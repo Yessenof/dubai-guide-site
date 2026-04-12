@@ -1,19 +1,29 @@
 # Dependencies
 node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Next.js
+/.next/
+/out/
+
+# Build outputs
+/build
+dist
 
 # Environment variables
 .env
 .env.local
 .env.*.local
-
-# Build outputs
-dist
-build
-.next
-.vercel
+.env*
 
 # Test coverage
-coverage
+/coverage
 
 # macOS
 .DS_Store
@@ -25,6 +35,21 @@ coverage
 *.tmp
 *.swp
 *.swo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Certificates
+*.pem
+
+# SQLite WAL auxiliary files (ephemeral, not for version control)
+data/guides.db-shm
+data/guides.db-wal
 
 # IDEs
 .idea

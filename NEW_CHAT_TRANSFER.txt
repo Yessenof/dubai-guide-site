@@ -1,0 +1,72 @@
+DUBAI GUIDE SITE — NEW CHAT TRANSFER
+=====================================
+
+WHAT TO ATTACH
+--------------
+Attach these files when opening a new chat:
+  1. CLAUDE.md            ← rules, architecture, QA rules (attach first)
+  2. PROJECT_STATE.md     ← current status, blockers, next step
+  3. NEW_CHAT_TRANSFER.txt ← this file
+
+If deep context is needed, also attach:
+  4. HANDOFF_PROMPT.md    ← full handoff prompt with rules list
+  5. DECISIONS.md         ← why architecture choices were made
+  6. CHECKPOINTS.md       ← verified stable milestones
+
+PASTE THIS IN A NEW CHAT
+-------------------------
+I'm continuing work on a Next.js Dubai guide site. Please read CLAUDE.md and
+PROJECT_STATE.md first before doing anything. The current phase is Phase 4
+(step management in the admin). Do not start building until you have confirmed
+you understand the current architecture, the admin QA rules, and the project
+memory maintenance requirement.
+
+WHAT THIS PROJECT IS
+---------------------
+A premium mobile-first Dubai knowledge hub. Owner-only admin panel. Content in
+SQLite. No external services. Stack: Next.js 16 (App Router) + TypeScript +
+Tailwind CSS v4 + better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
+
+CURRENT PHASE
+-------------
+Phase 4: Step management in the admin.
+Steps table exists and public page renders steps. Admin UI for steps does not
+exist yet. That is the only thing to build next.
+
+CURRENT NEXT STEP
+-----------------
+Add inline step CRUD to /admin/guides/[slug]:
+  - List existing steps below guide fields
+  - Add step (append at end)
+  - Edit: EN fields (title, what, where, address, advice, warning), RU fields, cost, time_est
+  - Delete step (confirm dialog)
+  - Reorder: up/down buttons (swap step_order integer)
+  - Server Actions: createStepAction, updateStepAction, deleteStepAction, reorderStepAction
+  - Call revalidateGuide(slug) after every step mutation
+
+RULES THAT MUST NOT BE BROKEN
+------------------------------
+1. Single form + intent pattern. Never split guide field-editing and publish
+   into separate <form> elements. Save draft / Save and publish = one form,
+   name="intent" buttons. Unpublish only is allowed as standalone form.
+
+2. Public/admin separation. Public pages: import only lib/db/reader.ts.
+   Admin pages: lib/db/writer.ts for reads. Never cross-import.
+
+3. proxy.ts not middleware.ts. Next.js 16 convention.
+
+4. serverExternalPackages: ["better-sqlite3"] in next.config.ts. Must stay.
+
+5. bcrypt hash in .env.local: escape $ as \$ to prevent dotenv-expand corruption.
+
+6. React key rule: outer <GuideEditForm key={saved ?? "init"}> handles remount.
+   Inner siblings must not carry the same key value.
+
+7. After every meaningful implementation step, update PROJECT_STATE.md,
+   SESSION_LOG.md, and CHECKPOINTS.md (if a milestone was reached) before
+   declaring the step complete.
+
+LAST VERIFIED STABLE STATE
+---------------------------
+Phase 3A complete. Guide CRUD works. Build clean. No React key warnings.
+SQLite reads and writes verified. Checkpoint logged in CHECKPOINTS.md.

@@ -1,115 +1,166 @@
-# Dubai Guide Site - Project Instructions
+# Dubai Guide Site — Project Instructions
+
+This is the permanent project rulebook. These rules override any default assistant behavior. Do not deviate without explicit owner approval.
+
+---
 
 ## Project Overview
-A premium mobile-first Dubai knowledge hub website. This is not a heavy web app. It should feel elegant, minimal, calm, and Apple-inspired.
 
-## Main Goal
-Build a lightweight website that helps users understand Dubai procedures:
-- Company setup
-- Visas
-- Hiring
-- Living and relocation
-- Key government-related processes
+A premium, mobile-first Dubai knowledge hub. Lightweight, calm, Apple-inspired. Not a web app — a content site with an owner-only admin panel built into the same Next.js project.
 
-## Design Principles
-- Mobile-first approach
-- Clean white background
-- Simple typography
-- Premium spacing
-- Elegant and readable design
-- No visual clutter
-- No swipe-based step screens
-- Articles must scroll as one beautiful vertical experience
-- First screen should show as much useful information as possible without feeling overloaded
+**Goal:** Help users understand Dubai procedures — company setup, visas, hiring, relocation, government processes — through clean, structured, step-by-step guides.
 
-## Content Structure
-Every guide page should have:
-- Title
-- Short explanation
-- Estimated price
-- Estimated timeline
-- Short overview of the full process
-- Chronological steps
+---
 
-Every step card should support:
-- Step number
-- What to do
-- Where to go
-- Address or place type
-- Estimated cost
-- Estimated time
-- Useful advice
-- Note or warning
+## Architecture Rules (locked)
 
-## Technical Principles
-- Keep the project lightweight
-- Keep components reusable
-- Make all article sections editable
-- Prioritize mobile readability over desktop complexity
-- Structure pages clearly for SEO and AI readability
-- Do not overengineer
-- Avoid unnecessary APIs unless clearly needed
+- **Framework:** Next.js (App Router), TypeScript, Tailwind CSS v4
+- **Database:** SQLite via `better-sqlite3` + Drizzle ORM — file at `data/guides.db`
+- **Public pages** import only from `lib/db/reader.ts` (read-only queries)
+- **Admin pages** import only from `lib/db/writer.ts` (read/write queries)
+- Admin and public share **no layout, no state, no rendering components**
+- Admin JS bundle must **never** appear in public page bundles (Next.js route-level code splitting enforces this)
+- No heavy CMS. No external content platform. No external auth service.
+- `next.config.ts` must keep `serverExternalPackages: ["better-sqlite3"]` to prevent Turbopack from bundling the native module
+- Route protection uses `proxy.ts` (Next.js 16 convention — NOT `middleware.ts`, which is deprecated in this version)
+- Auth: NextAuth.js v4, CredentialsProvider, bcryptjs (pure JS — NOT native `bcrypt`)
+- bcrypt hashes in `.env.local` must escape `$` as `\$` to prevent dotenv-expand corruption
 
-## Workflow Rules
-- Always preserve design consistency
-- Always preserve mobile-first layout
-- Always preserve the article structure system
-- Do not invent random styles
-- Do not change the information architecture without approval
+---
 
-## Confirmed Project Decisions
-These decisions are locked. Do not deviate from them without explicit approval.
+## Public Site Rules (locked)
 
-**Architecture**
-- The public site must stay lightweight and fast — no unnecessary dependencies
-- The admin panel is owner-only, built inside the same Next.js project under `/admin`
-- Public pages and admin must stay architecturally separated — admin never weighs down the public site
-- Public pages import only from `lib/db/reader.ts` (read-only)
-- Admin pages import only from `lib/db/writer.ts` (read/write)
-- No heavy CMS on the public site
-- Guide data lives in `data/guides.db` — SQLite via `better-sqlite3` + Drizzle ORM
-- Full admin architecture is documented in `docs/admin-architecture.md`
+- Mobile-first. Clean white background. No visual clutter.
+- Articles must scroll as one beautiful vertical experience — no swipe-based step screens
+- First screen shows as much useful information as possible without feeling overloaded
+- Do not invent random styles. Preserve all existing design patterns.
+- No stock photos of people. Micro-visual system only — no random illustrations.
+- Public URLs must never change without explicit approval (`/guides/[slug]`)
+- All guide pages render from SQLite via `reader.ts` — never import admin or writer code
 
-**Admin system (planned, not yet built)**
-- Auth: NextAuth.js with credentials provider, single owner, password stored as bcrypt hash in env vars
-- Storage: SQLite (`data/guides.db`) — single file on disk, no external services
-- Admin routes: `/admin/login`, `/admin/guides`, `/admin/guides/new`, `/admin/guides/[slug]`
-- Every guide field and every step field must be editable from the admin
-- Steps must be addable, deletable, and reorderable
-- Publish/unpublish per guide
-- On-demand ISR revalidation triggered by admin after save
+---
 
-**Migration plan (planned)**
-- Current MDX + metadata.ts system will be migrated to SQLite
-- Step 1: install better-sqlite3, drizzle-orm, drizzle-kit; create schema + connection
-- Step 2: run drizzle-kit migrate to create data/guides.db; seed with current guide data
-- Step 3: write lib/db/reader.ts; update public guide page to render from DB
-- Step 4: retire MDX files and metadata.ts
-- Step 5: build admin CRUD on top of the DB layer
-- Zero SEO regression — public URLs and rendered HTML stay identical
+## Content Structure (locked)
 
-**Content and language**
-- English is the primary language
+**Every guide has:**
+- Title, short summary (for cards + meta description), estimated price, estimated timeline
+- "Who this is for" (audience)
+- Multi-paragraph overview
+- Chronological steps (managed separately via the steps table)
+
+**Every step has:**
+- Step number, what to do, where to go, address/place, estimated cost, estimated time, advice, warning (optional)
+
+---
+
+## Category Taxonomy (locked)
+
+Categories are a fixed, centrally managed list. Do not allow free-text category input. The five valid values are:
+
+| Value | Label |
+|---|---|
+| `visas` | Visas |
+| `company-setup` | Company Setup |
+| `hiring` | Hiring |
+| `living` | Living |
+| `government` | Government |
+
+Any change to this list requires updating both the schema and the `CATEGORIES` constant in `components/admin/GuideFormFields.tsx`.
+
+---
+
+## Language Rules (locked)
+
+- **English is the primary language and source of truth**
 - Russian is the secondary language
-- A language switcher must exist in the top navigation when Russian is added
-- All data structures are bilingual from day one (en/ru fields per guide and step)
-- Do not use stock photos of people
-- Use only a small, consistent micro-visual system — no random generated illustrations
+- All DB columns are bilingual from day one (`en_*` and `ru_*` flat columns)
+- Russian fields default to empty string — valid until translated
+- When Russian is live, a language switcher must exist in the top navigation
+- URL pattern: `/guides/[slug]` for EN default, `/ru/guides/[slug]` for Russian
+- **Future:** Admin should support "Generate RU draft from EN" using the Claude API — populates `ru_*` fields with a draft translation, editable before saving. Do not build this until EN content workflow is complete and stable.
+- Public pages must fall back to EN if the Russian field is empty
 
-**Acquisition and distribution**
-- SEO and organic search are the primary acquisition channel
-- Social links (WhatsApp, Instagram, Facebook) support distribution, but article SEO is the main traffic source
-- Structure all guide pages clearly for search engines and AI readability
+---
+
+## SEO Rules (locked)
+
+- Organic search and AI discoverability are the primary acquisition channel
+- All guide pages must be statically rendered (SSG/ISR) — never client-fetched
+- `<title>` and `<meta description>` must always be populated from guide data
+- URL structure must not change
+- Structure all content clearly for search engines and AI readability
+- No unnecessary JavaScript on public pages
+
+---
+
+## Admin QA Rules (mandatory — do not skip)
+
+- **Never split field-edits and publish into separate HTML `<form>` elements.** Clicking a standalone Publish form submits only the hidden toggle — all unsaved field edits are silently discarded. The locked solution is: single `<form>` with `name="intent"` submit buttons (`value="draft"` and `value="publish"`).
+- **Every save action must write all editable fields.** Never write a Server Action that only updates a subset of columns while a full edit form is on the same page.
+- **Unpublish is the only standalone toggle allowed** — it carries no field data risk. Even so, the UI must show a dirty-state warning if the form has unsaved changes.
+- **After any admin form change, manually test:** edit a field → click "Save and publish" → verify the field change AND the published flag are both written to the DB.
+- **React key rule:** Never give two sibling elements the same key. In `GuideEditForm`, the outer `<GuideEditForm key={saved ?? "init"}>` in the page handles full remount on save — inner elements (`<form>`, `<SavedBanner>`) must NOT also carry a `key` set to the same timestamp value.
+
+---
+
+## Project-Memory Maintenance Rule (mandatory)
+
+After every meaningful implementation step, always update the relevant memory files **before declaring the step complete**.
+
+### What counts as a meaningful step
+
+Update memory when you complete any of these:
+- A new feature or phase (even partially)
+- A bugfix that changed observable behavior
+- An architecture or workflow decision
+- A new blocker discovered or resolved
+- A verified stable milestone (add a checkpoint)
+
+Do NOT update memory for: typo fixes, comment edits, reformatting, failed experiments that were reverted, or trivial config tweaks.
+
+### Files to update
+
+| File | Update when |
+|---|---|
+| `PROJECT_STATE.md` | After every meaningful step — current status, blockers, next step |
+| `SESSION_LOG.md` | After every meaningful step — one short reverse-chronological entry |
+| `CHECKPOINTS.md` | When a phase or milestone is fully verified |
+| `NEW_CHAT_TRANSFER.txt` | When current phase or next step changes |
+| `ROADMAP.md` | When a phase starts, completes, or scope changes |
+| `DECISIONS.md` | When a new architecture or product decision is made |
+| `HANDOFF_PROMPT.md` | When project state changes materially |
+| `SEO_STRATEGY.md` | When search or content strategy changes |
+
+### Automated guard
+
+`.claude/settings.json` configures a `Stop` hook that runs `.claude/memory-guard.sh` when Claude finishes a task. The script warns (but does not block) if files in `app/`, `components/`, `lib/`, `proxy.ts`, or `next.config.ts` are newer than `PROJECT_STATE.md`.
+
+If the guard fires and the step was meaningful — update the memory files. If the step was trivial — you can ignore it.
+
+This is a permanent workflow requirement, not optional. Future sessions depend on these files being accurate.
+
+---
 
 ## Local Dev Server Rules
-Whenever starting the local dev server for this project, always:
-1. Bind to 0.0.0.0 so the site is accessible from other devices on the same Wi-Fi network:
-   `npm run dev -- --hostname 0.0.0.0`
-2. Detect the current local network IP of this Mac using:
-   `ipconfig getifaddr en0` (or en1 as fallback)
-3. Stop any incorrectly running dev server before starting a new one
-4. Always print both URLs clearly at the end:
-   - Desktop: http://localhost:3000
-   - iPhone:  http://<LOCAL_IP>:3000
-5. If the port differs from 3000, print the actual port
-6. If the local IP cannot be detected, clearly say so and explain why
+
+Whenever starting the local dev server:
+
+1. Bind to `0.0.0.0`: `npm run dev -- --hostname 0.0.0.0`
+2. Detect local IP: `ipconfig getifaddr en0` (or `en1` as fallback)
+3. Stop any running dev server first
+4. Always print both URLs:
+   - Desktop: `http://localhost:3000`
+   - iPhone: `http://<LOCAL_IP>:3000`
+5. If port differs from 3000, print the actual port
+6. If local IP cannot be detected, say so explicitly
+
+---
+
+## Workflow Rules
+
+- Always preserve design consistency and mobile-first layout
+- Do not change the information architecture without owner approval
+- Do not add features beyond what was asked
+- Do not overengineer. Do not add abstractions for one-time operations.
+- Keep components reusable. Keep the project lightweight.
+- Structure all pages clearly for SEO and AI readability.

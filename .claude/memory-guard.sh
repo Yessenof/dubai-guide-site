@@ -2,20 +2,26 @@
 #
 # memory-guard.sh
 # Runs as a Claude Code Stop hook.
-# Warns when source files were modified more recently than PROJECT_STATE.md.
-# Exits 0 always — warns but never blocks.
+# Two checks — both warn only, never block (exits 0 always).
 #
-# "Meaningful" source paths watched:
+# Check 1: Source files newer than PROJECT_STATE.md
+#   → means project state may need updating
+#
+# Check 2: PROJECT_STATE.md newer than CLAUDE_PROJECT_KB.md
+#   → means the Claude Project knowledge base is stale
+#
+# Source paths watched:
 #   app/   components/   lib/   proxy.ts   next.config.ts   drizzle.config.ts
 #
-# Trivially excluded (never trigger the warning):
+# Excluded:
 #   .next/   node_modules/   data/   .env*   *.log   public/
 
 cd "$(dirname "$0")/.." || exit 0
 
 MEMORY_FILE="PROJECT_STATE.md"
+KB_FILE="CLAUDE_PROJECT_KB.md"
 
-# If the memory file doesn't exist at all, warn loudly and exit
+# ── Check 0: PROJECT_STATE.md must exist ─────────────────────────────────────
 if [ ! -f "$MEMORY_FILE" ]; then
   echo ""
   echo "  ╔══════════════════════════════════════════════════════════════╗"
@@ -26,7 +32,7 @@ if [ ! -f "$MEMORY_FILE" ]; then
   exit 0
 fi
 
-# Find source files newer than PROJECT_STATE.md
+# ── Check 1: Source files newer than PROJECT_STATE.md ────────────────────────
 NEWER=$(find app components lib proxy.ts next.config.ts drizzle.config.ts \
   -newer "$MEMORY_FILE" \
   -not -path "*/.next/*" \
@@ -46,6 +52,21 @@ if [ -n "$NEWER" ]; then
   echo "  ║                                                              ║"
   echo "  ║  If this was a meaningful step, update before finishing:    ║"
   echo "  ║    PROJECT_STATE.md   SESSION_LOG.md   CHECKPOINTS.md       ║"
+  echo "  ║    CLAUDE_PROJECT_KB.md                                     ║"
+  echo "  ╚══════════════════════════════════════════════════════════════╝"
+  echo ""
+fi
+
+# ── Check 2: PROJECT_STATE.md newer than CLAUDE_PROJECT_KB.md ────────────────
+if [ -f "$KB_FILE" ] && [ "$MEMORY_FILE" -nt "$KB_FILE" ]; then
+  echo ""
+  echo "  ╔══════════════════════════════════════════════════════════════╗"
+  echo "  ║  CLAUDE PROJECT KB CHECK                                     ║"
+  echo "  ║  PROJECT_STATE.md is newer than CLAUDE_PROJECT_KB.md.       ║"
+  echo "  ║  The Claude Project knowledge base may be stale.            ║"
+  echo "  ║                                                              ║"
+  echo "  ║  If meaningful changes were made, update:                   ║"
+  echo "  ║    CLAUDE_PROJECT_KB.md                                     ║"
   echo "  ╚══════════════════════════════════════════════════════════════╝"
   echo ""
 fi

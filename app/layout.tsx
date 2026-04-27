@@ -8,7 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Dubai Guide — Step-by-step guides for living and working in Dubai",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  title: "Guidex Consulting — Step-by-step guides for living and working in Dubai",
   description:
     "Clear, practical guides for company setup, visas, hiring, and relocation in Dubai and the UAE.",
 };

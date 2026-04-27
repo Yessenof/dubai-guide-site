@@ -130,6 +130,7 @@ Do NOT update memory for: typo fixes, comment edits, reformatting, failed experi
 | `DECISIONS.md` | When a new architecture or product decision is made |
 | `HANDOFF_PROMPT.md` | When project state changes materially |
 | `SEO_STRATEGY.md` | When search or content strategy changes |
+| `CLAUDE_PROJECT_KB.md` | When project state changes materially — this is the Claude Project knowledge base snapshot; keep it in sync with `PROJECT_STATE.md` |
 
 ### Automated guard
 
@@ -153,6 +154,73 @@ Whenever starting the local dev server:
    - iPhone: `http://<LOCAL_IP>:3000`
 5. If port differs from 3000, print the actual port
 6. If local IP cannot be detected, say so explicitly
+
+---
+
+## Content Writing Standard (locked)
+
+All guides must follow this standard. Apply when writing new guides and reviewing existing ones. The reference implementation is the `employment-visa` guide (April 2025 rewrite).
+
+### One intent per guide
+
+- Each guide targets one clear search query and user intent
+- Every guide page must be able to rank as a standalone article — no homepage context required
+- Keyword focus: official process names, service center names (Tasheel, Amer, Tawjeeh, GDRFA, MOHRE, ICA), fee ranges, visa/license type names
+
+### Field-level rules
+
+**Title** — specific, searchable, direct. No "Ultimate Guide" framing. No vague questions.
+- Good: "How to Get an Employment Visa in Dubai Without Leaving the UAE"
+- Bad: "Everything You Need to Know About Dubai Employment Visas"
+
+**Summary** — 1–2 sentences max. Must work as the meta description. States what the guide covers, the process type, and notable specifics (fees, service centers). No sentence over 30 words.
+
+**Who this is for** — 1–2 sentences. Describes the exact reader, not a vague category.
+- Good: "Employees already in the UAE on any visa status, sponsored by a Dubai mainland employer."
+- Bad: "People who want to work in Dubai."
+
+**Overview** — 2 short paragraphs max.
+- Para 1: what the route is + who handles it
+- Para 2: total cost range, timeline, the reader's role
+- Do not restate the step list. Do not narrate what is about to happen.
+
+**Steps**
+- Title: short, action-oriented, 3–6 words
+- What: 1–2 sentences max — describe the action, not the background
+- Where: name of authority or service center only
+- Address/portal: "Any [name] branch in Dubai" or a specific portal URL — never invent physical addresses
+- Advice: only when it adds real value the reader could not guess
+- Warning: only for genuine risk of error, delay, or money lost
+
+### Style rules (all fields)
+
+- Short declarative sentences
+- No em-dash-heavy phrasing
+- No theatrical framing ("This is the pivot of the process")
+- No filler transitions ("Once complete, you will then proceed to…")
+- No repeated explanations across fields — say it once, in the right field
+- Specific numbers when available: AED amounts, day counts, year durations
+- Use official terms where they exist: MOHRE, ICA, GDRFA, Tasheel, Amer, Tawjeeh
+
+### SEO rules for content
+
+- Pages must be complete, not thin — all structural fields filled per step
+- 2 solid overview paragraphs > 4 bloated ones
+- Keyword presence through accurate content — process names, service centers, official body names, fee ranges appear naturally
+- No keyword stuffing
+- Every guide must be linkable and rankable as a direct Google landing page
+
+---
+
+## Deployment and Source-of-Truth Rules (locked)
+
+- **Code source of truth: GitHub** (`Yessenof/dubai-guide-site`). All code, components, config, docs, and memory files must be committed and pushed.
+- **Production DB source of truth: local backups** (`backups/production-db/`). `data/guides.db` is never committed to git. Pull it from Cloudways before every deploy using `./scripts/db-backup-from-server.sh`.
+- **Cloudways is runtime only.** It is not a backup. The site must survive server deletion, billing failure, or accidental overwrite.
+- **Env secrets are stored out-of-band.** `.env.local` is never committed. Keep a secure local copy.
+- **Never overwrite production DB without a server-side timestamped backup first.** Use `./scripts/db-restore-to-server.sh` — it enforces this.
+- **When switching domains:** `NEXT_PUBLIC_SITE_URL` is baked at build time. Changing it requires updating `.env.local` on the server AND running `npm run build` before restarting PM2. Never skip the rebuild.
+- **Memory files are code.** `PROJECT_STATE.md`, `SESSION_LOG.md`, `CHECKPOINTS.md`, `NEW_CHAT_TRANSFER.txt`, `DECISIONS.md`, `ROADMAP.md`, `HANDOFF_PROMPT.md`, `SEO_STRATEGY.md`, `CLAUDE_PROJECT_KB.md` must be committed after every meaningful implementation step.
 
 ---
 

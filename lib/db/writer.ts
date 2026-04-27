@@ -3,9 +3,19 @@
  * Never import this in public pages.
  */
 import { db } from "./connection";
-import { guides } from "./schema";
-import { type Guide } from "./schema";
-import { desc, eq } from "drizzle-orm";
+import { guides, steps } from "./schema";
+import { type Guide, type Step } from "./schema";
+import { asc, desc, eq } from "drizzle-orm";
+
+/** Returns all steps for a guide, ordered by stepOrder ASC. */
+export function getStepsByGuideId(guideId: string): Step[] {
+  return db
+    .select()
+    .from(steps)
+    .where(eq(steps.guideId, guideId))
+    .orderBy(asc(steps.stepOrder))
+    .all();
+}
 
 /** Returns a single guide by slug (includes drafts). */
 export function getGuideBySlug(slug: string): Guide | null {

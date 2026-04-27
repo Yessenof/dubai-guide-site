@@ -47,9 +47,15 @@ next-env.d.ts
 # Certificates
 *.pem
 
-# SQLite WAL auxiliary files (ephemeral, not for version control)
+# SQLite — main DB and WAL auxiliary files
+data/guides.db
 data/guides.db-shm
 data/guides.db-wal
+data/guides.db.backup-*
+
+# Production DB backups (local copies pulled from Cloudways)
+# Directory is tracked via .gitkeep; actual backup files are not committed.
+backups/production-db/*.db*
 
 # IDEs
 .idea

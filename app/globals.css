@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+/*
+  Brand tokens. Exposed as Tailwind utilities via @theme:
+  --color-navy  → bg-navy, text-navy, border-navy (+ opacity variants like bg-navy/8)
+  --color-brass → bg-brass, text-brass, border-brass
+*/
+@theme {
+  --color-navy:  #1B2E4B;
+  --color-brass: #B5935A;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #111111;

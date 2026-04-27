@@ -1,5 +1,6 @@
-import { getGuideBySlug } from "@/lib/db/writer";
+import { getGuideBySlug, getStepsByGuideId } from "@/lib/db/writer";
 import GuideEditForm from "@/components/admin/GuideEditForm";
+import StepList from "@/components/admin/StepList";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -20,12 +21,26 @@ export default async function AdminEditGuidePage({ params, searchParams }: Props
   const guide = getGuideBySlug(slug);
   if (!guide) notFound();
 
+  const steps = getStepsByGuideId(guide.id);
+
   return (
-    <GuideEditForm
-      key={saved ?? "init"}
-      guide={guide}
-      savedTs={saved}
-      slug={slug}
-    />
+    <>
+      {/*
+        GuideEditForm is a client component with its own <form>.
+        StepList / StepCard each have their own <form> elements.
+        They are DOM siblings — no nesting, no HTML violation.
+      */}
+      <GuideEditForm
+        key={saved ?? "init"}
+        guide={guide}
+        savedTs={saved}
+        slug={slug}
+      />
+      <StepList
+        steps={steps}
+        guideId={guide.id}
+        slug={slug}
+      />
+    </>
   );
 }

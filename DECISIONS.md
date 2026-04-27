@@ -102,14 +102,16 @@ Major decisions, why each was made, and what was rejected. Treat these as locked
 
 ## Controlled Category Taxonomy
 
-**Decision:** Categories are a fixed list of five values managed in code (`GuideFormFields.tsx`). Not free-text.
+**Decision:** Categories are a controlled list managed in code (`GuideFormFields.tsx`). Not free-text.
 
 **Why chosen:**
 - Prevents typos and inconsistent category names in the DB
 - Enables clean filtering and navigation by category on the public site
-- Easy to add a new category by updating one constant
+- Easy to update by changing one constant
 
-**Five categories (locked):** `visas`, `company-setup`, `hiring`, `living`, `government`
+**Current five values in code:** `visas`, `company-setup`, `hiring`, `living`, `government`
+
+**Status: NOT owner-approved as final.** The category taxonomy is defined in code but has not been explicitly confirmed by the owner as the permanent taxonomy. Do not treat these five values as locked in future sessions without explicit owner confirmation. Any change requires updating the `CATEGORIES` constant in `components/admin/GuideFormFields.tsx` and the CategoryIcon component.
 
 ---
 

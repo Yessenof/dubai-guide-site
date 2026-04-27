@@ -142,10 +142,13 @@ Currently the `summary` field doubles as the meta description. This is acceptabl
 
 Before publishing a guide, it must meet these standards:
 
-- [ ] Has a real, complete title that matches the procedure name
-- [ ] Summary is under 160 characters and action-oriented
-- [ ] Overview explains the full process in plain language (not just "here are the steps")
-- [ ] At least 3 steps with real content (not placeholder text)
-- [ ] Cost and timeline fields are populated (even if approximate)
-- [ ] `lastUpdated` is set to the month/year the content was verified
-- [ ] English content is complete before the guide is published
+- [ ] Title is specific, searchable, direct — no fluff
+- [ ] Summary is 1–2 sentences max and works as the meta description (under 160 chars)
+- [ ] Overview is 2 paragraphs max — route/handler in para 1, cost/timeline/role in para 2
+- [ ] All steps have real content — no placeholder text
+- [ ] Cost field populated per step (even if approximate)
+- [ ] **Timeline (guide) populated and non-empty** — required field, server action throws if missing
+- [ ] **timeEst (step) populated for every step** — required field, server action throws if missing
+- [ ] `lastUpdated` set to month/year the content was verified
+- [ ] Writing follows the Content Writing Standard in `CLAUDE.md` — no AI verbosity, no em-dash chains
+- [ ] English content complete before guide is published

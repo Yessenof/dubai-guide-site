@@ -1,71 +1,49 @@
 import Hero from "@/components/Hero";
-import TopicCard from "@/components/TopicCard";
-import { getAllPublishedGuides } from "@/lib/db/reader";
+import PrimaryServices from "@/components/PrimaryServices";
+import HowItWorks from "@/components/HowItWorks";
+import FreeAdviceCta from "@/components/FreeAdviceCta";
+import RouteSnapshotBand from "@/components/RouteSnapshotBand";
+import Link from "next/link";
+import { getPublishedGuidesForBand } from "@/lib/db/reader";
+
+const BAND_SLUGS = [
+  "employment-visa",
+  "spouse-dependent-visa-dubai-outside-country",
+  "child-dependent-visa-dubai-outside-country",
+  "golden-visa-dubai-property",
+];
 
 export default function HomePage() {
-  const guides = getAllPublishedGuides();
+  const bandGuides = getPublishedGuidesForBand(BAND_SLUGS);
 
   return (
     <div>
+      {/* 1. Hero — what the site does + primary CTA */}
       <Hero />
 
-      <section className="px-5 pb-12">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-xs font-medium uppercase tracking-widest text-gray-400 mb-5">
-            Guides
-          </h2>
-          <div className="space-y-3">
-            {guides.map((guide) => (
-              <TopicCard
-                key={guide.slug}
-                slug={guide.slug}
-                title={guide.title}
-                summary={guide.summary}
-                price={guide.price}
-                timeline={guide.timeline}
-                category={guide.category}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* 2. Service menu — self-select your route immediately */}
+      <PrimaryServices />
 
-      <section className="px-5 pb-16 border-t border-gray-100 pt-10">
+      {/* 3. Live routes with costs — show real data fast */}
+      <RouteSnapshotBand guides={bandGuides} />
+
+      {/* 4. Trust block — before the escalation CTA */}
+      <HowItWorks />
+
+      {/* 5. Human escalation — for complex or unclear situations */}
+      <FreeAdviceCta />
+
+      {/* 6. Browse all */}
+      <div className="px-5 pb-10">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-medium uppercase tracking-widest text-gray-400 mb-5">
-            Get in touch
-          </p>
-          <div className="flex flex-col sm:flex-row gap-2.5">
-            <a
-              href="https://wa.me/971000000000"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-between flex-1 bg-gray-900 text-white rounded-2xl px-4 py-3.5 hover:bg-gray-700 transition-colors group"
-            >
-              <span className="text-sm font-semibold">WhatsApp</span>
-              <span className="text-gray-500 group-hover:text-gray-300 transition-colors">→</span>
-            </a>
-            <a
-              href="https://instagram.com/dubaiguide"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-between flex-1 border border-gray-100 bg-white rounded-2xl px-4 py-3.5 hover:border-gray-200 hover:bg-gray-50/50 transition-all group"
-            >
-              <span className="text-sm font-semibold text-gray-900">Instagram</span>
-              <span className="text-gray-300 group-hover:text-gray-500 transition-colors">→</span>
-            </a>
-            <a
-              href="https://facebook.com/dubaiguide"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-between flex-1 border border-gray-100 bg-white rounded-2xl px-4 py-3.5 hover:border-gray-200 hover:bg-gray-50/50 transition-all group"
-            >
-              <span className="text-sm font-semibold text-gray-900">Facebook</span>
-              <span className="text-gray-300 group-hover:text-gray-500 transition-colors">→</span>
-            </a>
-          </div>
+          <Link
+            href="/guides"
+            className="inline-block text-sm font-semibold text-brass hover:opacity-75 transition-opacity py-3"
+          >
+            Browse all guides →
+          </Link>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

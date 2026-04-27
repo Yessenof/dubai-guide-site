@@ -1,57 +1,96 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
+Last updated: 2026-04-25
 
 WHAT TO ATTACH
 --------------
-Attach these files when opening a new chat:
-  1. CLAUDE.md            ← rules, architecture, QA rules (attach first)
-  2. PROJECT_STATE.md     ← current status, blockers, next step
-  3. NEW_CHAT_TRANSFER.txt ← this file
+Minimum (always attach these three):
+  1. CLAUDE.md            <- rules, architecture, QA rules, content writing standard
+  2. PROJECT_STATE.md     <- current status, what's built, blockers, next step
+  3. NEW_CHAT_TRANSFER.txt <- this file
 
-If deep context is needed, also attach:
-  4. HANDOFF_PROMPT.md    ← full handoff prompt with rules list
-  5. DECISIONS.md         ← why architecture choices were made
-  6. CHECKPOINTS.md       ← verified stable milestones
+For deeper context, also attach:
+  4. CHECKPOINTS.md       <- verified stable milestones
+  5. SESSION_LOG.md       <- recent implementation steps
 
 PASTE THIS IN A NEW CHAT
 -------------------------
-I'm continuing work on a Next.js Dubai guide site. Please read CLAUDE.md and
-PROJECT_STATE.md first before doing anything. The current phase is Phase 4
-(step management in the admin). Do not start building until you have confirmed
-you understand the current architecture, the admin QA rules, and the project
-memory maintenance requirement.
+I'm continuing work on a Next.js Dubai guide site (Guidex Consulting). Please
+read CLAUDE.md, PROJECT_STATE.md, and NEW_CHAT_TRANSFER.txt first before doing
+anything.
+
+The site is LIVE on Cloudways at:
+https://phpstack-1618074-6379172.cloudwaysapps.com/
+
+Server: 157.245.207.99 — app ID dgcmdxxpjx
+SSH: master_udndspcyhr@157.245.207.99 (ControlMaster socket required)
+App path: /home/master/applications/dgcmdxxpjx/public_html
+Node: v20.20.2 via nvm — PM2: guidex-production (online)
+Real domain (NOT connected yet): https://guidex-consulting.ae
+
+The immediate next step is connecting the real domain:
+1. Update server .env.local (NEXT_PUBLIC_SITE_URL + NEXTAUTH_URL → guidex-consulting.ae)
+2. npm run build on server
+3. pm2 restart guidex-production
+4. Point DNS A record for guidex-consulting.ae → 157.245.207.99
+5. Enable SSL on Cloudways panel
+6. Final smoke test
+
+Do not start building until you have confirmed you understand the current
+architecture, the admin QA rules, and the project memory maintenance requirement.
 
 WHAT THIS PROJECT IS
 ---------------------
-A premium mobile-first Dubai knowledge hub. Owner-only admin panel. Content in
-SQLite. No external services. Stack: Next.js 16 (App Router) + TypeScript +
-Tailwind CSS v4 + better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
+Premium mobile-first Dubai knowledge hub. Owner-only admin panel. Content in
+SQLite. No external services.
 
-CURRENT PHASE
--------------
-Phase 4: Step management in the admin.
-Steps table exists and public page renders steps. Admin UI for steps does not
-exist yet. That is the only thing to build next.
+Stack: Next.js 16.2.3 (App Router, Turbopack) + TypeScript + Tailwind CSS v4 +
+better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
+
+CURRENT STATE (as of 2026-04-25)
+---------------------------------
+All phases complete through Phase 6 (launch-readiness). 15 guides published.
+
+Visas (8/9 live):
+  - employment-visa                                published (inside-country)
+  - employment-visa-dubai-outside-uae              published (outside-country)
+  - child-dependent-visa-dubai-outside-country     published
+  - child-dependent-visa-dubai-inside-country      published
+  - spouse-dependent-visa-dubai-outside-country    published
+  - spouse-dependent-visa-dubai-inside-country     published
+  - golden-visa-dubai-property                     published
+  - newborn-visa-dubai                             published
+  - renew-family-visa-dubai                        published
+  - Maid Visa                                      Soon (WhatsApp link)
+
+Business Setup (3/3 live):
+  - mainland-company-setup-dubai                   published
+  - free-zone-company-setup-dubai                  published
+  - open-business-bank-account-dubai               published
+
+Government (3/3 live):
+  - document-attestation-dubai                     published
+  - amer-center-dubai                              published
+  - pro-services-dubai                             published
 
 CURRENT NEXT STEP
 -----------------
-Add inline step CRUD to /admin/guides/[slug]:
-  - List existing steps below guide fields
-  - Add step (append at end)
-  - Edit: EN fields (title, what, where, address, advice, warning), RU fields, cost, time_est
-  - Delete step (confirm dialog)
-  - Reorder: up/down buttons (swap step_order integer)
-  - Server Actions: createStepAction, updateStepAction, deleteStepAction, reorderStepAction
-  - Call revalidateGuide(slug) after every step mutation
+Phase 6 complete. Site is launch-ready.
+
+Pre-launch actions (in order):
+1. git rm --cached data/guides.db && git commit   <- untrack DB from git
+2. Deploy to Cloudways -- follow docs/deployment-cloudways.md
+3. Set NEXT_PUBLIC_SITE_URL and NEXTAUTH_URL in .env.local on server
+4. DNS + SSL on Cloudways
+5. Add Plausible analytics (after domain is live)
 
 RULES THAT MUST NOT BE BROKEN
 ------------------------------
-1. Single form + intent pattern. Never split guide field-editing and publish
-   into separate <form> elements. Save draft / Save and publish = one form,
-   name="intent" buttons. Unpublish only is allowed as standalone form.
+1. Single form + intent pattern. One <form> with name="intent" buttons for
+   Save draft / Save and publish. Unpublish only is allowed as standalone form.
 
-2. Public/admin separation. Public pages: import only lib/db/reader.ts.
-   Admin pages: lib/db/writer.ts for reads. Never cross-import.
+2. Public/admin separation. Public pages: lib/db/reader.ts only.
+   Admin reads: lib/db/writer.ts. Never cross-import.
 
 3. proxy.ts not middleware.ts. Next.js 16 convention.
 
@@ -62,11 +101,31 @@ RULES THAT MUST NOT BE BROKEN
 6. React key rule: outer <GuideEditForm key={saved ?? "init"}> handles remount.
    Inner siblings must not carry the same key value.
 
-7. After every meaningful implementation step, update PROJECT_STATE.md,
-   SESSION_LOG.md, and CHECKPOINTS.md (if a milestone was reached) before
-   declaring the step complete.
+7. Timeline required. Guide timeline and step timeEst are required fields.
+   Server actions throw if empty. Do not remove validation.
+
+8. Content writing standard (CLAUDE.md). All new guides follow the field-level
+   and style rules. Summary 1-2 sentences. Overview 2 paragraphs max.
+   Step what = 1-2 sentences. No em-dashes. No AI verbosity.
+
+9. Fee discipline: No AED ranges without official tariff backing. Name variation
+   drivers when exact fee is unknown. Only retain ranges that are well-supported
+   (e.g. medical fitness test AED 250-450).
+
+10. After every meaningful step, update PROJECT_STATE.md, SESSION_LOG.md,
+    and CHECKPOINTS.md before declaring done.
+
+SCRIPT PATTERN FOR GUIDE CREATION
+-----------------------------------
+- Create a named script in scripts/ (e.g. create-employment-visa-outside-country.ts)
+- Use better-sqlite3 directly (raw SQL) -- Drizzle relative imports fail in npx tsx -e
+- Include existence guard: if guide slug already exists, exit(1)
+- Insert guide row first, then step rows in a loop
+- Save as draft (published: 0)
+- After creation, run QA scan for: em-dashes, sentence count in what fields,
+  invented addresses, unconfirmed AED ranges
 
 LAST VERIFIED STABLE STATE
 ---------------------------
-Phase 3A complete. Guide CRUD works. Build clean. No React key warnings.
-SQLite reads and writes verified. Checkpoint logged in CHECKPOINTS.md.
+CP-09 (2026-04-25): Phase 6 complete. Build clean -- 35 pages, 0 errors.
+sitemap.xml and robots.txt live. metadataBase set. 15 guides published.

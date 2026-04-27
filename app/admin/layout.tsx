@@ -15,7 +15,7 @@ export default async function AdminLayout({
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
           <span className="text-sm font-semibold text-gray-900">
-            Dubai Guide{" "}
+            Guidex Consulting{" "}
             <span className="font-normal text-gray-400">/ Admin</span>
           </span>
           {session && <AdminLogout />}

@@ -73,9 +73,9 @@ export default function GuideFormFields({ defaults = {} }: Props) {
               />
             </div>
             <div>
-              <label htmlFor="timeline" className={label}>Timeline</label>
+              <label htmlFor="timeline" className={label}>Timeline *</label>
               <input
-                id="timeline" name="timeline" type="text"
+                id="timeline" name="timeline" type="text" required
                 defaultValue={defaults.timeline ?? ""}
                 className={field}
                 placeholder="3–5 weeks"

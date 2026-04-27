@@ -1,122 +1,96 @@
 # Article Template — Universal Guide Structure
 
-This document defines the standard structure for every guide on the site. All articles must follow this template to maintain consistency, readability, and SEO quality.
+This document defines the standard structure for every guide on the site.
+For the binding writing and style rules, see the **Content Writing Standard** section in `CLAUDE.md`.
+The reference implementation is the `employment-visa` guide (April 2025 rewrite).
 
 ---
 
-## Article Header Block
+## Guide Header Fields
 
-Displayed at the top of every guide. Visible on the first screen without scrolling.
+Displayed at the top of every guide. Must be visible on first screen without scrolling.
 
-| Field | Description |
+| Field | Rule |
 |---|---|
-| **Title** | Clear, specific guide title. E.g. "How to Set Up a Mainland LLC in Dubai" |
-| **Short summary** | 2–3 sentences explaining what this guide covers and who it helps |
-| **Estimated price** | Total cost range for completing this process. E.g. "AED 15,000 – 25,000" |
-| **Estimated timeline** | How long the full process typically takes. E.g. "2–4 weeks" |
-| **Who this is for** | One sentence describing the target reader. E.g. "Founders setting up a trading or services business in Dubai without a free zone" |
-| **Last updated** | Date the guide was last reviewed or revised. E.g. "March 2025" |
+| **Title** | Specific, searchable, direct. No fluff. Max ~70 characters. |
+| **Summary** | 1–2 sentences max. Doubles as the meta description. |
+| **Estimated price** | Total cost range. E.g. "AED 4,900 – 7,300" |
+| **Estimated timeline** | Required. E.g. "2–4 weeks" |
+| **Who this is for** | 1–2 sentences. Exact reader, not a vague category. |
+| **Last updated** | Month + year. E.g. "April 2025" |
 
 ---
 
-## Process Overview Block
+## Process Overview
 
-A short, plain-language summary of the full process — written in 3–6 sentences or a brief numbered list. This gives the reader the full picture before they dive into steps.
+2 short paragraphs max. Skimmable in under 20 seconds.
 
-**Purpose:** Let the reader quickly assess if this is the right guide and what they are committing to. Should be skimmable in under 30 seconds.
+- **Para 1:** What the route is and who handles it (service centers, authorities)
+- **Para 2:** Total cost range, timeline, and the reader's role in the process
+
+Do not restate the step list. Do not narrate what is about to happen.
 
 ---
 
 ## Step-by-Step Flow
 
-All steps are presented as a single vertical scroll — never paginated, never one step per screen. Steps are numbered chronologically and displayed as structured cards.
+All steps presented as a single vertical scroll — never paginated, never one step per screen.
 
----
+### Step Card Fields
 
-### Step Card Structure
-
-Each step must include the following fields:
-
-| Field | Description |
+| Field | Rule |
 |---|---|
-| **Step number** | Sequential number. E.g. Step 1, Step 2 |
-| **Step title** | Short action-oriented title. E.g. "Reserve your trade name" |
-| **What to do** | Clear description of the action the user needs to take |
-| **Where to go** | Name of the authority, office, portal, or app to use |
-| **Address or place type** | Physical address, online portal URL description, or type of location |
-| **Estimated cost** | Cost for this specific step. E.g. "AED 620" or "Free" |
-| **Estimated time** | How long this step typically takes. E.g. "1–2 business days" |
-| **Useful advice** | Practical tip that helps the user complete this step more easily |
-| **Warning or note** | Important caveat, common mistake, or thing to watch out for |
-
----
-
-## Article UX Rules
-
-### Layout and scrolling
-- The article is one continuous vertical scroll — no tabs, no swipe gestures, no step-by-step pagination
-- The first screen must already show the title, summary, price, timeline, and the start of the process overview
-- Do not hide key information behind "expand" toggles on mobile
-
-### Step card design
-- Each step card is visually distinct but part of the same flow
-- Use a vertical connector line or step number to show progression
-- Cards should be compact enough that 1.5–2 steps are visible at once on mobile
-
-### Typography and readability
-- Body text minimum 16px, line height 1.6
-- Step titles in semi-bold, body text in regular weight
-- Use short paragraphs — no walls of text
-- Avoid jargon; if a term is unavoidable, explain it inline
-
-### Visual tone
-- Light background (white or off-white)
-- Subtle card borders or shadows — nothing heavy
-- No stock photography in guide content
-- Icons allowed for step types (document, building, online portal) but optional
-
-### Mobile behavior
-- Full-width cards on mobile (no side-by-side columns)
-- Tap targets on any interactive elements minimum 44px
-- No horizontal scrolling
-- Sticky "back to top" button optional on long guides
+| **Step number** | Sequential. |
+| **Step title** | 3–6 words, action-oriented. E.g. "Complete Medical Fitness Test" |
+| **What to do** | 1–2 sentences max. The action, not the background. |
+| **Where to go** | Name of authority or service center. Short. |
+| **Address or portal** | "Any [name] branch in Dubai" or a portal URL. Never invented addresses. |
+| **Estimated cost** | Step-level fee. E.g. "AED 323" or "Free" |
+| **Estimated time** | Required. E.g. "2–3 days" |
+| **Advice** | Only when it adds real value the reader could not guess. |
+| **Warning** | Only for genuine risk of error, delay, or money lost. |
 
 ---
 
 ## Example Article Outline
 
 ```
-Title:         How to Get an Employment Visa in Dubai
-Summary:       This guide walks you through the full process of...
-Price:         AED 3,000 – 5,000
-Timeline:      3–5 weeks
-Who it's for:  Employees being sponsored by a UAE-based employer
+Title:         How to Get an Employment Visa in Dubai Without Leaving the UAE
+Summary:       How to get a UAE employment residence visa without leaving the country.
+               Covers the full inside-country process with exact fees across Tasheel, Amer, and Tawjeeh.
+Price:         AED 4,900 – 7,300
+Timeline:      2–4 weeks
+Who it's for:  Employees already in the UAE on any visa status, sponsored by a Dubai mainland employer.
 Last updated:  April 2025
 
 Overview:
-  The UAE employment visa process involves several sequential steps...
+  Para 1 — The inside-country route lets you get UAE residence without leaving.
+            Your employer's PRO handles all service center visits across three networks:
+            Tasheel for MOHRE labor submissions, Amer for residency and Emirates ID,
+            and Tawjeeh for limited-skilled labor card finalization.
 
-Step 1 — Entry permit application
-  What to do:    Employer submits entry permit application via MOHRE
-  Where to go:   Ministry of Human Resources and Emiratisation (MOHRE)
-  Address:       mohre.gov.ae / MOHRE smart app
-  Cost:          AED 220
-  Time:          2–4 business days
-  Advice:        Ensure the employment contract is signed before applying
-  Warning:       The entry permit expires in 60 days — do not delay travel
+  Para 2 — Total fees are AED 4,900–7,300 depending on labor category.
+            The process takes approximately 2–4 weeks.
+            Your role is to provide documents on time and attend the medical appointment.
 
-Step 2 — Medical fitness test
-  What to do:    Employee completes medical test at approved center
-  Where to go:   Approved medical fitness center
-  Address:       MOHRE-approved clinics across Dubai
-  Cost:          AED 300 – 350
-  Time:          Same day to 1 business day
-  Advice:        Bring original passport and entry permit copy
-  Warning:       Certain medical results may affect visa eligibility
+Step 1 — Submit Offer Letter, Labor Card, and Work Permit
+  What:     Employer's PRO submits signed offer letter and work permit application at Tasheel.
+  Where:    Tasheel service center
+  Address:  Any Tasheel branch in Dubai
+  Cost:     AED 278
+  Time:     2–3 days
+  Advice:   Provide before their visit: signed offer letter, passport copy, photo, prior UAE visa page.
+  Warning:  (none)
 
-Step 3 — Emirates ID registration
-  ...
-
-Step 4 — Visa stamping
-  ...
+Step 2 — ...
 ```
+
+---
+
+## UX Layout Rules
+
+- Article is one continuous vertical scroll — no tabs, swipe gestures, or step pagination
+- First screen must show title, summary, price, timeline, and the start of the overview
+- Do not hide key information behind expand toggles on mobile
+- Full-width step cards on mobile
+- No stock photography in guide content

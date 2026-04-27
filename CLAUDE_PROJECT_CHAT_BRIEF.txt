@@ -1,0 +1,26 @@
+DUBAI GUIDE SITE — CHAT BRIEF
+==============================
+(Paste this at the start of a new conversation inside the Claude Project)
+
+This is a Next.js 16 content site for Dubai procedures (visas, company setup, hiring, relocation). Owner-only admin panel. SQLite database. No external services.
+
+WHAT'S BUILT (as of 2026-04-17)
+- Public site: home, guide list, guide detail (SSG+ISR), about, contact
+- Admin: full guide CRUD, inline step CRUD, publish/draft/delete, unsaved-changes guard
+- Visual system: navy (#1B2E4B) + brass (#B5935A) tokens, CategoryIcon SVGs, stone-50 cards, navy CTA block on guide pages
+- 1 published guide: employment-visa — "How to Get an Employment Visa in Dubai Without Leaving the UAE" — inside-country route, 8 steps, real fees across Tasheel/Amer/Tawjeeh
+- Content writing standard locked in CLAUDE.md — field-level rules, style rules, SEO rules
+- Timeline required at guide level and step level (form + server validation)
+
+CURRENT NEXT TASK
+Second article: Dependent / Family Visa guide (children). Inside-country and outside-country variants. Owner provides pricing and decides which variant to write first.
+
+KEY RULES
+- Single form + intent pattern for guide save/publish (never split into two forms)
+- Public pages import only reader.ts — admin never leaks into public
+- Category taxonomy (5 values) exists in code but is NOT owner-approved as final
+- All content must follow the writing standard in CLAUDE.md
+- After meaningful changes: update PROJECT_STATE.md, SESSION_LOG.md, CHECKPOINTS.md, CLAUDE_PROJECT_KB.md
+
+The full knowledge base is in CLAUDE_PROJECT_KB.md (uploaded to this Project).
+Repo source of truth: CLAUDE.md and PROJECT_STATE.md.

@@ -1,113 +1,135 @@
 # Roadmap — Dubai Guide Site
 
+Last updated: 2026-04-25
+
 ---
 
 ## Completed Phases
 
 ### Phase 1 — SQLite Data Layer Migration ✅
-Replaced the MDX + metadata.ts content system with SQLite via better-sqlite3 + Drizzle ORM.
-
-- Installed `better-sqlite3`, `drizzle-orm`, `drizzle-kit`
-- Created `lib/db/schema.ts` (guides + steps tables, bilingual flat columns)
-- Created `lib/db/connection.ts` (singleton, WAL mode, FK enforcement)
-- Wrote `lib/db/reader.ts` (public read-only queries)
-- Updated public guide pages to render from DB
-- Seeded employment-visa guide with all steps from old MDX
-- Retired MDX files, `metadata.ts`, `@next/mdx` config
-- Zero SEO regression — URLs and rendered HTML identical
+Replaced MDX + metadata.ts with SQLite via better-sqlite3 + Drizzle ORM.
 
 ### Phase 2 — Admin Foundation ✅
-Built the owner-only admin panel with auth and guide listing.
-
-- Installed `next-auth` v4 + `bcryptjs`
-- Created `lib/auth.ts` (CredentialsProvider, bcryptjs.compare, JWT sessions)
-- Created `app/admin/layout.tsx` (isolated from public, no shared Header)
-- Created `app/admin/login/page.tsx` (credentials form, `signIn` with `redirect: false`)
-- Added `proxy.ts` for route protection (protects `/admin/guides` and subpaths)
-- Created `app/admin/guides/page.tsx` (lists all guides: drafts + published)
-- Diagnosed and fixed bcrypt hash corruption by dotenv-expand (escape `$` as `\$`)
-- Renamed `middleware.ts` → `proxy.ts` (Next.js 16 convention)
+Auth, route protection (proxy.ts), guide listing.
 
 ### Phase 3A — Guide CRUD ✅
-Full create / edit / delete / publish workflow for guides (without steps).
+Create / edit / delete / publish workflow. ISR revalidation.
 
-- Created `app/admin/guides/new/page.tsx` + `createGuideAction`
-- Created `app/admin/guides/[slug]/page.tsx` (thin server component)
-- Created `components/admin/GuideEditForm.tsx` (client component: dirty tracking, unsaved-changes guard, single form with Save draft + Save and publish)
-- Created `components/admin/GuideFormFields.tsx` (shared field inputs)
-- Created `components/admin/SavedBanner.tsx` (3s auto-hide success banner)
-- Implemented `updateGuideAction` with `intent` field (draft/publish in one write)
-- Implemented `setPublishedAction` (Unpublish-only standalone form)
-- Implemented `deleteGuideAction` with confirm dialog
-- ISR revalidation after every save via `lib/revalidate.ts`
-- Fixed stale `defaultValue` on same-URL redirect (timestamp in URL + `key` on outer component)
-- Fixed duplicate React key warning (removed redundant inner keys)
+### Phase 4 — Step Management ✅
+Inline step CRUD, reorder (up/down), router.refresh pattern.
+
+### Phase 4.5–4.6 — Visual Identity + Content Standard ✅
+Navy/brass tokens, CategoryIcon, RouteSnapshot, StepCard, GuideHeader.
+Real guide content. Content writing standard locked in CLAUDE.md.
+
+### Phase 4.7–4.8 — Group Pages ✅
+Tab-based group pages for spouse/child family visas. GuideTabs component.
+Redirects from individual slugs to group page.
+
+### Phase 4.9–4.12 — Strategic Planning + UX Components ✅
+RouteSnapshot, RouteSnapshotBand, QuickDecisionCards, strategic docs.
+
+### Phase 5.x — Content Pillars Live (15 guides) ✅
+All three content pillars published:
+- Visas (9 guides including group pages)
+- Business Setup (3 guides)
+- Government (3 guides)
+
+Hub pages live: /visas, /visas/family, /visas/golden, /company-setup, /government.
+PrimaryServices, Hero, HowItWorks, FreeAdviceCta, Footer, BrowseByService.
+
+### Phase 7 — Calculator / Route Finder ✅
+/find-my-visa live — 6 question nodes, 13 resolution states, config-first.
+All 15 guide slugs wired. Supporting service injection.
+
+### Phase 8 (UX) — UX + Copy + Visibility Redesign ✅
+Phase 3+4 UX pass: copy compression, gray-500→600, WhatsApp header,
+golden visa 4-route hub, maid visa WhatsApp link, all hubs active.
+
+### Phase 8 (Content) — Guide Content Compression ✅
+Phase 5 content cleanup: 34 DB writes across 14 guides.
+Summaries, audiences, overviews, step titles, advice/warning all tightened.
+
+### Phase 9 — Launch-Readiness ✅
+sitemap.xml, robots.txt, metadataBase, permanent redirects (301),
+.gitignore fix, .env.example, deployment docs, build verified (35 pages).
+
+### Phase 9b — Launch-Prep Audit ✅
+Guide list: removed 4 redirect-slug duplicates, injected 2 group page entries.
+Calculator: GROUP_HREFS — canonical URLs for family visa results.
+Visas hub: added outside-UAE employment visa card.
+
+### Phase 10 — Guidex Consulting Brand Integration ✅
+All "Dubai Guide" text replaced with "Guidex Consulting" across 14 files.
+Header logo replaced with `<Image>` from `public/brand/logo-header.png` (480×120).
+Favicon, icon.png, apple-icon.png all replaced with Guidex brand assets.
+Build verified: 37 pages, 0 errors.
 
 ---
 
-## Current Phase
+## Next Steps (priority order)
 
-### Phase 4 — Step Management (IN PROGRESS)
+### 1. Pre-launch git cleanup ← DO FIRST
+```bash
+git rm --cached data/guides.db
+git commit -m "chore: untrack guides.db — managed outside version control"
+```
+The DB is currently tracked in git (was committed before .gitignore was updated).
+This does not delete the local database file.
 
-Add inline step CRUD to the guide edit page.
+### 2. Deploy to Cloudways
+Full guide: `docs/deployment-cloudways.md`
+Steps: git pull, npm install, npm run build, PM2, nginx proxy, .env.local.
 
-**Scope:**
-- [ ] List existing steps below guide fields in `/admin/guides/[slug]`
-- [ ] Add step button (appends new step at end)
-- [ ] Edit each step: EN fields (title, what, where, address, advice, warning), RU fields, cost, time_est
-- [ ] Delete step (confirm dialog)
-- [ ] Reorder steps: up/down buttons (swap integer `step_order`)
-- [ ] Server Actions: `createStepAction`, `updateStepAction`, `deleteStepAction`, `reorderStepAction`
-- [ ] ISR revalidation after every step change
+### 3. DNS + SSL
+Point domain to Cloudways IP. Let's Encrypt via Cloudways.
+Set NEXT_PUBLIC_SITE_URL and NEXTAUTH_URL in .env.local on server.
 
-**Design constraint:** Steps appear as an inline list below the guide form. No separate page. No drag-and-drop in v1 (up/down buttons are sufficient).
-
----
-
-## Next Phase
-
-### Phase 5 — Russian Language (PUBLIC RENDERING)
-
-Currently, Russian content fields are stored in the DB and editable in the admin, but the public site always renders English.
-
-**Scope:**
-- [ ] Add locale routing to public pages (`/guides/[slug]` = EN, `/ru/guides/[slug]` = RU)
-- [ ] Add `next-intl` (or similar) for locale context
-- [ ] Add language switcher to public `Header.tsx`
-- [ ] Update `reader.ts` to accept a locale parameter
-- [ ] EN fallback when RU field is empty
-- [ ] Update `generateStaticParams` to generate both locale variants
-- [ ] Update SEO metadata per locale
+### 4. Verify social handles
+Contact page links to instagram.com/dubaiguide and facebook.com/dubaiguide.
+Confirm these are registered handles or update to correct URLs.
 
 ---
 
 ## Later Phases
 
-### Phase 6 — RU Content Drafting via Claude API
-- Add "Generate RU draft from EN" button to admin guide edit form
-- Calls Claude API to populate `ru_*` fields with a draft translation
-- Fields remain editable before saving
-- Requires: stable EN content workflow (Phase 4 complete)
+### Russian Language (Public Rendering)
+- Locale routing: /guides/[slug] (EN), /ru/guides/[slug] (RU)
+- Language switcher in Header.tsx
+- reader.ts: accept locale param, EN fallback for empty RU fields
+- generateStaticParams: generate both locale variants
+- Requires: stable EN content and deployment first
 
-### Phase 7 — Sitemap + Structured Data
-- Generate `sitemap.xml` from published guides (DB query at build or dynamic route)
-- Add JSON-LD structured data per guide page
-- Add Open Graph image (og:image) per guide or a global default
+### RU Content Drafting via Claude API
+- "Generate RU draft from EN" button in admin
+- Calls Claude API to populate ru_* fields
+- Fields editable before saving
+- Requires: Russian routing live first
 
-### Phase 8 — Cloudways Deployment
-- Set up Node.js app on Cloudways
-- Configure `NEXTAUTH_URL` and credentials in production `.env.local`
-- Copy `data/guides.db` to server
-- Set up `npm run build && npm start` or PM2
-- Verify public URLs, admin login, ISR revalidation in production
-- Set up `data/guides.db` backup (cron job)
+### Analytics
+- Plausible Analytics recommended (no cookie consent, lightweight, UAE-safe)
+- Add after domain is live and confirmed
 
-### Phase 9 — Step Reorder v2 (Optional)
-- Replace up/down buttons with drag-and-drop using `@dnd-kit/sortable`
-- Only if up/down buttons feel too slow in practice
+### Structured Data (JSON-LD)
+- Add HowTo schema per guide page
+- Add Organization schema on homepage
+- Improves rich result eligibility in Google
 
-### Phase 10 — Multi-guide Content + Category Pages
-- Add more guides across all five categories
-- Add category index pages (`/guides/category/visas`, etc.)
-- Internal linking between related guides
-- Guide count is the primary SEO growth driver
+### OpenGraph Image
+- Global og:image (site logo or branded card)
+- Per-guide og:image (optional — branded card with title/fees)
+
+### New Content — Priority Queue
+- Maid Visa / Domestic Worker guide (currently WhatsApp link in PrimaryServices)
+- Golden Visa — Professional route guide
+- Golden Visa — Business Investor guide
+- Emirates ID renewal guide
+- Driving license transfer guide
+
+### Rate Limiting / Scraping Friction
+- After traffic justifies it
+- Max 60 req/min per IP via nginx or Next.js middleware
+- See docs/anti-copy-friction-plan.md
+
+### Step Reorder v2 (Optional)
+- Drag-and-drop via @dnd-kit/sortable if up/down buttons feel slow

@@ -5,6 +5,46 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-27 — Real domain launch + final smoke test (Phase 12)
+
+**guidex-consulting.ae is LIVE.**
+
+**Steps completed:**
+- DNS A record set in Tasjeel: guidex-consulting.ae → 157.245.207.99; www CNAME → apex
+- Cloudways primary domain: guidex-consulting.ae; additional: www.guidex-consulting.ae
+- Server .env.local updated: NEXT_PUBLIC_SITE_URL + NEXTAUTH_URL → https://guidex-consulting.ae (Python-safe update, backup created first)
+- `npm run build` on server — rebuild required for NEXT_PUBLIC_SITE_URL bake-in
+- PM2 restarted with --update-env
+- SSL Let's Encrypt installed for guidex-consulting.ae + www.guidex-consulting.ae
+- Production DB backed up locally: backups/production-db/guides.db.20260427-223918
+
+**Final smoke test (all HTTPS — 200):**
+- https://guidex-consulting.ae/ ✅
+- https://guidex-consulting.ae/guides ✅
+- https://guidex-consulting.ae/guides/employment-visa ✅
+- https://guidex-consulting.ae/guides/golden-visa-dubai-property ✅
+- https://guidex-consulting.ae/contact ✅
+- https://guidex-consulting.ae/admin/login ✅
+- https://guidex-consulting.ae/robots.txt ✅
+- https://guidex-consulting.ae/sitemap.xml ✅
+- https://www.guidex-consulting.ae/ ✅
+
+**Homepage confirmed:** Next.js Guidex (title: "Guidex Consulting — Step-by-step guides for living and working in Dubai")
+
+**Remaining item:** HTTP → HTTPS redirect not yet enabled (Cloudways panel toggle). HTTP returns 200 instead of 301.
+
+---
+
+## 2026-04-27 — Admin auth debug + fix (production)
+
+**Problem:** Admin login returned "Invalid email or password" despite bcrypt compare being true.
+**Root cause:** `reset-admin-credentials.sh` wrote the bcrypt hash with bare `$` signs to `.env.local`. The debug script read the file directly (bypassing dotenv-expand) so bcrypt compared true. But Next.js loads `.env.local` through `dotenv-expand`, which treats `$<letters>` as env var references and expands them to empty string — corrupting the hash.
+**Fix:** `runtime-env-diag.sh` — used `@next/env loadEnvConfig` to confirm corruption, re-escaped every `$` as `\$` in .env.local, PM2 restarted, NextAuth callback returned success.
+
+**Rule confirmed:** bcrypt hashes in .env.local MUST escape `$` as `\$`. This is now documented in CLAUDE.md.
+
+---
+
 ## 2026-04-27 — Backup/sync workflow + deployment docs (Phase 11 completion)
 
 **Files created/updated:**

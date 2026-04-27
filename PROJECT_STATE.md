@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-27 (Cloudways live + backup/sync workflow established)
+Last updated: 2026-04-27 (guidex-consulting.ae LIVE with HTTPS — Phase 12 complete)
 
 ---
 
@@ -167,36 +167,41 @@ Group pages live:
 
 ## Deployment Status
 
-**Phase 11 complete (2026-04-27). Site is live on Cloudways temporary URL.**
+**Phase 12 complete (2026-04-27). Site is LIVE on real domain with HTTPS.**
 
 | Item | Status |
 |---|---|
 | Server | Cloudways DigitalOcean — 157.245.207.99 |
 | App ID | dgcmdxxpjx |
-| Temporary URL | https://phpstack-1618074-6379172.cloudwaysapps.com/ |
-| Final domain | https://guidex-consulting.ae (NOT connected yet) |
+| Temporary URL | https://phpstack-1618074-6379172.cloudwaysapps.com/ (still active, unused) |
+| Production domain | https://guidex-consulting.ae ✅ LIVE |
+| WWW | https://www.guidex-consulting.ae ✅ LIVE |
+| SSL | Let's Encrypt — installed for both apex + www |
+| HTTP → HTTPS redirect | ⚠️ NOT yet configured — HTTP returns 200 (enable in Cloudways panel) |
 | Node | v20.20.2 via nvm under master user |
-| PM2 | guidex-production — online, 0 restarts |
+| PM2 | guidex-production — online |
 | App path | /home/master/applications/dgcmdxxpjx/public_html |
-| data/guides.db | Uploaded (124K), backed up locally |
-| .env.local on server | 5 vars set, permissions 600 |
+| data/guides.db | Backed up locally: `backups/production-db/guides.db.20260427-223918` |
+| .env.local on server | NEXT_PUBLIC_SITE_URL + NEXTAUTH_URL → guidex-consulting.ae |
 | mod_proxy_http | Enabled by Cloudways Support |
-| Smoke test | 8/8 routes 200 — Next.js confirmed serving |
+| Smoke test (real domain) | 8/8 HTTPS routes 200 ✅ — Next.js confirmed serving |
+| GitHub | c7288f1 — up to date |
 
 ---
 
 ## Current Next Step
 
-**Remaining before DNS/SSL and real domain switch:**
-1. Verify admin panel works end-to-end in browser at temporary URL (`/admin/login`)
-2. When ready to go live:
-   - Update server `.env.local`: `NEXT_PUBLIC_SITE_URL` and `NEXTAUTH_URL` → `https://guidex-consulting.ae`
-   - `npm run build` on server (NEXT_PUBLIC_* are baked at build time)
-   - `pm2 restart guidex-production`
-   - Point DNS A record for `guidex-consulting.ae` → `157.245.207.99`
-   - Enable SSL on Cloudways panel
-   - Final smoke test on real domain
-4. Add Plausible analytics (after domain is live)
+1. **Enable HTTP → HTTPS redirect** in Cloudways Panel:
+   - Application → SSL → toggle "Force HTTPS Redirect" (or similar)
+   - Verify: `curl -sI http://guidex-consulting.ae/` returns 301/302 → https://guidex-consulting.ae/
+
+2. **Add Plausible analytics** (domain is now live)
+
+3. **Submit sitemap to Google Search Console**:
+   - Property: guidex-consulting.ae
+   - Sitemap URL: https://guidex-consulting.ae/sitemap.xml
+
+4. **Verify admin panel end-to-end** at https://guidex-consulting.ae/admin/login
 
 Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 live (Maid Visa now WhatsApp link). Calculator: all 13 resolution states covered.
 
@@ -251,6 +256,8 @@ Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 li
 | Phase 9 | Phase 6 launch-readiness: sitemap.xml, robots.txt, metadataBase, permanent redirects, DB gitignore, .env.example, deployment docs, build verified (35 pages, 0 errors) | ✅ |
 | Phase 9b | Launch-prep audit: guide list redirect-slug fix, calculator GROUP_HREFS, visas hub outside-UAE employment visa card | ✅ |
 | Phase 10 | Guidex Consulting brand integration: all "Dubai Guide" text replaced, logo image in header, favicons replaced, all metadata titles updated, manifest.webmanifest added, all assets RGB-optimized, build verified (38 pages, 0 errors) | ✅ |
+| Phase 11 | Cloudways deployment live on temporary URL: nvm + Node 20 + PM2, rsync deploy, DB upload, Apache proxy, mod_proxy_http enabled by Support, smoke test 8/8 ✅ | ✅ |
+| Phase 12 | Real domain launch: guidex-consulting.ae live with HTTPS + www, DNS A record → 157.245.207.99, SSL Let's Encrypt, rebuild + PM2 restart, smoke test 8/8 ✅, production DB backup ✅ | ✅ |
 
 ---
 
@@ -273,7 +280,9 @@ Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 li
 - `data/guides.db` must exist on the server filesystem (writable, persistent)
 - Backup = copy `data/guides.db` to a safe location
 - `NEXTAUTH_URL` must be set to the production domain in `.env.local` on server
-- No deployment has been done yet
+- NEXT_PUBLIC_SITE_URL and NEXTAUTH_URL → https://guidex-consulting.ae
+- Rebuild ran on server after domain switch — NEXT_PUBLIC_* baked into static output
+- `./scripts/db-backup-from-server.sh` — pulls production DB, last run 2026-04-27-223918
 
 ---
 

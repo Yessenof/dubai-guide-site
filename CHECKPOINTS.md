@@ -5,6 +5,41 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-11 — Phase 12: guidex-consulting.ae live with HTTPS
+
+**Date:** 2026-04-27
+
+**What is confirmed stable:**
+
+*Domain and SSL:*
+- Primary domain: https://guidex-consulting.ae — SSL Let's Encrypt ✅
+- WWW: https://www.guidex-consulting.ae ✅
+- DNS: A record → 157.245.207.99 (Tasjeel), www CNAME → apex
+- HTTP → HTTPS redirect: NOT yet configured (enable in Cloudways panel)
+
+*Server:*
+- .env.local: NEXT_PUBLIC_SITE_URL + NEXTAUTH_URL → https://guidex-consulting.ae
+- Rebuild completed on server after domain switch
+- PM2 guidex-production — online, --update-env applied
+- Admin login: working at https://guidex-consulting.ae/admin/login
+
+*Smoke test (all HTTPS, all 200):*
+- / /guides /guides/employment-visa /guides/golden-visa-dubai-property
+- /contact /admin/login /robots.txt /sitemap.xml /www apex
+
+*Production DB backup:*
+- backups/production-db/guides.db.20260427-223918
+
+*GitHub:*
+- Commit c7288f1 — all code, docs, scripts, and memory files pushed
+
+**Remaining before full launch hardening:**
+1. Enable HTTP → HTTPS redirect in Cloudways panel
+2. Submit sitemap to Google Search Console
+3. Add Plausible analytics
+
+---
+
 ## CP-10 — Phase 11: Cloudways deployment live on temporary URL
 
 **Date:** 2026-04-27

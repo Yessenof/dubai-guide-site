@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-04-25
+Last updated: 2026-04-27
 
 WHAT TO ATTACH
 --------------
@@ -19,22 +19,14 @@ I'm continuing work on a Next.js Dubai guide site (Guidex Consulting). Please
 read CLAUDE.md, PROJECT_STATE.md, and NEW_CHAT_TRANSFER.txt first before doing
 anything.
 
-The site is LIVE on Cloudways at:
-https://phpstack-1618074-6379172.cloudwaysapps.com/
+The site is LIVE on the real domain:
+https://guidex-consulting.ae/
 
 Server: 157.245.207.99 — app ID dgcmdxxpjx
 SSH: master_udndspcyhr@157.245.207.99 (ControlMaster socket required)
 App path: /home/master/applications/dgcmdxxpjx/public_html
 Node: v20.20.2 via nvm — PM2: guidex-production (online)
-Real domain (NOT connected yet): https://guidex-consulting.ae
-
-The immediate next step is connecting the real domain:
-1. Update server .env.local (NEXT_PUBLIC_SITE_URL + NEXTAUTH_URL → guidex-consulting.ae)
-2. npm run build on server
-3. pm2 restart guidex-production
-4. Point DNS A record for guidex-consulting.ae → 157.245.207.99
-5. Enable SSL on Cloudways panel
-6. Final smoke test
+GitHub: c7288f1 (main) — all code, docs, scripts, memory files committed
 
 Do not start building until you have confirmed you understand the current
 architecture, the admin QA rules, and the project memory maintenance requirement.
@@ -47,11 +39,11 @@ SQLite. No external services.
 Stack: Next.js 16.2.3 (App Router, Turbopack) + TypeScript + Tailwind CSS v4 +
 better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
 
-CURRENT STATE (as of 2026-04-25)
+CURRENT STATE (as of 2026-04-27)
 ---------------------------------
-All phases complete through Phase 6 (launch-readiness). 15 guides published.
+Site is fully live on guidex-consulting.ae with HTTPS. 15 guides published.
 
-Visas (8/9 live):
+Visas (9/9 live):
   - employment-visa                                published (inside-country)
   - employment-visa-dubai-outside-uae              published (outside-country)
   - child-dependent-visa-dubai-outside-country     published
@@ -73,16 +65,17 @@ Government (3/3 live):
   - amer-center-dubai                              published
   - pro-services-dubai                             published
 
-CURRENT NEXT STEP
------------------
-Phase 6 complete. Site is launch-ready.
+CURRENT NEXT STEPS
+------------------
+1. Enable HTTP → HTTPS redirect in Cloudways panel
+   (HTTP currently returns 200 instead of 301)
 
-Pre-launch actions (in order):
-1. git rm --cached data/guides.db && git commit   <- untrack DB from git
-2. Deploy to Cloudways -- follow docs/deployment-cloudways.md
-3. Set NEXT_PUBLIC_SITE_URL and NEXTAUTH_URL in .env.local on server
-4. DNS + SSL on Cloudways
-5. Add Plausible analytics (after domain is live)
+2. Submit sitemap to Google Search Console:
+   https://guidex-consulting.ae/sitemap.xml
+
+3. Add Plausible analytics
+
+4. Continue content: next priority guides (maid visa, or employer-side hiring guide)
 
 RULES THAT MUST NOT BE BROKEN
 ------------------------------
@@ -97,6 +90,8 @@ RULES THAT MUST NOT BE BROKEN
 4. serverExternalPackages: ["better-sqlite3"] in next.config.ts. Must stay.
 
 5. bcrypt hash in .env.local: escape $ as \$ to prevent dotenv-expand corruption.
+   CONFIRMED BUG HISTORY: reset script wrote bare $ → dotenv-expand corrupted hash
+   → authorize() returned null → 401. Fixed by re-escaping in runtime-env-diag.sh.
 
 6. React key rule: outer <GuideEditForm key={saved ?? "init"}> handles remount.
    Inner siblings must not carry the same key value.
@@ -115,6 +110,20 @@ RULES THAT MUST NOT BE BROKEN
 10. After every meaningful step, update PROJECT_STATE.md, SESSION_LOG.md,
     and CHECKPOINTS.md before declaring done.
 
+11. NEXT_PUBLIC_SITE_URL is baked at build time. Any domain change requires
+    updating .env.local on server AND running npm run build before PM2 restart.
+
+DEPLOYMENT FACTS (locked)
+--------------------------
+- Code source of truth: GitHub (Yessenof/dubai-guide-site)
+- Production DB source of truth: local backups/production-db/ (pull before every deploy)
+- Secrets: out-of-band, never committed
+- DB backup script: ./scripts/db-backup-from-server.sh
+- DB restore script: ./scripts/db-restore-to-server.sh (requires typed YES)
+- Deploy: rsync -avz source to /home/master/applications/dgcmdxxpjx/public_html/
+- Start script on server: ~/start-guidex.sh (sources nvm, cd to app, PORT=3000)
+- Admin auth debug: ./scripts/runtime-env-diag.sh (tests @next/env loadEnvConfig)
+
 SCRIPT PATTERN FOR GUIDE CREATION
 -----------------------------------
 - Create a named script in scripts/ (e.g. create-employment-visa-outside-country.ts)
@@ -127,5 +136,6 @@ SCRIPT PATTERN FOR GUIDE CREATION
 
 LAST VERIFIED STABLE STATE
 ---------------------------
-CP-09 (2026-04-25): Phase 6 complete. Build clean -- 35 pages, 0 errors.
-sitemap.xml and robots.txt live. metadataBase set. 15 guides published.
+CP-11 (2026-04-27): guidex-consulting.ae LIVE with HTTPS. Build clean -- 38 pages.
+Smoke test 9/9 routes 200. Admin login working. Production DB backed up.
+GitHub c7288f1. HTTP→HTTPS redirect pending (Cloudways panel toggle).

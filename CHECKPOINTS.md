@@ -5,23 +5,50 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
-## CP-11 — Phase 12: guidex-consulting.ae live with HTTPS
+## CP-12 — Server recovery complete, guidex-consulting.ae fully live
 
-**Date:** 2026-04-27
+**Date:** 2026-04-28
 
 **What is confirmed stable:**
+
+*Recovered server:*
+- Cloudways — Recovered-guidex-main-server — IP: 165.245.187.15
+- SSH user: master_asumzwhebx
+- App path: /home/master/applications/dgcmdxxpjx/public_html
+- Node v20.20.2 via nvm, PM2 guidex-production online
+- mod_proxy_http, proxy_module, proxy_fcgi_module re-enabled by Cloudways Support
+- All project files, .env.local, data/guides.db, .next build survived recovery
 
 *Domain and SSL:*
 - Primary domain: https://guidex-consulting.ae — SSL Let's Encrypt ✅
 - WWW: https://www.guidex-consulting.ae ✅
-- DNS: A record → 157.245.207.99 (Tasjeel), www CNAME → apex
-- HTTP → HTTPS redirect: NOT yet configured (enable in Cloudways panel)
+- DNS: A record → 165.245.187.15 (updated in Tasjeel after recovery)
+- HTTP → HTTPS redirect: ✅ Enabled
 
-*Server:*
-- .env.local: NEXT_PUBLIC_SITE_URL + NEXTAUTH_URL → https://guidex-consulting.ae
-- Rebuild completed on server after domain switch
-- PM2 guidex-production — online, --update-env applied
-- Admin login: working at https://guidex-consulting.ae/admin/login
+*GitHub:*
+- Commit fea9411 — all scripts updated to new IP/SSH user
+
+**Remaining:**
+1. Fresh production DB backup after stable recovery
+2. Submit sitemap to Google Search Console
+3. Add Plausible analytics
+
+---
+
+## CP-11 — Phase 12: guidex-consulting.ae live with HTTPS (original server)
+
+**Date:** 2026-04-27
+
+**What was confirmed stable:**
+
+*Domain and SSL:*
+- Primary domain: https://guidex-consulting.ae — SSL Let's Encrypt ✅
+- WWW: https://www.guidex-consulting.ae ✅
+- DNS was: A record → 157.245.207.99 (Tasjeel) — **old IP, server later suspended**
+- HTTP → HTTPS redirect: enabled
+
+*Server at time of CP (later suspended by Cloudways):*
+- IP: 157.245.207.99 — SSH user: master_udndspcyhr
 
 *Smoke test (all HTTPS, all 200):*
 - / /guides /guides/employment-visa /guides/golden-visa-dubai-property
@@ -32,11 +59,6 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 *GitHub:*
 - Commit c7288f1 — all code, docs, scripts, and memory files pushed
-
-**Remaining before full launch hardening:**
-1. Enable HTTP → HTTPS redirect in Cloudways panel
-2. Submit sitemap to Google Search Console
-3. Add Plausible analytics
 
 ---
 

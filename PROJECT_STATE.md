@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-27 (guidex-consulting.ae LIVE with HTTPS — Phase 12 complete)
+Last updated: 2026-04-28 (Server recovery complete — new IP 165.245.187.15, site live)
 
 ---
 
@@ -171,37 +171,39 @@ Group pages live:
 
 | Item | Status |
 |---|---|
-| Server | Cloudways DigitalOcean — 157.245.207.99 |
+| Server | Cloudways — Recovered-guidex-main-server — 165.245.187.15 |
+| SSH user | master_asumzwhebx |
 | App ID | dgcmdxxpjx |
-| Temporary URL | https://phpstack-1618074-6379172.cloudwaysapps.com/ (still active, unused) |
+| Temporary URL | https://phpstack-1618074-6379172.cloudwaysapps.com/ |
 | Production domain | https://guidex-consulting.ae ✅ LIVE |
 | WWW | https://www.guidex-consulting.ae ✅ LIVE |
 | SSL | Let's Encrypt — installed for both apex + www |
-| HTTP → HTTPS redirect | ⚠️ NOT yet configured — HTTP returns 200 (enable in Cloudways panel) |
+| HTTP → HTTPS redirect | ✅ Enabled |
 | Node | v20.20.2 via nvm under master user |
 | PM2 | guidex-production — online |
 | App path | /home/master/applications/dgcmdxxpjx/public_html |
 | data/guides.db | Backed up locally: `backups/production-db/guides.db.20260427-223918` |
 | .env.local on server | NEXT_PUBLIC_SITE_URL + NEXTAUTH_URL → guidex-consulting.ae |
-| mod_proxy_http | Enabled by Cloudways Support |
+| mod_proxy_http | Re-enabled by Cloudways Support after recovery |
+| DNS A record | guidex-consulting.ae → 165.245.187.15 (updated after recovery) |
 | Smoke test (real domain) | 8/8 HTTPS routes 200 ✅ — Next.js confirmed serving |
-| GitHub | c7288f1 — up to date |
+| GitHub | fea9411 — up to date |
+
+**Recovery note (2026-04-28):** Server was suspended/recovered by Cloudways. New IP assigned (165.245.187.15), new SSH user (master_asumzwhebx). App files, .env.local, data/guides.db, and .next build survived the recovery. mod_proxy_http modules were re-enabled by Cloudways Support. DNS A record updated in Tasjeel to new IP.
 
 ---
 
 ## Current Next Step
 
-1. **Enable HTTP → HTTPS redirect** in Cloudways Panel:
-   - Application → SSL → toggle "Force HTTPS Redirect" (or similar)
-   - Verify: `curl -sI http://guidex-consulting.ae/` returns 301/302 → https://guidex-consulting.ae/
+1. **Add Plausible analytics** (domain is live)
 
-2. **Add Plausible analytics** (domain is now live)
-
-3. **Submit sitemap to Google Search Console**:
+2. **Submit sitemap to Google Search Console**:
    - Property: guidex-consulting.ae
    - Sitemap URL: https://guidex-consulting.ae/sitemap.xml
 
-4. **Verify admin panel end-to-end** at https://guidex-consulting.ae/admin/login
+3. **Verify admin panel end-to-end** at https://guidex-consulting.ae/admin/login
+
+4. **Run fresh production DB backup** now that server is stable: `./scripts/db-backup-from-server.sh`
 
 Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 live (Maid Visa now WhatsApp link). Calculator: all 13 resolution states covered.
 

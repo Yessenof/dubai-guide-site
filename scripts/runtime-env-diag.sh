@@ -14,8 +14,8 @@
 
 set -uo pipefail
 
-SSH_USER="master_udndspcyhr"
-SERVER="157.245.207.99"
+SSH_USER="master_asumzwhebx"
+SERVER="165.245.187.15"
 SOCKET="$HOME/.ssh/cm/guidex-cloudways.sock"
 APP="/home/master/applications/dgcmdxxpjx/public_html"
 BASE_URL="https://phpstack-1618074-6379172.cloudwaysapps.com"

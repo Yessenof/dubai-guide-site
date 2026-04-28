@@ -18,9 +18,9 @@
 | Item | Value |
 |---|---|
 | Provider | Cloudways DigitalOcean |
-| Server IP | 157.245.207.99 |
+| Server IP | 165.245.187.15 |
 | App ID | dgcmdxxpjx |
-| SSH user | master_udndspcyhr |
+| SSH user | master_asumzwhebx |
 | SSH socket | `~/.ssh/cm/guidex-cloudways.sock` |
 | App path | `/home/master/applications/dgcmdxxpjx/public_html` |
 | DB path | `/home/master/applications/dgcmdxxpjx/public_html/data/guides.db` |
@@ -40,13 +40,13 @@ Establish it once per session in your macOS Terminal:
 
 ```bash
 mkdir -p ~/.ssh/cm
-ssh -fNM -S ~/.ssh/cm/guidex-cloudways.sock -o StrictHostKeyChecking=no master_udndspcyhr@157.245.207.99
+ssh -fNM -S ~/.ssh/cm/guidex-cloudways.sock -o StrictHostKeyChecking=no master_asumzwhebx@165.245.187.15
 # enter password when prompted
 ```
 
 All subsequent commands use:
 ```bash
-ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99 '<command>'
+ssh -S ~/.ssh/cm/guidex-cloudways.sock master_asumzwhebx@165.245.187.15 '<command>'
 ```
 
 ---
@@ -91,20 +91,20 @@ The app starts via `~/start-guidex.sh` which sources nvm before running `npm sta
 
 ```bash
 # Start (first deploy or after server reboot)
-ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99 '
+ssh -S ~/.ssh/cm/guidex-cloudways.sock master_asumzwhebx@165.245.187.15 '
   export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
   pm2 start ~/start-guidex.sh --name guidex-production
   pm2 save
 '
 
 # Restart (after deploy)
-ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99 '
+ssh -S ~/.ssh/cm/guidex-cloudways.sock master_asumzwhebx@165.245.187.15 '
   export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
   pm2 restart guidex-production
 '
 
 # Check status and logs
-ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99 '
+ssh -S ~/.ssh/cm/guidex-cloudways.sock master_asumzwhebx@165.245.187.15 '
   export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
   pm2 status
   pm2 logs guidex-production --lines 30 --nostream
@@ -134,10 +134,10 @@ rsync -avz \
   --exclude='.DS_Store' \
   --exclude='.git/' \
   /Users/batyr/Desktop/dubai-guide-site/ \
-  master_udndspcyhr@157.245.207.99:/home/master/applications/dgcmdxxpjx/public_html/
+  master_asumzwhebx@165.245.187.15:/home/master/applications/dgcmdxxpjx/public_html/
 
 # 3. Install dependencies
-ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99 '
+ssh -S ~/.ssh/cm/guidex-cloudways.sock master_asumzwhebx@165.245.187.15 '
   export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
   nvm use 20 --silent
   cd /home/master/applications/dgcmdxxpjx/public_html
@@ -145,7 +145,7 @@ ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99 '
 '
 
 # 4. Build
-ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99 '
+ssh -S ~/.ssh/cm/guidex-cloudways.sock master_asumzwhebx@165.245.187.15 '
   export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
   nvm use 20 --silent
   cd /home/master/applications/dgcmdxxpjx/public_html
@@ -154,7 +154,7 @@ ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99 '
 '
 
 # 5. Restart
-ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99 '
+ssh -S ~/.ssh/cm/guidex-cloudways.sock master_asumzwhebx@165.245.187.15 '
   export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
   pm2 restart guidex-production
 '
@@ -171,17 +171,17 @@ Do this only when DNS and SSL are ready. NEXT_PUBLIC_* variables are baked at bu
 ./scripts/db-backup-from-server.sh
 
 # 2. Update .env.local on server
-ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99\
+ssh -S ~/.ssh/cm/guidex-cloudways.sock master_asumzwhebx@165.245.187.15\
   "sed -i 's|https://phpstack-1618074-6379172.cloudwaysapps.com|https://guidex-consulting.ae|g' \
   /home/master/applications/dgcmdxxpjx/public_html/.env.local"
 
 # Verify (keys only, not values):
-ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99 \
+ssh -S ~/.ssh/cm/guidex-cloudways.sock master_asumzwhebx@165.245.187.15 \
   "grep -E 'NEXT_PUBLIC_SITE_URL|NEXTAUTH_URL' \
   /home/master/applications/dgcmdxxpjx/public_html/.env.local | cut -d= -f1"
 
 # 3. Rebuild (mandatory — NEXT_PUBLIC_* are compile-time)
-ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99 '
+ssh -S ~/.ssh/cm/guidex-cloudways.sock master_asumzwhebx@165.245.187.15 '
   export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
   nvm use 20 --silent
   cd /home/master/applications/dgcmdxxpjx/public_html
@@ -190,13 +190,13 @@ ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99 '
 '
 
 # 4. Restart
-ssh -S ~/.ssh/cm/guidex-cloudways.sock master_udndspcyhr@157.245.207.99 '
+ssh -S ~/.ssh/cm/guidex-cloudways.sock master_asumzwhebx@165.245.187.15 '
   export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
   pm2 restart guidex-production
 '
 
 # 5. In Cloudways panel: add guidex-consulting.ae to the application
-# 6. Point DNS A record: guidex-consulting.ae → 157.245.207.99
+# 6. Point DNS A record: guidex-consulting.ae → 165.245.187.15
 # 7. In Cloudways panel: enable SSL (Let's Encrypt) for guidex-consulting.ae
 # 8. Smoke test on https://guidex-consulting.ae/
 ```

@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-04-27
+Last updated: 2026-04-28
 
 WHAT TO ATTACH
 --------------
@@ -22,11 +22,16 @@ anything.
 The site is LIVE on the real domain:
 https://guidex-consulting.ae/
 
-Server: 157.245.207.99 — app ID dgcmdxxpjx
-SSH: master_udndspcyhr@157.245.207.99 (ControlMaster socket required)
+Server: 165.245.187.15 — app ID dgcmdxxpjx (Recovered-guidex-main-server)
+SSH: master_asumzwhebx@165.245.187.15
 App path: /home/master/applications/dgcmdxxpjx/public_html
 Node: v20.20.2 via nvm — PM2: guidex-production (online)
-GitHub: c7288f1 (main) — all code, docs, scripts, memory files committed
+GitHub: fea9411 (main) — all code, docs, scripts, memory files committed
+
+NOTE: Server was suspended/recovered by Cloudways on 2026-04-28.
+New IP: 165.245.187.15 (old was 157.245.207.99)
+New SSH user: master_asumzwhebx (old was master_udndspcyhr)
+All scripts and docs updated to new values.
 
 Do not start building until you have confirmed you understand the current
 architecture, the admin QA rules, and the project memory maintenance requirement.
@@ -136,6 +141,7 @@ SCRIPT PATTERN FOR GUIDE CREATION
 
 LAST VERIFIED STABLE STATE
 ---------------------------
-CP-11 (2026-04-27): guidex-consulting.ae LIVE with HTTPS. Build clean -- 38 pages.
-Smoke test 9/9 routes 200. Admin login working. Production DB backed up.
-GitHub c7288f1. HTTP→HTTPS redirect pending (Cloudways panel toggle).
+CP-12 (2026-04-28): Server recovery complete. guidex-consulting.ae LIVE.
+New IP: 165.245.187.15. SSH: master_asumzwhebx. DNS updated. SSL active.
+mod_proxy_http re-enabled. HTTP→HTTPS redirect enabled. All scripts updated.
+GitHub fea9411. Run fresh DB backup when stable.

@@ -8,8 +8,8 @@ set -uo pipefail
 BASE_URL="https://phpstack-1618074-6379172.cloudwaysapps.com"
 EMAIL="zhanbatyresenov@gmail.com"
 SOCKET="$HOME/.ssh/cm/guidex-cloudways.sock"
-SSH_USER="master_udndspcyhr"
-SERVER="157.245.207.99"
+SSH_USER="master_asumzwhebx"
+SERVER="165.245.187.15"
 COOKIE_JAR=$(mktemp)
 trap 'rm -f "$COOKIE_JAR"' EXIT
 

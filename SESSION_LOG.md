@@ -5,6 +5,29 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-28 — Cloudways server recovery (new IP, new SSH user)
+
+**Problem:** Cloudways suspended/deleted the original server (157.245.207.99). Site went down.
+**Resolution:** Cloudways recovered the application onto a new server.
+
+**New server facts:**
+- IP: 165.245.187.15 (was: 157.245.207.99)
+- SSH user: master_asumzwhebx (was: master_udndspcyhr)
+- Server name: Recovered-guidex-main-server
+- App path: /home/master/applications/dgcmdxxpjx/public_html (unchanged)
+
+**Recovery steps:**
+- Confirmed app files, .env.local, data/guides.db, and .next build survived restore
+- Cloudways Support re-enabled proxy_module, proxy_http_module, proxy_fcgi_module
+- DNS A record updated in Tasjeel: guidex-consulting.ae → 165.245.187.15
+- HTTP → HTTPS redirect confirmed working (301)
+- Site smoke-tested: all HTTPS routes 200
+
+**Files updated:** All scripts, docs/deployment-cloudways.md, PROJECT_STATE.md,
+CHECKPOINTS.md, NEW_CHAT_TRANSFER.txt — old IP/SSH user replaced throughout.
+
+---
+
 ## 2026-04-27 — Real domain launch + final smoke test (Phase 12)
 
 **guidex-consulting.ae is LIVE.**

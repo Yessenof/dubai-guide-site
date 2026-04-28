@@ -13,8 +13,8 @@
 set -euo pipefail
 
 SOCKET="$HOME/.ssh/cm/guidex-cloudways.sock"
-SSH_USER="master_udndspcyhr"
-SERVER="157.245.207.99"
+SSH_USER="master_asumzwhebx"
+SERVER="165.245.187.15"
 SERVER_DB="/home/master/applications/dgcmdxxpjx/public_html/data/guides.db"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"

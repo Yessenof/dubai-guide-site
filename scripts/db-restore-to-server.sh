@@ -25,8 +25,8 @@ if [ ! -f "$LOCAL_DB" ]; then
 fi
 
 SOCKET="$HOME/.ssh/cm/guidex-cloudways.sock"
-SSH_USER="master_udndspcyhr"
-SERVER="157.245.207.99"
+SSH_USER="master_asumzwhebx"
+SERVER="165.245.187.15"
 APP_PATH="/home/master/applications/dgcmdxxpjx/public_html"
 SERVER_DB="$APP_PATH/data/guides.db"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)

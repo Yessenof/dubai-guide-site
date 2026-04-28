@@ -16,8 +16,8 @@
 
 set -uo pipefail
 
-SSH_USER="master_udndspcyhr"
-SERVER="157.245.207.99"
+SSH_USER="master_asumzwhebx"
+SERVER="165.245.187.15"
 SOCKET="$HOME/.ssh/cm/guidex-cloudways.sock"
 REAL_DOMAIN="https://guidex-consulting.ae"
 

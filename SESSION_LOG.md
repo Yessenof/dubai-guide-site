@@ -5,6 +5,24 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-28 — Strategic planning docs created (RU/EN SEO strategy + platform roadmap)
+
+**Five planning documents created:**
+
+1. `docs/platform-roadmap.md` — 8-phase forward roadmap with Russian as Phase 1 (business decision). Locked URL design: EN = `/guides/[slug]`, RU = `/ru/guides/[slug]`, no `/en/` prefix ever. Phase 1 implementation plan with routing, language switcher, hreflang/canonical, and first 12 pages to translate.
+
+2. `docs/seo-keyword-map-ru-en.md` — Keyword map for 5 clusters: A=Visa, B=Company setup, C=Bank account, D=Government, E=Relocation. Each keyword has language, priority label, page type, and target URL. Both EN and RU Cyrillic keywords. No invented search volumes.
+
+3. `docs/content-style-guide-ru-en.md` — Writing rules for all content fields. Em dash ban, short sentences, costs/timelines first, theatrical framing ban, AI verbosity ban. Bad/good examples in both English and Russian. RU-specific rules: do not translate English, use terms Russian professionals use, fees formatted "AED 2 500", lowercase "вы".
+
+4. `docs/ru-launch-plan.md` — Page-by-page plan for the 12 minimum RU launch pages. Each entry: RU URL, primary keyword, secondary keywords, title direction, meta description direction, content notes. Go/no-go criteria checklist included.
+
+5. `docs/content-audit-ai-tone.md` — Audit of all 15 published EN guides. Em dashes found in 11/15 guides. Priority fix queue: bank account (worst), mainland company, free zone, child visa summary, employment outside-UAE, then minor instances. One audience self-reference in mainland guide. No theatrical framing or AI verbosity remaining (prior pass cleaned those).
+
+**Memory files updated:** ROADMAP.md (forward phases added), PROJECT_STATE.md (next step updated to Phase 1 RU routing).
+
+---
+
 ## 2026-04-28 — Cloudways server recovery (new IP, new SSH user)
 
 **Problem:** Cloudways suspended/deleted the original server (157.245.207.99). Site went down.

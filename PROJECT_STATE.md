@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-28 (Server recovery complete — new IP 165.245.187.15, site live)
+Last updated: 2026-04-28 (Strategic planning docs created — RU/EN SEO strategy, platform roadmap, content audit)
 
 ---
 
@@ -195,15 +195,25 @@ Group pages live:
 
 ## Current Next Step
 
-1. **Add Plausible analytics** (domain is live)
+**Phase 1 — Russian language layer (NOW)**
 
-2. **Submit sitemap to Google Search Console**:
-   - Property: guidex-consulting.ae
-   - Sitemap URL: https://guidex-consulting.ae/sitemap.xml
+See `docs/platform-roadmap.md` Phase 1 for full implementation plan.
 
-3. **Verify admin panel end-to-end** at https://guidex-consulting.ae/admin/login
+1. **Implement `/ru/` routing** — `app/ru/` route group, `reader.ts` locale param, RU fallback to EN
+2. **Language switcher** in Header.tsx — shows when current page has a RU equivalent
+3. **hreflang + canonical** on all guide pages (EN and RU)
+4. **Translate first 12 pages** — see `docs/ru-launch-plan.md` for page-by-page plan
 
-4. **Run fresh production DB backup** now that server is stable: `./scripts/db-backup-from-server.sh`
+Pre-RU launch (pending):
+- Run fresh production DB backup: `./scripts/db-backup-from-server.sh`
+- Submit sitemap to Google Search Console: https://guidex-consulting.ae/sitemap.xml
+- Add Plausible analytics
+
+**Content fix queue (parallel with RU work):**
+- Fix em dashes in `open-business-bank-account-dubai` (steps 1–8)
+- Fix em dashes in `mainland-company-setup-dubai` (steps 1, 3, 4, 5) + audience self-reference
+- Fix em dashes in `free-zone-company-setup-dubai` (steps 2, 5, 8)
+- See `docs/content-audit-ai-tone.md` for full priority queue
 
 Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 live (Maid Visa now WhatsApp link). Calculator: all 13 resolution states covered.
 

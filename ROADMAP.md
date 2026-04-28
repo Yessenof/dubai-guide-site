@@ -1,6 +1,6 @@
 # Roadmap — Dubai Guide Site
 
-Last updated: 2026-04-25
+Last updated: 2026-04-28
 
 ---
 
@@ -133,3 +133,48 @@ Confirm these are registered handles or update to correct URLs.
 
 ### Step Reorder v2 (Optional)
 - Drag-and-drop via @dnd-kit/sortable if up/down buttons feel slow
+
+---
+
+## Forward Roadmap (Phase 1 onward — post-launch)
+
+Full detail in `docs/platform-roadmap.md`.
+
+### Phase 1 — Stability + Russian language layer ← CURRENT PRIORITY
+
+**1A. Runtime stability**
+- Production DB backup cron or monthly reminder
+- PM2 startup save
+- SSH ControlMaster socket documented
+
+**1B. RU public routing**
+- URL locked: EN = `/guides/[slug]`, RU = `/ru/guides/[slug]` (no `/en/` prefix ever)
+- `app/ru/` route group alongside `app/(public)/`
+- `reader.ts` accepts `locale` param
+
+**1C. Language switcher** — EN↔RU toggle in header
+
+**1D. hreflang + canonical** — per-page alternate links, sitemap alternates
+
+**1E. First 12 RU pages** — see `docs/ru-launch-plan.md`
+
+**1F. Admin RU workflow** — RU fields already in admin; translate manually first
+
+### Phase 2 — Content expansion
+- New EN guides: maid visa, golden visa professional/investor, Emirates ID, driving license, freelance permit
+- Structured data (HowTo, Organization, FAQ JSON-LD)
+- OpenGraph image
+
+### Phase 3 — News and articles system
+- `/news/[slug]` and `/ru/news/[slug]`
+- SQLite-backed, admin-managed, no auto-publish
+
+### Phase 4 — Tools and calculators
+- Route Finder already live (`/find-my-visa`)
+- Visa cost estimator, timeline estimator, company type selector
+
+### Phase 5–7 — User accounts, dashboards, PostgreSQL migration (conditional)
+- Only if confirmed business demand for user accounts
+
+### Phase 8 — Kazakh language
+- After Russian is stable and substantially complete

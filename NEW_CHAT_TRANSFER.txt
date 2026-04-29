@@ -73,13 +73,14 @@ CURRENT NEXT STEPS
    EN and RU homepages now both use 5 route-hub category cards.
    /ru/government created. PrimaryServices removed from homepage (file kept).
 
-2. RU content progress (3/9 done):
+2. RU content progress (4/9 done):
    - employment-visa: DONE (all ru_* fields, 8 steps)
    - golden-visa-dubai-property: DONE (all ru_* fields, 7 steps)
    - mainland-company-setup-dubai: DONE (all ru_* fields, 8 steps)
+   - free-zone-company-setup-dubai: DONE (all ru_* fields, 8 steps, 0 em-dashes)
 
    Remaining priority order:
-   free-zone-company-setup-dubai, open-business-bank-account-dubai, newborn-visa-dubai,
+   open-business-bank-account-dubai, newborn-visa-dubai,
    document-attestation-dubai, amer-center-dubai, pro-services-dubai
    See docs/ru-launch-plan.md for per-guide keyword/title/meta direction.
    Script pattern: scripts/add-ru-employment-visa.ts
@@ -185,3 +186,8 @@ already correct. Build 62 pages, 0 errors.
 CP-19 (2026-04-29): Homepage IA restructure. EN and RU homepages now both use
 5-card route-hub layout. /ru/government page created. PrimaryServices removed
 from EN homepage (file kept). Build 63 pages, 0 errors.
+
+CP-20 (2026-04-30): RU content for free-zone-company-setup-dubai live.
+All 8 step ru_* fields populated. 0 em-dashes. RU hreflang on EN page
+active. Sitemap includes /ru/guides/free-zone-company-setup-dubai.
+Build 63 pages, 0 errors.

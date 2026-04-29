@@ -205,12 +205,13 @@ Group pages live:
 - `PrimaryServices` removed from EN homepage import; file retained at `components/PrimaryServices.tsx`
 - Build: 63 pages, 0 errors
 
-**Next: resume RU content population**
+**RU content in progress (4/9 done)**
 - `employment-visa` complete (all ru_* fields populated, sitemap + hreflang active)
 - `golden-visa-dubai-property` complete (all ru_* fields populated, sitemap + hreflang active)
 - `mainland-company-setup-dubai` complete (all ru_* fields populated, sitemap + hreflang active)
+- `free-zone-company-setup-dubai` complete (all 8 step ru_* fields, sitemap + hreflang active, 0 em-dashes, build 63 pages 0 errors)
 - Remaining order from `docs/ru-launch-plan.md`:
-  free-zone-company-setup-dubai, open-business-bank-account-dubai, newborn-visa-dubai,
+  open-business-bank-account-dubai, newborn-visa-dubai,
   document-attestation-dubai, amer-center-dubai, pro-services-dubai
 - Once `ru_title` is non-empty for any guide, it appears in sitemap RU entries automatically
 
@@ -288,6 +289,7 @@ Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 li
 | RU content: mainland-company-setup-dubai | ru_title, ru_summary, ru_audience, ru_overview, all 8 steps populated. RU hreflang and sitemap entry active. Build: 62 pages, 0 errors. | ✅ |
 | RU locale navigation fix | Footer and StickyRouteCta made locale-aware. lib/locale-path.ts helper created. Audit confirmed TopicCard and GuideTabs already correct. Build: 62 pages, 0 errors. | ✅ |
 | Homepage IA restructure (CP-19) | EN and RU homepages now use matching 5-card route-hub layout. /ru/government created. PrimaryServices removed from EN homepage (file kept). Build: 63 pages, 0 errors. | ✅ |
+| RU content: free-zone-company-setup-dubai (CP-20) | ru_title, ru_summary, ru_audience, ru_overview, all 8 steps populated. 0 em-dashes. RU hreflang and sitemap entry active. Build: 63 pages, 0 errors. | ✅ |
 
 ---
 

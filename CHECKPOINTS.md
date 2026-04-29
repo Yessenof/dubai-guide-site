@@ -5,6 +5,24 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-20 — RU content: free-zone-company-setup-dubai
+
+**Date:** 2026-04-30
+
+**What is confirmed stable:**
+
+- `ru_title`, `ru_summary`, `ru_audience`, `ru_overview` populated for `free-zone-company-setup-dubai`
+- All 8 step `ru_*` fields populated (ru_title, ru_what, ru_where, ru_address, ru_advice, ru_warning)
+- 0 em-dashes in any RU field (initial draft had 6; fixed via targeted DB patch before commit)
+- EN fields unchanged
+- EN guide page: hreflang now includes `ru` alternate (triggered by non-empty `ru_title`)
+- Sitemap: `/ru/guides/free-zone-company-setup-dubai` entry present
+- `/ru/company-setup` hub: all 3 guide links intact (mainland, free-zone, bank-account)
+- Script: `scripts/add-ru-free-zone-company-setup.ts`
+- Build: 63 pages, 0 TypeScript errors
+
+---
+
 ## CP-19 — Homepage IA restructure: route-hub cards aligned across locales
 
 **Date:** 2026-04-29

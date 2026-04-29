@@ -5,6 +5,41 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-30 — RU content: free-zone-company-setup-dubai
+
+Populated all RU fields for the free zone company setup guide. 8/8 steps.
+
+**Script:** `scripts/add-ru-free-zone-company-setup.ts`
+
+**Guide-level fields set:**
+- `ru_title`: Открыть компанию в free zone в Дубае: лицензия, визы и банковский счёт
+- `ru_summary`: 4-sentence meta with zone selection warning, cost range (AED 6k–20k+)
+- `ru_audience`: Non-residents, online business, consulting, international trade, holding
+- `ru_overview`: 2 paragraphs. Para 1: free zone overview + zone selection risk. Para 2: timeline + post-license steps (establishment card, bank, visas, VAT, CT)
+
+**Steps populated:**
+1. Выбор free zone
+2. Выбор типа лицензии и вида деятельности
+3. Выбор пакета и визовой квоты
+4. Резервирование названия компании
+5. Подача заявки и документов
+6. Оплата сборов за регистрацию
+7. Получение лицензии и учредительных документов
+8. Первые шаги после получения лицензии
+
+**Em-dash fix:** Initial version had 6 em-dashes across steps 1/2/3/5/8 and overview. Fixed via targeted DB patch before commit. Final count: 0.
+
+**Verified:**
+- /ru/guides/free-zone-company-setup-dubai: 200, Russian H1, all 8 step H3 titles in Russian, 0 em-dashes
+- /guides/free-zone-company-setup-dubai: EN unchanged, hreflang now includes ru
+- Sitemap: /ru/guides/free-zone-company-setup-dubai entry present
+- /ru/company-setup: all 3 guide links intact (mainland, free-zone, bank-account)
+- Build: 63 pages, 0 TypeScript errors
+
+CP-20 added.
+
+---
+
 ## 2026-04-30 — Visual/UX smoke test after commit 1948214
 
 All 8 routes 200. No code changes. Findings recorded below.

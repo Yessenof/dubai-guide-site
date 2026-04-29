@@ -5,6 +5,42 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-29 — Fix: locale-aware navigation for RU pages
+
+Full audit of all public components generating guide/service links.
+
+**Bugs found and fixed:**
+- `Footer.tsx` — `/contact` → `/ru/contact` on RU pages; English labels → Russian ("О нас", "Контакты")
+- `StickyRouteCta.tsx` — English "Find My Route" / "Answer 2–3 quick questions" → Russian on RU pages
+
+**New helper:** `lib/locale-path.ts`
+- `getGuidePath(slug, locale)` — `/guides/slug` or `/ru/guides/slug`
+- `getLocalePath(path, locale)` — prefixes `/ru` when locale=ru
+- `getLocaleFromPathname(pathname)` — detects locale from URL
+
+**Audit findings — already correct (no changes):**
+- `TopicCard.tsx` — already locale-aware (locale prop, /ru/guides/ prefix)
+- `GuideTabs.tsx` — guidesHref already locale-aware; /find-my-visa stays EN (no RU equiv)
+- `Header.tsx` — already locale-aware (language switcher, RU_NAV/EN_NAV)
+- All RU-specific page-level links correct (hardcoded /ru/ in ru/ directory pages)
+
+**Audit findings — EN-only, not on RU pages (no fix needed):**
+- `PrimaryServices.tsx` — EN homepage only
+- `RouteSnapshotBand.tsx` — EN homepage only
+- `BrowseByService.tsx` — unused
+- `QuickDecisionCards.tsx` — unused
+- `RouteFinderFlow.tsx` — on /find-my-visa (EN-only page, no /ru/find-my-visa)
+
+**Verified:**
+- 6 RU pages: /ru/contact in footer, "Найти маршрут" in sticky CTA, no English sticky text
+- 4 EN pages: unaffected (/contact link, English sticky CTA)
+- Language switcher EN links on RU pages confirmed correct (Header alternatePath() behavior)
+- Build: 62 pages, 0 errors
+
+CP-18 added.
+
+---
+
 ## 2026-04-29 — Russian content: mainland-company-setup-dubai guide fully populated
 
 Created `scripts/add-ru-mainland-company.ts` — populates all ru_* fields for mainland-company-setup-dubai.

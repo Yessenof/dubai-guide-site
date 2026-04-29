@@ -176,3 +176,7 @@ ru_* fields populated. RU hreflang on EN page active. Sitemap includes
 CP-17 (2026-04-29): RU content for mainland-company-setup-dubai live. All 8 step
 ru_* fields populated. RU hreflang on EN page active. Sitemap includes
 /ru/guides/mainland-company-setup-dubai. Build 62 pages, 0 errors.
+
+CP-18 (2026-04-29): RU locale navigation fixed. Footer and StickyRouteCta now
+locale-aware. lib/locale-path.ts helper created. TopicCard and GuideTabs were
+already correct. Build 62 pages, 0 errors.

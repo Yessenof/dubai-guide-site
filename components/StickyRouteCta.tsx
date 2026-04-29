@@ -3,25 +3,21 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { getLocaleFromPathname } from "@/lib/locale-path";
 
-// Routes where the sticky CTA must not appear
 const HIDDEN_ON = ["/find-my-visa"];
-
-// Scroll distance (px) before the bar becomes visible
 const SCROLL_THRESHOLD = 100;
 
 export default function StickyRouteCta() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);
+  const isRu = getLocaleFromPathname(pathname) === "ru";
 
   useEffect(() => {
     function onScroll() {
       setVisible(window.scrollY > SCROLL_THRESHOLD);
     }
-
-    // Check immediately — handles page load while already scrolled
     onScroll();
-
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -47,10 +43,10 @@ export default function StickyRouteCta() {
       >
         <div className="min-w-0">
           <p className="text-[15px] font-semibold leading-tight">
-            Find My Route
+            {isRu ? "Найти маршрут" : "Find My Route"}
           </p>
           <p className="text-[12px] text-white/60 leading-tight mt-0.5">
-            Answer 2–3 quick questions
+            {isRu ? "Ответить на 2–3 вопроса" : "Answer 2–3 quick questions"}
           </p>
         </div>
         <span className="text-base text-white/80 flex-shrink-0">→</span>

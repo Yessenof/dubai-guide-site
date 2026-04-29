@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-29 (Russian mainland-company-setup-dubai guide content live — 3 of 9 priority RU guides done)
+Last updated: 2026-04-29 (locale-aware navigation fixed — Footer and StickyRouteCta now locale-aware; lib/locale-path.ts helper created)
 
 ---
 
@@ -281,6 +281,7 @@ Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 li
 | RU content: employment-visa | ru_title, ru_summary, ru_audience, ru_overview, all 8 steps populated. RU hreflang and sitemap entry active. Build: 62 pages, 0 errors. | ✅ |
 | RU content: golden-visa-dubai-property | ru_title, ru_summary, ru_audience, ru_overview, all 7 steps populated. RU hreflang and sitemap entry active. Build: 62 pages, 0 errors. | ✅ |
 | RU content: mainland-company-setup-dubai | ru_title, ru_summary, ru_audience, ru_overview, all 8 steps populated. RU hreflang and sitemap entry active. Build: 62 pages, 0 errors. | ✅ |
+| RU locale navigation fix | Footer and StickyRouteCta made locale-aware. lib/locale-path.ts helper created. Audit confirmed TopicCard and GuideTabs already correct. Build: 62 pages, 0 errors. | ✅ |
 
 ---
 

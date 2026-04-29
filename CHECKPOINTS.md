@@ -5,6 +5,25 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-18 — Locale-aware navigation fixed for RU pages
+
+**Date:** 2026-04-29
+
+**What is confirmed stable:**
+
+- `lib/locale-path.ts` created: `getGuidePath()`, `getLocalePath()`, `getLocaleFromPathname()`
+- `Footer.tsx` — locale-aware: `/ru/contact` link and Russian labels ("О нас", "Контакты") on RU pages
+- `StickyRouteCta.tsx` — locale-aware: shows "Найти маршрут / Ответить на 2–3 вопроса" on RU pages
+- 6 RU pages verified: `/ru/contact` in footer, Russian sticky CTA, no EN-only text
+- 4 EN pages verified: unaffected (`/contact` link, English sticky CTA)
+- `TopicCard.tsx` was already locale-aware (confirmed)
+- `GuideTabs.tsx` was already locale-aware for guide links (confirmed)
+- `PrimaryServices`, `RouteSnapshotBand`, `BrowseByService`, `QuickDecisionCards` — EN-only components, not used on RU pages, no change needed
+- `RouteFinderFlow` — EN-only page (`/find-my-visa`), no RU equiv exists, no change needed
+- Build: 62 pages, 0 errors
+
+---
+
 ## CP-17 — Russian mainland-company-setup-dubai guide content live
 
 **Date:** 2026-04-29

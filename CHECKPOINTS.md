@@ -5,6 +5,24 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-15 — Russian employment-visa guide content live
+
+**Date:** 2026-04-29
+
+**What is confirmed stable:**
+
+- RU content populated for `employment-visa`: ru_title, ru_summary, ru_audience, ru_overview, all 8 step ru_* fields
+- `/ru/guides/employment-visa` returns 200, renders Russian H1 and all 8 step titles in Russian
+- EN fallback for RU pages no longer needed for this guide — all ru_* fields populated
+- EN page `/guides/employment-visa` now emits `ru` hreflang (hasRuContent triggered correctly)
+- Sitemap includes `https://guidex-consulting.ae/ru/guides/employment-visa` (filtered by ru_title)
+- meta description on RU page: Russian, 2 sentences, under 160 chars
+- Build: 62 pages, 0 errors
+
+**Script used:** `scripts/add-ru-employment-visa.ts` — kept for reference
+
+---
+
 ## CP-14 — Phase 1B Russian routing verified
 
 **Date:** 2026-04-29

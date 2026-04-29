@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-29 (Phase 1B Russian routing verified — 62 pages, 0 errors, all routes confirmed)
+Last updated: 2026-04-29 (Russian employment-visa guide content live — first RU guide fully populated, sitemap + hreflang active)
 
 ---
 
@@ -157,7 +157,7 @@ Group pages live:
 
 2. **`docs/admin-architecture.md` is partially outdated.** References `middleware.ts` (now `proxy.ts`) and describes old writer.ts patterns. Useful for architectural context but not a literal code reference.
 
-3. **Russian content not yet populated.** Phase 1B routing infrastructure is live. All RU pages render EN fallback until `ru_*` fields are filled in admin. Priority content entry order in `docs/ru-launch-plan.md`.
+3. **Russian content partially populated.** `employment-visa` is fully done (ru_title, ru_summary, ru_audience, ru_overview, all 8 steps). Remaining 8 priority guides still need RU content. See `docs/ru-launch-plan.md` for order.
 
 4. **Category taxonomy not owner-approved as final.** Five categories are currently defined in code (`visas`, `company-setup`, `hiring`, `living`, `government`) but have not been explicitly confirmed by the owner as the permanent list. Treat as current working taxonomy, not a locked decision.
 
@@ -201,11 +201,12 @@ Group pages live:
 
 All routing, fallback logic, language switcher, and hreflang in place. No content translated yet — all RU pages render EN content via field-level fallback until `ru_*` fields are populated in admin.
 
-**Next: populate RU content via admin**
-- Open `/admin/guides/[slug]` for priority guides
-- Fill `ru_title`, `ru_summary`, `ru_audience`, `ru_overview`, and step `ru_*` fields
-- Start with order from `docs/ru-launch-plan.md` (employment-visa, golden-visa-dubai-property, ...)
-- Once `ru_title` is non-empty, guide appears in sitemap RU entries automatically
+**Next: continue populating RU content for remaining priority guides**
+- `employment-visa` complete (all ru_* fields populated, sitemap + hreflang active)
+- Remaining order from `docs/ru-launch-plan.md`: golden-visa-dubai-property, mainland-company-setup-dubai,
+  free-zone-company-setup-dubai, open-business-bank-account-dubai, newborn-visa-dubai,
+  document-attestation-dubai, amer-center-dubai, pro-services-dubai
+- Once `ru_title` is non-empty for any guide, it appears in sitemap RU entries automatically
 
 Pre-RU launch (pending):
 - Run fresh production DB backup: `./scripts/db-backup-from-server.sh`
@@ -275,6 +276,7 @@ Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 li
 | Phase 12 | Real domain launch: guidex-consulting.ae live with HTTPS + www, DNS A record → 157.245.207.99, SSL Let's Encrypt, rebuild + PM2 restart, smoke test 8/8 ✅, production DB backup ✅ | ✅ |
 | UpCloud migration | Migrated production from Cloudways to UpCloud (85.9.203.69). All 8 phases complete. DNS switched. HTTPS live. Cron daily backup. 9/9 smoke tests. | ✅ |
 | Phase 1B | Russian routing infrastructure: Locale type, pick() fallback, RU guide routes, language switcher, hreflang, sitemap dual-language. Build: 62 pages, 0 errors. | ✅ |
+| RU content: employment-visa | ru_title, ru_summary, ru_audience, ru_overview, all 8 steps populated. RU hreflang and sitemap entry active. Build: 62 pages, 0 errors. | ✅ |
 
 ---
 

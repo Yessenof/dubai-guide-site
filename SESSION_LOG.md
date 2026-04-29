@@ -5,6 +5,28 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-29 — Russian content: employment-visa guide fully populated
+
+Created `scripts/add-ru-employment-visa.ts` — populates all ru_* fields for employment-visa.
+
+- ru_title: "Рабочая виза в Дубае: оформление через компанию без выезда из ОАЭ"
+- ru_summary: 2 sentences, includes price range (AED 4 900–7 300), service centers
+- ru_audience: exact reader description in Russian
+- ru_overview: 2 paragraphs — route explanation + cost/timeline/reader role
+- All 8 step ru_title, ru_what, ru_where, ru_address, ru_advice, ru_warning fields populated
+- Russian style: short sentences, no em dashes, official terms (MOHRE, Tasheel, Amer, GDRFA, Tawjeeh, entry permit, change status, Emirates ID) used naturally
+- Target keywords woven in: рабочая виза в Дубае, рабочая резидентская виза, стоимость, сроки
+
+Verified:
+- `/ru/guides/employment-visa` 200, H1 in Russian, all 8 step titles in Russian, meta description in Russian
+- `/guides/employment-visa` now emits `ru` hreflang (hasRuContent=true triggered correctly)
+- Sitemap: `https://guidex-consulting.ae/ru/guides/employment-visa` present
+- Build: 62 pages, 0 errors
+
+CP-15 added.
+
+---
+
 ## 2026-04-29 — Phase 1B Russian routing: full verification pass
 
 Discovered Phase 1B was already fully implemented in commit 5149a84. Ran complete spec verification:

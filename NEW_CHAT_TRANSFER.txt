@@ -70,15 +70,16 @@ Government (3/3 live):
 CURRENT NEXT STEPS
 ------------------
 1. Phase 1B is DONE and VERIFIED. Build: 62 pages, 0 errors. Routes, hreflang,
-   sitemap, language switcher, EN fallback all confirmed working.
+   sitemap, language switcher confirmed working.
 
-2. Populate RU content via admin panel:
-   - Open /admin/guides/[slug] for each priority guide
-   - Fill ru_title, ru_summary, ru_audience, ru_overview, step ru_* fields
-   - Priority order: employment-visa, golden-visa-dubai-property, mainland-company-setup-dubai,
-     free-zone-company-setup-dubai, open-business-bank-account-dubai, newborn-visa-dubai,
-     document-attestation-dubai, amer-center-dubai, pro-services-dubai
-   - See docs/ru-launch-plan.md for per-guide keyword/title/meta direction
+2. RU content — employment-visa is DONE (ru_title, ru_summary, ru_audience, ru_overview,
+   all 8 step ru_* fields). RU hreflang and sitemap entry active for this guide.
+
+   Remaining priority order: golden-visa-dubai-property, mainland-company-setup-dubai,
+   free-zone-company-setup-dubai, open-business-bank-account-dubai, newborn-visa-dubai,
+   document-attestation-dubai, amer-center-dubai, pro-services-dubai
+   See docs/ru-launch-plan.md for per-guide keyword/title/meta direction.
+   Script pattern: scripts/add-ru-employment-visa.ts
 
 3. After translations entered, deploy to production:
    - ./scripts/db-backup-from-upcloud.sh first (pull fresh DB)
@@ -159,6 +160,9 @@ UpCloud IP 85.9.203.69. HTTPS active. All 8 migration phases done. DB verified
 (15 guides, 94 steps). PM2 online. Cron daily DB backup active.
 
 CP-14 (2026-04-29): Phase 1B Russian routing verified. 62 pages build cleanly.
-All EN routes unchanged. RU routes load (EN fallback for empty ru_* fields).
-Hreflang correct. Language switcher works. Sitemap includes RU static pages.
-No admin imports in public bundle.
+All EN routes unchanged. RU routes load. Hreflang correct. Language switcher works.
+Sitemap dual-language. No admin imports in public bundle.
+
+CP-15 (2026-04-29): RU content for employment-visa live. ru_title, ru_summary,
+ru_audience, ru_overview, all 8 steps populated. RU hreflang on EN page active.
+Sitemap includes /ru/guides/employment-visa. Build 62 pages, 0 errors.

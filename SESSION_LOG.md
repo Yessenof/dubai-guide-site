@@ -5,6 +5,18 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-30 — Visual/UX smoke test after commit 1948214
+
+All 8 routes 200. No code changes. Findings recorded below.
+
+Passed: EN homepage 5 cards render correctly; soon cards are non-clickable divs with no href; "Browse all guides →" present; RouteSnapshotBand renders (12 AED mentions); PrimaryServices not in HTML; RU homepage has Скоро badges, Government card, /ru/government link, "Все гайды →" bottom link; /ru/government: Russian H1 and copy, all 3 guide links to /ru/guides/..., hreflang canonical /ru/government + en-alternate /government, language switcher points to /government; Business Bank Account inside both /company-setup and /ru/company-setup; soon cards have no href on either locale; no EN /guides/ bleed on RU pages.
+
+One structural difference confirmed as intentional: EN homepage has 5 sections (Hero + Cards + RouteSnapshotBand + HowItWorks + FreeAdviceCta); RU has 3 (Hero + Cards + WhatsApp CTA). Not a bug.
+
+Density note: RouteSnapshotBand adds 4 more guide cards after the 5 category cards on EN only. Page total is shorter than old PrimaryServices (which had 12 item rows). Recommend keeping band for now; flag for removal if EN/RU parity becomes a priority.
+
+---
+
 ## 2026-04-29 — Homepage IA restructure: route-hub cards on EN and RU
 
 Replaced EN homepage `PrimaryServices` list with 5 category cards matching RU's route-hub structure.

@@ -75,8 +75,9 @@ CURRENT NEXT STEPS
 2. RU content progress (2/9 done):
    - employment-visa: DONE (all ru_* fields, 8 steps)
    - golden-visa-dubai-property: DONE (all ru_* fields, 7 steps)
+   - mainland-company-setup-dubai: DONE (all ru_* fields, 8 steps)
 
-   Remaining priority order: mainland-company-setup-dubai,
+   Remaining priority order:
    free-zone-company-setup-dubai, open-business-bank-account-dubai, newborn-visa-dubai,
    document-attestation-dubai, amer-center-dubai, pro-services-dubai
    See docs/ru-launch-plan.md for per-guide keyword/title/meta direction.
@@ -171,3 +172,7 @@ Sitemap includes /ru/guides/employment-visa. Build 62 pages, 0 errors.
 CP-16 (2026-04-29): RU content for golden-visa-dubai-property live. All 7 step
 ru_* fields populated. RU hreflang on EN page active. Sitemap includes
 /ru/guides/golden-visa-dubai-property. Build 62 pages, 0 errors.
+
+CP-17 (2026-04-29): RU content for mainland-company-setup-dubai live. All 8 step
+ru_* fields populated. RU hreflang on EN page active. Sitemap includes
+/ru/guides/mainland-company-setup-dubai. Build 62 pages, 0 errors.

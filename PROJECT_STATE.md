@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-29 (Russian golden-visa-dubai-property guide content live — 2 of 9 priority RU guides done)
+Last updated: 2026-04-29 (Russian mainland-company-setup-dubai guide content live — 3 of 9 priority RU guides done)
 
 ---
 
@@ -157,7 +157,7 @@ Group pages live:
 
 2. **`docs/admin-architecture.md` is partially outdated.** References `middleware.ts` (now `proxy.ts`) and describes old writer.ts patterns. Useful for architectural context but not a literal code reference.
 
-3. **Russian content partially populated.** `employment-visa` and `golden-visa-dubai-property` fully done. Remaining 7 priority guides still need RU content. See `docs/ru-launch-plan.md` for order.
+3. **Russian content partially populated.** `employment-visa`, `golden-visa-dubai-property`, and `mainland-company-setup-dubai` fully done. Remaining 6 priority guides still need RU content. See `docs/ru-launch-plan.md` for order.
 
 4. **Category taxonomy not owner-approved as final.** Five categories are currently defined in code (`visas`, `company-setup`, `hiring`, `living`, `government`) but have not been explicitly confirmed by the owner as the permanent list. Treat as current working taxonomy, not a locked decision.
 
@@ -204,7 +204,8 @@ All routing, fallback logic, language switcher, and hreflang in place. No conten
 **Next: continue populating RU content for remaining priority guides**
 - `employment-visa` complete (all ru_* fields populated, sitemap + hreflang active)
 - `golden-visa-dubai-property` complete (all ru_* fields populated, sitemap + hreflang active)
-- Remaining order from `docs/ru-launch-plan.md`: mainland-company-setup-dubai,
+- `mainland-company-setup-dubai` complete (all ru_* fields populated, sitemap + hreflang active)
+- Remaining order from `docs/ru-launch-plan.md`:
   free-zone-company-setup-dubai, open-business-bank-account-dubai, newborn-visa-dubai,
   document-attestation-dubai, amer-center-dubai, pro-services-dubai
 - Once `ru_title` is non-empty for any guide, it appears in sitemap RU entries automatically
@@ -279,6 +280,7 @@ Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 li
 | Phase 1B | Russian routing infrastructure: Locale type, pick() fallback, RU guide routes, language switcher, hreflang, sitemap dual-language. Build: 62 pages, 0 errors. | ✅ |
 | RU content: employment-visa | ru_title, ru_summary, ru_audience, ru_overview, all 8 steps populated. RU hreflang and sitemap entry active. Build: 62 pages, 0 errors. | ✅ |
 | RU content: golden-visa-dubai-property | ru_title, ru_summary, ru_audience, ru_overview, all 7 steps populated. RU hreflang and sitemap entry active. Build: 62 pages, 0 errors. | ✅ |
+| RU content: mainland-company-setup-dubai | ru_title, ru_summary, ru_audience, ru_overview, all 8 steps populated. RU hreflang and sitemap entry active. Build: 62 pages, 0 errors. | ✅ |
 
 ---
 

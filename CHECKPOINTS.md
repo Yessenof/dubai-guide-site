@@ -5,6 +5,21 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-17 — Russian mainland-company-setup-dubai guide content live
+
+**Date:** 2026-04-29
+
+**What is confirmed stable:**
+
+- RU content populated for `mainland-company-setup-dubai`: ru_title, ru_summary, ru_audience, ru_overview, all 8 step ru_* fields
+- `/ru/guides/mainland-company-setup-dubai` returns 200, H1 in Russian, all 8 step titles in Russian
+- EN page emits `ru` hreflang (hasRuContent triggered correctly)
+- Sitemap includes `https://guidex-consulting.ae/ru/guides/mainland-company-setup-dubai`
+- Build: 62 pages, 0 errors
+- Script: `scripts/add-ru-mainland-company.ts`
+
+---
+
 ## CP-16 — Russian golden-visa-dubai-property guide content live
 
 **Date:** 2026-04-29

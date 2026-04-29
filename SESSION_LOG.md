@@ -5,6 +5,26 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-29 — Russian content: mainland-company-setup-dubai guide fully populated
+
+Created `scripts/add-ru-mainland-company.ts` — populates all ru_* fields for mainland-company-setup-dubai.
+
+- ru_title: "Открыть mainland компанию в Дубае: лицензия DED и полный процесс"
+- ru_summary: 3 sentences — route, AED 12 000–25 000+ slab, Ejari/trade license
+- ru_audience: DED-licensed company founders, excludes regulated sectors
+- ru_overview: 2 paragraphs — what mainland means + 3-phase process + post-license steps (establishment card, MOHRE, VAT, bank account)
+- All 8 step ru_* fields populated; keywords woven in: DED, trade name reservation, initial approval, Ejari, MoA, local service agent, establishment card, immigration file, MOHRE, VAT, corporate tax, trade license
+
+Verified:
+- `/ru/guides/mainland-company-setup-dubai` 200, Russian H1, all 8 step titles in Russian, meta in Russian
+- `/guides/mainland-company-setup-dubai` emits `ru` hreflang
+- Sitemap: both EN and RU entries present
+- Build: 62 pages, 0 errors
+
+CP-17 added.
+
+---
+
 ## 2026-04-29 — Russian content: golden-visa-dubai-property guide fully populated
 
 Created `scripts/add-ru-golden-visa-property.ts` — populates all ru_* fields for golden-visa-dubai-property.

@@ -5,6 +5,30 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-29 — Homepage IA restructure: route-hub cards on EN and RU
+
+Replaced EN homepage `PrimaryServices` list with 5 category cards matching RU's route-hub structure.
+
+**Files changed:**
+- `app/(public)/page.tsx` — removed `PrimaryServices`; added 5 inline `ServiceCard` entries (3 active, 2 soon); kept `RouteSnapshotBand`, `HowItWorks`, `FreeAdviceCta`, "Browse all guides →"
+- `app/ru/page.tsx` — removed "Все гайды" primary card; added Государственные услуги card; added 2 soon cards (Туризм и аренда, Банкинг и консультации); added "Все гайды →" bottom text link
+- `app/ru/government/page.tsx` — new file; mirrors EN government hub structure; Russian copy; 3 guide cards; WhatsApp CTA; hreflang: `ru` canonical `/ru/government`, `en` alternate `/government`
+
+**Not changed:**
+- `components/PrimaryServices.tsx` — retained (not imported anywhere after this change)
+- All guide article pages — untouched
+- All hub pages (`/visas`, `/company-setup`, `/government`, `/ru/visas`, `/ru/company-setup`) — untouched
+- DB, sitemap logic, brand — untouched
+
+**Verified:**
+- `PrimaryServices` not imported anywhere in `app/` or `components/`
+- Build: 63 pages, 0 errors (new page: `/ru/government`)
+- TypeScript: clean
+
+CP-19 added.
+
+---
+
 ## 2026-04-29 — Fix: locale-aware navigation for RU pages
 
 Full audit of all public components generating guide/service links.

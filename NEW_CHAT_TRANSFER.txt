@@ -69,10 +69,11 @@ Government (3/3 live):
 
 CURRENT NEXT STEPS
 ------------------
-1. Phase 1B is DONE and VERIFIED. Build: 62 pages, 0 errors. Routes, hreflang,
-   sitemap, language switcher confirmed working.
+1. Homepage IA restructure DONE (CP-19). Build: 63 pages, 0 errors.
+   EN and RU homepages now both use 5 route-hub category cards.
+   /ru/government created. PrimaryServices removed from homepage (file kept).
 
-2. RU content progress (2/9 done):
+2. RU content progress (3/9 done):
    - employment-visa: DONE (all ru_* fields, 8 steps)
    - golden-visa-dubai-property: DONE (all ru_* fields, 7 steps)
    - mainland-company-setup-dubai: DONE (all ru_* fields, 8 steps)
@@ -180,3 +181,7 @@ ru_* fields populated. RU hreflang on EN page active. Sitemap includes
 CP-18 (2026-04-29): RU locale navigation fixed. Footer and StickyRouteCta now
 locale-aware. lib/locale-path.ts helper created. TopicCard and GuideTabs were
 already correct. Build 62 pages, 0 errors.
+
+CP-19 (2026-04-29): Homepage IA restructure. EN and RU homepages now both use
+5-card route-hub layout. /ru/government page created. PrimaryServices removed
+from EN homepage (file kept). Build 63 pages, 0 errors.

@@ -5,6 +5,23 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-19 — Homepage IA restructure: route-hub cards aligned across locales
+
+**Date:** 2026-04-29
+
+**What is confirmed stable:**
+
+- EN homepage (`app/(public)/page.tsx`) — 5 category cards (3 active: Visas, Company Setup, Government Services; 2 soon: Tourism & Holiday Homes, Banking & Advice). "Browse all guides →" bottom text link. `PrimaryServices` removed from import.
+- RU homepage (`app/ru/page.tsx`) — 5 category cards matching EN structure (Russian text). Government Services card added. "Все гайды →" bottom text link. "Все гайды" demoted from primary card.
+- `app/ru/government/page.tsx` — new static page. Russian copy. 3 guide cards (document-attestation, amer, pro-services, all /ru/guides/ hrefs). WhatsApp CTA. Hreflang: canonical `/ru/government`, en-alternate `/government`.
+- `components/PrimaryServices.tsx` — retained, not imported anywhere.
+- Soon cards are `<div>` (non-clickable), not `<Link>`. No fake hrefs.
+- Business Bank Account remains inside `/company-setup` and `/ru/company-setup` hubs.
+- Build: 63 pages, 0 errors (+1 from CP-18 due to new `/ru/government`)
+- TypeScript: clean
+
+---
+
 ## CP-18 — Locale-aware navigation fixed for RU pages
 
 **Date:** 2026-04-29

@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-29 (locale-aware navigation fixed — Footer and StickyRouteCta now locale-aware; lib/locale-path.ts helper created)
+Last updated: 2026-04-29 (homepage IA restructured — EN and RU now use route-hub card layout; /ru/government created; PrimaryServices removed from homepage)
 
 ---
 
@@ -88,7 +88,7 @@ docs/
 
 | Page | Status |
 |---|---|
-| Home (`/`) | Live, renders from SQLite |
+| Home (`/`) | Live — 5 route-hub category cards (3 active, 2 soon); "Browse all guides →" text link |
 | Guide list (`/guides`) | Live, published-only from SQLite |
 | Guide detail (`/guides/[slug]`) | Live, SSG + on-demand ISR |
 | About (`/about`) | Live (static) |
@@ -197,11 +197,15 @@ Group pages live:
 
 ## Current Next Step
 
-**Phase 1B complete — Russian routing infrastructure live (build verified)**
+**Homepage IA restructure complete (CP-19). EN and RU homepages now use matching route-hub card layout.**
 
-All routing, fallback logic, language switcher, and hreflang in place. No content translated yet — all RU pages render EN content via field-level fallback until `ru_*` fields are populated in admin.
+- EN homepage: 5 category cards (Visas, Company Setup, Government Services, Tourism (soon), Banking (soon)) + "Browse all guides →" text link
+- RU homepage: 5 category cards (same structure, Russian text) + "Все гайды →" text link
+- `app/ru/government/page.tsx` created (mirrors EN government hub, Russian copy, correct hreflang)
+- `PrimaryServices` removed from EN homepage import; file retained at `components/PrimaryServices.tsx`
+- Build: 63 pages, 0 errors
 
-**Next: continue populating RU content for remaining priority guides**
+**Next: resume RU content population**
 - `employment-visa` complete (all ru_* fields populated, sitemap + hreflang active)
 - `golden-visa-dubai-property` complete (all ru_* fields populated, sitemap + hreflang active)
 - `mainland-company-setup-dubai` complete (all ru_* fields populated, sitemap + hreflang active)
@@ -211,7 +215,8 @@ All routing, fallback logic, language switcher, and hreflang in place. No conten
 - Once `ru_title` is non-empty for any guide, it appears in sitemap RU entries automatically
 
 Pre-RU launch (pending):
-- Run fresh production DB backup: `./scripts/db-backup-from-server.sh`
+- Run fresh production DB backup: `./scripts/db-backup-from-upcloud.sh`
+- Deploy: git pull on server + npm run build + pm2 restart guidex-production
 - Submit sitemap to Google Search Console: https://guidex-consulting.ae/sitemap.xml
 - Add Plausible analytics
 
@@ -282,6 +287,7 @@ Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 li
 | RU content: golden-visa-dubai-property | ru_title, ru_summary, ru_audience, ru_overview, all 7 steps populated. RU hreflang and sitemap entry active. Build: 62 pages, 0 errors. | ✅ |
 | RU content: mainland-company-setup-dubai | ru_title, ru_summary, ru_audience, ru_overview, all 8 steps populated. RU hreflang and sitemap entry active. Build: 62 pages, 0 errors. | ✅ |
 | RU locale navigation fix | Footer and StickyRouteCta made locale-aware. lib/locale-path.ts helper created. Audit confirmed TopicCard and GuideTabs already correct. Build: 62 pages, 0 errors. | ✅ |
+| Homepage IA restructure (CP-19) | EN and RU homepages now use matching 5-card route-hub layout. /ru/government created. PrimaryServices removed from EN homepage (file kept). Build: 63 pages, 0 errors. | ✅ |
 
 ---
 

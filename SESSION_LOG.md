@@ -5,6 +5,27 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-29 — Russian content: golden-visa-dubai-property guide fully populated
+
+Created `scripts/add-ru-golden-visa-property.ts` — populates all ru_* fields for golden-visa-dubai-property.
+
+- ru_title: "Золотая виза в Дубае через недвижимость от AED 2 000 000"
+- ru_summary: 3 sentences, covers route, AED 2M threshold, DLD/GDRFA, AED 9 885 slab
+- ru_audience: freehold owners at AED 2M+ threshold, no employer required
+- ru_overview: 2 paragraphs — eligibility + cost/timeline
+- All 7 step ru_* fields populated (title, what, where, address, advice, warning)
+- Keywords woven in: золотая виза в Дубае через недвижимость, DLD, GDRFA, title deed, Oqood, mortgage NOC, property valuation certificate, Emirates ID, freehold, AED 2 000 000
+
+Verified:
+- `/ru/guides/golden-visa-dubai-property` 200, Russian H1, all 7 step titles in Russian, meta in Russian
+- `/guides/golden-visa-dubai-property` now emits `ru` hreflang
+- Sitemap: both EN and RU entries present
+- Build: 62 pages, 0 errors
+
+CP-16 added.
+
+---
+
 ## 2026-04-29 — Russian content: employment-visa guide fully populated
 
 Created `scripts/add-ru-employment-visa.ts` — populates all ru_* fields for employment-visa.

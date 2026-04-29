@@ -72,10 +72,11 @@ CURRENT NEXT STEPS
 1. Phase 1B is DONE and VERIFIED. Build: 62 pages, 0 errors. Routes, hreflang,
    sitemap, language switcher confirmed working.
 
-2. RU content — employment-visa is DONE (ru_title, ru_summary, ru_audience, ru_overview,
-   all 8 step ru_* fields). RU hreflang and sitemap entry active for this guide.
+2. RU content progress (2/9 done):
+   - employment-visa: DONE (all ru_* fields, 8 steps)
+   - golden-visa-dubai-property: DONE (all ru_* fields, 7 steps)
 
-   Remaining priority order: golden-visa-dubai-property, mainland-company-setup-dubai,
+   Remaining priority order: mainland-company-setup-dubai,
    free-zone-company-setup-dubai, open-business-bank-account-dubai, newborn-visa-dubai,
    document-attestation-dubai, amer-center-dubai, pro-services-dubai
    See docs/ru-launch-plan.md for per-guide keyword/title/meta direction.
@@ -166,3 +167,7 @@ Sitemap dual-language. No admin imports in public bundle.
 CP-15 (2026-04-29): RU content for employment-visa live. ru_title, ru_summary,
 ru_audience, ru_overview, all 8 steps populated. RU hreflang on EN page active.
 Sitemap includes /ru/guides/employment-visa. Build 62 pages, 0 errors.
+
+CP-16 (2026-04-29): RU content for golden-visa-dubai-property live. All 7 step
+ru_* fields populated. RU hreflang on EN page active. Sitemap includes
+/ru/guides/golden-visa-dubai-property. Build 62 pages, 0 errors.

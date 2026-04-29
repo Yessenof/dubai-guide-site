@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-# DEPRECATED — production is now on UpCloud.
-# Use: ./scripts/db-restore-to-upcloud.sh
+# Restore a local guides.db to the UpCloud production server.
 #
-# This script is kept for backwards compatibility only.
-# It now defaults to the UpCloud IP unless OVH_IP is explicitly set.
+# SAFETY: Always creates a timestamped server-side backup BEFORE overwriting.
+#
+# Usage:
+#   ./scripts/db-restore-to-upcloud.sh <path-to-local-guides.db>
+#
+# Example:
+#   ./scripts/db-restore-to-upcloud.sh backups/production-db/guides.db.latest
 
 set -euo pipefail
 
@@ -18,7 +22,7 @@ if [ ! -f "$LOCAL_DB" ]; then
 fi
 
 SSH_USER="root"
-SERVER="${OVH_IP:-85.9.203.69}"
+SERVER="85.9.203.69"
 APP_PATH="/var/www/guidex"
 SERVER_DB="$APP_PATH/data/guides.db"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)

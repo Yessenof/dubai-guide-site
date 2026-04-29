@@ -6,7 +6,7 @@ Last updated: 2026-04-29 (UpCloud migration complete — HTTPS live, DNS switche
 
 ## Project Summary
 
-A premium, mobile-first Dubai knowledge hub. Owner-only admin panel built into the same Next.js project. Content stored in SQLite. No external services. Deployment target: Cloudways (Node.js VPS).
+A premium, mobile-first Dubai knowledge hub. Owner-only admin panel built into the same Next.js project. Content stored in SQLite. No external services. Deployment: UpCloud VPS, Ubuntu 24.04, `85.9.203.69`.
 
 ---
 
@@ -191,9 +191,7 @@ Group pages live:
 | GitHub | c127e9b — up to date |
 | Swap | 2 GB swapfile (persistent via /etc/fstab) |
 
-**Cloudways (165.245.187.15):** All 8 phases complete — safe to cancel now.
-
-**Previous host:** Cloudways — 165.245.187.15 (decommission pending Phase 8 completion)
+**Previous host:** Cloudways (165.245.187.15) — decommissioned after migration.
 
 ---
 
@@ -292,15 +290,15 @@ Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 li
 
 ## Deployment Notes
 
-- Target: Cloudways (Node.js VPS, Ubuntu/Debian)
-- `better-sqlite3` requires native bindings — compiled on deploy via `npm install`
+- Target: UpCloud VPS — Ubuntu 24.04, `root@85.9.203.69`, app at `/var/www/guidex`
+- `better-sqlite3` requires native bindings — compiled on deploy via `npm ci`
 - `data/guides.db` must exist on the server filesystem (writable, persistent)
-- Backup = copy `data/guides.db` to a safe location
 - `NEXTAUTH_URL` must be set to the production domain in `.env.local` on server
-- NEXT_PUBLIC_SITE_URL and NEXTAUTH_URL → https://guidex-consulting.ae
-- Rebuild ran on server after domain switch — NEXT_PUBLIC_* baked into static output
-- `./scripts/db-backup-from-server.sh` — pulls production DB, last run 2026-04-29-140304
-- OVH migration: `backups/production-db/guides.db.20260429-140304` verified (integrity_check ok, 15 guides, 94 steps, all published) — ready to upload to OVH
+- `NEXT_PUBLIC_SITE_URL` and `NEXTAUTH_URL` → `https://guidex-consulting.ae`
+- `NEXT_PUBLIC_*` vars are baked at build time — rebuild required after any change
+- `./scripts/db-backup-from-upcloud.sh` — pull production DB to local backups
+- `./scripts/db-restore-to-upcloud.sh` — restore local DB to server (with server-side backup + PM2 restart)
+- Latest verified local DB: `backups/production-db/guides.db.20260429-140304` (15 guides, 94 steps)
 
 ---
 

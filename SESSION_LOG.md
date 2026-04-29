@@ -5,6 +5,17 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-29 — Post-migration cleanup: UpCloud docs and scripts
+
+- Created `docs/deployment-upcloud.md` — authoritative runbook with IP filled in (85.9.203.69), all OVH placeholders removed
+- Removed `docs/deployment-ovh.md` (superseded)
+- Created `scripts/db-backup-from-upcloud.sh` — clean backup script, IP hardcoded
+- Created `scripts/db-restore-to-upcloud.sh` — clean restore script, IP hardcoded
+- `scripts/db-backup-from-ovh.sh` and `db-restore-to-ovh.sh` — updated to deprecated with backwards-compat default of UpCloud IP
+- `PROJECT_STATE.md` — updated deployment target, deployment notes, removed all OVH/Cloudways stale references
+
+---
+
 ## 2026-04-29 — UpCloud migration: HTTPS live, DNS switched, all smoke tests pass
 
 Full migration from Cloudways (165.245.187.15) to UpCloud (85.9.203.69) complete.

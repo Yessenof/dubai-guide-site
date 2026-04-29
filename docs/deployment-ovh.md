@@ -403,18 +403,20 @@ pm2 restart guidex-production --update-env
 
 ---
 
-## Cloudways → OVH migration checklist
+## Cloudways → UpCloud migration checklist
+
+**MIGRATION COMPLETE 2026-04-29**
 
 - [x] DB verified locally: `guides.db.20260429-140304` — 15 guides, 94 steps, integrity_check ok
-- [ ] Phase 1: Ubuntu 24.04 confirmed, server setup script ran
-- [ ] Phase 2: Repo cloned, npm ci done, .env.local created with correct secrets
-- [ ] Phase 3: guides.db uploaded, sqlite3 verify passes (15 guides, 94 steps)
-- [ ] Phase 4: npm run build succeeded, PM2 running, pm2 startup + pm2 save done
-- [ ] Phase 5: Nginx config deployed, nginx -t passes, nginx reloaded
-- [ ] Phase 6: Pre-DNS smoke tests pass (all 200 by IP with Host header)
-- [ ] Phase 7: DNS A records updated at Tasjeel, SSL issued, post-DNS smoke tests pass
-- [ ] Phase 8: Cron backup running, first backup verified at /var/backups/guidex/
-- [ ] Cloudways cancelled only after all above confirmed
+- [x] Phase 1: Ubuntu 24.04 confirmed, Node 20 / PM2 / Nginx / UFW installed, 2 GB swap created
+- [x] Phase 2: Repo cloned at c127e9b, npm ci done, .env.local created (600 perms, 5 keys present)
+- [x] Phase 3: guides.db uploaded, sqlite3 verify passes (15 guides, 94 steps, integrity ok)
+- [x] Phase 4: npm run build succeeded (62 pages, 0 errors), PM2 online, pm2 startup + pm2 save done
+- [x] Phase 5: Nginx config deployed, nginx -t passes, nginx reloaded
+- [x] Phase 6: Pre-DNS smoke tests pass (all 8 routes 200 by IP with Host header)
+- [x] Phase 7: DNS A records updated at Tasjeel (@ + www → 85.9.203.69), SSL issued (Let's Encrypt, valid to 2026-07-28), post-DNS smoke tests pass (9/9 HTTPS 200, HTTP→HTTPS 301, certbot.timer active)
+- [x] Phase 8: Cron backup running (0 3 * * *), first backup verified — guides.db.20260429-140750 (124K, SQLite ok)
+- [ ] Cloudways cancelled — safe to cancel now (all 8 phases complete)
 
 ---
 

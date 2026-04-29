@@ -5,6 +5,51 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-13 — UpCloud migration complete, guidex-consulting.ae live on new server
+
+**Date:** 2026-04-29
+
+**What is confirmed stable:**
+
+*Server:*
+- Provider: UpCloud
+- IP: 85.9.203.69
+- SSH user: root
+- App path: /var/www/guidex
+- Node v20.20.2 (system NodeSource), PM2 guidex-production online
+- 2 GB swap (persistent), pm2-root.service enabled
+- Nginx reverse proxy, Let's Encrypt SSL, certbot.timer active
+
+*Database:*
+- guides.db.20260429-140304: 15 guides, 94 steps, all published, integrity ok
+- Server path: /var/www/guidex/data/guides.db
+- Server cron backup: /var/backups/guidex/ — daily 03:00, 30-day retention
+- First backup verified: guides.db.20260429-140750 (124K, SQLite ok)
+
+*Domain and SSL:*
+- https://guidex-consulting.ae ✅ HTTPS 200
+- https://www.guidex-consulting.ae ✅ HTTPS 200
+- HTTP → HTTPS redirect: 301 ✅
+- SSL: Let's Encrypt, valid to 2026-07-28, auto-renewal via certbot.timer
+- DNS: @ + www → 85.9.203.69 (updated at Tasjeel 2026-04-29)
+
+*Build:*
+- Commit c127e9b — 62 pages (EN + RU Phase 1B), 0 errors
+- Phase 1B Russian routing live (EN fallback until ru_* fields populated)
+
+*Smoke tests (9/9 HTTPS 200):*
+/ /guides /guides/employment-visa /guides/golden-visa-dubai-property /contact /admin/login /robots.txt /sitemap.xml https://www.guidex-consulting.ae/
+
+**Cloudways (165.245.187.15):** Safe to cancel — all 8 migration phases complete.
+
+**Remaining:**
+1. Cancel Cloudways subscription
+2. Populate ru_* content fields in admin (see docs/ru-launch-plan.md)
+3. Submit sitemap to Google Search Console
+4. Add Plausible analytics
+
+---
+
 ## CP-12 — Server recovery complete, guidex-consulting.ae fully live
 
 **Date:** 2026-04-28

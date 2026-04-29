@@ -5,6 +5,31 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-29 — UpCloud migration: HTTPS live, DNS switched, all smoke tests pass
+
+Full migration from Cloudways (165.245.187.15) to UpCloud (85.9.203.69) complete.
+
+Steps completed:
+- 2 GB swap created (fallocate, permanent via /etc/fstab)
+- Repo cloned from GitHub at c127e9b, data/ dir created
+- .env.local uploaded (scp), chmod 600, all 5 keys verified present without printing values
+- DB uploaded (guides.db.20260429-140304): integrity ok, 15 guides, 94 steps
+- npm ci + npm run build: 62 pages, 0 errors
+- PM2 started via ecosystem.config.js (guidex-production), pm2 save, pm2-root.service enabled
+- Port 3000 → 200 confirmed from server
+- Nginx config deployed, nginx -t passes, nginx reload
+- Pre-DNS smoke tests: 8/8 routes 200 by IP + Host header
+- DNS: @ + www → 85.9.203.69 updated at Tasjeel
+- Certbot SSL issued: guidex-consulting.ae + www, valid to 2026-07-28, certbot.timer active
+- Post-DNS smoke tests: 9/9 HTTPS routes 200, HTTP→HTTPS 301 confirmed
+
+Cloudways still live — do NOT cancel until cron backup (Phase 8) is done.
+
+Phase 8: cron backup installed (0 3 * * *), first backup verified (guides.db.20260429-140750, 124K, SQLite ok).
+All 8 phases complete. Cloudways safe to cancel.
+
+---
+
 ## 2026-04-29 — OVH migration: DB verified, migration prep committed
 
 DB backup `guides.db.20260429-140304` pulled from Cloudways and verified:

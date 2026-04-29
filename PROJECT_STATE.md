@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-29 (Phase 1B committed; OVH migration prep complete; DB verified for migration)
+Last updated: 2026-04-29 (UpCloud migration complete — HTTPS live, DNS switched, SSL issued, 9/9 smoke tests pass)
 
 ---
 
@@ -167,29 +167,33 @@ Group pages live:
 
 ## Deployment Status
 
-**Phase 12 complete (2026-04-27). Site is LIVE on real domain with HTTPS.**
+**UpCloud migration complete (2026-04-29). Site is LIVE on UpCloud with HTTPS.**
 
 | Item | Status |
 |---|---|
-| Server | Cloudways — 165.245.187.15 (active; do NOT cancel until OVH is live + DNS switched) |
-| SSH user | master_asumzwhebx |
-| App ID | dgcmdxxpjx |
-| Temporary URL | https://phpstack-1618074-6379172.cloudwaysapps.com/ |
+| Provider | UpCloud |
+| Server IP | 85.9.203.69 |
+| SSH user | root |
+| App path | /var/www/guidex |
+| DB path | /var/www/guidex/data/guides.db |
+| DB backups (server) | /var/backups/guidex/ |
+| DB backups (local) | backups/production-db/ |
+| PM2 process | guidex-production — online |
+| PM2 startup | pm2-root.service enabled (systemd) |
+| Node | v20.20.2 (system, NodeSource) |
+| Nginx | /etc/nginx/sites-enabled/guidex-consulting.ae |
 | Production domain | https://guidex-consulting.ae ✅ LIVE |
 | WWW | https://www.guidex-consulting.ae ✅ LIVE |
-| SSL | Let's Encrypt — installed for both apex + www |
-| HTTP → HTTPS redirect | ✅ Enabled |
-| Node | v20.20.2 via nvm under master user |
-| PM2 | guidex-production — online |
-| App path | /home/master/applications/dgcmdxxpjx/public_html |
-| data/guides.db | Backed up locally: `backups/production-db/guides.db.20260427-223918` |
-| .env.local on server | NEXT_PUBLIC_SITE_URL + NEXTAUTH_URL → guidex-consulting.ae |
-| mod_proxy_http | Re-enabled by Cloudways Support after recovery |
-| DNS A record | guidex-consulting.ae → 165.245.187.15 (updated after recovery) |
-| Smoke test (real domain) | 8/8 HTTPS routes 200 ✅ — Next.js confirmed serving |
-| GitHub | fea9411 — up to date |
+| SSL | Let's Encrypt — valid to 2026-07-28, auto-renewal via certbot.timer |
+| HTTP → HTTPS redirect | ✅ 301 |
+| DNS A record | @ + www → 85.9.203.69 (updated at Tasjeel 2026-04-29) |
+| Smoke test | 9/9 HTTPS routes 200 ✅, HTTP→HTTPS 301 ✅ |
+| GitHub | c127e9b — up to date |
+| Swap | 2 GB swapfile (persistent via /etc/fstab) |
 
-**Recovery note (2026-04-28):** Server was suspended/recovered by Cloudways. New IP assigned (165.245.187.15), new SSH user (master_asumzwhebx). App files, .env.local, data/guides.db, and .next build survived the recovery. mod_proxy_http modules were re-enabled by Cloudways Support. DNS A record updated in Tasjeel to new IP.
+**Cloudways (165.245.187.15):** All 8 phases complete — safe to cancel now.
+
+**Previous host:** Cloudways — 165.245.187.15 (decommission pending Phase 8 completion)
 
 ---
 

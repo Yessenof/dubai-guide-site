@@ -8,18 +8,56 @@ import RouteSnapshot from "@/components/RouteSnapshot";
 import StepCard from "@/components/StepCard";
 import type { GuideData } from "@/lib/db/reader";
 import type { GuideGroupConfig } from "@/lib/guide-groups";
+import type { Locale } from "@/lib/db/reader";
 
 const WHATSAPP_HREF = "https://wa.me/971506304817";
+
+const STRINGS = {
+  en: {
+    allGuides:   "← All guides",
+    findRoute:   "Find my route →",
+    findMyRoute: "Find My Route",
+    askExpert:   "Ask an Expert",
+    seeGuide:    "See full step-by-step guide ↓",
+    stepByStep:  "Step by step",
+    overview:    "Overview",
+    helpHeading: "Need help with this process?",
+    helpBody:    "We manage government submissions, medicals, and filings on your behalf.",
+    whatsapp:    "Chat on WhatsApp →",
+  },
+  ru: {
+    allGuides:   "← Все гайды",
+    findRoute:   "Найти маршрут →",
+    findMyRoute: "Найти маршрут",
+    askExpert:   "Спросить эксперта",
+    seeGuide:    "Читать полное руководство ↓",
+    stepByStep:  "Пошагово",
+    overview:    "Обзор",
+    helpHeading: "Нужна помощь?",
+    helpBody:    "Берём на себя подачу документов, медосмотры и оформление.",
+    whatsapp:    "Написать в WhatsApp →",
+  },
+};
 
 interface Props {
   group:        GuideGroupConfig;
   guides:       GuideData[];
   defaultRoute: string;
+  locale?:      Locale;
 }
 
-export default function GuideTabs({ group, guides, defaultRoute }: Props) {
+export default function GuideTabs({
+  group,
+  guides,
+  defaultRoute,
+  locale = "en",
+}: Props) {
   const router   = useRouter();
   const pathname = usePathname();
+  const t        = STRINGS[locale];
+
+  const guidesHref    = locale === "ru" ? "/ru/guides" : "/guides";
+  const findVisaHref  = "/find-my-visa";
 
   const [activeRoute, setActiveRoute] = useState(defaultRoute);
 
@@ -40,16 +78,16 @@ export default function GuideTabs({ group, guides, defaultRoute }: Props) {
       {/* Breadcrumb */}
       <div className="flex items-center justify-between mb-4 -mx-1">
         <Link
-          href="/guides"
+          href={guidesHref}
           className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors px-1 py-3"
         >
-          ← All guides
+          {t.allGuides}
         </Link>
         <Link
-          href="/find-my-visa"
+          href={findVisaHref}
           className="text-xs text-brass hover:opacity-70 transition-opacity px-1 py-3"
         >
-          Find my route →
+          {t.findRoute}
         </Link>
       </div>
 
@@ -103,10 +141,10 @@ export default function GuideTabs({ group, guides, defaultRoute }: Props) {
       {/* CTAs */}
       <div className="mt-4 flex gap-2.5">
         <Link
-          href="/find-my-visa"
+          href={findVisaHref}
           className="flex-1 text-center text-[13px] font-semibold text-navy border-2 border-navy/20 py-3 rounded-xl hover:border-navy/40 transition-colors"
         >
-          Find My Route
+          {t.findMyRoute}
         </Link>
         <a
           href={WHATSAPP_HREF}
@@ -114,7 +152,7 @@ export default function GuideTabs({ group, guides, defaultRoute }: Props) {
           rel="noopener noreferrer"
           className="flex-1 text-center text-[13px] font-semibold bg-navy text-white py-3 rounded-xl hover:opacity-90 transition-opacity"
         >
-          Ask an Expert
+          {t.askExpert}
         </a>
       </div>
 
@@ -135,7 +173,7 @@ export default function GuideTabs({ group, guides, defaultRoute }: Props) {
             href="#steps"
             className="inline-block mt-3 text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity"
           >
-            See full step-by-step guide ↓
+            {t.seeGuide}
           </a>
         </div>
       )}
@@ -144,7 +182,7 @@ export default function GuideTabs({ group, guides, defaultRoute }: Props) {
       <div className="mt-10 pt-8 border-t border-stone-100" id="steps">
         <div className="w-6 h-0.5 bg-brass rounded-full mb-2" />
         <h2 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-6">
-          Step by step
+          {t.stepByStep}
         </h2>
         {activeGuide.steps.map((step) => (
           <StepCard
@@ -162,12 +200,12 @@ export default function GuideTabs({ group, guides, defaultRoute }: Props) {
         ))}
       </div>
 
-      {/* Overview — SEO depth */}
+      {/* Overview */}
       {overviewParagraphs.length > 0 && (
         <div className="mt-10 pt-8 border-t border-stone-100">
           <div className="w-6 h-0.5 bg-brass rounded-full mb-2" />
           <h2 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-5">
-            Overview
+            {t.overview}
           </h2>
           {overviewParagraphs.map((text, i) => (
             <p key={i} className="text-[15px] text-gray-600 leading-relaxed mb-4 last:mb-0">
@@ -179,15 +217,15 @@ export default function GuideTabs({ group, guides, defaultRoute }: Props) {
 
       {/* Footer CTA */}
       <div className="mt-10 bg-navy rounded-2xl px-5 py-5">
-        <p className="text-[14px] font-semibold text-white mb-1">Need help with this process?</p>
-        <p className="text-[12px] text-white/60 mb-3">We manage government submissions, medicals, and filings on your behalf.</p>
+        <p className="text-[14px] font-semibold text-white mb-1">{t.helpHeading}</p>
+        <p className="text-[12px] text-white/60 mb-3">{t.helpBody}</p>
         <a
           href={WHATSAPP_HREF}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity py-2"
         >
-          Chat on WhatsApp →
+          {t.whatsapp}
         </a>
       </div>
 

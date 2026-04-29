@@ -6,6 +6,17 @@ import { db } from "./connection";
 import { guides, steps } from "./schema";
 import { eq, asc, desc, and, inArray } from "drizzle-orm";
 
+// ─── Locale support ──────────────────────────────────────────────────────────
+
+export type Locale = "en" | "ru";
+
+/** Field-level locale pick with EN fallback when RU field is empty. */
+function pick(locale: Locale, ru: string, en: string): string {
+  return locale === "ru" && ru.trim() !== "" ? ru : en;
+}
+
+// ─── Interfaces ───────────────────────────────────────────────────────────────
+
 export interface GuideListItem {
   slug:     string;
   title:    string;
@@ -29,16 +40,17 @@ export interface StepData {
 }
 
 export interface GuideData {
-  slug:        string;
-  category:    string;
-  price:       string;
-  timeline:    string;
-  lastUpdated: string;
-  title:       string;
-  summary:     string;
-  audience:    string;
-  overview:    string;
-  steps:       StepData[];
+  slug:          string;
+  category:      string;
+  price:         string;
+  timeline:      string;
+  lastUpdated:   string;
+  title:         string;
+  summary:       string;
+  audience:      string;
+  overview:      string;
+  hasRuContent:  boolean;   // true when ru_title is non-empty — used for hreflang decisions
+  steps:         StepData[];
 }
 
 export interface BandGuideItem {
@@ -51,21 +63,39 @@ export interface BandGuideItem {
   category: string;
 }
 
-export function getPublishedGuidesForBand(slugs: string[]): BandGuideItem[] {
+// ─── Queries ──────────────────────────────────────────────────────────────────
+
+export function getPublishedGuidesForBand(
+  slugs: string[],
+  locale: Locale = "en",
+): BandGuideItem[] {
   if (slugs.length === 0) return [];
-  return db
+  const rows = db
     .select({
-      slug:      guides.slug,
-      title:     guides.enTitle,
-      summary:   guides.enSummary,
-      audience:  guides.enAudience,
-      price:     guides.price,
-      timeline:  guides.timeline,
-      category:  guides.category,
+      slug:       guides.slug,
+      enTitle:    guides.enTitle,
+      ruTitle:    guides.ruTitle,
+      enSummary:  guides.enSummary,
+      ruSummary:  guides.ruSummary,
+      enAudience: guides.enAudience,
+      ruAudience: guides.ruAudience,
+      price:      guides.price,
+      timeline:   guides.timeline,
+      category:   guides.category,
     })
     .from(guides)
     .where(and(eq(guides.published, true), inArray(guides.slug, slugs)))
     .all();
+
+  return rows.map((r) => ({
+    slug:     r.slug,
+    title:    pick(locale, r.ruTitle, r.enTitle),
+    summary:  pick(locale, r.ruSummary, r.enSummary),
+    audience: pick(locale, r.ruAudience, r.enAudience),
+    price:    r.price,
+    timeline: r.timeline,
+    category: r.category,
+  }));
 }
 
 export function getRecentPublishedGuides(limit: number): GuideListItem[] {
@@ -85,22 +115,48 @@ export function getRecentPublishedGuides(limit: number): GuideListItem[] {
     .all();
 }
 
-export function getAllPublishedGuides(): GuideListItem[] {
-  return db
+export function getAllPublishedGuides(locale: Locale = "en"): GuideListItem[] {
+  const rows = db
     .select({
-      slug:     guides.slug,
-      title:    guides.enTitle,
-      summary:  guides.enSummary,
-      price:    guides.price,
-      timeline: guides.timeline,
-      category: guides.category,
+      slug:      guides.slug,
+      enTitle:   guides.enTitle,
+      ruTitle:   guides.ruTitle,
+      enSummary: guides.enSummary,
+      ruSummary: guides.ruSummary,
+      price:     guides.price,
+      timeline:  guides.timeline,
+      category:  guides.category,
     })
     .from(guides)
     .where(eq(guides.published, true))
     .all();
+
+  return rows.map((r) => ({
+    slug:     r.slug,
+    title:    pick(locale, r.ruTitle, r.enTitle),
+    summary:  pick(locale, r.ruSummary, r.enSummary),
+    price:    r.price,
+    timeline: r.timeline,
+    category: r.category,
+  }));
 }
 
-export function getGuideGroup(slugs: string[]): GuideData[] {
+/** Returns slugs of published guides that have a non-empty ru_title. */
+export function getRuPublishedGuidesSlugs(): string[] {
+  const rows = db
+    .select({ slug: guides.slug, ruTitle: guides.ruTitle })
+    .from(guides)
+    .where(eq(guides.published, true))
+    .all();
+  return rows
+    .filter((r) => r.ruTitle.trim() !== "")
+    .map((r) => r.slug);
+}
+
+export function getGuideGroup(
+  slugs: string[],
+  locale: Locale = "en",
+): GuideData[] {
   return slugs.flatMap((slug) => {
     const guide = db.select().from(guides).where(eq(guides.slug, slug)).get();
     if (!guide) return [];
@@ -111,33 +167,37 @@ export function getGuideGroup(slugs: string[]): GuideData[] {
       .orderBy(asc(steps.stepOrder))
       .all();
     const data: GuideData = {
-      slug:        guide.slug,
-      category:    guide.category,
-      price:       guide.price,
-      timeline:    guide.timeline,
-      lastUpdated: guide.lastUpdated,
-      title:       guide.enTitle,
-      summary:     guide.enSummary,
-      audience:    guide.enAudience,
-      overview:    guide.enOverview,
+      slug:         guide.slug,
+      category:     guide.category,
+      price:        guide.price,
+      timeline:     guide.timeline,
+      lastUpdated:  guide.lastUpdated,
+      hasRuContent: guide.ruTitle.trim() !== "",
+      title:        pick(locale, guide.ruTitle, guide.enTitle),
+      summary:      pick(locale, guide.ruSummary, guide.enSummary),
+      audience:     pick(locale, guide.ruAudience, guide.enAudience),
+      overview:     pick(locale, guide.ruOverview, guide.enOverview),
       steps: guideSteps.map((s) => ({
         id:        s.id,
         stepOrder: s.stepOrder,
         cost:      s.cost,
         timeEst:   s.timeEst,
-        title:     s.enTitle,
-        what:      s.enWhat,
-        where:     s.enWhere,
-        address:   s.enAddress,
-        advice:    s.enAdvice,
-        warning:   s.enWarning,
+        title:     pick(locale, s.ruTitle, s.enTitle),
+        what:      pick(locale, s.ruWhat, s.enWhat),
+        where:     pick(locale, s.ruWhere, s.enWhere),
+        address:   pick(locale, s.ruAddress, s.enAddress),
+        advice:    pick(locale, s.ruAdvice, s.enAdvice),
+        warning:   pick(locale, s.ruWarning, s.enWarning),
       })),
     };
     return [data];
   });
 }
 
-export function getPublishedGuideBySlug(slug: string): GuideData | null {
+export function getPublishedGuideBySlug(
+  slug: string,
+  locale: Locale = "en",
+): GuideData | null {
   const guide = db
     .select()
     .from(guides)
@@ -154,26 +214,27 @@ export function getPublishedGuideBySlug(slug: string): GuideData | null {
     .all();
 
   return {
-    slug:        guide.slug,
-    category:    guide.category,
-    price:       guide.price,
-    timeline:    guide.timeline,
-    lastUpdated: guide.lastUpdated,
-    title:       guide.enTitle,
-    summary:     guide.enSummary,
-    audience:    guide.enAudience,
-    overview:    guide.enOverview,
+    slug:         guide.slug,
+    category:     guide.category,
+    price:        guide.price,
+    timeline:     guide.timeline,
+    lastUpdated:  guide.lastUpdated,
+    hasRuContent: guide.ruTitle.trim() !== "",
+    title:        pick(locale, guide.ruTitle, guide.enTitle),
+    summary:      pick(locale, guide.ruSummary, guide.enSummary),
+    audience:     pick(locale, guide.ruAudience, guide.enAudience),
+    overview:     pick(locale, guide.ruOverview, guide.enOverview),
     steps: guideSteps.map((s) => ({
       id:        s.id,
       stepOrder: s.stepOrder,
       cost:      s.cost,
       timeEst:   s.timeEst,
-      title:     s.enTitle,
-      what:      s.enWhat,
-      where:     s.enWhere,
-      address:   s.enAddress,
-      advice:    s.enAdvice,
-      warning:   s.enWarning,
+      title:     pick(locale, s.ruTitle, s.enTitle),
+      what:      pick(locale, s.ruWhat, s.enWhat),
+      where:     pick(locale, s.ruWhere, s.enWhere),
+      address:   pick(locale, s.ruAddress, s.enAddress),
+      advice:    pick(locale, s.ruAdvice, s.enAdvice),
+      warning:   pick(locale, s.ruWarning, s.enWarning),
     })),
   };
 }

@@ -5,6 +5,20 @@ import FreeAdviceCta from "@/components/FreeAdviceCta";
 import RouteSnapshotBand from "@/components/RouteSnapshotBand";
 import Link from "next/link";
 import { getPublishedGuidesForBand } from "@/lib/db/reader";
+import type { Metadata } from "next";
+
+const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: BASE,
+    languages: {
+      "en":        BASE,
+      "ru":        `${BASE}/ru`,
+      "x-default": BASE,
+    },
+  },
+};
 
 const BAND_SLUGS = [
   "employment-visa",

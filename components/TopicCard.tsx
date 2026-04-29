@@ -8,6 +8,7 @@ interface TopicCardProps {
   timeline: string;
   slug: string;
   category?: string;
+  locale?: "en" | "ru";
 }
 
 export default function TopicCard({
@@ -17,9 +18,11 @@ export default function TopicCard({
   timeline,
   slug,
   category,
+  locale = "en",
 }: TopicCardProps) {
+  const prefix = locale === "ru" ? "/ru/guides" : "/guides";
   return (
-    <Link href={`/guides/${slug}`} className="block group">
+    <Link href={`${prefix}/${slug}`} className="block group">
       <div className="border border-stone-200 rounded-2xl p-5 hover:border-stone-300 hover:bg-stone-100 transition-all bg-stone-50">
 
         <div className="flex items-start justify-between gap-3 mb-2">

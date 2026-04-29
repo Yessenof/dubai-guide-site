@@ -20,25 +20,25 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const guide = getPublishedGuideBySlug(slug);
+  const guide = getPublishedGuideBySlug(slug, "ru");
   if (!guide) return {};
   return {
     title: `${guide.title} — Guidex Consulting`,
     description: guide.summary,
     alternates: {
-      canonical: `${BASE}/guides/${slug}`,
+      canonical: `${BASE}/ru/guides/${slug}`,
       languages: {
-        "en": `${BASE}/guides/${slug}`,
+        "en":        `${BASE}/guides/${slug}`,
+        "ru":        `${BASE}/ru/guides/${slug}`,
         "x-default": `${BASE}/guides/${slug}`,
-        ...(guide.hasRuContent ? { "ru": `${BASE}/ru/guides/${slug}` } : {}),
       },
     },
   };
 }
 
-export default async function GuidePage({ params }: Props) {
+export default async function RuGuidePage({ params }: Props) {
   const { slug } = await params;
-  const guide = getPublishedGuideBySlug(slug);
+  const guide = getPublishedGuideBySlug(slug, "ru");
   if (!guide) notFound();
 
   const overviewParagraphs = guide.overview.split("\n\n").filter(Boolean);
@@ -49,16 +49,16 @@ export default async function GuidePage({ params }: Props) {
       {/* Breadcrumb */}
       <div className="flex items-center justify-between mb-4 -mx-1">
         <Link
-          href="/guides"
+          href="/ru/guides"
           className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors px-1 py-3"
         >
-          ← All guides
+          ← Все гайды
         </Link>
         <Link
           href="/find-my-visa"
           className="text-xs text-brass hover:opacity-70 transition-opacity px-1 py-3"
         >
-          Find my route →
+          Найти маршрут →
         </Link>
       </div>
 
@@ -71,7 +71,7 @@ export default async function GuidePage({ params }: Props) {
         }}
       />
 
-      {/* 2. Quick-answer block: cost, timeline, for, steps count, start */}
+      {/* 2. Quick-answer block */}
       <RouteSnapshot
         price={guide.price}
         timeline={guide.timeline}
@@ -80,13 +80,13 @@ export default async function GuidePage({ params }: Props) {
         lastUpdated={guide.lastUpdated}
       />
 
-      {/* 3. CTAs — immediately after the answer */}
+      {/* 3. CTAs */}
       <div className="mt-4 flex gap-2.5">
         <Link
           href="/find-my-visa"
           className="flex-1 text-center text-[13px] font-semibold text-navy border-2 border-navy/20 py-3 rounded-xl hover:border-navy/40 transition-colors"
         >
-          Find My Route
+          Найти маршрут
         </Link>
         <a
           href={WHATSAPP_HREF}
@@ -94,11 +94,11 @@ export default async function GuidePage({ params }: Props) {
           rel="noopener noreferrer"
           className="flex-1 text-center text-[13px] font-semibold bg-navy text-white py-3 rounded-xl hover:opacity-90 transition-opacity"
         >
-          Ask an Expert
+          Спросить эксперта
         </a>
       </div>
 
-      {/* 4. Step outline — process at a glance before diving in */}
+      {/* 4. Step outline */}
       {guide.steps.length > 0 && (
         <div className="mt-6">
           <ol className="space-y-1.5">
@@ -115,7 +115,7 @@ export default async function GuidePage({ params }: Props) {
             href="#steps"
             className="inline-block mt-3 text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity"
           >
-            See full step-by-step guide ↓
+            Читать полное руководство ↓
           </a>
         </div>
       )}
@@ -124,7 +124,7 @@ export default async function GuidePage({ params }: Props) {
       <div className="mt-10 pt-8 border-t border-stone-100" id="steps">
         <div className="w-6 h-0.5 bg-brass rounded-full mb-2" />
         <h2 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-6">
-          Step by step
+          Пошагово
         </h2>
         {guide.steps.map((step) => (
           <StepCard
@@ -142,12 +142,12 @@ export default async function GuidePage({ params }: Props) {
         ))}
       </div>
 
-      {/* 6. Overview — SEO depth, positioned after practical content */}
+      {/* 6. Overview */}
       {overviewParagraphs.length > 0 && (
         <div className="mt-10 pt-8 border-t border-stone-100">
           <div className="w-6 h-0.5 bg-brass rounded-full mb-2" />
           <h2 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-5">
-            Overview
+            Обзор
           </h2>
           {overviewParagraphs.map((text, i) => (
             <p key={i} className="text-[15px] text-gray-600 leading-relaxed mb-4 last:mb-0">
@@ -159,15 +159,15 @@ export default async function GuidePage({ params }: Props) {
 
       {/* 7. Footer CTA */}
       <div className="mt-10 bg-navy rounded-2xl px-5 py-5">
-        <p className="text-[14px] font-semibold text-white mb-1">Need help with this process?</p>
-        <p className="text-[12px] text-white/60 mb-3">We manage government submissions, medicals, and filings on your behalf.</p>
+        <p className="text-[14px] font-semibold text-white mb-1">Нужна помощь?</p>
+        <p className="text-[12px] text-white/60 mb-3">Берём на себя подачу документов, медосмотры и оформление.</p>
         <a
           href={WHATSAPP_HREF}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity py-2"
         >
-          Chat on WhatsApp →
+          Написать в WhatsApp →
         </a>
       </div>
 

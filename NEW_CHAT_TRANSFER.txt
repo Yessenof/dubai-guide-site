@@ -72,21 +72,24 @@ Government (3/3 live):
 
 CURRENT NEXT STEPS
 ------------------
-1. Implement Phase 1 Russian language routing
-   - app/ru/ route group for /ru/guides/[slug]
-   - reader.ts locale param + EN fallback
-   - Language switcher in Header.tsx
-   - hreflang/canonical on all guide pages
-   See docs/platform-roadmap.md Phase 1B-1D for implementation spec
+1. Phase 1B is done (Russian routing infrastructure). Build verified: 62 pages, 0 errors.
+   Do NOT deploy yet — owner reviewing QA output.
 
-2. Translate first 12 pages to Russian
-   See docs/ru-launch-plan.md for page-by-page plan
+2. Populate RU content via admin panel:
+   - Open /admin/guides/[slug] for each priority guide
+   - Fill ru_title, ru_summary, ru_audience, ru_overview, step ru_* fields
+   - Priority order: employment-visa, golden-visa-dubai-property, mainland-company-setup-dubai,
+     free-zone-company-setup-dubai, open-business-bank-account-dubai, newborn-visa-dubai,
+     document-attestation-dubai, amer-center-dubai, pro-services-dubai
+   - See docs/ru-launch-plan.md for per-guide keyword/title/meta direction
 
-3. Fix em dashes in content (parallel task)
+3. After translations entered, deploy to production:
+   - ./scripts/db-backup-from-server.sh first
+   - git pull on server, npm run build, pm2 restart
+
+4. Fix em dashes in content (parallel task):
    Priority: open-business-bank-account-dubai, mainland-company-setup-dubai, free-zone-company-setup-dubai
    See docs/content-audit-ai-tone.md for full queue
-
-4. Run fresh production DB backup: ./scripts/db-backup-from-server.sh
 
 5. Submit sitemap to Google Search Console:
    https://guidex-consulting.ae/sitemap.xml

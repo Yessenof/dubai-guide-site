@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-28 (Strategic planning docs created — RU/EN SEO strategy, platform roadmap, content audit)
+Last updated: 2026-04-28 (Phase 1B complete — Russian public routing infrastructure, build verified 62 pages)
 
 ---
 
@@ -195,14 +195,15 @@ Group pages live:
 
 ## Current Next Step
 
-**Phase 1 — Russian language layer (NOW)**
+**Phase 1B complete — Russian routing infrastructure live (build verified)**
 
-See `docs/platform-roadmap.md` Phase 1 for full implementation plan.
+All routing, fallback logic, language switcher, and hreflang in place. No content translated yet — all RU pages render EN content via field-level fallback until `ru_*` fields are populated in admin.
 
-1. **Implement `/ru/` routing** — `app/ru/` route group, `reader.ts` locale param, RU fallback to EN
-2. **Language switcher** in Header.tsx — shows when current page has a RU equivalent
-3. **hreflang + canonical** on all guide pages (EN and RU)
-4. **Translate first 12 pages** — see `docs/ru-launch-plan.md` for page-by-page plan
+**Next: populate RU content via admin**
+- Open `/admin/guides/[slug]` for priority guides
+- Fill `ru_title`, `ru_summary`, `ru_audience`, `ru_overview`, and step `ru_*` fields
+- Start with order from `docs/ru-launch-plan.md` (employment-visa, golden-visa-dubai-property, ...)
+- Once `ru_title` is non-empty, guide appears in sitemap RU entries automatically
 
 Pre-RU launch (pending):
 - Run fresh production DB backup: `./scripts/db-backup-from-server.sh`

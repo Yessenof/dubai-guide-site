@@ -1,8 +1,7 @@
 import { MetadataRoute } from "next";
-import { getAllPublishedGuides } from "@/lib/db/reader";
+import { getAllPublishedGuides, getRuPublishedGuidesSlugs } from "@/lib/db/reader";
 
-// These slugs have DB entries but are redirected to group hub pages.
-// Their canonical URLs are the group pages — exclude from sitemap.
+// Variant slugs are redirected to group hub pages — exclude from sitemap.
 const REDIRECT_SLUGS = new Set([
   "spouse-dependent-visa-dubai-outside-country",
   "spouse-dependent-visa-dubai-inside-country",
@@ -12,7 +11,7 @@ const REDIRECT_SLUGS = new Set([
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
-const STATIC_PAGES: Array<{ path: string; priority: number }> = [
+const EN_STATIC: Array<{ path: string; priority: number }> = [
   { path: "",                                    priority: 1.0 },
   { path: "/guides",                             priority: 0.9 },
   { path: "/guides/spouse-dependent-visa-dubai", priority: 0.8 },
@@ -27,22 +26,58 @@ const STATIC_PAGES: Array<{ path: string; priority: number }> = [
   { path: "/contact",                            priority: 0.4 },
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const guideEntries = getAllPublishedGuides()
-    .filter((g) => !REDIRECT_SLUGS.has(g.slug))
-    .map((g) => ({
-      url:             `${BASE_URL}/guides/${g.slug}`,
-      lastModified:    new Date(),
-      changeFrequency: "monthly" as const,
-      priority:        0.8,
-    }));
+const RU_STATIC: Array<{ path: string; priority: number }> = [
+  { path: "/ru",                                 priority: 0.9 },
+  { path: "/ru/guides",                          priority: 0.8 },
+  { path: "/ru/guides/spouse-dependent-visa-dubai", priority: 0.7 },
+  { path: "/ru/guides/child-dependent-visa-dubai",  priority: 0.7 },
+  { path: "/ru/visas",                           priority: 0.7 },
+  { path: "/ru/visas/family",                    priority: 0.7 },
+  { path: "/ru/visas/golden",                    priority: 0.7 },
+  { path: "/ru/company-setup",                   priority: 0.7 },
+  { path: "/ru/contact",                         priority: 0.4 },
+];
 
-  const staticEntries = STATIC_PAGES.map(({ path, priority }) => ({
+export default function sitemap(): MetadataRoute.Sitemap {
+  const enSlugs = getAllPublishedGuides()
+    .map((g) => g.slug)
+    .filter((s) => !REDIRECT_SLUGS.has(s));
+
+  const ruSlugs = getRuPublishedGuidesSlugs()
+    .filter((s) => !REDIRECT_SLUGS.has(s));
+
+  const enGuideEntries = enSlugs.map((slug) => ({
+    url:             `${BASE_URL}/guides/${slug}`,
+    lastModified:    new Date(),
+    changeFrequency: "monthly" as const,
+    priority:        0.8,
+  }));
+
+  const ruGuideEntries = ruSlugs.map((slug) => ({
+    url:             `${BASE_URL}/ru/guides/${slug}`,
+    lastModified:    new Date(),
+    changeFrequency: "monthly" as const,
+    priority:        0.8,
+  }));
+
+  const enStaticEntries = EN_STATIC.map(({ path, priority }) => ({
     url:             `${BASE_URL}${path}`,
     lastModified:    new Date(),
     changeFrequency: "monthly" as const,
     priority,
   }));
 
-  return [...staticEntries, ...guideEntries];
+  const ruStaticEntries = RU_STATIC.map(({ path, priority }) => ({
+    url:             `${BASE_URL}${path}`,
+    lastModified:    new Date(),
+    changeFrequency: "monthly" as const,
+    priority,
+  }));
+
+  return [
+    ...enStaticEntries,
+    ...enGuideEntries,
+    ...ruStaticEntries,
+    ...ruGuideEntries,
+  ];
 }

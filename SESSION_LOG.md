@@ -5,6 +5,40 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-28 — Phase 1B: Russian public routing infrastructure
+
+**Build result:** 62 pages, 0 TypeScript errors, 0 build errors. Up from 38 pages (EN only).
+
+**New RU routes (all static or SSG):**
+- `/ru` — Russian homepage
+- `/ru/guides` — all published guides, localized (EN fallback where ru_* empty)
+- `/ru/guides/[slug]` — 15 static pages, EN fallback content until translated
+- `/ru/guides/spouse-dependent-visa-dubai` — tab group page (locale-aware)
+- `/ru/guides/child-dependent-visa-dubai` — tab group page (locale-aware)
+- `/ru/visas` — Russian visa hub
+- `/ru/visas/family` — Russian family visa hub
+- `/ru/visas/golden` — Russian golden visa hub
+- `/ru/company-setup` — Russian company setup hub
+- `/ru/contact` — Russian contact page
+
+**Infrastructure changes:**
+- `lib/db/reader.ts` — added `Locale` type, field-level `pick()` helper, locale params (default 'en') to all public query functions, `hasRuContent: boolean` on GuideData, `getRuPublishedGuidesSlugs()` for sitemap
+- `components/Header.tsx` — locale detection from `usePathname`, RU nav items, EN/RU language switcher pill (desktop + mobile), locale-aware logo link and active state
+- `components/GuideTabs.tsx` — added `locale?: Locale` prop, `STRINGS` map for translated UI labels, locale-aware breadcrumb links
+- `components/TopicCard.tsx` — added `locale?: 'en'|'ru'` prop, href prefix switches to `/ru/guides/` when locale is 'ru'
+- `app/sitemap.ts` — added RU static pages + RU guide entries (filtered to slugs where ru_title non-empty)
+- `app/(public)/guides/[slug]/page.tsx` — added hreflang alternates to generateMetadata (ru only added when guide.hasRuContent is true)
+- `app/(public)/page.tsx` — added metadata with hreflang alternates (EN/RU/x-default)
+- `app/ru/layout.tsx` — new RU layout wrapping same Header/Footer/StickyRouteCta as EN
+
+**Fallback behavior:** All RU routes use field-level EN fallback. If `ru_title` is empty, the EN title renders. Same per field. No blank pages possible.
+
+**Sitemap:** RU guide entries only appear for slugs where `ru_title` non-empty. Currently 0 (no translations yet). Will grow automatically as admin fills ru_* fields.
+
+**Not yet committed — pending owner QA review.**
+
+---
+
 ## 2026-04-28 — Strategic planning docs created (RU/EN SEO strategy + platform roadmap)
 
 **Five planning documents created:**

@@ -6,15 +6,33 @@ import { usePathname } from "next/navigation";
 
 const WHATSAPP_HREF = "https://wa.me/971506304817";
 
-const navItems = [
+const EN_NAV = [
   { label: "Find My Route",  href: "/find-my-visa" },
   { label: "Visas",          href: "/visas" },
   { label: "Company Setup",  href: "/company-setup" },
   { label: "Guides",         href: "/guides" },
 ];
 
+const RU_NAV = [
+  { label: "Визы",             href: "/ru/visas" },
+  { label: "Компании",         href: "/ru/company-setup" },
+  { label: "Гайды",            href: "/ru/guides" },
+];
+
+/** /ru → /   |   /ru/guides/foo → /guides/foo   |   / → /ru   |   /guides/foo → /ru/guides/foo */
+function alternatePath(pathname: string): string {
+  if (pathname === "/ru") return "/";
+  if (pathname.startsWith("/ru/")) return pathname.slice(3);
+  if (pathname === "/") return "/ru";
+  return "/ru" + pathname;
+}
+
 export default function Header() {
   const pathname = usePathname();
+  const isRu     = pathname === "/ru" || pathname.startsWith("/ru/");
+  const navItems = isRu ? RU_NAV : EN_NAV;
+  const logoHref = isRu ? "/ru" : "/";
+  const altPath  = alternatePath(pathname);
 
   function isActive(href: string) {
     return pathname === href || pathname.startsWith(href + "/");
@@ -25,7 +43,7 @@ export default function Header() {
       {/* Main row */}
       <div className="max-w-2xl mx-auto px-5 h-14 flex items-center justify-between gap-4">
 
-        <Link href="/" className="flex-shrink-0 flex items-center">
+        <Link href={logoHref} className="flex-shrink-0 flex items-center">
           <Image
             src="/brand/logo-header.png"
             alt="Guidex Consulting"
@@ -52,6 +70,14 @@ export default function Header() {
           ))}
         </nav>
 
+        {/* Language switcher */}
+        <Link
+          href={altPath}
+          className="hidden sm:block flex-shrink-0 text-[12px] font-medium text-gray-400 hover:text-gray-700 transition-colors border border-gray-200 rounded-full px-2.5 py-1"
+        >
+          {isRu ? "EN" : "RU"}
+        </Link>
+
         {/* WhatsApp button */}
         <a
           href={WHATSAPP_HREF}
@@ -67,7 +93,7 @@ export default function Header() {
 
       </div>
 
-      {/* Mobile secondary nav row — full site nav, scrollable */}
+      {/* Mobile secondary nav row */}
       <nav className="sm:hidden border-t border-gray-100 overflow-x-auto">
         <div className="flex items-center px-4 gap-1" style={{ minWidth: "max-content" }}>
           {navItems.map(({ label, href }) => (
@@ -83,6 +109,13 @@ export default function Header() {
               {label}
             </Link>
           ))}
+          {/* Language switcher — mobile */}
+          <Link
+            href={altPath}
+            className="flex-shrink-0 ml-2 px-3 py-2 text-[12px] font-medium text-gray-400 hover:text-gray-700 whitespace-nowrap border border-gray-200 rounded-full transition-colors"
+          >
+            {isRu ? "EN" : "RU"}
+          </Link>
         </div>
       </nav>
     </header>

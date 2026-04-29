@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-04-28
+Last updated: 2026-04-29
 
 WHAT TO ATTACH
 --------------
@@ -22,16 +22,12 @@ anything.
 The site is LIVE on the real domain:
 https://guidex-consulting.ae/
 
-Server: 165.245.187.15 — app ID dgcmdxxpjx (Recovered-guidex-main-server)
-SSH: master_asumzwhebx@165.245.187.15
-App path: /home/master/applications/dgcmdxxpjx/public_html
-Node: v20.20.2 via nvm — PM2: guidex-production (online)
-GitHub: fea9411 (main) — all code, docs, scripts, memory files committed
-
-NOTE: Server was suspended/recovered by Cloudways on 2026-04-28.
-New IP: 165.245.187.15 (old was 157.245.207.99)
-New SSH user: master_asumzwhebx (old was master_udndspcyhr)
-All scripts and docs updated to new values.
+Server: UpCloud — IP 85.9.203.69 (Ubuntu 24.04, 2 GB RAM)
+SSH: root@85.9.203.69
+App path: /var/www/guidex
+Node: v20.20.2 (NodeSource system install) — PM2: guidex-production (online)
+PM2 config: ecosystem.config.js (not start-guidex.sh)
+GitHub: 3927e4c (main) — all code, docs, scripts, memory files committed
 
 Do not start building until you have confirmed you understand the current
 architecture, the admin QA rules, and the project memory maintenance requirement.
@@ -44,9 +40,10 @@ SQLite. No external services.
 Stack: Next.js 16.2.3 (App Router, Turbopack) + TypeScript + Tailwind CSS v4 +
 better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
 
-CURRENT STATE (as of 2026-04-27)
+CURRENT STATE (as of 2026-04-29)
 ---------------------------------
 Site is fully live on guidex-consulting.ae with HTTPS. 15 guides published.
+Phase 1B (Russian routing infrastructure) is complete and verified.
 
 Visas (9/9 live):
   - employment-visa                                published (inside-country)
@@ -72,8 +69,8 @@ Government (3/3 live):
 
 CURRENT NEXT STEPS
 ------------------
-1. Phase 1B is done (Russian routing infrastructure). Build verified: 62 pages, 0 errors.
-   Do NOT deploy yet — owner reviewing QA output.
+1. Phase 1B is DONE and VERIFIED. Build: 62 pages, 0 errors. Routes, hreflang,
+   sitemap, language switcher, EN fallback all confirmed working.
 
 2. Populate RU content via admin panel:
    - Open /admin/guides/[slug] for each priority guide
@@ -84,8 +81,8 @@ CURRENT NEXT STEPS
    - See docs/ru-launch-plan.md for per-guide keyword/title/meta direction
 
 3. After translations entered, deploy to production:
-   - ./scripts/db-backup-from-server.sh first
-   - git pull on server, npm run build, pm2 restart
+   - ./scripts/db-backup-from-upcloud.sh first (pull fresh DB)
+   - git pull on server, npm run build, pm2 restart guidex-production
 
 4. Fix em dashes in content (parallel task):
    Priority: open-business-bank-account-dubai, mainland-company-setup-dubai, free-zone-company-setup-dubai
@@ -93,6 +90,8 @@ CURRENT NEXT STEPS
 
 5. Submit sitemap to Google Search Console:
    https://guidex-consulting.ae/sitemap.xml
+
+6. Add Plausible analytics.
 
 RULES THAT MUST NOT BE BROKEN
 ------------------------------
@@ -135,11 +134,13 @@ DEPLOYMENT FACTS (locked)
 - Code source of truth: GitHub (Yessenof/dubai-guide-site)
 - Production DB source of truth: local backups/production-db/ (pull before every deploy)
 - Secrets: out-of-band, never committed
-- DB backup script: ./scripts/db-backup-from-server.sh
-- DB restore script: ./scripts/db-restore-to-server.sh (requires typed YES)
-- Deploy: rsync -avz source to /home/master/applications/dgcmdxxpjx/public_html/
-- Start script on server: ~/start-guidex.sh (sources nvm, cd to app, PORT=3000)
-- Admin auth debug: ./scripts/runtime-env-diag.sh (tests @next/env loadEnvConfig)
+- DB backup script: ./scripts/db-backup-from-upcloud.sh
+- DB restore script: ./scripts/db-restore-to-upcloud.sh (requires typed YES)
+- Deploy: git pull on server + npm run build + pm2 restart guidex-production
+- PM2 config: ecosystem.config.js — name: guidex-production, PORT 3000
+- Server: root@85.9.203.69, app at /var/www/guidex, Node via NodeSource (not nvm)
+- Nginx reverse proxy to 127.0.0.1:3000, Certbot SSL, UFW: SSH+80+443
+- 2 GB swapfile on server (needed — only 2 GB RAM)
 
 SCRIPT PATTERN FOR GUIDE CREATION
 -----------------------------------
@@ -153,7 +154,11 @@ SCRIPT PATTERN FOR GUIDE CREATION
 
 LAST VERIFIED STABLE STATE
 ---------------------------
-CP-12 (2026-04-28): Server recovery complete. guidex-consulting.ae LIVE.
-New IP: 165.245.187.15. SSH: master_asumzwhebx. DNS updated. SSL active.
-mod_proxy_http re-enabled. HTTP→HTTPS redirect enabled. All scripts updated.
-GitHub fea9411. Run fresh DB backup when stable.
+CP-13 (2026-04-29): UpCloud migration complete. guidex-consulting.ae LIVE on
+UpCloud IP 85.9.203.69. HTTPS active. All 8 migration phases done. DB verified
+(15 guides, 94 steps). PM2 online. Cron daily DB backup active.
+
+CP-14 (2026-04-29): Phase 1B Russian routing verified. 62 pages build cleanly.
+All EN routes unchanged. RU routes load (EN fallback for empty ru_* fields).
+Hreflang correct. Language switcher works. Sitemap includes RU static pages.
+No admin imports in public bundle.

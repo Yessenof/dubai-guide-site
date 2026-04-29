@@ -5,6 +5,30 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-14 — Phase 1B Russian routing verified
+
+**Date:** 2026-04-29
+
+**What is confirmed stable:**
+
+- All 7 required routes return 200: `/`, `/guides`, `/guides/employment-visa`, `/ru/guides/employment-visa`, `/guides/golden-visa-dubai-property`, `/ru/guides/golden-visa-dubai-property`, `/admin/login`
+- EN guide pages: hreflang `en` + `x-default` emitted. `ru` hreflang only when `hasRuContent=true` (currently none — all ru_* empty)
+- RU guide pages: hreflang `en` + `ru` + `x-default` + canonical `/ru/guides/[slug]`
+- Language switcher: EN pages show RU pill → `/ru/[path]`, RU pages show EN pill → `/[path]`
+- RU pages render with EN fallback for all empty ru_* fields
+- RU nav: Визы / Компании / Гайды (no Find My Route)
+- Sitemap: 32 entries — EN static + EN guides + RU static + RU guide entries (0 currently, filtered by ru_title)
+- No admin/writer imports in public bundle
+- Build: 62 pages, 0 errors (commit 3927e4c)
+
+**Remaining before RU launch:**
+1. Populate ru_* fields via admin (priority order in docs/ru-launch-plan.md)
+2. After translations, deploy: `git pull` + `npm run build` + `pm2 restart`
+3. Submit sitemap to Google Search Console
+4. Add Plausible analytics
+
+---
+
 ## CP-13 — UpCloud migration complete, guidex-consulting.ae live on new server
 
 **Date:** 2026-04-29

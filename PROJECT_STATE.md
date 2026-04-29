@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-29 (UpCloud migration complete — HTTPS live, DNS switched, SSL issued, 9/9 smoke tests pass)
+Last updated: 2026-04-29 (Phase 1B Russian routing verified — 62 pages, 0 errors, all routes confirmed)
 
 ---
 
@@ -157,7 +157,7 @@ Group pages live:
 
 2. **`docs/admin-architecture.md` is partially outdated.** References `middleware.ts` (now `proxy.ts`) and describes old writer.ts patterns. Useful for architectural context but not a literal code reference.
 
-3. **Russian language not live on public site.** RU fields are in the DB and editable in admin, but the public site always renders EN. Locale routing not yet implemented.
+3. **Russian content not yet populated.** Phase 1B routing infrastructure is live. All RU pages render EN fallback until `ru_*` fields are filled in admin. Priority content entry order in `docs/ru-launch-plan.md`.
 
 4. **Category taxonomy not owner-approved as final.** Five categories are currently defined in code (`visas`, `company-setup`, `hiring`, `living`, `government`) but have not been explicitly confirmed by the owner as the permanent list. Treat as current working taxonomy, not a locked decision.
 
@@ -188,7 +188,7 @@ Group pages live:
 | HTTP → HTTPS redirect | ✅ 301 |
 | DNS A record | @ + www → 85.9.203.69 (updated at Tasjeel 2026-04-29) |
 | Smoke test | 9/9 HTTPS routes 200 ✅, HTTP→HTTPS 301 ✅ |
-| GitHub | c127e9b — up to date |
+| GitHub | 3927e4c — up to date |
 | Swap | 2 GB swapfile (persistent via /etc/fstab) |
 
 **Previous host:** Cloudways (165.245.187.15) — decommissioned after migration.
@@ -273,6 +273,8 @@ Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 li
 | Phase 10 | Guidex Consulting brand integration: all "Dubai Guide" text replaced, logo image in header, favicons replaced, all metadata titles updated, manifest.webmanifest added, all assets RGB-optimized, build verified (38 pages, 0 errors) | ✅ |
 | Phase 11 | Cloudways deployment live on temporary URL: nvm + Node 20 + PM2, rsync deploy, DB upload, Apache proxy, mod_proxy_http enabled by Support, smoke test 8/8 ✅ | ✅ |
 | Phase 12 | Real domain launch: guidex-consulting.ae live with HTTPS + www, DNS A record → 157.245.207.99, SSL Let's Encrypt, rebuild + PM2 restart, smoke test 8/8 ✅, production DB backup ✅ | ✅ |
+| UpCloud migration | Migrated production from Cloudways to UpCloud (85.9.203.69). All 8 phases complete. DNS switched. HTTPS live. Cron daily backup. 9/9 smoke tests. | ✅ |
+| Phase 1B | Russian routing infrastructure: Locale type, pick() fallback, RU guide routes, language switcher, hreflang, sitemap dual-language. Build: 62 pages, 0 errors. | ✅ |
 
 ---
 

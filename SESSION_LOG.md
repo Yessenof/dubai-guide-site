@@ -5,6 +5,23 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-29 — Phase 1B Russian routing: full verification pass
+
+Discovered Phase 1B was already fully implemented in commit 5149a84. Ran complete spec verification:
+
+- All 7 routes return 200: `/`, `/guides`, `/guides/employment-visa`, `/ru/guides/employment-visa`, `/guides/golden-visa-dubai-property`, `/ru/guides/golden-visa-dubai-property`, `/admin/login`
+- EN guide hreflang: `en` + `x-default` only (no `ru` — correct, all ru_title empty so hasRuContent=false)
+- RU guide hreflang: `en` + `ru` + `x-default` + canonical `/ru/guides/[slug]`
+- Language switcher: EN→RU and RU→EN links both correct via alternatePath()
+- RU nav: Визы / Компании / Гайды (no Find My Route — correct per spec)
+- EN fallback: RU pages render EN h1 for empty ru_title (correct)
+- Sitemap: 32 entries — EN static (12) + EN guides (11, minus 4 redirect slugs) + RU static (9) + RU guides (0, filtered by ru_title)
+- No admin/writer imports in public bundle
+- CP-14 added to CHECKPOINTS.md
+- NEW_CHAT_TRANSFER.txt rewritten: UpCloud server details, correct git hash (3927e4c), Phase 1B verified status
+
+---
+
 ## 2026-04-29 — Post-migration cleanup: UpCloud docs and scripts
 
 - Created `docs/deployment-upcloud.md` — authoritative runbook with IP filled in (85.9.203.69), all OVH placeholders removed

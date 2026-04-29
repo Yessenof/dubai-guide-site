@@ -138,7 +138,7 @@ chmod 600 /var/www/guidex/.env.local
 ls -lh backups/production-db/
 ```
 
-Latest backup: `guides.db.20260428-151457` (15 guides, 94 steps, all published)
+Latest backup: `guides.db.20260429-140304` (15 guides, 94 steps, all published, integrity_check ok)
 
 ### Recover from Cloudways (if still accessible)
 
@@ -405,6 +405,7 @@ pm2 restart guidex-production --update-env
 
 ## Cloudways → OVH migration checklist
 
+- [x] DB verified locally: `guides.db.20260429-140304` — 15 guides, 94 steps, integrity_check ok
 - [ ] Phase 1: Ubuntu 24.04 confirmed, server setup script ran
 - [ ] Phase 2: Repo cloned, npm ci done, .env.local created with correct secrets
 - [ ] Phase 3: guides.db uploaded, sqlite3 verify passes (15 guides, 94 steps)

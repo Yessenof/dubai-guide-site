@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-28 (Phase 1B complete — Russian public routing infrastructure, build verified 62 pages)
+Last updated: 2026-04-29 (Phase 1B committed; OVH migration prep complete; DB verified for migration)
 
 ---
 
@@ -171,7 +171,7 @@ Group pages live:
 
 | Item | Status |
 |---|---|
-| Server | Cloudways — Recovered-guidex-main-server — 165.245.187.15 |
+| Server | Cloudways — 165.245.187.15 (active; do NOT cancel until OVH is live + DNS switched) |
 | SSH user | master_asumzwhebx |
 | App ID | dgcmdxxpjx |
 | Temporary URL | https://phpstack-1618074-6379172.cloudwaysapps.com/ |
@@ -295,7 +295,8 @@ Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 li
 - `NEXTAUTH_URL` must be set to the production domain in `.env.local` on server
 - NEXT_PUBLIC_SITE_URL and NEXTAUTH_URL → https://guidex-consulting.ae
 - Rebuild ran on server after domain switch — NEXT_PUBLIC_* baked into static output
-- `./scripts/db-backup-from-server.sh` — pulls production DB, last run 2026-04-27-223918
+- `./scripts/db-backup-from-server.sh` — pulls production DB, last run 2026-04-29-140304
+- OVH migration: `backups/production-db/guides.db.20260429-140304` verified (integrity_check ok, 15 guides, 94 steps, all published) — ready to upload to OVH
 
 ---
 

@@ -5,6 +5,24 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-29 — OVH migration: DB verified, migration prep committed
+
+DB backup `guides.db.20260429-140304` pulled from Cloudways and verified:
+- `PRAGMA integrity_check;` → ok
+- 15 guides, 94 steps, all published=1
+- All key slugs present
+
+This is the source DB for the OVH migration. Cloudways remains live (do not cancel until OVH is live and DNS has switched). Waiting on: OVH server IP + SSH root access.
+
+All OVH migration assets committed in `5149a84`:
+- `ecosystem.config.js`, `deploy/nginx/guidex-consulting.ae`, `deploy/scripts/server-cron-backup.sh`
+- `scripts/ovh-server-setup.sh`, `scripts/db-backup-from-ovh.sh`, `scripts/db-restore-to-ovh.sh`
+- `docs/deployment-ovh.md` — full 9-phase runbook
+
+**Next:** Provide OVH IP → Phase 1 server setup → Phase 2 clone/env → Phase 3 DB upload → Phase 4 PM2 → Phase 5 Nginx → Phase 6 smoke tests → Phase 7 DNS+SSL
+
+---
+
 ## 2026-04-28 — Phase 1B: Russian public routing infrastructure
 
 **Build result:** 62 pages, 0 TypeScript errors, 0 build errors. Up from 38 pages (EN only).

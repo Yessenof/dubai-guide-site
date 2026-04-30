@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllPublishedGuides, getPublishedGuideBySlug } from "@/lib/db/reader";
+import { localizeValue } from "@/lib/localize-value";
 import GuideHeader from "@/components/GuideHeader";
 import RouteSnapshot from "@/components/RouteSnapshot";
 import StepCard from "@/components/StepCard";
@@ -74,11 +75,11 @@ export default async function RuGuidePage({ params }: Props) {
 
       {/* 2. Quick-answer block */}
       <RouteSnapshot
-        price={guide.price}
-        timeline={guide.timeline}
+        price={localizeValue(guide.price, "ru")}
+        timeline={localizeValue(guide.timeline, "ru")}
         audience={guide.audience}
         steps={guide.steps}
-        lastUpdated={guide.lastUpdated}
+        lastUpdated={localizeValue(guide.lastUpdated, "ru")}
         locale="ru"
       />
 
@@ -136,8 +137,8 @@ export default async function RuGuidePage({ params }: Props) {
             what={step.what}
             where={step.where}
             address={step.address}
-            cost={step.cost}
-            time={step.timeEst}
+            cost={localizeValue(step.cost, "ru")}
+            time={localizeValue(step.timeEst, "ru")}
             advice={step.advice}
             warning={step.warning || undefined}
             locale="ru"

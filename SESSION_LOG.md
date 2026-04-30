@@ -5,6 +5,22 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-30 — Bank account guide upgrade audit
+
+Reviewed Wio Business onboarding screenshots (user-provided) and audited the current `open-business-bank-account-dubai` EN guide for content gaps.
+
+**Current state:** 8 steps, all EN fields populated, all RU fields empty. Guide is structurally sound but compliance-thin. Missing: customer/supplier profiles, source of funds detail, 3-month bank statement requirement, RERA warning, CV/LinkedIn, digital bank options, shareholder role types.
+
+**Wio Business evidence:** Shows structured onboarding for applicant role (shareholder/POA/employee), top 5 customers, top 5 suppliers, 3-month bank statements (not password-protected), subsidiary disclosure, consultancy service description, regulated/RERA activity, source of funds declaration, and CV/LinkedIn. Guide covers none of these explicitly.
+
+**Recommendation:** Upgrade EN master guide first (8 → 9 steps). New Step 4 dedicated to source of funds. Step 3 rewritten to cover KYC compliance package (customers, suppliers, bank statements, CV). Steps 5–9 correspond to current 4–8.
+
+**No code, DB, or content changes made in this step.** Audit only.
+
+Audit document: `docs/bank-account-guide-upgrade-audit.md`
+
+---
+
 ## 2026-04-30 — Step 4: full RU value localization + D-class em-dash fix
 
 **lib/localize-value.ts expanded** from 21 to 47 mappings, covering:

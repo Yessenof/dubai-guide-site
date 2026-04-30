@@ -89,13 +89,17 @@ CURRENT NEXT STEPS
    - ./scripts/db-backup-from-upcloud.sh first (pull fresh DB)
    - git pull on server, npm run build, pm2 restart guidex-production
 
-4. Step 1A DONE. Step 2 DONE.
+4. Step 1A DONE. Step 2 DONE. Step 3 DONE.
    - Step 1A: em-dash hygiene for all 4 completed RU guides (scripts + DB)
    - Step 2: UI label localization — RouteSnapshot, StepCard, GuideHeader now
      locale-aware. RU pages show Russian labels. EN unchanged.
-   Next: Step 3 — Category B value cleanup (cost/time values still English)
-   Options: display-level mapping for known values ("No fee"→"Без сборов",
-   "1 day"→"1 день") or rewrite values in DB. Decision required.
+   - Step 3: Display-level value localization — lib/localize-value.ts created.
+     21 A-class exact-match mappings + month-name regex. Applied in
+     app/ru/guides/[slug]/page.tsx for price, timeline, lastUpdated, cost,
+     timeEst. 22 A-class strings now Russian on RU pages. EN unchanged.
+     C-class (AED + context) deferred to schema redesign. 2 D-class EN
+     em-dashes in timeEst fields remain (separate EN content fix).
+   Next: Continue RU content population (open-business-bank-account-dubai next).
 
 5. Submit sitemap to Google Search Console:
    https://guidex-consulting.ae/sitemap.xml
@@ -206,3 +210,9 @@ CP-22 (2026-04-30): Step 2 complete. UI label localization live.
 RouteSnapshot, StepCard, GuideHeader have locale prop. RU guide pages pass
 locale="ru". All 12 labels show Russian on RU pages. EN unchanged.
 DB not touched. Build 63 pages, 0 errors.
+
+CP-23 (2026-04-30): Step 3 complete. Display-level value localization live.
+lib/localize-value.ts: 21 exact-match A-class mappings + month-name regex.
+app/ru/guides/[slug]/page.tsx wraps price, timeline, lastUpdated, cost,
+timeEst via localizeValue. 22 A-class English values now Russian on RU pages.
+EN guide page unchanged. DB not touched. Build 63 pages, 0 errors.

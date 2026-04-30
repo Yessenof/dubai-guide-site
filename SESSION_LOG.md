@@ -5,6 +5,20 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-30 — Step 3: display-level value localization for RU guide pages
+
+Created `lib/localize-value.ts` with 21 exact-match A-class mappings (cost + timeEst strings) and a month-name regex for `lastUpdated`. Helper returns original value unchanged for any unmatched or B/C-class string.
+
+Updated `app/ru/guides/[slug]/page.tsx` to wrap guide.price, guide.timeline, guide.lastUpdated, step.cost, and step.timeEst via `localizeValue("ru")` before passing to RouteSnapshot and StepCard. EN guide page not touched.
+
+Verified via built HTML: "2–4 недели", "2–3 дня", "Апрель 2025/2026", "Бесплатно", "По необходимости", "Без сборов", "Без сборов на этом этапе", "Зависит от сектора", "Включено в шаг 6/7", "Включено в стоимость пакета", "Оплата в тот же день" all present on correct RU pages. AED amounts and C-class values unchanged.
+
+Production smoke test: all 4 RU guides confirmed. Build: 63 pages, 0 errors. Commit: 665744e. CP-23 added.
+
+Remaining English on RU pages: C-class values (AED + English context strings) — deferred to schema redesign. D-class EN em-dashes ("Varies — 4–10+ weeks", "Varies — bank account may take 2–6 weeks") — separate EN content fix.
+
+---
+
 ## 2026-04-30 — Step 2: UI label localization for RU guide pages
 
 Added `locale?: "en" | "ru"` prop (default "en") to:

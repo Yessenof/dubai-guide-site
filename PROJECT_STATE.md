@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-30 (Step 2 complete: UI label localization — RouteSnapshot, StepCard, GuideHeader now locale-aware; RU guide pages show Russian labels)
+Last updated: 2026-04-30 (Step 3 complete: display-level value localization — lib/localize-value.ts applied in RU guide page; 22 A-class English values now Russian on RU pages)
 
 ---
 
@@ -235,6 +235,14 @@ Pre-RU launch (pending):
 - `StepCard.tsx`: `locale` prop added; 6 labels (Where to go→Куда идти, Address/portal→Адрес/портал, Est. cost→Стоимость, Est. time→Срок, Advice→Совет, Note→Важно)
 - `GuideHeader.tsx`: `locale` prop added; category map (visas→Визы, company-setup→Компании, government→Госуслуги)
 - `app/ru/guides/[slug]/page.tsx`: passes `locale="ru"` to all three components
+
+**Step 3 complete: display-level value localization**
+- `lib/localize-value.ts`: 21 A-class exact-match mappings + month-name regex for lastUpdated
+- `app/ru/guides/[slug]/page.tsx`: wraps guide.price, guide.timeline, guide.lastUpdated, step.cost, step.timeEst via localizeValue("ru") before passing to RouteSnapshot and StepCard
+- EN guide page not touched — localizeValue returns input unchanged for locale="en"
+- Verified: 22 A-class values now Russian on RU pages. AED amounts, C-class values unchanged.
+- Build: 63 pages, 0 errors. Production: smoke tested all 4 RU guides ✅
+- Commit: 665744e. CP-23 added.
 - EN guide page: unchanged (all locale props default to "en")
 - Build: 63 pages, 0 TypeScript errors
 - Production: all 4 RU pages show Russian labels, EN page unchanged

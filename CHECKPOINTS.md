@@ -5,6 +5,27 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-23 — Step 3: display-level value localization for RU guide pages
+
+**Date:** 2026-04-30
+
+**What is confirmed stable:**
+
+- `lib/localize-value.ts` created — 21 exact-match A-class mappings + month-name regex
+- `app/ru/guides/[slug]/page.tsx` — wraps price, timeline, lastUpdated, cost, timeEst via localizeValue before passing to RouteSnapshot and StepCard
+- EN guide page (`app/(public)/guides/[slug]/page.tsx`) unchanged
+- All 8 audit checklist items verified in built HTML
+- Production smoke test: all 4 RU guides confirmed ✅
+- Build: 63 pages, 0 TypeScript errors
+- No DB changes, no schema changes
+- Commit: 665744e
+
+**Remaining English on RU pages:**
+- C-class values (AED + English context) — deferred to schema redesign (ru_price, ru_timeline, ru_cost, ru_timeEst columns)
+- 2 D-class EN em-dashes in timeEst fields — separate EN content fix
+
+---
+
 ## CP-22 — Step 2: UI label localization for RU guide pages
 
 **Date:** 2026-04-30

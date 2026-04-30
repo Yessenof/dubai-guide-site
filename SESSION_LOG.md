@@ -5,6 +5,26 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-30 — RU guide quality audit (no code/DB changes)
+
+Produced comprehensive audit of all 4 live RU guide pages. Output: `docs/ru-guide-quality-audit.md`.
+
+**Key findings:**
+
+- **Category A (code fix):** 12 UI labels hardcoded in English across `RouteSnapshot.tsx` (6 labels) and `StepCard.tsx` (6 labels). Category pill in `GuideHeader.tsx` also has no locale mapping. Fix: add `locale` prop, translate labels, pass from `app/ru/guides/[slug]/page.tsx`.
+
+- **Category B (schema/content fix):** 6 DB fields have no `ru_*` equivalents — `price`, `timeline`, `lastUpdated`, `category` (guide level) and `cost`, `timeEst` (step level). Values show in English on all RU pages. Recommended fix: display-level mapping for category; rewrite EN-only duration words in content.
+
+- **Category C (CRITICAL — em-dashes):** `free-zone-company-setup-dubai` has em-dashes in production DB (Step 1 ru_advice, Step 2 ru_what, ru_overview). Script file `scripts/add-ru-free-zone-company-setup.ts` was never updated after local DB patch — source still contains em-dashes. Both script file AND production DB must be fixed.
+
+- SEO quality: employment-visa 4/5, golden-visa 3.5/5, mainland-company-setup 3.5/5, free-zone 3/5 (em-dash penalty).
+
+**No code, no DB, no deploy in this step.**
+
+Next: Step 1 — fix em-dashes in free-zone script file + production DB patch.
+
+---
+
 ## 2026-04-30 — RU content: free-zone-company-setup-dubai
 
 Populated all RU fields for the free zone company setup guide. 8/8 steps.

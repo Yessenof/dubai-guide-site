@@ -8,10 +8,27 @@ interface GuideFrontmatter {
 
 interface GuideHeaderProps {
   frontmatter: GuideFrontmatter;
+  locale?: "en" | "ru";
 }
 
-export default function GuideHeader({ frontmatter }: GuideHeaderProps) {
+const CATEGORY_RU: Record<string, string> = {
+  "visas":               "Визы",
+  "visa":                "Визы",
+  "company-setup":       "Компании",
+  "business-setup":      "Компании",
+  "government":          "Госуслуги",
+  "government-services": "Госуслуги",
+  "hiring":              "Найм",
+  "living":              "Проживание",
+};
+
+export default function GuideHeader({ frontmatter, locale = "en" }: GuideHeaderProps) {
   const { title, summary, category } = frontmatter;
+
+  const categoryLabel =
+    locale === "ru"
+      ? (CATEGORY_RU[category] ?? category.replace(/-/g, " "))
+      : category.replace(/-/g, " ");
 
   return (
     <div>
@@ -21,7 +38,7 @@ export default function GuideHeader({ frontmatter }: GuideHeaderProps) {
           <CategoryIcon category={category} />
         </span>
         <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 capitalize">
-          {category.replace(/-/g, " ")}
+          {categoryLabel}
         </p>
       </div>
 

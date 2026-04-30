@@ -9,7 +9,27 @@ interface RouteSnapshotProps {
   audience: string;
   steps: StepPreview[];
   lastUpdated: string;
+  locale?: "en" | "ru";
 }
+
+const LABELS = {
+  en: {
+    govFee:      "Gov. fee",
+    timeline:    "Timeline",
+    for:         "For",
+    steps:       "Steps",
+    start:       "Start",
+    lastUpdated: "Last updated",
+  },
+  ru: {
+    govFee:      "Стоимость",
+    timeline:    "Срок",
+    for:         "Для кого",
+    steps:       "Шаги",
+    start:       "С чего начать",
+    lastUpdated: "Обновлено",
+  },
+};
 
 function truncate(text: string, maxLen: number): string {
   if (text.length <= maxLen) return text;
@@ -30,7 +50,9 @@ export default function RouteSnapshot({
   audience,
   steps,
   lastUpdated,
+  locale = "en",
 }: RouteSnapshotProps) {
+  const L = LABELS[locale];
   const audienceTruncated = truncate(audience, 85);
   const startTruncated = truncate(steps[0]?.what ?? "", 90);
 
@@ -40,35 +62,35 @@ export default function RouteSnapshot({
 
         {/* Row 1: Cost + Timeline — the two primary answers */}
         <div className="bg-white px-4 py-3.5">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">Gov. fee</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">{L.govFee}</p>
           <p className="text-[17px] font-bold text-navy leading-none">{price}</p>
         </div>
         <div className="bg-white px-4 py-3.5">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">Timeline</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">{L.timeline}</p>
           <p className="text-[17px] font-bold text-navy leading-none">{timeline}</p>
         </div>
 
         {/* Row 2: For + Steps count */}
         <div className="bg-white px-4 py-3">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">For</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">{L.for}</p>
           <p className="text-[12px] text-gray-700 leading-snug">{audienceTruncated}</p>
         </div>
         <div className="bg-white px-4 py-3">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">Steps</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">{L.steps}</p>
           <p className="text-[17px] font-bold text-navy leading-none">{steps.length}</p>
         </div>
 
         {/* Row 3: Start — first action */}
         {startTruncated && (
           <div className="bg-white px-4 py-3 col-span-2 border-t border-stone-100">
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">Start</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">{L.start}</p>
             <p className="text-[12px] text-gray-700 leading-snug">{startTruncated}</p>
           </div>
         )}
 
       </div>
 
-      <p className="text-[10px] text-gray-400 mt-2.5">Last updated: {lastUpdated}</p>
+      <p className="text-[10px] text-gray-400 mt-2.5">{L.lastUpdated}: {lastUpdated}</p>
     </div>
   );
 }

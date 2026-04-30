@@ -8,7 +8,27 @@ interface StepCardProps {
   time: string;
   advice: string;
   warning?: string;
+  locale?: "en" | "ru";
 }
+
+const LABELS = {
+  en: {
+    whereTo:  "Where to go",
+    address:  "Address / portal",
+    cost:     "Est. cost",
+    time:     "Est. time",
+    advice:   "Advice",
+    note:     "Note",
+  },
+  ru: {
+    whereTo:  "Куда идти",
+    address:  "Адрес / портал",
+    cost:     "Стоимость",
+    time:     "Срок",
+    advice:   "Совет",
+    note:     "Важно",
+  },
+};
 
 export default function StepCard({
   number,
@@ -20,7 +40,10 @@ export default function StepCard({
   time,
   advice,
   warning,
+  locale = "en",
 }: StepCardProps) {
+  const L = LABELS[locale];
+
   return (
     <div className="relative pl-10 pb-7 last:pb-0 before:content-[''] before:absolute before:left-3.5 before:top-8 before:bottom-0 before:w-px before:bg-stone-100 last:before:hidden">
       {/* Step number bubble */}
@@ -43,11 +66,11 @@ export default function StepCard({
         {/* Where / Address */}
         <div className="border-t border-stone-100 grid grid-cols-2 divide-x divide-stone-100">
           <div className="px-4 py-2.5">
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">Where to go</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">{L.whereTo}</p>
             <p className="text-[13px] text-gray-700 leading-snug">{where}</p>
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">Address / portal</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">{L.address}</p>
             <p className="text-[13px] text-gray-700 leading-snug">{address}</p>
           </div>
         </div>
@@ -55,25 +78,25 @@ export default function StepCard({
         {/* Cost / Time */}
         <div className="border-t border-stone-100 grid grid-cols-2 divide-x divide-stone-100">
           <div className="px-4 py-2.5">
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">Est. cost</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">{L.cost}</p>
             <p className="text-[14px] font-bold text-gray-900">{cost}</p>
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">Est. time</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">{L.time}</p>
             <p className="text-[13px] font-medium text-gray-700">{time}</p>
           </div>
         </div>
 
         {/* Advice */}
         <div className="border-t border-stone-100 px-4 py-3 bg-navy/[.05]">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-navy mb-1">Advice</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-navy mb-1">{L.advice}</p>
           <p className="text-[13px] text-gray-700 leading-relaxed">{advice}</p>
         </div>
 
         {/* Warning */}
         {warning && (
           <div className="border-t border-stone-100 px-4 py-3 bg-amber-50/70">
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-amber-600 mb-1">Note</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-amber-600 mb-1">{L.note}</p>
             <p className="text-[13px] text-gray-700 leading-relaxed">{warning}</p>
           </div>
         )}

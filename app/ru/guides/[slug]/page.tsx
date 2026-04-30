@@ -69,6 +69,7 @@ export default async function RuGuidePage({ params }: Props) {
           summary:  guide.summary,
           category: guide.category,
         }}
+        locale="ru"
       />
 
       {/* 2. Quick-answer block */}
@@ -78,6 +79,7 @@ export default async function RuGuidePage({ params }: Props) {
         audience={guide.audience}
         steps={guide.steps}
         lastUpdated={guide.lastUpdated}
+        locale="ru"
       />
 
       {/* 3. CTAs */}
@@ -138,6 +140,7 @@ export default async function RuGuidePage({ params }: Props) {
             time={step.timeEst}
             advice={step.advice}
             warning={step.warning || undefined}
+            locale="ru"
           />
         ))}
       </div>

@@ -5,6 +5,36 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-30 — Step 1A: RU content em-dash hygiene pass (all 4 guides)
+
+Removed all content em-dashes from the 4 completed RU guides.
+
+**Before:**
+- employment-visa: guide-level pos 180, steps 2/3/4/7/8 affected
+- golden-visa-dubai-property: guide-level pos 133, steps 1/3/7 affected
+- mainland-company-setup-dubai: guide-level pos 660, steps 1/3/4/5/6 affected
+- free-zone-company-setup-dubai: guide-level clean (prev patched locally), steps clean locally; production had em-dashes
+
+**After:** guide=OK steps=OK for all 4 on both local and production DB.
+
+**Files changed:**
+- `scripts/add-ru-employment-visa.ts` — 9 content em-dashes removed
+- `scripts/add-ru-golden-visa-property.ts` — 6 content em-dashes removed
+- `scripts/add-ru-mainland-company.ts` — 11 content em-dashes removed
+- `scripts/add-ru-free-zone-company-setup.ts` — 7 content em-dashes removed
+- `scripts/patch-ru-em-dashes-completed-guides.ts` — NEW targeted patch script with assertNoEmDash guards
+
+**Replacements used:** comma, colon, parentheses, sentence split. No meaning removed.
+
+**Production backup:** `/var/backups/guidex/guides.db.pre-ru-em-dash-cleanup-YYYYMMDD-HHMMSS`
+**Build:** 63 pages, 0 errors. PM2 restarted, online.
+
+Remaining em-dashes in HTML: `<title>` separator (intentional) + EN `time_est` values (Category B, not in scope).
+
+CP-21 added.
+
+---
+
 ## 2026-04-30 — RU guide quality audit (no code/DB changes)
 
 Produced comprehensive audit of all 4 live RU guide pages. Output: `docs/ru-guide-quality-audit.md`.

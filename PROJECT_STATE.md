@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-29 (homepage IA restructured — EN and RU now use route-hub card layout; /ru/government created; PrimaryServices removed from homepage)
+Last updated: 2026-04-30 (Step 1A complete: em-dash hygiene pass across all 4 completed RU guides — scripts, local DB, production DB all clean)
 
 ---
 
@@ -221,11 +221,16 @@ Pre-RU launch (pending):
 - Submit sitemap to Google Search Console: https://guidex-consulting.ae/sitemap.xml
 - Add Plausible analytics
 
-**Content fix queue (parallel with RU work):**
-- Fix em dashes in `open-business-bank-account-dubai` (steps 1–8)
-- Fix em dashes in `mainland-company-setup-dubai` (steps 1, 3, 4, 5) + audience self-reference
-- Fix em dashes in `free-zone-company-setup-dubai` (steps 2, 5, 8)
-- See `docs/content-audit-ai-tone.md` for full priority queue
+**Step 1A complete: RU content em-dash hygiene**
+- All 4 completed RU guides scanned and cleaned
+- Source scripts updated: 0 content em-dashes
+- Local DB patched: guide=OK steps=OK for all 4
+- Production DB patched (backup at /var/backups/guidex/guides.db.pre-ru-em-dash-cleanup-*)
+- Patch script: `scripts/patch-ru-em-dashes-completed-guides.ts`
+- Build: 63 pages, 0 errors. PM2 online.
+- Remaining HTML em-dashes are in `<title>` separator (intentional) and EN step `time_est` values (Category B, not in scope)
+
+**Next recommended single action:** Step 2 — localize UI labels in RouteSnapshot and StepCard (add locale prop, 12 labels)
 
 Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 live (Maid Visa now WhatsApp link). Calculator: all 13 resolution states covered.
 

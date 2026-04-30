@@ -5,6 +5,28 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-21 — Step 1A: RU content em-dash hygiene across all 4 completed guides
+
+**Date:** 2026-04-30
+
+**What is confirmed stable:**
+
+- All 4 completed RU guides scanned for em-dashes in ru_* fields
+- Source scripts updated: 0 content em-dashes in add-ru-employment-visa.ts, add-ru-golden-visa-property.ts, add-ru-mainland-company.ts, add-ru-free-zone-company-setup.ts
+- Patch script created: `scripts/patch-ru-em-dashes-completed-guides.ts` (assertNoEmDash guards, UPDATE-only, ru_* fields only, 4-guide scope)
+- Local DB: guide=OK steps=OK for all 4 (verified by patch script)
+- Production DB: guide=OK steps=OK for all 4 (patch ran on server; backup at /var/backups/guidex/guides.db.pre-ru-em-dash-cleanup-*)
+- DB integrity: ok before and after
+- Build: 63 pages, 0 TypeScript errors
+- PM2 restarted, online
+- Live smoke test: all 4 RU guide pages return HTTP 200; no em-dashes in RU content fields
+- EN fields: unchanged throughout
+- Remaining HTML em-dashes: `<title>` separator pattern (intentional) + EN step time_est values (Category B, separate step)
+
+**Commit:** 5f6c30d
+
+---
+
 ## CP-20 — RU content: free-zone-company-setup-dubai
 
 **Date:** 2026-04-30

@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-30 (Step 1A complete: em-dash hygiene pass across all 4 completed RU guides — scripts, local DB, production DB all clean)
+Last updated: 2026-04-30 (Step 2 complete: UI label localization — RouteSnapshot, StepCard, GuideHeader now locale-aware; RU guide pages show Russian labels)
 
 ---
 
@@ -230,7 +230,23 @@ Pre-RU launch (pending):
 - Build: 63 pages, 0 errors. PM2 online.
 - Remaining HTML em-dashes are in `<title>` separator (intentional) and EN step `time_est` values (Category B, not in scope)
 
-**Next recommended single action:** Step 2 — localize UI labels in RouteSnapshot and StepCard (add locale prop, 12 labels)
+**Step 2 complete: UI label localization**
+- `RouteSnapshot.tsx`: `locale` prop added; 6 labels (Gov. fee→Стоимость, Timeline→Срок, For→Для кого, Steps→Шаги, Start→С чего начать, Last updated→Обновлено)
+- `StepCard.tsx`: `locale` prop added; 6 labels (Where to go→Куда идти, Address/portal→Адрес/портал, Est. cost→Стоимость, Est. time→Срок, Advice→Совет, Note→Важно)
+- `GuideHeader.tsx`: `locale` prop added; category map (visas→Визы, company-setup→Компании, government→Госуслуги)
+- `app/ru/guides/[slug]/page.tsx`: passes `locale="ru"` to all three components
+- EN guide page: unchanged (all locale props default to "en")
+- Build: 63 pages, 0 TypeScript errors
+- Production: all 4 RU pages show Russian labels, EN page unchanged
+- DB: not touched
+
+**Remaining Category B issues (not fixed yet):**
+- Step `cost` and `timeEst` values are still English (e.g. "No fee", "1 day", "2–3 days")
+- Guide `price` and `timeline` values still English
+- `last_updated` value still English
+- These require either content rewrites or display-level mapping (next step)
+
+**Next recommended single action:** Category B value cleanup — map or rewrite duration/status values for RU guide pages
 
 Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 live (Maid Visa now WhatsApp link). Calculator: all 13 resolution states covered.
 

@@ -5,6 +5,27 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-30 — Step 2: UI label localization for RU guide pages
+
+Added `locale?: "en" | "ru"` prop (default "en") to:
+- `components/RouteSnapshot.tsx` — 6 label pairs in LABELS dict
+- `components/StepCard.tsx` — 6 label pairs in LABELS dict
+- `components/GuideHeader.tsx` — category map (5 category slugs → Russian)
+
+Updated `app/ru/guides/[slug]/page.tsx` to pass `locale="ru"` to GuideHeader, RouteSnapshot, and every StepCard.
+
+EN guide page (`app/(public)/guides/[slug]/page.tsx`) not touched — defaults work.
+
+Build: 63 pages, 0 TypeScript errors. No DB changes. No schema changes.
+
+Production smoke test: all 4 RU guide pages return HTTP 200 with all 8 Russian label types confirmed. EN employment-visa page retains English labels.
+
+Still not fixed (Category B): step cost/time values ("No fee", "1 day"), guide price/timeline values — English DB values, separate step.
+
+CP-22 added.
+
+---
+
 ## 2026-04-30 — Step 1A: RU content em-dash hygiene pass (all 4 guides)
 
 Removed all content em-dashes from the 4 completed RU guides.

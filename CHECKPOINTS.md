@@ -5,6 +5,26 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-22 — Step 2: UI label localization for RU guide pages
+
+**Date:** 2026-04-30
+
+**What is confirmed stable:**
+
+- `RouteSnapshot.tsx`, `StepCard.tsx`, `GuideHeader.tsx` — all have optional `locale` prop, default "en"
+- 12 UI labels localized (6 in RouteSnapshot, 6 in StepCard); category pill localized in GuideHeader
+- `app/ru/guides/[slug]/page.tsx` passes `locale="ru"` to all three components
+- EN guide page (`app/(public)/guides/[slug]/page.tsx`) unchanged — defaults to "en"
+- Build: 63 pages, 0 TypeScript errors
+- No DB changes, no schema changes
+- Production: all 4 RU guide pages show Russian labels (verified via curl)
+- EN guide page retains English labels (verified via curl)
+- Remaining English on RU pages: step cost/time values and guide price/timeline — Category B, separate step
+
+**Commit:** 025d40f
+
+---
+
 ## CP-21 — Step 1A: RU content em-dash hygiene across all 4 completed guides
 
 **Date:** 2026-04-30

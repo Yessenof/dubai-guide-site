@@ -89,10 +89,13 @@ CURRENT NEXT STEPS
    - ./scripts/db-backup-from-upcloud.sh first (pull fresh DB)
    - git pull on server, npm run build, pm2 restart guidex-production
 
-4. Step 1A DONE: em-dash hygiene for all 4 completed RU guides.
-   Patch script: scripts/patch-ru-em-dashes-completed-guides.ts.
-   Next: Step 2 — localize UI labels in RouteSnapshot.tsx and StepCard.tsx
-   (add locale prop, 12 labels, no DB changes, no schema changes)
+4. Step 1A DONE. Step 2 DONE.
+   - Step 1A: em-dash hygiene for all 4 completed RU guides (scripts + DB)
+   - Step 2: UI label localization — RouteSnapshot, StepCard, GuideHeader now
+     locale-aware. RU pages show Russian labels. EN unchanged.
+   Next: Step 3 — Category B value cleanup (cost/time values still English)
+   Options: display-level mapping for known values ("No fee"→"Без сборов",
+   "1 day"→"1 день") or rewrite values in DB. Decision required.
 
 5. Submit sitemap to Google Search Console:
    https://guidex-consulting.ae/sitemap.xml
@@ -198,3 +201,8 @@ completed RU guides. Source scripts, local DB, and production DB all clean.
 Patch script: scripts/patch-ru-em-dashes-completed-guides.ts.
 Production backup at /var/backups/guidex/guides.db.pre-ru-em-dash-cleanup-*.
 Build 63 pages, 0 errors. PM2 online.
+
+CP-22 (2026-04-30): Step 2 complete. UI label localization live.
+RouteSnapshot, StepCard, GuideHeader have locale prop. RU guide pages pass
+locale="ru". All 12 labels show Russian on RU pages. EN unchanged.
+DB not touched. Build 63 pages, 0 errors.

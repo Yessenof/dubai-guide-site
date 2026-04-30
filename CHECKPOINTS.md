@@ -5,6 +5,29 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-24 — Step 4: full RU value localization + D-class em-dash fix
+
+**Date:** 2026-04-30
+
+**What is confirmed stable:**
+
+- `lib/localize-value.ts` expanded to 47 mappings (from 21)
+  - 3 guide price (AED+context), 2 guide timeline (conditional)
+  - 10 step cost (AED+context), 7 step timeEst (duration+context)
+  - 2 post-D-fix timeEst (Varies: ...)
+- D-class DB fix: mainland step 6 and free-zone step 8 `time_est` fields patched (em-dash → colon). Backup: /var/backups/guidex/guides.db.pre-step4-d-class-fix-*
+- Production smoke test: all 4 RU guides verified; EN employment-visa verified; EN mainland shows "Varies:" not "Varies —"
+- Build: 63 pages, 0 TypeScript errors
+- Commit: bcf98b9
+
+**Remaining English on RU pages (intentional — B-class pure AED):**
+- Pure AED amount strings: AED 278, AED 1,126, AED 676, AED 323, AED 386, AED 546, AED 8,031.75, AED 700, AED 1,153, AED 620–720, AED 4,900–7,300
+- No further action required for these values
+
+**RU visible cleanup complete.** All 4 guides ready for RU content population.
+
+---
+
 ## CP-23 — Step 3: display-level value localization for RU guide pages
 
 **Date:** 2026-04-30

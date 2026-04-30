@@ -5,6 +5,28 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-04-30 — Step 4: full RU value localization + D-class em-dash fix
+
+**lib/localize-value.ts expanded** from 21 to 47 mappings, covering:
+- 3 guide price strings (AED+English context): "AED 9,884.75 (main applicant)" etc.
+- 2 guide timeline conditionals: "(without external approvals)", "(varies by free zone)"
+- 10 step cost AED+context strings (employment-visa steps 2/7, golden step 7, mainland steps 4/5/7, free-zone steps 4/5/6)
+- 7 step timeEst duration+context strings ("for review", "after payment", "after submission", etc.)
+- 2 post-D-fix timeEst mappings ("Varies: 4–10+...", "Varies: bank account...")
+
+**D-class DB patch** (`scripts/patch-d-class-timeest-em-dashes.ts`): removed em-dash from 2 EN `time_est` fields. Applied locally and on production (backup at /var/backups/guidex/guides.db.pre-step4-d-class-fix-*). Verified: mainland step 6 and free-zone step 8 now use colon on both EN and RU pages.
+
+**Build:** 63 pages, 0 errors. **Production smoke test:** all 4 RU guides show Russian values; EN employment-visa shows English; D-class em-dash gone from EN mainland. Commit: bcf98b9. CP-24 added.
+
+**Remaining English on RU pages (intentional, B-class pure AED):**
+- AED 278, AED 1,126, AED 676, AED 323, AED 386, AED 546 (employment-visa steps)
+- AED 8,031.75, AED 700, AED 1,153 (golden-visa steps)
+- AED 620–720 (mainland step 3)
+- AED 4,900 – 7,300 (employment-visa guide price)
+These are internationally understood in a Dubai financial context — no mapping needed.
+
+---
+
 ## 2026-04-30 — Step 3: display-level value localization for RU guide pages
 
 Created `lib/localize-value.ts` with 21 exact-match A-class mappings (cost + timeEst strings) and a month-name regex for `lastUpdated`. Helper returns original value unchanged for any unmatched or B/C-class string.

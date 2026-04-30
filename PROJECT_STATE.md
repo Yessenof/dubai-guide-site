@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-30 (Step 3 complete: display-level value localization — lib/localize-value.ts applied in RU guide page; 22 A-class English values now Russian on RU pages)
+Last updated: 2026-04-30 (Step 4 complete: full RU value localization + D-class em-dash fix — 47 mappings in lib/localize-value.ts; all completable English values now Russian on RU pages; D-class em-dashes removed from EN DB fields)
 
 ---
 
@@ -236,25 +236,26 @@ Pre-RU launch (pending):
 - `GuideHeader.tsx`: `locale` prop added; category map (visas→Визы, company-setup→Компании, government→Госуслуги)
 - `app/ru/guides/[slug]/page.tsx`: passes `locale="ru"` to all three components
 
-**Step 3 complete: display-level value localization**
-- `lib/localize-value.ts`: 21 A-class exact-match mappings + month-name regex for lastUpdated
-- `app/ru/guides/[slug]/page.tsx`: wraps guide.price, guide.timeline, guide.lastUpdated, step.cost, step.timeEst via localizeValue("ru") before passing to RouteSnapshot and StepCard
-- EN guide page not touched — localizeValue returns input unchanged for locale="en"
-- Verified: 22 A-class values now Russian on RU pages. AED amounts, C-class values unchanged.
-- Build: 63 pages, 0 errors. Production: smoke tested all 4 RU guides ✅
-- Commit: 665744e. CP-23 added.
-- EN guide page: unchanged (all locale props default to "en")
-- Build: 63 pages, 0 TypeScript errors
-- Production: all 4 RU pages show Russian labels, EN page unchanged
-- DB: not touched
+**Step 3 complete: display-level value localization (CP-23)**
+- `lib/localize-value.ts`: 21 A-class exact-match mappings + month-name regex
+- Applied in `app/ru/guides/[slug]/page.tsx` for price, timeline, lastUpdated, cost, timeEst
+- Commit: 665744e
 
-**Remaining Category B issues (not fixed yet):**
-- Step `cost` and `timeEst` values are still English (e.g. "No fee", "1 day", "2–3 days")
-- Guide `price` and `timeline` values still English
-- `last_updated` value still English
-- These require either content rewrites or display-level mapping (next step)
+**Step 4 complete: full RU value localization + D-class em-dash fix (CP-24)**
+- `lib/localize-value.ts`: expanded to 47 mappings (3 guide price, 2 guide timeline, 10 step cost, 7 step timeEst duration+context, 2 post-D-fix)
+- `scripts/patch-d-class-timeest-em-dashes.ts`: removed em-dash from mainland step 6 and free-zone step 8 `time_est` (EN field, both EN and RU pages)
+- Remaining English on RU pages: only pure AED amounts (internationally understood, no change needed)
+- Build: 63 pages, 0 errors. Production smoke test: all 4 RU guides + EN verified ✅
+- Commit: bcf98b9. **RU visible cleanup complete.**
 
-**Next recommended single action:** Category B value cleanup — map or rewrite duration/status values for RU guide pages
+**Remaining English on RU pages (intentional — B-class pure AED, no change needed):**
+- AED 278, AED 1,126, AED 676, AED 323, AED 386, AED 546 (employment-visa step costs)
+- AED 8,031.75, AED 700, AED 1,153 (golden-visa step costs)
+- AED 620–720 (mainland step 3 cost)
+- AED 4,900 – 7,300 (employment-visa guide price)
+These are internationally understood in Dubai financial context.
+
+**Next recommended action:** Continue RU content population — `open-business-bank-account-dubai` is next.
 
 Government pillar is fully live. Business Setup pillar fully live. Visas: 7/7 live (Maid Visa now WhatsApp link). Calculator: all 13 resolution states covered.
 

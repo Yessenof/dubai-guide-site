@@ -16,7 +16,7 @@ safely restored to or continued from. Add a new entry only after full verificati
 - Wio nuance correct: monthly subscription + no minimum balance stated; no forbidden AED 25,000–50,000 phrase; other banks/packages correctly described as varying
 - No em-dashes, no guarantee language, no Wio partnership implication in any field
 - All ru_* fields remain empty
-- Production DB backed up at `/var/backups/guidex/guides.db.pre-bank-en-upgrade-<timestamp>` before script ran
+- Production DB backed up at `/var/backups/guidex/guides.db.pre-bank-en-upgrade-20260501-134430` before script ran
 - Targeted script only — no full DB restore
 - Build: 63 pages, 0 TypeScript errors
 - PM2: guidex-production online

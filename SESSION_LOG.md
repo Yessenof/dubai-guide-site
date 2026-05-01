@@ -12,7 +12,7 @@ Deployed upgraded EN content for `open-business-bank-account-dubai` to productio
 **Process:**
 - Committed `scripts/update-bank-account-guide-en.ts` + docs to GitHub
 - SSH into UpCloud (85.9.203.69), git pull origin main
-- Production DB backed up at `/var/backups/guidex/guides.db.pre-bank-en-upgrade-<timestamp>`
+- Production DB backed up at `/var/backups/guidex/guides.db.pre-bank-en-upgrade-20260501-134430`
 - Ran `npx tsx scripts/update-bank-account-guide-en.ts` on production server
 - Post-write verification: step count = 9, RU empty, 0 em-dashes, integrity_check = ok
 - `npm run build` on production: 63 pages, 0 errors

@@ -1,8 +1,37 @@
 # Bank Account Guide Upgrade Audit
 **Date:** 2026-04-30
 **Guide slug:** open-business-bank-account-dubai
-**Scope:** Audit only. No code, DB, or content changes made during this step.
+**Scope:** Audit + EN upgrade implemented locally (2026-05-01). No production changes.
 **Evidence basis:** Wio Business corporate account onboarding screenshots (user-provided).
+
+---
+
+## EN Upgrade Status (2026-05-01)
+
+EN content upgrade implemented locally via `scripts/update-bank-account-guide-en.ts`.
+
+| Item | Before | After |
+|------|--------|-------|
+| en_title | How to Open a Business Bank Account in Dubai | Open a Business Bank Account in Dubai for a UAE Company |
+| Step count | 8 | 9 |
+| RU fields | Empty | Still empty (untouched) |
+| Em-dashes in content | 0 (clean) | 0 (clean) |
+| Build | 63 pages, 0 errors | 63 pages, 0 errors |
+
+New step structure:
+1. Confirm Your Company Profile and Applicant Role
+2. Choose the Bank Route and Understand Digital Onboarding
+3. Prepare Company, Shareholder, and Authority Documents
+4. Build the Business Profile the Bank Can Understand
+5. Prepare Customer and Supplier Evidence
+6. Explain Source of Funds and Provide Bank History
+7. Prepare Expected Transaction and Tax Information
+8. Handle Compliance Checks for Real Estate and Regulated Activities
+9. Submit, Answer Bank Questions, and Wait for the Decision
+
+Script assertions passed: no em-dashes, no guarantee language, no Wio partnership language, step count = 9, RU fields = empty.
+
+**Next:** Review EN guide via local admin panel. Then deploy to production with DB backup. Then create RU content.
 
 ---
 

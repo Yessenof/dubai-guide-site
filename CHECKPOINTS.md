@@ -5,6 +5,31 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-25 — Bank account guide EN upgrade (local only)
+
+**Date:** 2026-05-01
+
+**What is confirmed stable (locally):**
+
+- `scripts/update-bank-account-guide-en.ts` executed cleanly
+- `open-business-bank-account-dubai`: 8 steps → 9 steps
+- EN title: "Open a Business Bank Account in Dubai for a UAE Company"
+- All 9 step EN fields populated: shareholder/POA role, digital bank option (Wio as example), customer/supplier profiles, source of funds + 3-month statements, FATCA/CRS/TIN, RERA/DNFBP/goAML, expected transactions
+- All ru_* fields remain empty (untouched)
+- Local DB backup: data/guides.db.backup-bank-en-upgrade-1777616978301
+- Build: 63 pages, 0 TypeScript errors
+- All 10 compliance terms present in built HTML
+- No em-dashes in content, no guarantee language, no Wio partnership language
+
+**Not done yet:**
+- Production DB not updated
+- RU content not created
+- Admin panel review not completed
+
+**Next:** Review locally via admin, then deploy to production with DB backup, then create RU content.
+
+---
+
 ## CP-24 — Step 4: full RU value localization + D-class em-dash fix
 
 **Date:** 2026-04-30

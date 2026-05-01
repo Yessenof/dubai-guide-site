@@ -5,6 +5,38 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-01 — Bank account guide EN upgrade (local only)
+
+Upgraded EN content for `open-business-bank-account-dubai` via `scripts/update-bank-account-guide-en.ts`.
+
+**Changes:**
+- en_title: "How to Open a Business Bank Account in Dubai" → "Open a Business Bank Account in Dubai for a UAE Company"
+- en_summary, en_audience, en_overview, price: fully rewritten
+- Steps: 8 → 9 (delete-and-reinsert; all ru_* fields explicitly set to empty string)
+
+**New steps:**
+1. Confirm Your Company Profile and Applicant Role
+2. Choose the Bank Route and Understand Digital Onboarding
+3. Prepare Company, Shareholder, and Authority Documents
+4. Build the Business Profile the Bank Can Understand
+5. Prepare Customer and Supplier Evidence
+6. Explain Source of Funds and Provide Bank History
+7. Prepare Expected Transaction and Tax Information
+8. Handle Compliance Checks for Real Estate and Regulated Activities
+9. Submit, Answer Bank Questions, and Wait for the Decision
+
+**Content covers:** shareholder/POA role types, digital bank option (Wio as example only), customer/supplier profiles, source of funds + 3-month bank statements, FATCA/CRS/TIN, RERA/DNFBP/goAML, expected transaction estimates.
+
+**QA assertions passed:** no em-dashes, no guarantee language, no Wio partnership language, step count = 9, RU empty, build 63 pages 0 errors.
+
+**Local DB backup:** data/guides.db.backup-bank-en-upgrade-1777616978301
+
+**No code changes. No production changes. No RU content.**
+
+CP-25 added.
+
+---
+
 ## 2026-04-30 — Bank account guide upgrade audit
 
 Reviewed Wio Business onboarding screenshots (user-provided) and audited the current `open-business-bank-account-dubai` EN guide for content gaps.

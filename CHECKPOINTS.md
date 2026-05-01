@@ -5,6 +5,27 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-25B — EN bank account guide deployed to production
+
+**Date:** 2026-05-01
+
+**What is confirmed stable (production):**
+
+- `open-business-bank-account-dubai` EN upgrade live on https://guidex-consulting.ae
+- 9 steps: shareholder/POA role, bank route + digital onboarding (Wio as example), company documents (UBO), business profile, customer/supplier evidence, source of funds + 3-month statements, expected transactions + FATCA/CRS/TIN, real estate RERA/goAML, submission + wait
+- Wio nuance correct: monthly subscription + no minimum balance stated; no forbidden AED 25,000–50,000 phrase; other banks/packages correctly described as varying
+- No em-dashes, no guarantee language, no Wio partnership implication in any field
+- All ru_* fields remain empty
+- Production DB backed up at `/var/backups/guidex/guides.db.pre-bank-en-upgrade-<timestamp>` before script ran
+- Targeted script only — no full DB restore
+- Build: 63 pages, 0 TypeScript errors
+- PM2: guidex-production online
+- Smoke test: 200 on EN and RU pages; RU falls back to EN (ru_title empty, excluded from sitemap)
+
+**Next:** Create RU content for `open-business-bank-account-dubai` from the improved 9-step EN master.
+
+---
+
 ## CP-25 — Bank account guide EN upgrade (local only)
 
 **Date:** 2026-05-01

@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-04-30 (Step 4 complete: full RU value localization + D-class em-dash fix — 47 mappings in lib/localize-value.ts; all completable English values now Russian on RU pages; D-class em-dashes removed from EN DB fields)
+Last updated: 2026-05-01 (CP-25B: EN bank account guide upgrade deployed to production via targeted script — 9 steps, full compliance content, Wio nuance correct; no full DB restore; RU fields empty)
 
 ---
 
@@ -197,27 +197,25 @@ Group pages live:
 
 ## Current Next Step
 
-**Homepage IA restructure complete (CP-19). EN and RU homepages now use matching route-hub card layout.**
+**CP-25B complete: EN bank account guide deployed to production.**
 
-- EN homepage: 5 category cards (Visas, Company Setup, Government Services, Tourism (soon), Banking (soon)) + "Browse all guides →" text link
-- RU homepage: 5 category cards (same structure, Russian text) + "Все гайды →" text link
-- `app/ru/government/page.tsx` created (mirrors EN government hub, Russian copy, correct hreflang)
-- `PrimaryServices` removed from EN homepage import; file retained at `components/PrimaryServices.tsx`
-- Build: 63 pages, 0 errors
+- `open-business-bank-account-dubai` EN upgrade live on https://guidex-consulting.ae
+- 9 steps, full compliance content (UBO, source of funds, FATCA/CRS, RERA/goAML)
+- Wio Business correctly framed as example only; monthly subscription + no-minimum-balance nuance present; no forbidden phrases
+- Targeted script used; no full DB restore; production DB backed up at `/var/backups/guidex/` before script ran
+- RU fields remain empty for this guide
+- Build: 63 pages, 0 errors on production
 
 **RU content in progress (4/9 done)**
 - `employment-visa` complete (all ru_* fields populated, sitemap + hreflang active)
 - `golden-visa-dubai-property` complete (all ru_* fields populated, sitemap + hreflang active)
 - `mainland-company-setup-dubai` complete (all ru_* fields populated, sitemap + hreflang active)
 - `free-zone-company-setup-dubai` complete (all 8 step ru_* fields, sitemap + hreflang active, 0 em-dashes, build 63 pages 0 errors)
-- Remaining order from `docs/ru-launch-plan.md`:
-  open-business-bank-account-dubai, newborn-visa-dubai,
-  document-attestation-dubai, amer-center-dubai, pro-services-dubai
-- Once `ru_title` is non-empty for any guide, it appears in sitemap RU entries automatically
+- Remaining order: open-business-bank-account-dubai (next), newborn-visa-dubai, document-attestation-dubai, amer-center-dubai, pro-services-dubai
+
+**Next:** Create RU content for `open-business-bank-account-dubai` from the improved 9-step EN master.
 
 Pre-RU launch (pending):
-- Run fresh production DB backup: `./scripts/db-backup-from-upcloud.sh`
-- Deploy: git pull on server + npm run build + pm2 restart guidex-production
 - Submit sitemap to Google Search Console: https://guidex-consulting.ae/sitemap.xml
 - Add Plausible analytics
 

@@ -5,6 +5,24 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-01 — CP-25B: EN bank account guide deployed to production
+
+Deployed upgraded EN content for `open-business-bank-account-dubai` to production via targeted script only.
+
+**Process:**
+- Committed `scripts/update-bank-account-guide-en.ts` + docs to GitHub
+- SSH into UpCloud (85.9.203.69), git pull origin main
+- Production DB backed up at `/var/backups/guidex/guides.db.pre-bank-en-upgrade-<timestamp>`
+- Ran `npx tsx scripts/update-bank-account-guide-en.ts` on production server
+- Post-write verification: step count = 9, RU empty, 0 em-dashes, integrity_check = ok
+- `npm run build` on production: 63 pages, 0 errors
+- PM2 restarted: guidex-production online
+- Smoke test: EN page 200, H1 correct, 9 steps visible, Wio nuance correct, no guarantee language
+
+**No full DB restore used.** Targeted script only.
+
+---
+
 ## 2026-05-01 — Bank account guide EN upgrade (local only)
 
 Upgraded EN content for `open-business-bank-account-dubai` via `scripts/update-bank-account-guide-en.ts`.

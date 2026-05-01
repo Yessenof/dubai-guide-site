@@ -63,15 +63,17 @@ const GUIDE_FIELDS = {
     "where funds come from, who the customers and suppliers are, and what transaction volumes to expect. " +
     "Some business activities, such as real estate, trigger additional compliance steps. " +
     "Approval depends on the bank's internal compliance decision, not on the government.\n\n" +
-    "No government fee applies. Most traditional banks require a minimum average monthly balance, " +
-    "typically AED 25,000–50,000. Some digital banks operate without a minimum balance requirement. " +
+    "No government fee applies. Bank package costs and minimum balance rules vary: some digital bank " +
+    "packages charge a monthly subscription fee with no minimum balance; some traditional bank packages " +
+    "may require an average monthly balance, a relationship balance, or additional documents. " +
     "The process typically takes 2–6 weeks from submission to account activation. " +
-    "Approval is not guaranteed: banks can decline applications without providing a reason, " +
+    "Approval is not guaranteed: banks can decline without providing a reason, " +
     "and a rejection at one bank does not affect eligibility at another.",
 
   price:
-    "No government fee. Traditional banks typically require a minimum average monthly balance " +
-    "of AED 25,000–50,000. Some digital banks have no minimum balance requirement.",
+    "No government fee. Bank package costs vary: some digital bank packages charge a monthly " +
+    "subscription fee with no minimum balance; some traditional bank packages may require an average " +
+    "monthly balance, a relationship balance, or additional documents. Compare packages before applying.",
 };
 
 interface Step {
@@ -115,14 +117,20 @@ const STEPS: Step[] = [
     en_what:
       "Select whether to apply through a traditional UAE bank or a digital bank. " +
       "Traditional banks include Emirates NBD, Mashreq, RAKBANK, and ADCB. " +
-      "Wio Business is one example of a UAE-licensed digital bank with a fully online " +
-      "onboarding process and no minimum balance requirement.",
+      "Wio Business is one example of a UAE-licensed digital bank with a fully online onboarding " +
+      "process: it charges a monthly subscription fee and requires no minimum balance. " +
+      "Digital onboarding does not mean a lighter compliance review: the bank will still ask detailed " +
+      "KYC and compliance questions based on your company activity and shareholder profile.",
     en_where: "Bank website or business banking branch",
     en_address: "Bank's business banking portal or nearest branch",
     en_advice:
-      "Consider what account features your business needs before choosing: multi-currency accounts " +
-      "(AED, USD, EUR, GBP), cheque book, debit or virtual cards, salary payments (WPS), payment " +
-      "gateway, POS terminal, or international transfers. " +
+      "Do not choose by bank name alone. " +
+      "Compare the account package, monthly fee, minimum balance rule, cheque book, WPS, payment " +
+      "gateway, international transfers, and document requirements. " +
+      "Wio Business is a useful digital onboarding example: it charges a monthly subscription and " +
+      "requires no minimum balance, but other UAE bank packages may work differently. " +
+      "Some have no minimum balance but charge monthly fees; others may expect an average balance, " +
+      "relationship balance, branch review, or stronger supporting documents. " +
       "If your free zone has a preferred banking partner, onboarding through that channel is often faster.",
     en_warning:
       "Wio Business is not a partner of Guidex. Account approval is determined entirely by the " +
@@ -145,6 +153,7 @@ const STEPS: Step[] = [
       "certificate of incorporation (for free zone companies), shareholding structure or share " +
       "certificate, establishment card, passport copies and Emirates IDs for all shareholders holding " +
       "25% or more, and proof of address. " +
+      "Banks may call these shareholders UBOs or beneficial owners. " +
       "If a representative is applying under a Power of Attorney, include the notarized and attested " +
       "POA document. " +
       "Prepare certified copies: most banks require originals or certified copies, not photocopies.",
@@ -211,8 +220,12 @@ const STEPS: Step[] = [
     en_address: "Your existing bank's online portal or nearest branch",
     en_advice:
       "Common sources of funds accepted by UAE banks: shareholder personal savings, revenue from " +
-      "existing business activity, funds from family or close associates (with a written explanation), " +
-      "and advance payments from buyers or clients. " +
+      "existing business activity, funds from family or close associates, and advance payments from " +
+      "buyers or clients. " +
+      "If funds come from family, friends, or associates, prepare a short signed explanation showing " +
+      "who sent the money, the relationship, why it was sent, the amount, and attach proof such as " +
+      "transfer records or bank statements if available. " +
+      "Some banks may provide their own declaration format. " +
       "Typical supporting documents: last 3 months of personal or company bank statements (files must " +
       "not be password-protected), salary payslips or salary transfer records if funds come from " +
       "employment, and sale documents or contracts if funds come from a previous business transaction.",
@@ -251,7 +264,7 @@ const STEPS: Step[] = [
   // ── Step 8 ──────────────────────────────────────────────────────────────────
   {
     cost: "No fee (regulatory registration costs are separate)",
-    time_est: "Varies by regulatory status",
+    time_est: "Allow additional weeks if RERA or goAML registration is required.",
     en_title: "Handle Compliance Checks for Real Estate and Regulated Activities",
     en_what:
       "Real estate businesses face additional compliance questions during bank onboarding. " +
@@ -261,11 +274,10 @@ const STEPS: Step[] = [
     en_where: "RERA (Dubai Land Department) / UAE Ministry of Economy goAML portal",
     en_address: "Dubai Land Department portal / UAE Ministry of Economy goAML portal",
     en_advice:
-      "Real estate firms and brokers in the UAE are classified as Designated Non-Financial " +
-      "Businesses and Professions (DNFBPs) under UAE AML regulations, and banks apply additional " +
-      "scrutiny to this category. " +
-      "Having a valid RERA license and awareness of your goAML registration status will reduce " +
-      "delays and show the bank that your compliance readiness is in order.",
+      "Real estate brokers, agents, and certain real estate activities can attract additional AML " +
+      "checks in the UAE. " +
+      "Depending on the exact activity, the bank may ask about RERA licensing, AML/KYC procedures, " +
+      "goAML readiness, source of funds, and transaction records.",
     en_warning:
       "This guide does not provide legal or compliance advice. " +
       "If you are unsure whether your business activity requires RERA registration or goAML " +
@@ -274,7 +286,7 @@ const STEPS: Step[] = [
 
   // ── Step 9 ──────────────────────────────────────────────────────────────────
   {
-    cost: "No fee at most banks. Some charge an account opening fee of up to AED 500.",
+    cost: "No government fee. Bank package, monthly subscription, account opening, card, cheque book, or transfer fees depend on the bank and account package.",
     time_est: "2–6 weeks from submission (varies by bank and compliance review)",
     en_title: "Submit, Answer Bank Questions, and Wait for the Decision",
     en_what:
@@ -288,10 +300,10 @@ const STEPS: Step[] = [
     en_advice:
       "Respond to any bank request within 24–48 hours: delayed responses can reset the review " +
       "period. " +
-      "Once approved, a digital account and virtual card are typically available first, with " +
-      "physical cards and cheque books issued separately. " +
-      "Deposit the required minimum balance promptly to unlock full account functionality, and " +
-      "request the bank's fee schedule before completing setup.",
+      "Once approved, check the bank's activation steps, package fee, minimum balance rule if any, " +
+      "and card or cheque book requirements. " +
+      "Some accounts activate with no minimum balance, while others require a balance, package setup, " +
+      "or additional review before all features are available.",
     en_warning:
       "Approval is not guaranteed. " +
       "Banks can decline without providing a reason, and a rejection at one bank does not affect " +

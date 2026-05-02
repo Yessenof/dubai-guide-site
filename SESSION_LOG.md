@@ -5,6 +5,29 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-02 — CP-HH-03B: Holiday home permit guide deployed to production
+
+Targeted script `scripts/add-holiday-home-permit-guide.ts` run on production. Guide is live at https://guidex-consulting.ae/guides/holiday-home-permit-dubai.
+
+**Deployment sequence:**
+- Commit `2dbd005` pushed to `origin/main`
+- Production pulled: `git pull origin main` on `root@85.9.203.69:/var/www/guidex`
+- Production DB backed up: `/var/backups/guidex/guides.db.pre-holiday-home-guide-20260502-164949`
+- Script run: guide created fresh (did not exist on production), `published=1`, 12 steps, all guards passed, em-dash=0, RU fields empty
+- Production build: 53 pages, 0 errors (EN holiday guide included, RU holiday guide absent — correct, no ru_title)
+- PM2 restarted: `guidex-production` online, 0 unstable restarts
+
+**Smoke tests passed:**
+- `https://guidex-consulting.ae/guides/holiday-home-permit-dubai` → 200, correct H1 and meta
+- `/guides` → 200, Tourism section present, holiday home link present
+- `/ru/guides/employment-visa` → 200 (RU pages intact)
+- `/` → 200, Tourism card still inactive/Coming soon, no direct link to guide
+- Sitemap: `/guides/holiday-home-permit-dubai` present, `/ru/guides/holiday-home-permit-dubai` absent
+
+**No full DB restore used. No bank/RU files deployed.**
+
+---
+
 ## 2026-05-02 — CP-HH-02E: Holiday home permit guide final content QA polish (local only)
 
 Final pre-review pass on `scripts/add-holiday-home-permit-guide.ts`. Guide remains DRAFT.

@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-01 (CP-25B: EN bank account guide upgrade deployed to production via targeted script — 9 steps, full compliance content, Wio nuance correct; no full DB restore; RU fields empty)
+Last updated: 2026-05-02 (CP-HH-03B: holiday-home-permit-dubai deployed to production — 12 steps, tourism category, EN only, published=1, build 53 pages, PM2 restarted, all smoke tests passed)
 
 ---
 
@@ -197,23 +197,30 @@ Group pages live:
 
 ## Current Next Step
 
-**CP-25B complete: EN bank account guide deployed to production.**
+**CP-HH-03B complete: holiday-home-permit-dubai live on production.**
 
-- `open-business-bank-account-dubai` EN upgrade live on https://guidex-consulting.ae
-- 9 steps, full compliance content (UBO, source of funds, FATCA/CRS, RERA/goAML)
-- Wio Business correctly framed as example only; monthly subscription + no-minimum-balance nuance present; no forbidden phrases
-- Targeted script used; no full DB restore; production DB backed up at `/var/backups/guidex/` before script ran
-- RU fields remain empty for this guide
-- Build: 63 pages, 0 errors on production
+- Guide live at https://guidex-consulting.ae/guides/holiday-home-permit-dubai
+- Tourism category support deployed (admin dropdown, CategoryIcon, EN/RU list pages, GuideHeader)
+- RU static params fix deployed (generateStaticParams now uses getRuPublishedGuidesSlugs — only guides with ru_title are pre-rendered in RU route)
+- Production build: 53 pages, 0 errors. PM2 online.
+- Commit: 2dbd005
 
-**RU content in progress (4/9 done)**
-- `employment-visa` complete (all ru_* fields populated, sitemap + hreflang active)
-- `golden-visa-dubai-property` complete (all ru_* fields populated, sitemap + hreflang active)
-- `mainland-company-setup-dubai` complete (all ru_* fields populated, sitemap + hreflang active)
-- `free-zone-company-setup-dubai` complete (all 8 step ru_* fields, sitemap + hreflang active, 0 em-dashes, build 63 pages 0 errors)
-- Remaining order: open-business-bank-account-dubai (next), newborn-visa-dubai, document-attestation-dubai, amer-center-dubai, pro-services-dubai
+**Next:** Deploy RU bank account guide content to production (targeted script + lib/localize-value.ts).
 
-**Next:** Create RU content for `open-business-bank-account-dubai` from the improved 9-step EN master.
+**CP-26: RU bank account guide — local only, pending deploy.**
+
+- `open-business-bank-account-dubai` RU content complete locally (all 9 steps)
+- ru_title: "Открыть бизнес-счёт в банке ОАЭ для компании в Дубае"
+- 6 new localize-value.ts mappings for step/guide-level EN values
+- Production DB not yet updated with RU content
+
+**RU content in progress (5/9 done)**
+- `employment-visa` complete (deployed)
+- `golden-visa-dubai-property` complete (deployed)
+- `mainland-company-setup-dubai` complete (deployed)
+- `free-zone-company-setup-dubai` complete (deployed)
+- `open-business-bank-account-dubai` complete locally (pending deploy)
+- Remaining order: newborn-visa-dubai, document-attestation-dubai, amer-center-dubai, pro-services-dubai
 
 Pre-RU launch (pending):
 - Submit sitemap to Google Search Console: https://guidex-consulting.ae/sitemap.xml

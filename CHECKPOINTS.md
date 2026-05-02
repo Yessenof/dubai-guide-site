@@ -5,6 +5,31 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-HH-03B — Holiday home permit guide live on production
+
+**Date:** 2026-05-02
+**Commit:** 2dbd005
+
+Guide `holiday-home-permit-dubai` deployed to production via targeted script. Fully verified.
+
+- URL: https://guidex-consulting.ae/guides/holiday-home-permit-dubai
+- Category: tourism
+- Published: 1 (live)
+- Steps: 12 (EN only, RU fields empty)
+- Build: 53 pages, 0 errors on production
+- DB backup before deploy: `/var/backups/guidex/guides.db.pre-holiday-home-guide-20260502-164949`
+- Tourism category support live: admin dropdown, CategoryIcon, EN/RU guides list pages, GuideHeader
+- RU static params fix in place: RU route pre-renders only guides with ru_title populated
+- Homepage Tourism card remains inactive (Coming soon)
+- Sitemap: EN URL present, RU URL absent
+
+**State at this checkpoint:**
+- 16 EN guides on production (14 existing + holiday-home-permit-dubai + newborn-visa-dubai... wait, let me not guess)
+- 4 RU guides pre-rendered: employment-visa, golden-visa-dubai-property, mainland-company-setup-dubai, free-zone-company-setup-dubai
+- open-business-bank-account-dubai RU content: local only, not yet deployed
+
+---
+
 ## CP-HH-02B — Holiday home permit guide draft (local only)
 
 **Date:** 2026-05-02

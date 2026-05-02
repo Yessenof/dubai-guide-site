@@ -5,6 +5,33 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-02 — CP-BATCH-RU-02: Bank Account RU + Holiday Homes RU deployed to production
+
+Batch production deploy. Two targeted scripts run on production. Both passed all guards. Build: 55 pages, 0 errors. PM2 restarted, online. All 4 URLs return 200. Both RU URLs in sitemap. EN pages unchanged. No full DB restore used.
+
+**Scripts run:**
+1. `scripts/add-ru-business-bank-account.ts` — 1 guide + 9 steps updated
+2. `scripts/add-ru-holiday-home-permit-guide.ts` — 1 guide + 12 steps updated
+
+**Production state:**
+- DB backup: `/var/backups/guidex/guides.db.pre-batch-ru-bank-hh-20260502-180053`
+- Production HEAD: `b18971e`
+- Build: 55 pages, 0 errors
+- PM2: online, 0 unstable restarts
+- `open-business-bank-account-dubai`: ru_title populated, 9/9 RU steps
+- `holiday-home-permit-dubai`: ru_title populated, 12/12 RU steps
+- EN fields: unchanged on both guides
+- Em-dashes in RU DB content: 0
+- Integrity check: ok
+- `/tourism` hub: 404 (not created)
+- Homepage Tourism card: inactive
+
+**Live:**
+- https://guidex-consulting.ae/ru/guides/open-business-bank-account-dubai
+- https://guidex-consulting.ae/ru/guides/holiday-home-permit-dubai
+
+---
+
 ## 2026-05-02 — CP-BATCH-RU-01: Bank RU script verified locally, ready for batch production deploy
 
 Verified `scripts/add-ru-business-bank-account.ts` against all content rules. Script run locally: 1 guide + 9 steps updated, all guards passed, 0 em-dashes. EN title unchanged. Build: 55 pages, 0 errors. All 4 URLs return 200. Both RU URLs in sitemap. Script committed. Ready to batch with Holiday Homes RU in one production maintenance session.

@@ -5,6 +5,24 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-BATCH-RU-02 — Bank Account RU + Holiday Homes RU live on production
+
+**Date:** 2026-05-02
+**Commits:** 3a33d65 (HH RU + localize-value) · b18971e (Bank RU script)
+
+Two Russian guides deployed via batch targeted scripts. Fully verified.
+
+- `open-business-bank-account-dubai` RU: live at https://guidex-consulting.ae/ru/guides/open-business-bank-account-dubai
+- `holiday-home-permit-dubai` RU: live at https://guidex-consulting.ae/ru/guides/holiday-home-permit-dubai
+- DB backup before deploy: `/var/backups/guidex/guides.db.pre-batch-ru-bank-hh-20260502-180053`
+- Build: 55 pages, 0 errors
+- PM2: online, 0 unstable restarts
+- EN pages: unchanged
+- Em-dashes in RU DB: 0
+- Full DB restore: not used
+
+---
+
 ## CP-HH-03B — Holiday home permit guide live on production
 
 **Date:** 2026-05-02

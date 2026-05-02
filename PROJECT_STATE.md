@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-02 (CP-BATCH-RU-01: Bank RU script verified locally — 9 steps, guards passed, build 55 pages, all 4 URLs 200, both RU URLs in sitemap — batch production deploy pending)
+Last updated: 2026-05-02 (CP-BATCH-RU-02: Bank Account RU + Holiday Homes RU live on production — both scripts passed, build 55 pages, all 4 URLs 200, sitemap updated, PM2 online)
 
 ---
 
@@ -204,9 +204,14 @@ Group pages live:
 - Build: 55 pages, 0 errors. RU guide pre-rendered. Sitemap includes `/ru/guides/holiday-home-permit-dubai`.
 - Local DB backup: `data/guides.db.backup-holiday-home-ru-phrase-polish-1777743683`
 
-**Next:** Batch production deploy — SSH, run both RU scripts in sequence, build + PM2 restart:
-1. `npx tsx scripts/add-ru-business-bank-account.ts`
-2. `npx tsx scripts/add-ru-holiday-home-permit-guide.ts`
+**CP-BATCH-RU-02 complete: Bank Account RU + Holiday Homes RU live on production.**
+
+- `open-business-bank-account-dubai` RU: https://guidex-consulting.ae/ru/guides/open-business-bank-account-dubai
+- `holiday-home-permit-dubai` RU: https://guidex-consulting.ae/ru/guides/holiday-home-permit-dubai
+- DB backup: `/var/backups/guidex/guides.db.pre-batch-ru-bank-hh-20260502-180053`
+- Production HEAD: b18971e
+
+**Next:** Continue RU content population — newborn-visa-dubai, document-attestation-dubai, amer-center-dubai, pro-services-dubai.
 
 **CP-26: RU bank account guide — local only, pending deploy.**
 

@@ -5,6 +5,19 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-02 — CP-BATCH-RU-01: Bank RU script verified locally, ready for batch production deploy
+
+Verified `scripts/add-ru-business-bank-account.ts` against all content rules. Script run locally: 1 guide + 9 steps updated, all guards passed, 0 em-dashes. EN title unchanged. Build: 55 pages, 0 errors. All 4 URLs return 200. Both RU URLs in sitemap. Script committed. Ready to batch with Holiday Homes RU in one production maintenance session.
+
+**Changes:**
+- `scripts/add-ru-business-bank-account.ts` committed (local run only, no production change)
+- `docs/bank-account-guide-upgrade-audit.md` updated with RU status
+- `docs/ru-guide-value-localization-audit.md` committed (research doc)
+
+**Production: untouched. Local only.**
+
+---
+
 ## 2026-05-02 — CP-HH-RU-02A: Russian content phrase polish for holiday-home-permit-dubai
 
 Patched 5 weak phrases in `scripts/add-ru-holiday-home-permit-guide.ts`. Script rerun: 1 guide + 12 steps updated, all guards passed, 0 em-dashes. Build: 55 pages, 0 errors. RU page 200. Sitemap includes `/ru/guides/holiday-home-permit-dubai`. Ready for production deploy.

@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-02 (CP-HH-RU-02A: holiday-home-permit-dubai Russian content polished — 5 phrase patches applied, script rerun passed all guards, build 55 pages, RU page 200, sitemap confirmed — pending production deploy)
+Last updated: 2026-05-02 (CP-BATCH-RU-01: Bank RU script verified locally — 9 steps, guards passed, build 55 pages, all 4 URLs 200, both RU URLs in sitemap — batch production deploy pending)
 
 ---
 
@@ -204,7 +204,9 @@ Group pages live:
 - Build: 55 pages, 0 errors. RU guide pre-rendered. Sitemap includes `/ru/guides/holiday-home-permit-dubai`.
 - Local DB backup: `data/guides.db.backup-holiday-home-ru-phrase-polish-1777743683`
 
-**Next:** Production deploy of RU holiday home content — push commit, SSH, run `add-ru-holiday-home-permit-guide.ts` on production, build + PM2 restart.
+**Next:** Batch production deploy — SSH, run both RU scripts in sequence, build + PM2 restart:
+1. `npx tsx scripts/add-ru-business-bank-account.ts`
+2. `npx tsx scripts/add-ru-holiday-home-permit-guide.ts`
 
 **CP-26: RU bank account guide — local only, pending deploy.**
 

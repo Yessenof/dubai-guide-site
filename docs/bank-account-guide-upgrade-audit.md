@@ -1,22 +1,42 @@
 # Bank Account Guide Upgrade Audit
 **Date:** 2026-04-30
 **Guide slug:** open-business-bank-account-dubai
-**Scope:** Audit + EN upgrade implemented locally (2026-05-01). No production changes.
+**Scope:** Audit + EN upgrade deployed to production (2026-05-01). RU content added locally (2026-05-01, CP-26).
 **Evidence basis:** Wio Business corporate account onboarding screenshots (user-provided).
 
 ---
 
-## EN Upgrade Status (2026-05-01)
+## EN Upgrade Status (2026-05-01) — DEPLOYED TO PRODUCTION
 
-EN content upgrade implemented locally via `scripts/update-bank-account-guide-en.ts`.
+EN content upgrade via `scripts/update-bank-account-guide-en.ts`. Deployed to production via targeted script only. No full DB restore.
 
 | Item | Before | After |
 |------|--------|-------|
 | en_title | How to Open a Business Bank Account in Dubai | Open a Business Bank Account in Dubai for a UAE Company |
 | Step count | 8 | 9 |
-| RU fields | Empty | Still empty (untouched) |
+| RU fields | Empty | Empty (untouched by EN upgrade) |
 | Em-dashes in content | 0 (clean) | 0 (clean) |
 | Build | 63 pages, 0 errors | 63 pages, 0 errors |
+| Production backup | n/a | /var/backups/guidex/guides.db.pre-bank-en-upgrade-20260501-134430 |
+
+## RU Content Status (2026-05-01) — LOCAL ONLY (CP-26)
+
+RU content added locally via `scripts/add-ru-business-bank-account.ts`.
+
+| Item | Status |
+|------|--------|
+| ru_title | Открыть бизнес-счёт в банке ОАЭ для компании в Дубае |
+| ru_summary | Populated |
+| ru_audience | Populated |
+| ru_overview | 2 paragraphs populated |
+| Step RU fields | 9/9 steps: ru_title, ru_what, ru_where, ru_address, ru_advice, ru_warning all populated |
+| Em-dashes in RU | 0 (clean) |
+| EN fields | Unchanged |
+| Wio nuance in RU | Correct: example only, not a partner, monthly subscription + no minimum balance nuance, digital onboarding not lighter compliance |
+| Value localization | 6 new mappings added to lib/localize-value.ts: Step 8 cost, Step 8 timeEst, Step 9 cost, Step 9 timeEst, guide timeline, guide price |
+| Sitemap | /ru/guides/open-business-bank-account-dubai now included (ru_title non-empty) |
+| Build | 63 pages, 0 errors |
+| Production | Not deployed yet |
 
 New step structure:
 1. Confirm Your Company Profile and Applicant Role

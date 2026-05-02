@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-02 (CP-HH-03B: holiday-home-permit-dubai deployed to production — 12 steps, tourism category, EN only, published=1, build 53 pages, PM2 restarted, all smoke tests passed)
+Last updated: 2026-05-02 (CP-HH-RU-02A: holiday-home-permit-dubai Russian content polished — 5 phrase patches applied, script rerun passed all guards, build 55 pages, RU page 200, sitemap confirmed — pending production deploy)
 
 ---
 
@@ -197,15 +197,14 @@ Group pages live:
 
 ## Current Next Step
 
-**CP-HH-03B complete: holiday-home-permit-dubai live on production.**
+**CP-HH-RU-02A complete: holiday-home-permit-dubai Russian content polished locally.**
 
-- Guide live at https://guidex-consulting.ae/guides/holiday-home-permit-dubai
-- Tourism category support deployed (admin dropdown, CategoryIcon, EN/RU list pages, GuideHeader)
-- RU static params fix deployed (generateStaticParams now uses getRuPublishedGuidesSlugs — only guides with ru_title are pre-rendered in RU route)
-- Production build: 53 pages, 0 errors. PM2 online.
-- Commit: 2dbd005
+- 5 weak phrases patched in `scripts/add-ru-holiday-home-permit-guide.ts`
+- Script rerun: 1 guide row + 12 step rows updated, all guards passed, 0 em-dashes
+- Build: 55 pages, 0 errors. RU guide pre-rendered. Sitemap includes `/ru/guides/holiday-home-permit-dubai`.
+- Local DB backup: `data/guides.db.backup-holiday-home-ru-phrase-polish-1777743683`
 
-**Next:** Deploy RU bank account guide content to production (targeted script + lib/localize-value.ts).
+**Next:** Production deploy of RU holiday home content — push commit, SSH, run `add-ru-holiday-home-permit-guide.ts` on production, build + PM2 restart.
 
 **CP-26: RU bank account guide — local only, pending deploy.**
 

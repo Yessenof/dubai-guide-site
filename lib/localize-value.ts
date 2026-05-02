@@ -65,6 +65,55 @@ const EXACT_MAP: Record<string, string> = {
   // ── step timeEst — D-class fixed (em-dash removed from EN field) ───────────
   "Varies: 4–10+ weeks if required":          "Сроки варьируются: 4–10+ недель (если требуется)",
   "Varies: bank account may take 2–6 weeks":  "Сроки варьируются: открытие счёта 2–6 недель",
+
+  // ── bank account guide — step cost ────────────────────────────────────────
+  "No fee (regulatory registration costs are separate)":
+    "Без комиссии (государственная регистрация оплачивается отдельно)",
+  "No government fee. Bank package, monthly subscription, account opening, card, cheque book, or transfer fees depend on the bank and account package.":
+    "Государственных сборов нет. Комиссии зависят от банка и пакета: ежемесячная подписка, открытие счёта, карты, чековая книжка и переводы.",
+
+  // ── bank account guide — step timeEst ─────────────────────────────────────
+  "Allow additional weeks if RERA or goAML registration is required.":
+    "Заложите дополнительные недели, если потребуется регистрация RERA или goAML.",
+  "2–6 weeks from submission (varies by bank and compliance review)":
+    "2–6 недель с момента подачи (зависит от банка и compliance-проверки)",
+
+  // ── holiday home guide — step timeEst ────────────────────────────────────
+  "5 minutes":                                 "5 минут",
+  "15 minutes":                                "15 минут",
+  "15-30 minutes":                             "15-30 минут",
+  "20-30 minutes":                             "20-30 минут",
+  "30-60 minutes":                             "30-60 минут",
+  "1-2 hours":                                 "1-2 часа",
+  "10 minutes for first-time registration; instant for returning users":
+    "10 минут при первичной регистрации; мгновенно для существующих аккаунтов",
+  "Variable. DET targets 1 business day for service delivery, but review, comments and resubmissions can extend the timeline.":
+    "Сроки варьируются. DET указывает 1 рабочий день для оказания услуги, но проверка, комментарии и повторная подача могут увеличить срок.",
+  "1-3 business days after payment confirmation":
+    "1-3 рабочих дня после подтверждения оплаты",
+
+  // ── holiday home guide — step cost ────────────────────────────────────────
+  "No additional fee":                         "Без дополнительных сборов",
+  "AED 50 (classification fee, included in the total permit fee paid in Step 8)":
+    "AED 50 (сбор за классификацию, включён в общий сбор, уплачиваемый на шаге 8)",
+  "From AED 370 (1-bedroom). AED 670 for 2-bedroom, AED 970 for 3-bedroom. Formula: AED 300 per bedroom + AED 50 classification + AED 10 Knowledge + AED 10 Innovation.":
+    "От AED 370 (1 спальня). AED 670 (2 спальни), AED 970 (3 спальни). Формула: AED 300 за спальню + AED 50 (классификация) + AED 10 (Knowledge) + AED 10 (Innovation).",
+  "From AED 370 (see Step 8 for full breakdown). Online payment only.":
+    "От AED 370 (расчёт в шаге 8). Оплата только онлайн.",
+  "No government fee. Tourism Dirham is collected from guests: AED 15 per room per night (Deluxe) or AED 10 per room per night (Standard).":
+    "Государственных сборов нет. Tourism Dirham взимается с гостей: AED 15 за номер в сутки (Deluxe) или AED 10 за номер в сутки (Standard).",
+
+  // ── holiday home guide — guide-level price and timeline ───────────────────
+  "From AED 370 for a 1-bedroom unit (AED 300 per bedroom + AED 50 classification + AED 10 Knowledge + AED 10 Innovation). Final fee depends on bedroom count and portal calculation.":
+    "От AED 370 за юнит с одной спальней (AED 300 за спальню + AED 50 за классификацию + AED 10 Knowledge + AED 10 Innovation). Итоговый сбор зависит от количества спален и расчёта в портале.",
+  "DET lists 1 business day as the target service delivery time. Review, comments, payment confirmation and record issuance can add additional days.":
+    "DET указывает 1 рабочий день как целевой срок оказания услуги. Проверка, комментарии, подтверждение оплаты и выпуск записи могут добавить дни к сроку.",
+
+  // ── bank account guide — guide-level timeline and price ───────────────────
+  "2–6 weeks (varies by bank, compliance review, and business activity)":
+    "2–6 недель (зависит от банка, compliance-проверки и вида деятельности)",
+  "No government fee. Bank package costs vary: some digital bank packages charge a monthly subscription fee with no minimum balance; some traditional bank packages may require an average monthly balance, a relationship balance, or additional documents. Compare packages before applying.":
+    "Государственных сборов нет. Стоимость банковского обслуживания варьируется: у одних цифровых банков действует ежемесячная подписка без минимального остатка; у других банков могут потребоваться средний остаток, relationship balance или дополнительные документы. Сравните пакеты перед подачей.",
 };
 
 const MONTHS: Record<string, string> = {

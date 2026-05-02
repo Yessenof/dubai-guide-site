@@ -2,6 +2,29 @@
 
 ---
 
+## RU Local Draft Status (CP-HH-RU-01)
+
+**Date:** 2026-05-02
+**Status:** RU content written locally via `scripts/add-ru-holiday-home-permit-guide.ts`
+
+- Slug: `holiday-home-permit-dubai`
+- RU fields written: ru_title, ru_summary, ru_audience, ru_overview (guide); ru_title, ru_what, ru_where, ru_address, ru_advice, ru_warning (all 12 steps)
+- Em-dashes in DB RU content: 0
+- Em-dashes in HTML: 2 (both in `<title>` separator, standard for all guides)
+- localize-value.ts: 16 new mappings added (9 timeEst, 5 cost, 2 guide-level price/timeline)
+- Build: 55 pages, 0 errors (RU guide now pre-rendered; +1 from 54)
+- Sitemap: /ru/guides/holiday-home-permit-dubai now included locally
+- Production: untouched — local only
+- DB backup: `data/guides.db.backup-holiday-home-ru-content-1777742571`
+
+**Local review URLs:**
+- http://localhost:3000/ru/guides/holiday-home-permit-dubai
+- http://localhost:3000/guides/holiday-home-permit-dubai
+
+**Next:** Owner visual review of RU page, then production deploy (SSH + script + build + PM2).
+
+---
+
 ## Local Guide Draft Status (CP-HH-02B)
 
 **Date:** 2026-05-02

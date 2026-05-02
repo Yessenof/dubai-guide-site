@@ -5,6 +5,40 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-02 — CP-HH-RU-02A: Russian content phrase polish for holiday-home-permit-dubai
+
+Patched 5 weak phrases in `scripts/add-ru-holiday-home-permit-guide.ts`. Script rerun: 1 guide + 12 steps updated, all guards passed, 0 em-dashes. Build: 55 pages, 0 errors. RU page 200. Sitemap includes `/ru/guides/holiday-home-permit-dubai`. Ready for production deploy.
+
+**Changes:**
+- `scripts/add-ru-holiday-home-permit-guide.ts`: Step 1 ru_what (Add New Unit / Renew phrasing), Step 2 ru_advice (portal login note), Step 4 ru_advice (date errors), Step 7 ru_advice (DET classification self-service), Step 12 ru_advice (Tourism Dirham obligation)
+
+**Production: untouched. Local only.**
+
+---
+
+## 2026-05-02 — CP-HH-RU-01: Russian content for holiday-home-permit-dubai (local only)
+
+Created `scripts/add-ru-holiday-home-permit-guide.ts`. Wrote RU content for all guide-level fields and all 12 steps. Updated `lib/localize-value.ts` with 16 new HH-specific mappings.
+
+**Changes:**
+- `scripts/add-ru-holiday-home-permit-guide.ts` created: UPDATE-only script, targets RU fields only, does not touch EN fields or published status, transaction with full post-write verification
+- `lib/localize-value.ts`: 9 new timeEst mappings + 5 new cost mappings + 2 guide-level price/timeline mappings
+- DB: ru_title, ru_summary, ru_audience, ru_overview populated; all 12 steps have ru_title, ru_what, ru_where, ru_address, ru_advice, ru_warning
+- DB backup: `data/guides.db.backup-holiday-home-ru-content-1777742571`
+
+**Verification:**
+- Script guards: em-dash (caught and fixed 1 in script + 1 in localize-value.ts), guarantee, partnership, private data — all pass
+- DB: 12/12 steps have ru_title, ru_what, ru_advice, ru_warning; em-dash count in RU DB fields = 0
+- Build: 55 pages, 0 errors (+1 RU holiday home guide now pre-rendered)
+- Sitemap: /ru/guides/holiday-home-permit-dubai now included locally
+- RU page: correct H1 in Russian, 12 Russian step titles, no EN body fallback, 2 em-dashes (standard title separator only)
+- EN guide: unchanged, still 200
+- Bank pages (local): unchanged
+
+**Production: untouched. Local only.**
+
+---
+
 ## 2026-05-02 — CP-HH-03B: Holiday home permit guide deployed to production
 
 Targeted script `scripts/add-holiday-home-permit-guide.ts` run on production. Guide is live at https://guidex-consulting.ae/guides/holiday-home-permit-dubai.

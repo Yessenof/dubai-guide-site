@@ -5,6 +5,153 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-02 — CP-HH-02E: Holiday home permit guide final content QA polish (local only)
+
+Final pre-review pass on `scripts/add-holiday-home-permit-guide.ts`. Guide remains DRAFT.
+
+**Changes (7 targeted edits):**
+1. All `tourism.gov.ae` en_address values replaced with `HH Permits portal` (10 steps, replace_all)
+2. Step 2 address: `tourism.gov.ae (HH Permits section)` → `HH Permits portal`
+3. Step 2 warning (was empty): account type caution added
+4. Step 3 warning (was empty): bedroom count caution added
+5. Step 5 advice: tenant/non-owner cautious note appended ("If the applicant is not the property owner, or if a company or operator manages the unit, check current portal requirements...")
+6. Step 6 warning (was empty): submission risk caution added
+7. Step 8 warning (was empty): portal fee controls caution added
+
+**All 12 warnings now non-empty.**
+**Zero `tourism.gov.ae` in any en_address field.**
+
+**DB backup:** data/guides.db.backup-holiday-home-final-polish-1777717040
+**Build:** 63 pages, 0 errors. **Production:** untouched. **Git pushed:** no.
+
+---
+
+## 2026-05-02 — CP-HH-02D: Holiday home permit guide EN accuracy polish (local only)
+
+Applied 8 accuracy and wording fixes to `scripts/add-holiday-home-permit-guide.ts` and reran locally. Guide remains DRAFT.
+
+**Fixes applied:**
+1. Step 5: Property Management Letter added to document list with cautious wording ("may be required depending on applicant type and portal flow")
+2. Step 2 advice: owner-managed vs operator-managed note added ("A separate management company is not always required...")
+3. Step 5 what + advice: DEWA wording updated to "recent DEWA bill and the DEWA number requested by the portal"; added account-vs-premises number caution
+4. Step 4 what: "Permits are valid for one year" replaced with "Holiday home permits are generally annual"; added Property Management Letter date-matching note for operator-managed units
+5. Step 6 title changed to "Review and Submit the Application"; what and advice rewritten to be safe about portal stage labeling
+6. Step 7 what: classification timing made portal-sequence-safe; advice added DET public guidance note
+7. Step 10 advice: payment-pending status clarified as not meaning approved; new warning added for Renewal Payment Pending Approval persistence
+8. Step 11 what: added "unit status must show Approved before you rely on the permit"; new warning: do not list until status is Approved
+9. Step 12 advice: added "Holiday Homes 2.0 handles guest check-ins, check-outs, Tourism Dirham payments and QR code functions where applicable"
+
+**DB backup:** data/guides.db.backup-holiday-home-polish-1777716404
+**Build:** 63 pages, 0 errors. **Production:** untouched. **Git pushed:** no.
+
+---
+
+## 2026-05-02 — CP-HH-02B: Holiday home permit guide created as draft (local only)
+
+Created guide `holiday-home-permit-dubai` via `scripts/add-holiday-home-permit-guide.ts`. Draft only, not published.
+
+**Script:** `scripts/add-holiday-home-permit-guide.ts`
+- Pre-write validation: em-dash, guarantee language, partnership language, private data
+- Transaction: delete-if-exists then insert guide + 12 steps
+- Post-write verification: step count = 12, RU fields empty, em-dashes = 0, category = tourism, published = 0
+
+**Guide fields:**
+- en_title: "Holiday Home Permit in Dubai: Register or Renew for Airbnb and Booking.com"
+- slug: holiday-home-permit-dubai
+- category: tourism
+- published: false (DRAFT)
+- price: From AED 370 for a 1-bedroom unit...
+- timeline: DET lists 1 business day target...
+
+**12 steps created:**
+1. Choose Add New Unit or Renew
+2. Open the HH Permits Portal
+3. Fill Unit Information
+4. Set Permit Dates Carefully
+5. Upload Required Documents
+6. Review Before Submission
+7. Complete Unit Classification
+8. Check Official Fees
+9. Wait for DET Review or Comments
+10. Confirm Payment and Upload Receipt if Required
+11. Wait for Payment Approval and Record Issuance
+12. Print the Permit and Keep the Unit Ready for Guests
+
+**DB backup:** data/guides.db.backup-holiday-home-guide-1777714931
+**Build:** 63 pages, 0 errors (guide is draft, not pre-rendered yet; will be 64 pages after publish)
+**Production:** untouched. **Git pushed:** no. **Homepage:** unchanged (Tourism card still inactive).
+
+**Admin URL:** http://localhost:3000/admin/guides/holiday-home-permit-dubai
+**Public URL (after publish):** http://localhost:3000/guides/holiday-home-permit-dubai
+
+---
+
+## 2026-05-02 — CP-HH-02A: Tourism category support added (local only)
+
+Added `tourism` category value across all relevant frontend files. No guide created, no DB changes, no homepage card activated, no hub page created.
+
+**Files changed (5):**
+- `components/admin/GuideFormFields.tsx` — added `{ value: "tourism", label: "Tourism & Short-Term Rentals" }` to CATEGORIES
+- `components/CategoryIcon.tsx` — added `"tourism"` to KnownCategory type + key SVG icon (14×14, 1.5px stroke)
+- `components/GuideHeader.tsx` — added `"tourism" → "Туризм"` to CATEGORY_RU map
+- `app/(public)/guides/page.tsx` — added `"tourism"` to CATEGORY_ORDER + `"Tourism & Short-Term Rentals"` to CATEGORY_LABELS
+- `app/ru/guides/page.tsx` — added `"tourism"` to CATEGORY_ORDER + `"Туризм и краткосрочная аренда"` to CATEGORY_LABELS
+
+**Build:** 63 pages, 0 TypeScript errors, 0 warnings.
+**DB:** untouched. **Production:** untouched. **Homepage:** no change (Tourism card remains inactive/soon).
+
+**Next:** Create holiday home permit guide via admin panel (slug: `holiday-home-permit-dubai`, category: `tourism`).
+
+---
+
+## 2026-05-01 — CP-HH-01: Holiday Home Permit guide — research and content plan
+
+Created `docs/holiday-home-permit-guide-plan.md` — planning document only, no code/DB/production changes.
+
+**Document covers (10 sections):**
+- Executive Summary: "holiday home permit Dubai" / "Airbnb permit Dubai" — high-intent, underserved, neutral slot
+- Official Source Findings: DET portal, fee formula (AED 300/bedroom + AED 70 = AED 370 for 1-bed), permit duration 1 year, Tourism Dirham rates (AED 15 Deluxe / AED 10 Standard), 7 unit statuses
+- Screenshot Workflow Findings: 6-stage portal flow (Unit Information → Documents → Review → Associated Forms → Pay Fees → Record Issuance)
+- SEO/Competitor Gap: underserved by real estate blogs and DET portal pages; AI answer gap
+- IA and Naming: new `tourism` category required, slug `holiday-home-permit-dubai`, URL `/guides/holiday-home-permit-dubai`
+- Recommended Guide Structure: 12 steps from qualification check through Tourism Dirham setup
+- Privacy and Legal Cautions: never publish permit numbers, owner names, unit numbers, DEWA numbers, payment refs
+- Future Web App Opportunities: fee calculator, document checklist, classification checker, renewal reminder, Tourism Dirham tracker
+- Implementation Plan: 4-phase, ~2 hours total effort
+- Exact Next Single Action: add `tourism` to CATEGORIES constant in GuideFormFields.tsx
+
+**No implementation.** No DB changes. No scripts. No production changes.
+
+---
+
+## 2026-05-01 — CP-26: RU content for bank account guide (local only)
+
+Added RU content for `open-business-bank-account-dubai` via `scripts/add-ru-business-bank-account.ts`.
+
+**Changes:**
+- ru_title: "Открыть бизнес-счёт в банке ОАЭ для компании в Дубае"
+- ru_summary, ru_audience, ru_overview: populated
+- All 9 steps: ru_title, ru_what, ru_where, ru_address, ru_advice, ru_warning populated
+- EN fields: unchanged
+- Wio Business: example only (not partner), monthly subscription + no minimum balance nuance present, digital onboarding compliance depth mentioned
+- POA: one scenario only (not mandatory) — owner/shareholder can apply directly
+- Real estate: conditional language ("may ask", "depending on exact activity")
+- No em-dashes, no guarantee language, no Wio partnership implication
+
+**Value localization (6 new mappings in lib/localize-value.ts):**
+- "No fee (regulatory registration costs are separate)" → Russian
+- "No government fee. Bank package, monthly subscription..." → Russian
+- "Allow additional weeks if RERA or goAML registration is required." → Russian
+- "2–6 weeks from submission (varies by bank and compliance review)" → Russian
+- "2–6 weeks (varies by bank, compliance review, and business activity)" → Russian
+- Guide price long text → Russian
+
+**Verification:** 9 steps RU complete, 0 em-dashes, EN unchanged, sitemap now includes /ru/guides/open-business-bank-account-dubai, build 63 pages 0 errors.
+
+**Not deployed:** local only. Production DB untouched.
+
+---
+
 ## 2026-05-01 — CP-25B: EN bank account guide deployed to production
 
 Deployed upgraded EN content for `open-business-bank-account-dubai` to production via targeted script only.

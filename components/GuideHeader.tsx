@@ -20,6 +20,7 @@ const CATEGORY_RU: Record<string, string> = {
   "government-services": "Госуслуги",
   "hiring":              "Найм",
   "living":              "Проживание",
+  "tourism":             "Туризм",
 };
 
 export default function GuideHeader({ frontmatter, locale = "en" }: GuideHeaderProps) {

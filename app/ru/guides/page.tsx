@@ -20,13 +20,14 @@ export const metadata: Metadata = {
   },
 };
 
-const CATEGORY_ORDER = ["visas", "company-setup", "government", "hiring", "living"] as const;
+const CATEGORY_ORDER = ["visas", "company-setup", "government", "hiring", "living", "tourism"] as const;
 const CATEGORY_LABELS: Record<string, string> = {
   "visas":         "Визы",
   "company-setup": "Открытие компании",
   "government":    "Государственные услуги",
   "hiring":        "Найм сотрудников",
   "living":        "Жизнь в Дубае",
+  "tourism":       "Туризм и краткосрочная аренда",
 };
 
 const RU_GROUP_ENTRIES: GuideListItem[] = Object.entries(GUIDE_GROUPS).map(([groupSlug, group]) => {

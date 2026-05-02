@@ -9,7 +9,8 @@ type KnownCategory =
   | "company-setup"
   | "hiring"
   | "living"
-  | "government";
+  | "government"
+  | "tourism";
 
 const icons: Record<KnownCategory, React.ReactNode> = {
   // Passport / travel document: rounded booklet + photo circle + two data lines
@@ -76,6 +77,20 @@ const icons: Record<KnownCategory, React.ReactNode> = {
       <line x1="2" y1="7" x2="4.5" y2="7"
         stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
       <line x1="9.5" y1="7" x2="12" y2="7"
+        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
+
+  // Key: circle head + diagonal shaft + two teeth
+  tourism: (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <circle cx="4.75" cy="4.75" r="2.5"
+        stroke="currentColor" strokeWidth="1.5" />
+      <line x1="6.5" y1="6.5" x2="12" y2="12"
+        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="10" y1="9.5" x2="10" y2="11"
+        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="11.5" y1="11" x2="11.5" y2="12.5"
         stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   ),

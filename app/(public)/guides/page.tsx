@@ -8,13 +8,14 @@ export const metadata: Metadata = {
   description: "Browse all step-by-step guides for company setup, visas, hiring, and relocation in Dubai.",
 };
 
-const CATEGORY_ORDER = ["visas", "company-setup", "government", "hiring", "living"] as const;
+const CATEGORY_ORDER = ["visas", "company-setup", "government", "hiring", "living", "tourism"] as const;
 const CATEGORY_LABELS: Record<string, string> = {
   "visas":          "Visas",
   "company-setup":  "Company Setup",
   "government":     "Government",
   "hiring":         "Hiring",
   "living":         "Living",
+  "tourism":        "Tourism & Short-Term Rentals",
 };
 
 // Synthetic group-page entries — replace the 4 individual redirect slugs.

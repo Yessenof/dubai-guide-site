@@ -1,11 +1,12 @@
 import type { Guide } from "@/lib/db/schema";
 
 const CATEGORIES = [
-  { value: "visas",          label: "Visas"          },
-  { value: "company-setup",  label: "Company Setup"  },
-  { value: "hiring",         label: "Hiring"         },
-  { value: "living",         label: "Living"         },
-  { value: "government",     label: "Government"     },
+  { value: "visas",          label: "Visas"                        },
+  { value: "company-setup",  label: "Company Setup"                },
+  { value: "hiring",         label: "Hiring"                       },
+  { value: "living",         label: "Living"                       },
+  { value: "government",     label: "Government"                   },
+  { value: "tourism",        label: "Tourism & Short-Term Rentals" },
 ];
 
 const field =

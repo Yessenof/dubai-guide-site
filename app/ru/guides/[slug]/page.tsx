@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAllPublishedGuides, getPublishedGuideBySlug } from "@/lib/db/reader";
+import { getRuPublishedGuidesSlugs, getPublishedGuideBySlug } from "@/lib/db/reader";
 import { localizeValue } from "@/lib/localize-value";
 import GuideHeader from "@/components/GuideHeader";
 import RouteSnapshot from "@/components/RouteSnapshot";
@@ -15,8 +15,7 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const guides = getAllPublishedGuides();
-  return guides.map((g) => ({ slug: g.slug }));
+  return getRuPublishedGuidesSlugs().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

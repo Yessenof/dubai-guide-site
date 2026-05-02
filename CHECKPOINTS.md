@@ -5,6 +5,83 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-HH-02B — Holiday home permit guide draft (local only)
+
+**Date:** 2026-05-02
+
+**What is confirmed stable (locally):**
+
+- `scripts/add-holiday-home-permit-guide.ts` executed cleanly
+- Guide `holiday-home-permit-dubai` created: slug, category=tourism, published=false (DRAFT)
+- en_title: "Holiday Home Permit in Dubai: Register or Renew for Airbnb and Booking.com"
+- 12 steps inserted, all EN fields populated, all RU fields empty
+- Pre-write and post-write validation passed: 0 em-dashes, no guarantee language, no partnership language, no private data
+- DB backup: data/guides.db.backup-holiday-home-guide-1777714931
+- Build: 63 pages, 0 TypeScript errors (guide is draft, not pre-rendered)
+- Homepage: unchanged — Tourism card still inactive
+- Production DB: untouched
+
+**Not done yet:**
+- Guide not reviewed via admin panel/browser
+- Guide not published
+- RU content not created
+- Deployment pending owner review and publish decision
+
+---
+
+## CP-HH-02A — Tourism category support (local only)
+
+**Date:** 2026-05-02
+
+**What is confirmed stable (locally):**
+
+- `tourism` added to CATEGORIES in `components/admin/GuideFormFields.tsx`
+- `tourism` added to KnownCategory type + key icon in `components/CategoryIcon.tsx`
+- `tourism → "Туризм"` added to CATEGORY_RU in `components/GuideHeader.tsx`
+- `tourism` + "Tourism & Short-Term Rentals" added to `app/(public)/guides/page.tsx`
+- `tourism` + "Туризм и краткосрочная аренда" added to `app/ru/guides/page.tsx`
+- Build: 63 pages, 0 TypeScript errors
+- No homepage card activated
+- No hub page created
+- No guide created
+- DB untouched
+- Production untouched
+
+**Not done yet:**
+- Holiday home permit guide not created
+- Tourism card on homepage still inactive/soon
+- Deployment of category support pending (code-only change, no DB script needed)
+
+---
+
+## CP-26 — RU content for bank account guide (local only)
+
+**Date:** 2026-05-01
+
+**What is confirmed stable (locally):**
+
+- `scripts/add-ru-business-bank-account.ts` executed cleanly
+- `open-business-bank-account-dubai`: all 9 steps fully translated to Russian
+- ru_title: "Открыть бизнес-счёт в банке ОАЭ для компании в Дубае"
+- Wio Business: presented as example only, monthly subscription + no minimum balance nuance, digital onboarding compliance depth
+- POA: framed as one scenario (not mandatory)
+- Real estate: conditional language, not universal requirements
+- No em-dashes, no guarantee language, no Wio partnership implication
+- EN fields unchanged, step count unchanged (9)
+- 6 new exact mappings added to lib/localize-value.ts for step/guide-level EN values
+- Sitemap now includes /ru/guides/open-business-bank-account-dubai (ru_title non-empty)
+- Local DB backup: data/guides.db.backup-bank-ru-content-1777629562706
+- Build: 63 pages, 0 TypeScript errors
+- RU page 200, H1 in Russian, all localized values correct
+
+**Not done yet:**
+- Production DB not updated with RU content
+- Deployment pending owner review
+
+**Next:** Review RU content at http://localhost:3000/ru/guides/open-business-bank-account-dubai, then deploy to production using targeted script.
+
+---
+
 ## CP-25B — EN bank account guide deployed to production
 
 **Date:** 2026-05-01

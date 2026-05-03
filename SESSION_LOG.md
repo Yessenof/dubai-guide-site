@@ -5,6 +5,24 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-03 — CP-LOCALE-FIX-01: Fixed all 5 RU listing locale bugs locally
+
+Fixed all 5 confirmed bugs from CP-LOCALE-AUDIT-01 in two files. Build clean. Local verification complete. Not pushed.
+
+**Files changed:**
+- `app/ru/guides/page.tsx` — added `ruSlugSet` filter (BUG-1), replaced English `RU_GROUP_ENTRIES` with hardcoded Russian (BUG-5)
+- `components/TopicCard.tsx` — added `LABELS`, `CATEGORY_RU`, `localizeValue()` calls (BUG-2, BUG-3, BUG-4)
+
+**Verification:**
+- Build: 55 pages, 0 TS errors
+- `/ru/guides`: shows 8 cards (6 RU-complete DB + 2 Russian group entries), all RU labels, zero EN bleed-through
+- `/guides`: EN regression clean — Fee/Time still English, all 14 EN guides listed, zero Russian labels
+- `/sitemap.xml`: 200, unchanged
+
+**Status:** Local only. Awaiting owner review before commit.
+
+---
+
 ## 2026-05-02 — CP-BATCH-RU-02: Bank Account RU + Holiday Homes RU deployed to production
 
 Batch production deploy. Two targeted scripts run on production. Both passed all guards. Build: 55 pages, 0 errors. PM2 restarted, online. All 4 URLs return 200. Both RU URLs in sitemap. EN pages unchanged. No full DB restore used.

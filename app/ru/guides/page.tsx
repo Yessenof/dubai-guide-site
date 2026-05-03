@@ -1,6 +1,6 @@
 import TopicCard from "@/components/TopicCard";
-import { getAllPublishedGuides } from "@/lib/db/reader";
-import { REDIRECT_SLUGS, GUIDE_GROUPS } from "@/lib/guide-groups";
+import { getAllPublishedGuides, getRuPublishedGuidesSlugs } from "@/lib/db/reader";
+import { REDIRECT_SLUGS } from "@/lib/guide-groups";
 import type { GuideListItem } from "@/lib/db/reader";
 import type { Metadata } from "next";
 
@@ -30,26 +30,35 @@ const CATEGORY_LABELS: Record<string, string> = {
   "tourism":       "Туризм и краткосрочная аренда",
 };
 
-const RU_GROUP_ENTRIES: GuideListItem[] = Object.entries(GUIDE_GROUPS).map(([groupSlug, group]) => {
-  const prices: Record<string, string> = {
-    "spouse-dependent-visa-dubai": "AED 1,800–3,200",
-    "child-dependent-visa-dubai":  "AED 1,586–2,875",
-  };
-  return {
-    slug:     groupSlug,
-    title:    group.title,
-    summary:  group.summary,
-    price:    prices[groupSlug] ?? "",
-    timeline: "3–6 weeks",
-    category: group.category,
-  };
-});
+// Hardcoded Russian entries for dynamic family visa group pages.
+// These are not DB guides — they link to /ru/guides/[group] tab pages.
+const RU_GROUP_ENTRIES: GuideListItem[] = [
+  {
+    slug:     "child-dependent-visa-dubai",
+    title:    "Виза ребёнка в Дубае: оформление dependent visa",
+    summary:  "Маршрут для оформления резидентской визы ребёнка в Дубае. Выберите вариант внутри ОАЭ или за пределами ОАЭ, чтобы понять шаги, документы, стоимость и сроки.",
+    price:    "AED 1,586–2,875",
+    timeline: "3–6 недель",
+    category: "visas",
+  },
+  {
+    slug:     "spouse-dependent-visa-dubai",
+    title:    "Виза жены или мужа в Дубае: оформление dependent visa",
+    summary:  "Маршрут для оформления резидентской визы супруга в Дубае. Подходит для семей, где спонсор уже имеет резидентскую визу ОАЭ.",
+    price:    "AED 1,800–3,200",
+    timeline: "3–6 недель",
+    category: "visas",
+  },
+];
 
 export default function RuGuidesPage() {
-  const rawGuides = getAllPublishedGuides("ru");
+  const ruSlugSet = new Set(getRuPublishedGuidesSlugs());
+  const rawGuides = getAllPublishedGuides("ru").filter(
+    (g) => ruSlugSet.has(g.slug) && !REDIRECT_SLUGS.has(g.slug),
+  );
 
   const allGuides = [
-    ...rawGuides.filter((g) => !REDIRECT_SLUGS.has(g.slug)),
+    ...rawGuides,
     ...RU_GROUP_ENTRIES,
   ];
 

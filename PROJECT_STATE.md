@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-04 (fix /ru/government 404 links — all 3 guide cards converted to soon:true, local build 60 pages 0 errors, not yet deployed)
+Last updated: 2026-05-04 (fix /ru/government 404 links — deployed b588201, all smoke tests green)
 
 ---
 
@@ -210,15 +210,18 @@ Production state (2026-05-04):
 - RU homepage: all 5 cards active (no more `soon:true`)
 - Sitemap: all 4 hub URLs present (banking-tax, tourism, ru/banking-tax, ru/tourism)
 
-**Local fix ready (not yet deployed):**
-- `app/ru/government/page.tsx` — all 3 guide cards converted to `soon: true`. No broken links. Page renders "Скоро" pills. Build: 60 pages, 0 errors. Smoke tests: 7/7 routes 200.
+**Production state (2026-05-04):**
+- Git HEAD: `b588201` (working tree clean)
+- PM2: `guidex-production` online
+- DB: 17 published guides, 115 steps (unchanged)
+- `/ru/government`: live — 3 broken guide links replaced with "Скоро" cards; WhatsApp CTA intact
+- No broken `/ru/guides/` links remain on any RU hub page
 
 **Next options (priority order):**
-1. Deploy /ru/government fix (commit + push + build + PM2 restart)
-2. TRC RU translation — write `scripts/add-ru-trc.ts`, insert ru_* fields + 8 steps
-3. newborn-visa-dubai RU
-4. renew-family-visa-dubai RU
-5. Government guide batch: document-attestation, amer-center, pro-services RU (flips cards from soon to linked)
+1. TRC RU translation — write `scripts/add-ru-trc.ts`, insert ru_* fields + 8 steps
+2. newborn-visa-dubai RU
+3. renew-family-visa-dubai RU
+4. Government guide batch: document-attestation, amer-center, pro-services RU (flips cards from soon to linked)
 
 ---
 

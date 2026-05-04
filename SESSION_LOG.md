@@ -5,9 +5,9 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
-## 2026-05-04 — Fix /ru/government 404 links — local only, not yet deployed
+## 2026-05-04 — Fix /ru/government 404 links — deployed b588201
 
-`app/ru/government/page.tsx`: all 3 guide cards converted from broken `/ru/guides/...` links to `soon: true` non-link cards. "Скоро" pill pattern matches RU homepage. No broken links. DB unchanged. Build: 60 pages, 0 errors. 7/7 local smoke tests 200. Not committed, not deployed.
+`app/ru/government/page.tsx`: all 3 broken `/ru/guides/` link cards converted to `soon: true` non-link "Скоро" cards. WhatsApp CTA retained as conversion path. 8/8 production smoke tests 200. DB unchanged (17 guides, 115 steps). No broken `/ru/guides/` links remain on any RU hub page.
 
 ---
 

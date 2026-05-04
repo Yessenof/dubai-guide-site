@@ -3,13 +3,14 @@ import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const WHATSAPP_HREF = "https://wa.me/971506304817";
 
 export const metadata: Metadata = {
-  title: "Tourism & Holiday Homes in Dubai — Guidex Consulting",
+  title: "Туризм и Holiday Homes в Дубае — Guidex Consulting",
   description:
-    "Holiday home permits and short-term rental compliance for property owners in Dubai. DTCM registration with process guidance from Guidex.",
+    "Разрешение holiday home и краткосрочная аренда в Дубае: регистрация DTCM, оформление лицензии и соответствие требованиям для Airbnb и Booking.com.",
   alternates: {
-    canonical: `${BASE}/tourism`,
+    canonical: `${BASE}/ru/tourism`,
     languages: {
       "en":        `${BASE}/tourism`,
       "ru":        `${BASE}/ru/tourism`,
@@ -20,23 +21,23 @@ export const metadata: Metadata = {
 
 const services = [
   {
-    title: "Holiday Home Permit",
+    title: "Разрешение Holiday Home",
     description:
-      "Register your Dubai property for short-term rental with DTCM. Required before listing on any platform including Airbnb and Booking.com.",
-    href: "/guides/holiday-home-permit-dubai",
-    meta: "DTCM · Short-term rental",
+      "Зарегистрируйте объект для краткосрочной аренды через DTCM. Обязательно до размещения на любой платформе, включая Airbnb и Booking.com.",
+    href: "/ru/guides/holiday-home-permit-dubai",
+    meta: "DTCM · Краткосрочная аренда",
   },
 ];
 
-export default function TourismHubPage() {
+export default function RuTourismHubPage() {
   return (
     <div className="max-w-2xl mx-auto px-5 py-10">
 
       <Link
-        href="/"
+        href="/ru"
         className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors mb-4 py-3 -mt-1"
       >
-        Home
+        Главная
       </Link>
 
       <PageHero
@@ -46,9 +47,9 @@ export default function TourismHubPage() {
           tone: "warm",
         }}
         gradientStyle="warm-light"
-        overline="Tourism and Holiday Homes"
-        heading="Tourism & Holiday Homes in Dubai"
-        subtext="Permits, licences, and compliance for short-term rental operators and property owners."
+        overline="Туризм и аренда"
+        heading="Туризм и Holiday Homes в Дубае"
+        subtext="Разрешения, лицензии и соответствие требованиям для владельцев недвижимости и операторов краткосрочной аренды."
       />
 
       <div className="space-y-3 mb-10">
@@ -77,20 +78,20 @@ export default function TourismHubPage() {
       <div className="pt-8 border-t border-stone-100 mb-8">
         <div className="w-6 h-0.5 bg-brass rounded-full mb-2" />
         <h2 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-4">
-          Who this is for
+          Кому это нужно
         </h2>
         <ul className="space-y-2.5">
           <li className="flex items-start gap-2.5">
             <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-brass mt-2" />
-            <span className="text-[14px] text-gray-700 leading-snug">Property owners listing on Airbnb, Booking.com, or similar platforms</span>
+            <span className="text-[14px] text-gray-700 leading-snug">Владельцы недвижимости, размещающие объекты на Airbnb, Booking.com и других платформах</span>
           </li>
           <li className="flex items-start gap-2.5">
             <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-brass mt-2" />
-            <span className="text-[14px] text-gray-700 leading-snug">Investors setting up a short-term rental portfolio in Dubai</span>
+            <span className="text-[14px] text-gray-700 leading-snug">Инвесторы, формирующие портфель краткосрочной аренды в Дубае</span>
           </li>
           <li className="flex items-start gap-2.5">
             <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-brass mt-2" />
-            <span className="text-[14px] text-gray-700 leading-snug">Owners renewing or updating an existing holiday home permit</span>
+            <span className="text-[14px] text-gray-700 leading-snug">Владельцы с действующим разрешением, которым нужно продление или обновление</span>
           </li>
         </ul>
       </div>
@@ -98,26 +99,26 @@ export default function TourismHubPage() {
       <div className="pt-8 border-t border-stone-100 mb-10">
         <div className="w-6 h-0.5 bg-brass rounded-full mb-2" />
         <h2 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-4">
-          How Guidex helps
+          Как помогает Guidex
         </h2>
         <p className="text-[14px] text-gray-700 leading-snug mb-3">
-          We handle DTCM registration, document preparation, and permit renewals. For new operators, we advise on the correct permit type before you start the process.
+          Мы сопровождаем регистрацию в DTCM, готовим документы и оформляем продление. Для новых операторов определяем правильный тип разрешения до начала процесса.
         </p>
         <p className="text-[13px] text-gray-500 leading-snug">
-          Guides for holiday home renewal, short-term rental setup, and tourism licences are being added.
+          Гайды по продлению holiday home, краткосрочной аренде и туристическим лицензиям добавляются.
         </p>
       </div>
 
       <div className="bg-navy rounded-2xl px-5 py-5">
-        <p className="text-[14px] font-semibold text-white mb-1">Setting up your first holiday home?</p>
-        <p className="text-[12px] text-white/60 mb-3">We handle the DTCM permit and advise on the correct setup for your property.</p>
+        <p className="text-[14px] font-semibold text-white mb-1">Оформляете первый holiday home?</p>
+        <p className="text-[12px] text-white/60 mb-3">Возьмём разрешение DTCM и поможем правильно оформить объект.</p>
         <a
-          href="https://wa.me/971506304817"
+          href={WHATSAPP_HREF}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity py-2"
         >
-          Chat on WhatsApp →
+          Написать в WhatsApp →
         </a>
       </div>
 

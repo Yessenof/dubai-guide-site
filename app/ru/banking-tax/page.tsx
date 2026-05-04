@@ -3,13 +3,14 @@ import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const WHATSAPP_HREF = "https://wa.me/971506304817";
 
 export const metadata: Metadata = {
-  title: "Banking & Tax in Dubai — Guidex Consulting",
+  title: "Банкинг и налоги в Дубае — Guidex Consulting",
   description:
-    "Tax Residency Certificate and business bank account for UAE residents, investors, and companies with international banking or tax reporting requirements.",
+    "Сертификат налогового резидентства ОАЭ и корпоративный банковский счёт для резидентов, инвесторов и компаний с международными требованиями к отчётности.",
   alternates: {
-    canonical: `${BASE}/banking-tax`,
+    canonical: `${BASE}/ru/banking-tax`,
     languages: {
       "en":        `${BASE}/banking-tax`,
       "ru":        `${BASE}/ru/banking-tax`,
@@ -20,30 +21,30 @@ export const metadata: Metadata = {
 
 const services = [
   {
-    title: "Tax Residency Certificate",
+    title: "Сертификат налогового резидентства ОАЭ",
     description:
-      "UAE tax residency proof for foreign banks, tax authorities, and international income declarations. Issued by the Federal Tax Authority through EmaraTax.",
+      "Подтверждение налогового резидентства для иностранных банков, налоговых органов и международных деклараций о доходах. Выдаётся Федеральной налоговой службой через EmaraTax.",
     href: "/guides/tax-residency-certificate-uae",
-    meta: "FTA · EmaraTax",
+    meta: "FTA · EmaraTax · EN",
   },
   {
-    title: "Business Bank Account",
+    title: "Корпоративный банковский счёт",
     description:
-      "Corporate account opening for mainland and free zone companies. Required after company formation. Guidex prepares your file and advises on the right bank.",
-    href: "/guides/open-business-bank-account-dubai",
-    meta: "Required after licensing",
+      "Открытие счёта для компаний mainland и free zone. Требуется после регистрации. Guidex готовит досье и подбирает подходящий банк.",
+    href: "/ru/guides/open-business-bank-account-dubai",
+    meta: "Обязателен после регистрации",
   },
 ];
 
-export default function BankingTaxHubPage() {
+export default function RuBankingTaxHubPage() {
   return (
     <div className="max-w-2xl mx-auto px-5 py-10">
 
       <Link
-        href="/"
+        href="/ru"
         className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors mb-4 py-3 -mt-1"
       >
-        Home
+        Главная
       </Link>
 
       <PageHero
@@ -53,9 +54,9 @@ export default function BankingTaxHubPage() {
           tone: "cool",
         }}
         gradientStyle="medium"
-        overline="Banking and Tax"
-        heading="Banking & Tax in Dubai"
-        subtext="For residents, investors, and companies with international banking or tax reporting requirements."
+        overline="Банкинг и налоги"
+        heading="Банкинг и налоги в Дубае"
+        subtext="Для резидентов, инвесторов и компаний с международными банковскими или налоговыми требованиями."
       />
 
       <div className="space-y-3 mb-10">
@@ -84,24 +85,24 @@ export default function BankingTaxHubPage() {
       <div className="pt-8 border-t border-stone-100 mb-8">
         <div className="w-6 h-0.5 bg-brass rounded-full mb-2" />
         <h2 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-4">
-          Who this is for
+          Кому это нужно
         </h2>
         <ul className="space-y-2.5">
           <li className="flex items-start gap-2.5">
             <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-brass mt-2" />
-            <span className="text-[14px] text-gray-700 leading-snug">Investors and founders with international income or assets</span>
+            <span className="text-[14px] text-gray-700 leading-snug">Инвесторы и предприниматели с международными доходами или активами</span>
           </li>
           <li className="flex items-start gap-2.5">
             <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-brass mt-2" />
-            <span className="text-[14px] text-gray-700 leading-snug">UAE residents proving tax residency to a foreign bank or authority</span>
+            <span className="text-[14px] text-gray-700 leading-snug">Резиденты ОАЭ, которым нужно подтвердить налоговое резидентство для иностранного банка или налогового органа</span>
           </li>
           <li className="flex items-start gap-2.5">
             <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-brass mt-2" />
-            <span className="text-[14px] text-gray-700 leading-snug">Companies opening a corporate account after licensing</span>
+            <span className="text-[14px] text-gray-700 leading-snug">Компании, открывающие корпоративный счёт после получения лицензии</span>
           </li>
           <li className="flex items-start gap-2.5">
             <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-brass mt-2" />
-            <span className="text-[14px] text-gray-700 leading-snug">Free zone and mainland businesses with cross-border reporting obligations</span>
+            <span className="text-[14px] text-gray-700 leading-snug">Компании free zone и mainland с обязательствами по международной отчётности</span>
           </li>
         </ul>
       </div>
@@ -109,26 +110,26 @@ export default function BankingTaxHubPage() {
       <div className="pt-8 border-t border-stone-100 mb-10">
         <div className="w-6 h-0.5 bg-brass rounded-full mb-2" />
         <h2 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-4">
-          How Guidex helps
+          Как помогает Guidex
         </h2>
         <p className="text-[14px] text-gray-700 leading-snug mb-3">
-          We review your case before submission, confirm the correct route, and prepare your file. Where authorised, we manage the process with the relevant authority on your behalf.
+          Мы изучаем ситуацию до подачи заявки, определяем правильный маршрут и готовим досье. При наличии полномочий ведём процесс с уполномоченным органом от вашего имени.
         </p>
         <p className="text-[14px] text-gray-600 leading-snug">
-          Not sure which document you need? Start with a free case review.
+          Не уверены, какой документ нужен? Начните с бесплатного разбора ситуации.
         </p>
       </div>
 
       <div className="bg-navy rounded-2xl px-5 py-5">
-        <p className="text-[14px] font-semibold text-white mb-1">Not sure where to start?</p>
-        <p className="text-[12px] text-white/60 mb-3">We review your situation and confirm the correct document and route for your case.</p>
+        <p className="text-[14px] font-semibold text-white mb-1">Не знаете, с чего начать?</p>
+        <p className="text-[12px] text-white/60 mb-3">Разберём ситуацию и определим нужный документ и маршрут для вашего случая.</p>
         <a
-          href="https://wa.me/971506304817"
+          href={WHATSAPP_HREF}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity py-2"
         >
-          Chat on WhatsApp →
+          Написать в WhatsApp →
         </a>
       </div>
 

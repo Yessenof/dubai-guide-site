@@ -45,14 +45,14 @@ const services: ServiceCard[] = [
   {
     label: "Туризм и аренда",
     description: "Holiday homes, краткосрочная аренда и туристические разрешения.",
-    meta: "Скоро",
-    soon: true,
+    href: "/ru/tourism",
+    meta: "DTCM · Краткосрочная аренда",
   },
   {
     label: "Банкинг и консультации",
-    description: "Банки, compliance, VAT, corporate tax и практические разборы.",
-    meta: "Скоро",
-    soon: true,
+    description: "Банки, налоговое резидентство, корпоративный счёт и практические разборы.",
+    href: "/ru/banking-tax",
+    meta: "FTA · EmaraTax · Банки",
   },
 ];
 

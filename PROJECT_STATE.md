@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-04 (CODE7: premium hubs + TRC page + visual system + homepage hero + RU parity — committed d3faa8a, not yet pushed or deployed)
+Last updated: 2026-05-04 (CODE7: premium hubs + TRC page + visual system + homepage hero + RU parity — deployed to production, all smoke tests green)
 
 ---
 
@@ -197,16 +197,24 @@ Group pages live:
 
 ## Current Next Step
 
-**CODE7 committed (d3faa8a) — not yet pushed or deployed.**
+**CODE7 fully deployed to production. All systems green.**
 
-CODE7 added: `/banking-tax` hub, `/tourism` hub, `/guides/tax-residency-certificate-uae` custom page, `PageHero` visual system, homepage hero image + gradient, RU homepage visual parity, mobile header fix. Build: 58 pages, 0 errors. All routes 200.
+CODE7 added: `/banking-tax` hub, `/tourism` hub, `/guides/tax-residency-certificate-uae` custom page, `PageHero` visual system, homepage hero image + gradient, RU homepage visual parity, mobile header fix. Build: 58 pages, 0 errors. All 10 smoke test routes 200.
+
+Production state (2026-05-04):
+- Git HEAD: `5a3f1f2` (all CODE7 commits present, working tree clean)
+- PM2: `guidex-production` online
+- DB: 17 published guides, 115 steps
+- TRC: live at https://guidex-consulting.ae/guides/tax-residency-certificate-uae
+- Banking-tax hub: live at https://guidex-consulting.ae/banking-tax
+- Tourism hub: live at https://guidex-consulting.ae/tourism
+- Backup: `/var/backups/guidex/guides.db.pre-code7-20260504-114324`
 
 **Next options:**
-- Push CODE7 to GitHub + deploy to UpCloud (requires production DB backup first — TRC guide must exist in production DB before deploying)
-- OR: continue RU content population (newborn-visa-dubai, document-attestation-dubai, amer-center-dubai, pro-services-dubai)
-- OR: add Business Bank Account guide expansion
-
-**Production DB note:** `tax-residency-certificate-uae` guide was inserted locally via `scripts/add-en-trc.ts`. Production DB does not yet have this guide. Page will 404 on production until the script is run server-side or DB is synced.
+- RU translations for TRC, banking-tax hub, tourism hub
+- Business Bank Account guide expansion
+- Holiday Home Permit guide expansion
+- Add more EN guides (newborn-visa-dubai, document-attestation-dubai, amer-center-dubai, pro-services-dubai)
 
 ---
 

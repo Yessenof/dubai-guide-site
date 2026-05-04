@@ -21,6 +21,8 @@ const EN_STATIC: Array<{ path: string; priority: number }> = [
   { path: "/visas/golden",                       priority: 0.7 },
   { path: "/company-setup",                      priority: 0.7 },
   { path: "/government",                         priority: 0.7 },
+  { path: "/banking-tax",                        priority: 0.7 },
+  { path: "/tourism",                            priority: 0.7 },
   { path: "/find-my-visa",                       priority: 0.6 },
   { path: "/about",                              priority: 0.4 },
   { path: "/contact",                            priority: 0.4 },
@@ -35,6 +37,8 @@ const RU_STATIC: Array<{ path: string; priority: number }> = [
   { path: "/ru/visas/family",                    priority: 0.7 },
   { path: "/ru/visas/golden",                    priority: 0.7 },
   { path: "/ru/company-setup",                   priority: 0.7 },
+  { path: "/ru/banking-tax",                     priority: 0.7 },
+  { path: "/ru/tourism",                         priority: 0.7 },
   { path: "/ru/contact",                         priority: 0.4 },
 ];
 

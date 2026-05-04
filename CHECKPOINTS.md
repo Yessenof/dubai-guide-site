@@ -5,6 +5,31 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-CODE7 — Premium hubs, TRC guide, visual system live on production
+
+**Date:** 2026-05-04
+**Commits:** d3faa8a (local) · 5a3f1f2 (cron backup chmod fix)
+
+CODE7 fully deployed. All smoke tests green.
+
+- `/banking-tax` hub: live — editorial gradient hero, service cards, WhatsApp CTA
+- `/tourism` hub: live — warm-light gradient, JLT image
+- `/guides/tax-residency-certificate-uae`: live — custom static route, navy header, 8 steps from DB
+- `PageHero` component: reusable gradient hero (image + gradient + text + CTA slot)
+- `lib/page-visuals.ts`: central gradient config (`light` / `medium` / `warm-light`)
+- Homepage hero: skyline image with "light" gradient, Burj visible
+- RU homepage: visual parity via PageHero with overline + WhatsApp CTA
+- Header mobile overflow fix: RU pill in top row, mobile nav flex-wrap
+- Homepage: Banking & Tax and Tourism cards activated (removed `soon:true`)
+- Production DB: 17 published guides, 115 steps
+- DB backup: `/var/backups/guidex/guides.db.pre-code7-20260504-114324`
+- Build: 58 pages, 0 TypeScript errors
+- PM2: online
+- Smoke test: 10/10 routes 200
+- Content checks: TRC renders, on index and sitemap, absent from `/ru/guides`; homepage links confirmed
+
+---
+
 ## CP-BATCH-RU-02 — Bank Account RU + Holiday Homes RU live on production
 
 **Date:** 2026-05-02

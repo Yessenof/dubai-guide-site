@@ -5,6 +5,19 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-04 — CODE7: Deployed to production — all smoke tests green
+
+CODE7 fully live on production at `guidex-consulting.ae`. 10/10 smoke tests 200. All content checks passed.
+
+- TRC inserted to production DB via `npx tsx scripts/add-en-trc.ts` (17 guides, 115 steps)
+- `npm run build` — 58 pages, 0 TypeScript errors
+- PM2 restarted — `guidex-production` online
+- Smoke tests: `/`, `/ru`, `/banking-tax`, `/tourism`, `/guides/tax-residency-certificate-uae`, bank-account, holiday-home, employment-visa, `/ru/guides`, `/sitemap.xml` — all 200
+- Content checks: TRC renders, appears on `/guides` index and sitemap, absent from `/ru/guides`; homepage links to `/banking-tax` and `/tourism` confirmed
+- Production DB backup: `/var/backups/guidex/guides.db.pre-code7-20260504-114324`
+
+---
+
 ## 2026-05-04 — CODE7: Premium hubs, TRC page, visual system, homepage hero, RU parity — committed
 
 Phase complete. All CODE7 local work committed as `d3faa8a feat: add premium hubs and TRC service page`. Not pushed, not deployed.

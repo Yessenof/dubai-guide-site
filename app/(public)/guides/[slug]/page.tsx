@@ -13,9 +13,13 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+const CUSTOM_PAGE_SLUGS = new Set(["tax-residency-certificate-uae"]);
+
 export async function generateStaticParams() {
   const guides = getAllPublishedGuides();
-  return guides.map((g) => ({ slug: g.slug }));
+  return guides
+    .filter((g) => !CUSTOM_PAGE_SLUGS.has(g.slug))
+    .map((g) => ({ slug: g.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

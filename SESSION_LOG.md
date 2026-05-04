@@ -5,6 +5,19 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-03 — CODE7-EN: TRC guide (EN) inserted locally, homepage Banking & Tax card activated
+
+New guide `tax-residency-certificate-uae` inserted via `scripts/add-en-trc.ts`. Category: government. Published: true (local only). 8 steps. All ru_* fields empty. All guards passed (em-dash, guarantee, AED fee amounts). Homepage EN card renamed from "Banking & Advice" to "Banking & Tax" with href to TRC page. Build: 56 pages, 0 TS errors. Local verification complete. Not pushed, not deployed, not committed.
+
+**Files changed:**
+- `scripts/add-en-trc.ts` (new)
+- `app/(public)/page.tsx` (Banking & Tax card activated)
+- `data/guides.db` (local only — guide + 8 steps inserted)
+
+**Local backup:** `data/guides.db.backup-trc-en-1777805265`
+
+---
+
 ## 2026-05-03 — CP-LOCALE-FIX-01: Fixed all 5 RU listing locale bugs locally
 
 Fixed all 5 confirmed bugs from CP-LOCALE-AUDIT-01 in two files. Build clean. Local verification complete. Not pushed.

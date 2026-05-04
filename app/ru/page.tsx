@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import PageHero from "@/components/PageHero";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -60,25 +61,28 @@ export default function RuHomePage() {
     <div>
 
       {/* Hero */}
-      <section className="px-5 pt-12 pb-10">
+      <section className="pt-8 pb-0 px-5">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">
-            Дубай · ОАЭ
-          </p>
-          <h1 className="text-[28px] font-bold text-gray-900 leading-snug mb-4">
-            Гайды по Дубаю — визы, компании, документы
-          </h1>
-          <p className="text-[15px] text-gray-600 leading-snug mb-8 max-w-md">
-            Пошаговые руководства по оформлению виз, регистрации компаний и работе с государственными органами ОАЭ. Актуальные официальные сборы и сроки.
-          </p>
-          <a
-            href={WHATSAPP_HREF}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-navy text-white text-[14px] font-semibold px-5 py-3 rounded-xl hover:opacity-90 transition-opacity"
+          <PageHero
+            asset={{
+              src: "/images/hubs/dubai-skyline-downtown.webp",
+              alt: "Dubai Downtown skyline at dusk with Burj Khalifa rising above surrounding towers",
+              tone: "cool",
+            }}
+            gradientStyle="light"
+            overline="Дубай · ОАЭ"
+            heading="Гайды по Дубаю — визы, компании, документы"
+            subtext="Пошаговые руководства по оформлению виз, регистрации компаний и работе с государственными органами ОАЭ. Актуальные официальные сборы и сроки."
           >
-            Получить консультацию →
-          </a>
+            <a
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-navy text-white text-[14px] font-semibold px-5 py-3 rounded-xl hover:opacity-90 transition-opacity"
+            >
+              Получить консультацию →
+            </a>
+          </PageHero>
         </div>
       </section>
 

@@ -52,14 +52,14 @@ const services: ServiceCard[] = [
   {
     label: "Tourism & Holiday Homes",
     description: "Holiday home permits, short-term rental setup, and tourism procedures.",
-    meta: "Coming soon",
-    soon: true,
+    meta: "DTCM · Short-term rental",
+    href: "/tourism",
   },
   {
-    label: "Banking & Advice",
-    description: "Banking guidance, compliance, VAT, corporate tax, and account issues.",
-    meta: "Coming soon",
-    soon: true,
+    label: "Banking & Tax",
+    description: "TRC, business banking and UAE financial proof for residents, investors and companies.",
+    meta: "TRC · Business banking",
+    href: "/banking-tax",
   },
 ];
 

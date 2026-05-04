@@ -18,27 +18,31 @@ export const metadata: Metadata = {
   },
 };
 
-const guides = [
+type GuideCard =
+  | { title: string; description: string; meta: string; href: string }
+  | { title: string; description: string; meta: string; soon: true };
+
+const guides: GuideCard[] = [
   {
     title: "Аттестация документов",
     description:
       "MOFA, консульская легализация, переводы и подготовка документов для ОАЭ.",
-    href: "/ru/guides/document-attestation-dubai",
     meta: "Документы · MOFA",
+    soon: true,
   },
   {
     title: "Amer Services",
     description:
       "Визовые заявки, Emirates ID, изменение статуса и резидентские процедуры через Amer.",
-    href: "/ru/guides/amer-center-dubai",
     meta: "Визы · Emirates ID",
+    soon: true,
   },
   {
     title: "PRO услуги",
     description:
       "Сопровождение заявок, государственных процедур и документов для частных лиц и компаний.",
-    href: "/ru/guides/pro-services-dubai",
     meta: "PRO · Госуслуги",
+    soon: true,
   },
 ];
 
@@ -70,26 +74,48 @@ export default function RuGovernmentHubPage() {
       </p>
 
       <div className="space-y-3">
-        {guides.map((g) => (
-          <Link key={g.href} href={g.href} className="block group">
-            <div className="border border-stone-200 rounded-2xl p-5 hover:border-stone-300 hover:bg-stone-100 transition-all bg-stone-50">
+        {guides.map((g) =>
+          "soon" in g ? (
+            <div
+              key={g.title}
+              className="border border-stone-200 rounded-2xl p-5 bg-stone-50"
+            >
               <div className="flex items-start justify-between gap-3 mb-1.5">
-                <h2 className="text-[15px] font-semibold text-gray-900 leading-snug">
+                <h2 className="text-[15px] font-semibold text-gray-400 leading-snug">
                   {g.title}
                 </h2>
-                <span className="text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0 text-sm mt-0.5">
-                  →
+                <span className="flex-shrink-0 text-[10px] font-medium text-gray-400 bg-stone-200 px-2 py-1 rounded-full leading-none whitespace-nowrap mt-0.5">
+                  Скоро
                 </span>
               </div>
-              <p className="text-[13px] text-gray-600 leading-snug mb-3">
+              <p className="text-[13px] text-gray-400 leading-snug mb-3">
                 {g.description}
               </p>
-              <span className="inline-block text-[11px] text-brass/80 bg-brass/[.08] px-2.5 py-1 rounded-full">
+              <span className="inline-block text-[11px] text-gray-400 bg-stone-100 px-2.5 py-1 rounded-full">
                 {g.meta}
               </span>
             </div>
-          </Link>
-        ))}
+          ) : (
+            <Link key={g.href} href={g.href} className="block group">
+              <div className="border border-stone-200 rounded-2xl p-5 hover:border-stone-300 hover:bg-stone-100 transition-all bg-stone-50">
+                <div className="flex items-start justify-between gap-3 mb-1.5">
+                  <h2 className="text-[15px] font-semibold text-gray-900 leading-snug">
+                    {g.title}
+                  </h2>
+                  <span className="text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0 text-sm mt-0.5">
+                    →
+                  </span>
+                </div>
+                <p className="text-[13px] text-gray-600 leading-snug mb-3">
+                  {g.description}
+                </p>
+                <span className="inline-block text-[11px] text-brass/80 bg-brass/[.08] px-2.5 py-1 rounded-full">
+                  {g.meta}
+                </span>
+              </div>
+            </Link>
+          )
+        )}
       </div>
 
       <div className="mt-8 bg-navy rounded-2xl px-5 py-5">

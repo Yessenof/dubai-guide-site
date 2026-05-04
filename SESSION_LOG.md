@@ -5,6 +5,22 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-04 — Fix /ru/government 404 links — local only, not yet deployed
+
+`app/ru/government/page.tsx`: all 3 guide cards converted from broken `/ru/guides/...` links to `soon: true` non-link cards. "Скоро" pill pattern matches RU homepage. No broken links. DB unchanged. Build: 60 pages, 0 errors. 7/7 local smoke tests 200. Not committed, not deployed.
+
+---
+
+## 2026-05-04 — RU hub parity batch deployed (60deb84) — all smoke tests green
+
+`/ru/banking-tax` and `/ru/tourism` live on production. Sitemap fixed (4 hub URLs added). Canonical + hreflang added to all 4 hub pages. RU homepage no longer has any `soon:true` cards. 9/9 smoke tests 200. DB unchanged (17 guides, 115 steps).
+
+TRC card on `/ru/banking-tax` links to EN guide with `· EN` meta label — honest, no fake RU link.
+
+Known issue carried forward: `/ru/government` links to 3 guides with no RU content (will 404 from that hub). Fix deferred to government guide RU translation batch.
+
+---
+
 ## 2026-05-04 — CODE7: Deployed to production — all smoke tests green
 
 CODE7 fully live on production at `guidex-consulting.ae`. 10/10 smoke tests 200. All content checks passed.

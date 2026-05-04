@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-04 (CODE7: premium hubs + TRC page + visual system + homepage hero + RU parity — deployed to production, all smoke tests green)
+Last updated: 2026-05-04 (fix /ru/government 404 links — all 3 guide cards converted to soon:true, local build 60 pages 0 errors, not yet deployed)
 
 ---
 
@@ -197,24 +197,28 @@ Group pages live:
 
 ## Current Next Step
 
-**CODE7 fully deployed to production. All systems green.**
+**RU hub parity batch deployed (commit 60deb84). All systems green.**
 
-CODE7 added: `/banking-tax` hub, `/tourism` hub, `/guides/tax-residency-certificate-uae` custom page, `PageHero` visual system, homepage hero image + gradient, RU homepage visual parity, mobile header fix. Build: 58 pages, 0 errors. All 10 smoke test routes 200.
+Batch added: `/ru/banking-tax`, `/ru/tourism` hub pages. Fixed sitemap (4 new entries), added canonical + hreflang to all 4 hub pages. Activated RU homepage cards. Build: 60 pages, 0 errors. All 9 smoke test routes 200.
 
 Production state (2026-05-04):
-- Git HEAD: `5a3f1f2` (all CODE7 commits present, working tree clean)
+- Git HEAD: `60deb84` (working tree clean)
 - PM2: `guidex-production` online
-- DB: 17 published guides, 115 steps
-- TRC: live at https://guidex-consulting.ae/guides/tax-residency-certificate-uae
-- Banking-tax hub: live at https://guidex-consulting.ae/banking-tax
-- Tourism hub: live at https://guidex-consulting.ae/tourism
-- Backup: `/var/backups/guidex/guides.db.pre-code7-20260504-114324`
+- DB: 17 published guides, 115 steps (unchanged)
+- `/ru/banking-tax`: live — TRC card links to EN guide with "· EN" label
+- `/ru/tourism`: live — links to `/ru/guides/holiday-home-permit-dubai`
+- RU homepage: all 5 cards active (no more `soon:true`)
+- Sitemap: all 4 hub URLs present (banking-tax, tourism, ru/banking-tax, ru/tourism)
 
-**Next options:**
-- RU translations for TRC, banking-tax hub, tourism hub
-- Business Bank Account guide expansion
-- Holiday Home Permit guide expansion
-- Add more EN guides (newborn-visa-dubai, document-attestation-dubai, amer-center-dubai, pro-services-dubai)
+**Local fix ready (not yet deployed):**
+- `app/ru/government/page.tsx` — all 3 guide cards converted to `soon: true`. No broken links. Page renders "Скоро" pills. Build: 60 pages, 0 errors. Smoke tests: 7/7 routes 200.
+
+**Next options (priority order):**
+1. Deploy /ru/government fix (commit + push + build + PM2 restart)
+2. TRC RU translation — write `scripts/add-ru-trc.ts`, insert ru_* fields + 8 steps
+3. newborn-visa-dubai RU
+4. renew-family-visa-dubai RU
+5. Government guide batch: document-attestation, amer-center, pro-services RU (flips cards from soon to linked)
 
 ---
 

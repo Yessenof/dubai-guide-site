@@ -5,6 +5,24 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-RU-HUBS — RU banking-tax and tourism hubs live, sitemap fixed, RU homepage complete
+
+**Date:** 2026-05-04
+**Commit:** 60deb84
+
+All 5 RU homepage service cards active (no more `soon:true`). Sitemap now includes all hub routes. Hreflang bidirectionally correct on all hub pages.
+
+- `/ru/banking-tax`: live — PageHero, DIFC image, RU text, TRC card links to EN guide with `· EN` label
+- `/ru/tourism`: live — PageHero, JLT image, RU text, links to `/ru/guides/holiday-home-permit-dubai`
+- Sitemap: `/banking-tax`, `/tourism`, `/ru/banking-tax`, `/ru/tourism` all present
+- Hreflang: en, ru, x-default correct on all 4 hub pages
+- DB: unchanged — 17 guides, 115 steps
+- PM2: online
+- Smoke test: 9/9 routes 200
+- Known issue: `/ru/government` links to 3 EN-only guides that will 404 — deferred to government RU batch
+
+---
+
 ## CP-CODE7 — Premium hubs, TRC guide, visual system live on production
 
 **Date:** 2026-05-04

@@ -5,6 +5,41 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-04 — CODE7: Premium hubs, TRC page, visual system, homepage hero, RU parity — committed
+
+Phase complete. All CODE7 local work committed as `d3faa8a feat: add premium hubs and TRC service page`. Not pushed, not deployed.
+
+**What was built:**
+- `/banking-tax` hub page — editorial gradient hero, service cards, who-it's-for, WhatsApp CTA
+- `/tourism` hub page — same structure, warm-light gradient, JLT image
+- `/guides/tax-residency-certificate-uae` — custom static route bypassing `[slug]`, navy premium header block, TRC-specific CTAs, no RouteSnapshot, steps from DB
+- `components/PageHero.tsx` — reusable editorial gradient hero (image + gradient + text + children CTA slot)
+- `lib/page-visuals.ts` — central gradient config (`light` / `medium` / `warm-light`)
+- `components/Header.tsx` — mobile overflow fix: RU pill moved to top row, mobile nav uses flex-wrap
+- `components/Hero.tsx` — updated to use PageHero with downtown skyline image
+- `app/(public)/page.tsx` — Banking & Tax and Tourism cards activated (removed `soon:true`)
+- `app/(public)/guides/[slug]/page.tsx` — `CUSTOM_PAGE_SLUGS` filter excludes TRC from `generateStaticParams`
+- `app/ru/page.tsx` — RU hero refactored to PageHero for visual parity
+- `scripts/add-en-trc.ts` — one-shot script that inserted TRC guide + 8 steps into local DB (not re-run)
+- 3 hub images in `public/images/hubs/`: Business Bay (banking-tax), JLT sunset (tourism), Dubai dusk Burj (homepage/RU)
+- `SESSION_LOG.md` updated
+
+**Gradient values:**
+- `light` (homepage + RU): `from-white via-white/75 to-white/25`
+- `medium` (banking-tax): `from-white via-white/95 to-white/40`
+- `warm-light` (tourism): `from-white via-white/90 to-white/50`
+
+**Images:**
+- `difc-business-bay-glass-towers.webp` — 131KB, Pexels 19689942
+- `jlt-dubai-towers-sunset-reflection.webp` — 140KB, Pexels 29353238
+- `dubai-skyline-downtown.webp` — 122KB, Pexels 5087047 (960×1200, dusk Burj+Downtown)
+
+**Build:** 58 pages, 0 TS errors. All 7 routes 200.
+
+**Not done yet:** push to GitHub, deploy to Cloudways, RU translations for TRC/banking-tax/tourism, business bank account guide, add `banking-tax` DB category.
+
+---
+
 ## 2026-05-03 — CODE7-EN: TRC guide (EN) inserted locally, homepage Banking & Tax card activated
 
 New guide `tax-residency-certificate-uae` inserted via `scripts/add-en-trc.ts`. Category: government. Published: true (local only). 8 steps. All ru_* fields empty. All guards passed (em-dash, guarantee, AED fee amounts). Homepage EN card renamed from "Banking & Advice" to "Banking & Tax" with href to TRC page. Build: 56 pages, 0 TS errors. Local verification complete. Not pushed, not deployed, not committed.

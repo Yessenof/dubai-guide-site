@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-02 (CP-BATCH-RU-02: Bank Account RU + Holiday Homes RU live on production — both scripts passed, build 55 pages, all 4 URLs 200, sitemap updated, PM2 online)
+Last updated: 2026-05-04 (CODE7: premium hubs + TRC page + visual system + homepage hero + RU parity — committed d3faa8a, not yet pushed or deployed)
 
 ---
 
@@ -196,6 +196,19 @@ Group pages live:
 ---
 
 ## Current Next Step
+
+**CODE7 committed (d3faa8a) — not yet pushed or deployed.**
+
+CODE7 added: `/banking-tax` hub, `/tourism` hub, `/guides/tax-residency-certificate-uae` custom page, `PageHero` visual system, homepage hero image + gradient, RU homepage visual parity, mobile header fix. Build: 58 pages, 0 errors. All routes 200.
+
+**Next options:**
+- Push CODE7 to GitHub + deploy to UpCloud (requires production DB backup first — TRC guide must exist in production DB before deploying)
+- OR: continue RU content population (newborn-visa-dubai, document-attestation-dubai, amer-center-dubai, pro-services-dubai)
+- OR: add Business Bank Account guide expansion
+
+**Production DB note:** `tax-residency-certificate-uae` guide was inserted locally via `scripts/add-en-trc.ts`. Production DB does not yet have this guide. Page will 404 on production until the script is run server-side or DB is synced.
+
+---
 
 **CP-HH-RU-02A complete: holiday-home-permit-dubai Russian content polished locally.**
 

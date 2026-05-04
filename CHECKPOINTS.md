@@ -5,6 +5,22 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-RU-TRC — RU TRC guide complete locally (pending deploy)
+
+**Date:** 2026-05-04
+**Status:** Local only — not yet committed or deployed
+
+- `scripts/add-ru-trc.ts`: 8 step + 4 guide `ru_*` fields written to local DB. All guards passed. EN fields untouched.
+- `app/ru/guides/tax-residency-certificate-uae/page.tsx`: custom static RU premium page (navy hero, Russian WHY_CARDS, Russian CTAs "Разобрать мой кейс" / "Написать в WhatsApp")
+- `app/ru/guides/[slug]/page.tsx`: CUSTOM_PAGE_SLUGS filter excludes TRC from generic RU route
+- `app/(public)/guides/tax-residency-certificate-uae/page.tsx`: hreflang `"ru"` key added
+- `app/ru/banking-tax/page.tsx`: TRC card now links to `/ru/guides/tax-residency-certificate-uae`, `· EN` label removed
+- DB: 17 guides, 115 steps (unchanged count)
+- Build: 61 pages, 0 errors. `/ru/guides/tax-residency-certificate-uae` = `○ (Static)`.
+- Smoke tests: 9/9 routes 200
+
+---
+
 ## CP-RU-HUBS — RU banking-tax and tourism hubs live, sitemap fixed, RU homepage complete
 
 **Date:** 2026-05-04

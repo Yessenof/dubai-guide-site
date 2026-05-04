@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-04 — RU TRC guide complete locally — pending owner approval for deploy
+
+`scripts/add-ru-trc.ts` run: all 8 ru_* step fields + 4 guide fields written to local DB. Em-dash guard caught 4 issues in script content — all fixed (colon, restructured sentence) before write. All guards passed, EN fields untouched. Custom RU premium page created at `app/ru/guides/tax-residency-certificate-uae/page.tsx` (navy hero, 3 WHY_CARDS in Russian, Russian CTAs). `CUSTOM_PAGE_SLUGS` filter added to RU `[slug]/page.tsx`. EN TRC hreflang updated with `"ru"` key. `/ru/banking-tax` TRC card updated to RU route, `· EN` label removed. Build: 61 pages (+1 from last), 0 errors. `/ru/guides/tax-residency-certificate-uae` = `○ (Static)`. 9/9 smoke tests 200.
+
+---
+
 ## 2026-05-04 — Fix /ru/government 404 links — deployed b588201
 
 `app/ru/government/page.tsx`: all 3 broken `/ru/guides/` link cards converted to `soon: true` non-link "Скоро" cards. WhatsApp CTA retained as conversion path. 8/8 production smoke tests 200. DB unchanged (17 guides, 115 steps). No broken `/ru/guides/` links remain on any RU hub page.

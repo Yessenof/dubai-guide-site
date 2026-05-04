@@ -10,12 +10,16 @@ import type { Metadata } from "next";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
+const CUSTOM_PAGE_SLUGS = new Set(["tax-residency-certificate-uae"]);
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  return getRuPublishedGuidesSlugs().map((slug) => ({ slug }));
+  return getRuPublishedGuidesSlugs()
+    .filter((slug) => !CUSTOM_PAGE_SLUGS.has(slug))
+    .map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

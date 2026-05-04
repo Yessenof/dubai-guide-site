@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-04 (fix /ru/government 404 links — deployed b588201, all smoke tests green)
+Last updated: 2026-05-04 (RU TRC guide complete — local build 61 pages, 9/9 smoke tests green — pending owner approval for commit + deploy)
 
 ---
 
@@ -217,11 +217,20 @@ Production state (2026-05-04):
 - `/ru/government`: live — 3 broken guide links replaced with "Скоро" cards; WhatsApp CTA intact
 - No broken `/ru/guides/` links remain on any RU hub page
 
-**Next options (priority order):**
-1. TRC RU translation — write `scripts/add-ru-trc.ts`, insert ru_* fields + 8 steps
+**Next options (priority order — updated after RU TRC complete locally):**
+1. Commit + deploy RU TRC batch (pending owner approval) — `feat: add Russian TRC guide and custom RU route`
 2. newborn-visa-dubai RU
 3. renew-family-visa-dubai RU
 4. Government guide batch: document-attestation, amer-center, pro-services RU (flips cards from soon to linked)
+
+**RU TRC local status (2026-05-04):**
+- `scripts/add-ru-trc.ts` run: 8 ru_* step fields + 4 guide fields written to local DB (17 guides, 115 steps — count unchanged)
+- `app/ru/guides/tax-residency-certificate-uae/page.tsx` created — custom static RU premium page (navy hero, WHY_CARDS RU, Russian CTAs)
+- `app/ru/guides/[slug]/page.tsx` — CUSTOM_PAGE_SLUGS filter added (excludes TRC from generic RU route)
+- `app/(public)/guides/tax-residency-certificate-uae/page.tsx` — hreflang `"ru"` key added
+- `app/ru/banking-tax/page.tsx` — TRC card href updated to `/ru/guides/tax-residency-certificate-uae`, meta `· EN` label removed
+- Build: 61 pages, 0 errors. `/ru/guides/tax-residency-certificate-uae` = `○ (Static)`. Generic RU `[slug]` = 6 paths (TRC excluded).
+- Smoke tests: 9/9 routes 200 ✅
 
 ---
 

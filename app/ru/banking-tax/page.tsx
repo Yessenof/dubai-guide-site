@@ -24,8 +24,8 @@ const services = [
     title: "Сертификат налогового резидентства ОАЭ",
     description:
       "Подтверждение налогового резидентства для иностранных банков, налоговых органов и международных деклараций о доходах. Выдаётся Федеральной налоговой службой через EmaraTax.",
-    href: "/guides/tax-residency-certificate-uae",
-    meta: "FTA · EmaraTax · EN",
+    href: "/ru/guides/tax-residency-certificate-uae",
+    meta: "FTA · EmaraTax",
   },
   {
     title: "Корпоративный банковский счёт",

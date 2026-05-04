@@ -40,7 +40,7 @@ SQLite. No external services.
 Stack: Next.js 16.2.3 (App Router, Turbopack) + TypeScript + Tailwind CSS v4 +
 better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
 
-CURRENT STATE (as of 2026-05-04) — CP-RU-HUBS DEPLOYED
+CURRENT STATE (as of 2026-05-04) — RU TRC COMPLETE LOCALLY, AWAITING DEPLOY APPROVAL
 --------------------------------------------------------
 Site is fully live on guidex-consulting.ae with HTTPS.
 CODE7 + RU hub parity batch deployed. 17 guides published. All smoke tests 200.
@@ -84,17 +84,24 @@ DB backup: /var/backups/guidex/guides.db.pre-code7-20260504-114324
 
 CURRENT NEXT STEPS
 ------------------
-1. TRC RU translation — write scripts/add-ru-trc.ts, insert ru_* fields + 8 steps.
-   After this: TRC card on /ru/banking-tax can link to /ru/guides/tax-residency-certificate-uae.
+1. Approve and deploy RU TRC batch (local state ready):
+   - scripts/add-ru-trc.ts: run locally ✅ (DB updated, all guards passed)
+   - app/ru/guides/tax-residency-certificate-uae/page.tsx: created ✅ (custom RU premium page)
+   - app/ru/guides/[slug]/page.tsx: CUSTOM_PAGE_SLUGS filter added ✅
+   - app/(public)/guides/tax-residency-certificate-uae/page.tsx: RU hreflang added ✅
+   - app/ru/banking-tax/page.tsx: TRC card updated to RU route ✅
+   - Build: 61 pages, 0 errors ✅. Smoke: 9/9 200 ✅.
+   Deploy steps: git add + commit as "feat: add Russian TRC guide and custom RU route"
+   + push + ssh deploy (git pull, npx tsx scripts/add-ru-trc.ts, npm run build, pm2 restart)
 
 2. newborn-visa-dubai RU
    renew-family-visa-dubai RU
 
-3. Government guide RU batch (fixes /ru/government dead links):
+3. Government guide RU batch (fixes /ru/government dead soon-cards):
    - document-attestation-dubai RU
    - amer-center-dubai RU
    - pro-services-dubai RU
-   *** /ru/government currently links to these 3 guides which will 404. KNOWN BUG. ***
+   *** /ru/government currently shows these 3 as "Скоро" non-link cards. KNOWN. ***
    Script pattern: scripts/add-ru-employment-visa.ts
 
 4. employment-visa-dubai-outside-uae RU (sister to completed inside-country guide)

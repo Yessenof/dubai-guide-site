@@ -5,6 +5,18 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-05 — renew-family-visa-dubai RU deployed to production
+
+`scripts/add-ru-renew-family-visa.ts` committed + pushed. Production DB backup created. Script run on server: 4 steps + 4 guide fields populated. Factual cleanup applied: no "GDRFA медцентр", no "система ICA", no "ica.gov.ae". `lib/localize-value.ts` 9 renew-family cost/time mappings deployed. Clean build on server. PM2 restarted. Smoke tests: 9/9 routes 200. Hreflang bidirectionally correct. Sitemap includes `/ru/guides/renew-family-visa-dubai`. RU page: 0 EN cost/time leakage. DB: 17 guides / 115 steps (unchanged).
+
+---
+
+## 2026-05-05 — renew-family-visa-dubai RU complete locally — factual cleanup applied
+
+`scripts/add-ru-renew-family-visa.ts` created and run: 4 steps + 4 guide fields written to local DB. All guards passed, 0 em-dashes, EN fields untouched. 9 new exact-match mappings added to `lib/localize-value.ts`. Clean build required (Turbopack module cache stale after localize-value.ts edit — `rm -rf .next` + rebuild resolved it). Built HTML verified: 10/10 RU cost/time strings present, 0 EN leakage. Build: 63 pages (+1 from 62), 0 errors. Sitemap built file: both `/guides/renew-family-visa-dubai` and `/ru/guides/renew-family-visa-dubai` present. Hreflang bidirectionally correct. DB: 17 guides / 115 steps (unchanged). Local backup: `backups/production-db/guides.db.pre-ru-renew-family-20260505-095803`. Note: `holiday-home-permit-dubai` also has RU content (pre-existing from earlier work).
+
+---
+
 ## 2026-05-05 — newborn-visa-dubai RU cost/time localization complete
 
 11 new exact-match mappings added to `lib/localize-value.ts` (newborn visa guide section). All 12 cost/time_est strings now display in Russian on /ru/guides/newborn-visa-dubai. "No additional fee" was already mapped. Built HTML verified clean: 0 EN cost/time leakage. Build: 62 pages, 0 errors. 5/5 smoke tests 200.

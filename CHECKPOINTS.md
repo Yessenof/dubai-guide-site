@@ -5,6 +5,19 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-RU-RENEW-FAMILY — renew-family-visa-dubai RU live on production
+
+**Date:** 2026-05-05
+
+- `scripts/add-ru-renew-family-visa.ts`: 4 step + 4 guide `ru_*` fields written. All guards passed. EN fields untouched.
+- `lib/localize-value.ts`: 9 renew-family cost/time exact-match mappings added. Zero EN cost/time leakage on RU page.
+- Factual cleanup: no "GDRFA медцентр", no "система ICA", no "ica.gov.ae" in any RU field.
+- Generic `app/ru/guides/[slug]/page.tsx` handles route — no custom page needed.
+- DB: 17 guides, 115 steps (unchanged). Production backup: `/var/backups/guidex/guides.db.pre-ru-renew-family-YYYYMMDD-HHMMSS`.
+- Build: 63 pages, 0 errors. Smoke tests: 9/9 production routes 200. Hreflang bidirectionally correct. Sitemap includes both EN and RU renew-family URLs.
+
+---
+
 ## CP-RU-NEWBORN — newborn-visa-dubai RU live on production
 
 **Date:** 2026-05-05

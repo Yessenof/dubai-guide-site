@@ -135,6 +135,30 @@ const EXACT_MAP: Record<string, string> = {
   "2–5 working days (visa stamp); 5–10 working days (Emirates ID delivered by post)":
     "2–5 рабочих дней на визу; 5–10 рабочих дней на доставку Emirates ID по почте",
 
+  // ── renew-family-visa guide — guide-level price and timeline ─────────────
+  "AED 250–450 (medical test, adults 18+ only; children under 18 exempt). Visa and EID fees confirmed at Amer.":
+    "AED 250–450 (медосмотр, для лиц от 18 лет; дети до 18 лет освобождены). Сборы за визу и Emirates ID подтверждаются в Amer.",
+  "Medical results: 1–3 working days. Amer processing: 2–5 working days. EID delivered by post within 5–10 working days.":
+    "Результаты медосмотра: 1–3 рабочих дня. Обработка в Amer: 2–5 рабочих дней. Emirates ID доставляется по почте в течение 5–10 рабочих дней.",
+
+  // ── renew-family-visa guide — step cost ───────────────────────────────────
+  "No cost":
+    "Без сборов",
+  "AED 250–450 (fee varies by approved medical center)":
+    "AED 250–450 (зависит от аккредитованного медцентра)",
+  "Residence visa renewal and Emirates ID fees vary by visa duration and family file status. Amer confirms the combined total and service fee at submission.":
+    "Сборы за продление residence visa и Emirates ID зависят от срока визы и статуса family file. Сумму и сервисный сбор Amer подтверждает при подаче.",
+
+  // ── renew-family-visa guide — step timeEst ────────────────────────────────
+  "5–10 minutes":
+    "5–10 минут",
+  "1–3 working days for results to be uploaded to the ICA system":
+    "1–3 рабочих дня до появления результата в системе",
+  "Counter visit 30–60 minutes. Residence visa processed within 2–5 working days.":
+    "Визит в офис: 30–60 минут. Residence visa обрабатывается в течение 2–5 рабочих дней.",
+  "Visa stamp: 2–5 working days after Amer submission. Emirates ID: delivered by post within 5–10 working days after visa approval.":
+    "Штамп визы: 2–5 рабочих дней после подачи в Amer. Emirates ID: доставляется по почте в течение 5–10 рабочих дней после одобрения визы.",
+
   // ── bank account guide — guide-level timeline and price ───────────────────
   "2–6 weeks (varies by bank, compliance review, and business activity)":
     "2–6 недель (зависит от банка, compliance-проверки и вида деятельности)",

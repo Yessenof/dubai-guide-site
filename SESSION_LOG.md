@@ -5,9 +5,9 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
-## 2026-05-05 — renew-family-visa-dubai RU deployed to production
+## 2026-05-05 — renew-family-visa-dubai RU deployed to production (daa9cf3)
 
-`scripts/add-ru-renew-family-visa.ts` committed + pushed. Production DB backup created. Script run on server: 4 steps + 4 guide fields populated. Factual cleanup applied: no "GDRFA медцентр", no "система ICA", no "ica.gov.ae". `lib/localize-value.ts` 9 renew-family cost/time mappings deployed. Clean build on server. PM2 restarted. Smoke tests: 9/9 routes 200. Hreflang bidirectionally correct. Sitemap includes `/ru/guides/renew-family-visa-dubai`. RU page: 0 EN cost/time leakage. DB: 17 guides / 115 steps (unchanged).
+`scripts/add-ru-renew-family-visa.ts` committed + pushed. Production DB backup: `/var/backups/guidex/guides.db.pre-ru-renew-family-20260505-071227`. Script run on server: 4 steps + 4 guide fields populated. Factual cleanup applied: no "GDRFA медцентр", no "система ICA", no "ica.gov.ae". `lib/localize-value.ts` 9 renew-family cost/time mappings deployed. Build: 63 pages, 0 errors. PM2 restarted. Smoke tests: 9/9 routes 200. Hreflang: en + ru + x-default on EN page. Sitemap includes both `/guides/renew-family-visa-dubai` and `/ru/guides/renew-family-visa-dubai`. RU page: all 7 target RU strings present, 0 EN cost/time leakage, 0 risky medical/ICA phrases. DB: 17 guides / 115 steps (unchanged).
 
 ---
 

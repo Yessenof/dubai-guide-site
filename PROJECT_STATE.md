@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-05 (renew-family-visa-dubai RU deployed — see SESSION_LOG for commit hash)
+Last updated: 2026-05-05 (renew-family-visa-dubai RU deployed — daa9cf3 — 63 pages, 9/9 production smoke tests green)
 
 ---
 

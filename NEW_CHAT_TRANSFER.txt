@@ -27,7 +27,7 @@ SSH: root@85.9.203.69
 App path: /var/www/guidex
 Node: v20.20.2 (NodeSource system install) — PM2: guidex-production (online)
 PM2 config: ecosystem.config.js (not start-guidex.sh)
-GitHub: see latest commit on main — all code, docs, scripts, memory files committed
+GitHub: daa9cf3 (main) — all code, docs, scripts, memory files committed
 
 Do not start building until you have confirmed you understand the current
 architecture, the admin QA rules, and the project memory maintenance requirement.
@@ -72,7 +72,7 @@ Hub pages (4 live — 2 EN + 2 RU):
   - /ru/tourism                                    RU hub (links to RU holiday-home guide)
 
 localize-value.ts: 9 renew-family cost/time mappings added (2026-05-05)
-Production DB backup (pre-renew-family): /var/backups/guidex/guides.db.pre-ru-renew-family-[timestamp]
+Production DB backup (pre-renew-family): /var/backups/guidex/guides.db.pre-ru-renew-family-20260505-071227
 
 CURRENT NEXT STEPS
 ------------------

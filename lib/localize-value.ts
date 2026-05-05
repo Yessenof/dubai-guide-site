@@ -109,6 +109,32 @@ const EXACT_MAP: Record<string, string> = {
   "DET lists 1 business day as the target service delivery time. Review, comments, payment confirmation and record issuance can add additional days.":
     "DET указывает 1 рабочий день как целевой срок оказания услуги. Проверка, комментарии, подтверждение оплаты и выпуск записи могут добавить дни к сроку.",
 
+  // ── newborn visa guide — step cost ───────────────────────────────────────
+  "AED 50–100 (birth certificate fee; often included in hospital discharge process)":
+    "AED 50–100 (сбор за свидетельство о рождении, часто входит в процесс выписки из больницы)",
+  "Varies by nationality (typically equivalent to USD 50–200)":
+    "Зависит от гражданства, обычно эквивалент USD 50–200",
+  "Included in Step 2 consulate fees":
+    "Включено в консульские сборы из шага 2",
+  "AED 510 (residence visa issuance; if family file already exists) or AED 762 (AED 252 family file + AED 510 residence, if opening a new file)":
+    "AED 510, если family file уже открыт, или AED 762 при открытии нового файла: AED 252 + AED 510",
+  "AED 385 (Emirates ID fee)":
+    "AED 385 (сбор за Emirates ID)",
+
+  // ── newborn visa guide — step timeEst ────────────────────────────────────
+  "1–3 working days":
+    "1–3 рабочих дня",
+  "1–5 working days (registration visit); passport takes 2–8 weeks":
+    "1–5 рабочих дней на визит для регистрации; паспорт обычно занимает 2–8 недель",
+  "2–8 weeks from initial consulate registration (varies by nationality)":
+    "2–8 недель после первичной регистрации в консульстве, зависит от гражданства",
+  "2–5 working days":
+    "2–5 рабочих дней",
+  "5–10 working days for card delivery after application":
+    "5–10 рабочих дней на доставку карты после подачи",
+  "2–5 working days (visa stamp); 5–10 working days (Emirates ID delivered by post)":
+    "2–5 рабочих дней на визу; 5–10 рабочих дней на доставку Emirates ID по почте",
+
   // ── bank account guide — guide-level timeline and price ───────────────────
   "2–6 weeks (varies by bank, compliance review, and business activity)":
     "2–6 недель (зависит от банка, compliance-проверки и вида деятельности)",

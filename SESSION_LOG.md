@@ -5,6 +5,24 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-05 — newborn-visa-dubai RU cost/time localization complete
+
+11 new exact-match mappings added to `lib/localize-value.ts` (newborn visa guide section). All 12 cost/time_est strings now display in Russian on /ru/guides/newborn-visa-dubai. "No additional fee" was already mapped. Built HTML verified clean: 0 EN cost/time leakage. Build: 62 pages, 0 errors. 5/5 smoke tests 200.
+
+---
+
+## 2026-05-05 — newborn-visa-dubai RU complete locally — pending owner approval for commit + deploy
+
+`scripts/add-ru-newborn-visa.ts` created and run: all 6 steps + 4 guide fields written to local DB. All guards passed (0 em-dashes, 0 guarantee language). EN fields untouched. No custom page file needed — generic `app/ru/guides/[slug]/page.tsx` handles it. EN guide auto-adds RU hreflang via `guide.hasRuContent`. Build: 62 pages (+1 from last), 0 errors. `/ru/guides/newborn-visa-dubai` included in generic RU SSG `[+4 more paths]`. 8/8 local smoke tests 200. Sitemap includes both EN and RU newborn URLs. Hreflang correct on both pages. DB: 17 guides / 115 steps (unchanged). Local backup: `backups/production-db/guides.db.pre-ru-newborn-20260505-093223`.
+
+---
+
+## 2026-05-04 — RU TRC deployed to production — all smoke tests green (e811c6a)
+
+`scripts/add-ru-trc.ts` run on production DB. All 8 RU step fields + 4 guide fields written. Production DB backup: `/var/backups/guidex/guides.db.pre-ru-trc-20260504-222454`. Build: 61 pages, 0 errors. 9/9 production smoke tests 200. RU TRC page live at guidex-consulting.ae/ru/guides/tax-residency-certificate-uae.
+
+---
+
 ## 2026-05-04 — RU TRC guide complete locally — pending owner approval for deploy
 
 `scripts/add-ru-trc.ts` run: all 8 ru_* step fields + 4 guide fields written to local DB. Em-dash guard caught 4 issues in script content — all fixed (colon, restructured sentence) before write. All guards passed, EN fields untouched. Custom RU premium page created at `app/ru/guides/tax-residency-certificate-uae/page.tsx` (navy hero, 3 WHY_CARDS in Russian, Russian CTAs). `CUSTOM_PAGE_SLUGS` filter added to RU `[slug]/page.tsx`. EN TRC hreflang updated with `"ru"` key. `/ru/banking-tax` TRC card updated to RU route, `· EN` label removed. Build: 61 pages (+1 from last), 0 errors. `/ru/guides/tax-residency-certificate-uae` = `○ (Static)`. 9/9 smoke tests 200.

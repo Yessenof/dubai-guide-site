@@ -5,19 +5,33 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
-## CP-RU-TRC — RU TRC guide complete locally (pending deploy)
+## CP-RU-NEWBORN — newborn-visa-dubai RU live on production
+
+**Date:** 2026-05-05
+**Commit:** 4cd8e70
+
+- `scripts/add-ru-newborn-visa.ts`: 6 step + 4 guide `ru_*` fields written. All guards passed. EN fields untouched.
+- `lib/localize-value.ts`: 11 newborn cost/time exact-match mappings added. Zero EN cost/time leakage on RU page.
+- Generic `app/ru/guides/[slug]/page.tsx` handles route — no custom page needed.
+- DB: 17 guides, 115 steps (unchanged). Production backup: `/var/backups/guidex/guides.db.pre-ru-newborn-20260505-094818`.
+- Build: 62 pages, 0 errors. `[+4 more paths]` in RU slug route (newborn included).
+- Smoke tests: 9/9 production routes 200. Hreflang bidirectionally correct. Sitemap includes both EN and RU newborn URLs.
+
+---
+
+## CP-RU-TRC — RU TRC guide deployed to production
 
 **Date:** 2026-05-04
-**Status:** Local only — not yet committed or deployed
+**Commit:** e811c6a
 
-- `scripts/add-ru-trc.ts`: 8 step + 4 guide `ru_*` fields written to local DB. All guards passed. EN fields untouched.
-- `app/ru/guides/tax-residency-certificate-uae/page.tsx`: custom static RU premium page (navy hero, Russian WHY_CARDS, Russian CTAs "Разобрать мой кейс" / "Написать в WhatsApp")
+- `scripts/add-ru-trc.ts`: 8 step + 4 guide `ru_*` fields written. All guards passed. EN fields untouched.
+- `app/ru/guides/tax-residency-certificate-uae/page.tsx`: custom static RU premium page (navy hero, Russian WHY_CARDS)
 - `app/ru/guides/[slug]/page.tsx`: CUSTOM_PAGE_SLUGS filter excludes TRC from generic RU route
 - `app/(public)/guides/tax-residency-certificate-uae/page.tsx`: hreflang `"ru"` key added
 - `app/ru/banking-tax/page.tsx`: TRC card now links to `/ru/guides/tax-residency-certificate-uae`, `· EN` label removed
-- DB: 17 guides, 115 steps (unchanged count)
+- DB: 17 guides, 115 steps (unchanged). Production backup: `/var/backups/guidex/guides.db.pre-ru-trc-20260504-222454`.
 - Build: 61 pages, 0 errors. `/ru/guides/tax-residency-certificate-uae` = `○ (Static)`.
-- Smoke tests: 9/9 routes 200
+- Smoke tests: 9/9 production routes 200.
 
 ---
 

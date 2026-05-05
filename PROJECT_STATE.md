@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-05 (newborn-visa-dubai RU complete locally — local build 62 pages, 8/8 smoke tests green — pending owner approval for commit + deploy)
+Last updated: 2026-05-05 (newborn-visa-dubai RU deployed — 4cd8e70 — 62 pages, 9/9 production smoke tests green)
 
 ---
 

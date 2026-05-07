@@ -8,6 +8,7 @@ safely restored to or continued from. Add a new entry only after full verificati
 ## CP-RU-GOVERNMENT-BATCH — government RU batch live on production
 
 **Date:** 2026-05-07
+**Commit:** 6b510b8
 
 - `scripts/add-ru-document-attestation.ts`: 3 steps + 4 guide `ru_*` fields. All guards passed. EN fields untouched.
 - `scripts/add-ru-amer-center.ts`: 4 steps + 4 guide `ru_*` fields. All guards passed. EN fields untouched.
@@ -15,7 +16,7 @@ safely restored to or continued from. Add a new entry only after full verificati
 - `lib/localize-value.ts`: 25 government batch cost/time exact-match mappings added.
 - `app/ru/government/page.tsx`: all 3 "Скоро" cards flipped to live href cards.
 - Factual cleanup: no apostille-replaces wording, no unverified amer.ae URL.
-- DB: 17 guides, 115 steps (unchanged). Production backup: `/var/backups/guidex/guides.db.pre-ru-government-batch-[timestamp]`.
+- DB: 17 guides, 115 steps (unchanged). Production backup: `/var/backups/guidex/guides.db.pre-ru-government-batch-20260507-070313`.
 - Build: 0 errors (full clean build — node_modules/.cache cleared). Smoke tests: 13/13 routes 200.
 - /ru/government: 3 live guide links, 0 "Скоро". Sitemap: all 6 EN+RU government guide URLs present.
 

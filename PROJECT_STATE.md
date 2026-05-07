@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-07 (government RU batch deployed — see SESSION_LOG for commit hash)
+Last updated: 2026-05-07 (government RU batch deployed — 6b510b8 — 13/13 production smoke tests green)
 
 ---
 

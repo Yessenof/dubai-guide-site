@@ -27,7 +27,7 @@ SSH: root@85.9.203.69
 App path: /var/www/guidex
 Node: v20.20.2 (NodeSource system install) — PM2: guidex-production (online)
 PM2 config: ecosystem.config.js (not start-guidex.sh)
-GitHub: daa9cf3 (main) — all code, docs, scripts, memory files committed
+GitHub: 6b510b8 (main) — all code, docs, scripts, memory files committed
 
 Do not start building until you have confirmed you understand the current
 architecture, the admin QA rules, and the project memory maintenance requirement.
@@ -74,7 +74,7 @@ Hub pages (4 live — 2 EN + 2 RU):
   - /ru/tourism                                    RU hub (links to RU holiday-home guide)
 
 localize-value.ts: 25 government batch cost/time mappings added (2026-05-07)
-Production DB backup (pre-government-batch): /var/backups/guidex/guides.db.pre-ru-government-batch-[timestamp]
+Production DB backup (pre-government-batch): /var/backups/guidex/guides.db.pre-ru-government-batch-20260507-070313
 
 IMPORTANT BUILD NOTE:
 When lib/localize-value.ts is changed, both caches must be cleared:

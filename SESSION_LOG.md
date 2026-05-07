@@ -5,7 +5,7 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
-## 2026-05-07 — government RU batch deployed to production
+## 2026-05-07 — government RU batch deployed to production (6b510b8)
 
 3 government guides translated: `document-attestation-dubai` (3 steps), `amer-center-dubai` (4 steps), `pro-services-dubai` (5 steps). 25 new exact-match mappings in `lib/localize-value.ts`. `app/ru/government/page.tsx` flipped all 3 cards from "Скоро" to live hrefs. Factual cleanup applied: no apostille-replaces claims, no unverified amer.ae URL. Full clean build required (node_modules/.cache must be cleared with localize-value.ts changes). Production DB backup created. All 3 scripts run on server. Build: 0 errors. PM2 restarted. Smoke tests: 13/13 routes 200. /ru/government: 3 live links, 0 "Скоро". Sitemap: all 6 RU/EN government guide URLs present. DB: 17 guides / 115 steps (unchanged).
 

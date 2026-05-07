@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ROUTE_FINDER_CONFIG,
   ROUTE_FINDER_CONFIG_RU,
@@ -12,6 +12,7 @@ import {
 } from "@/lib/route-finder-config";
 import { GROUP_HREFS, RU_GROUP_HREFS } from "@/lib/guide-groups";
 import { localizeValue } from "@/lib/localize-value";
+import { pushEvent } from "@/lib/gtm";
 
 const UI = {
   en: {
@@ -99,7 +100,15 @@ export default function RouteFinderFlow({ guideDataMap, startFlow, locale = "en"
   const loadingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const whatsappHref = config.whatsappHref;
 
+  useEffect(() => {
+    if (state.phase !== "result") return;
+    pushEvent("route_finder_result_view", { resolution_id: state.currentId, locale });
+  }, [state.phase, state.currentId, locale]);
+
   function handleOption(option: { value: string; next: string; contextKey?: string }) {
+    if (state.answers.length === 0) {
+      pushEvent("route_finder_start", { first_answer: option.value, locale });
+    }
     const newContext = option.contextKey
       ? { ...state.context, [option.contextKey]: option.value }
       : state.context;
@@ -364,6 +373,7 @@ export default function RouteFinderFlow({ guideDataMap, startFlow, locale = "en"
             href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => pushEvent("route_finder_whatsapp_click", { resolution_id: state.currentId, locale })}
             className="block text-center text-[13px] text-gray-400 hover:text-gray-600 py-2"
           >
             {ui.askExpert}
@@ -436,6 +446,7 @@ export default function RouteFinderFlow({ guideDataMap, startFlow, locale = "en"
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => pushEvent("route_finder_whatsapp_click", { resolution_id: state.currentId, locale })}
               className="block text-center text-[13px] text-gray-400 hover:text-gray-600 py-2"
             >
               {ui.askExpert}
@@ -478,6 +489,7 @@ export default function RouteFinderFlow({ guideDataMap, startFlow, locale = "en"
           href={whatsappHref}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => pushEvent("route_finder_whatsapp_click", { resolution_id: state.currentId, locale })}
           className="block w-full text-center bg-navy text-white text-[15px] font-bold py-3.5 rounded-xl"
         >
           {ui.messageWA}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { getLocaleFromPathname } from "@/lib/locale-path";
+import { pushEvent } from "@/lib/gtm";
 
 const HIDDEN_ON = ["/find-my-visa", "/ru/find-my-visa"];
 const SCROLL_THRESHOLD = 100;
@@ -39,6 +40,7 @@ export default function StickyRouteCta() {
     >
       <Link
         href={isRu ? "/ru/find-my-visa" : "/find-my-visa"}
+        onClick={() => pushEvent("route_finder_start", { source: "sticky_cta", locale: isRu ? "ru" : "en" })}
         className="flex items-center justify-between gap-4 bg-navy px-5 py-3 text-white"
       >
         <div className="min-w-0">

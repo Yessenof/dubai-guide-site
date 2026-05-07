@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-07 (pre-GSC SEO cleanup deployed — sitemap, hreflang, newborn localization, RouteFinderFlow localizeValue)
+Last updated: 2026-05-07 (SEO/analytics foundation deployed — GTM, Organization schema, BreadcrumbList, OG metadata, dataLayer events)
 
 ---
 
@@ -208,10 +208,29 @@ What was fixed:
 - DB: unchanged (17 guides / 115 steps). No content scripts run.
 - Build: 72 pages, 0 errors (full clean build from cold cache).
 
+**SEO/analytics foundation added (2026-05-07):**
+- `lib/gtm.ts` — `pushEvent` dataLayer helper
+- `components/GoogleTagManager.tsx` — GTM script + noscript, reads `NEXT_PUBLIC_GTM_ID`, renders nothing if unset
+- `components/OrgSchema.tsx` — Organization JSON-LD, injected in both public layouts
+- `app/layout.tsx` — GTM components wired; root OG/Twitter metadata added
+- `app/(public)/layout.tsx` + `app/ru/layout.tsx` — OrgSchema imported
+- `app/(public)/guides/[slug]/page.tsx` + `app/ru/guides/[slug]/page.tsx` — OG/Twitter metadata + BreadcrumbList JSON-LD per guide
+- `components/Header.tsx` — `language_switch_click` + `whatsapp_click` (source: header) events
+- `components/RouteFinderFlow.tsx` — `route_finder_start`, `route_finder_result_view`, `route_finder_whatsapp_click` events
+- `components/StickyRouteCta.tsx` — `route_finder_start` (source: sticky_cta) event
+- GTM renders nothing until `NEXT_PUBLIC_GTM_ID` is set in `.env.local` on server + rebuild
+
+**To activate GTM on production:**
+1. Create GTM container → get GTM-XXXXXXX ID
+2. On server: add `NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX` to `/var/www/guidex/.env.local`
+3. Run full clean build (both caches) + pm2 restart
+4. Verify GTM script appears in page source
+
 **Next steps:**
-1. Submit sitemap to Google Search Console:
-   https://guidex-consulting.ae/sitemap.xml
-2. Add Plausible analytics
+1. Submit sitemap to Google Search Console: https://guidex-consulting.ae/sitemap.xml
+2. Create GTM container + configure it (WA click trigger, guide CTA trigger, service card trigger)
+3. Wire GA4 via GTM
+4. Add Plausible analytics (optional, parallel to GTM/GA4)
 
 ---
 

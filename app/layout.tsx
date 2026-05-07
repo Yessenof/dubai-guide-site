@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { GTMScript, GTMNoScript } from "@/components/GoogleTagManager";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -12,6 +13,13 @@ export const metadata: Metadata = {
   title: "Guidex Consulting — Step-by-step guides for living and working in Dubai",
   description:
     "Clear, practical guides for company setup, visas, hiring, and relocation in Dubai and the UAE.",
+  openGraph: {
+    siteName: "Guidex Consulting",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+  },
 };
 
 export default function RootLayout({
@@ -21,7 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.className} h-full`}>
-      <body className="min-h-full bg-white text-gray-900">{children}</body>
+      <body className="min-h-full bg-white text-gray-900">
+        <GTMNoScript />
+        {children}
+        <GTMScript />
+      </body>
     </html>
   );
 }

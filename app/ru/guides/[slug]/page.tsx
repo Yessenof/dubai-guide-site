@@ -37,6 +37,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         "x-default": `${BASE}/guides/${slug}`,
       },
     },
+    openGraph: {
+      title: `${guide.title} — Guidex Consulting`,
+      description: guide.summary,
+      url: `${BASE}/ru/guides/${slug}`,
+      siteName: "Guidex Consulting",
+      locale: "ru_RU",
+      type: "article",
+    },
+    twitter: {
+      card: "summary",
+      title: `${guide.title} — Guidex Consulting`,
+      description: guide.summary,
+    },
   };
 }
 
@@ -47,8 +60,22 @@ export default async function RuGuidePage({ params }: Props) {
 
   const overviewParagraphs = guide.overview.split("\n\n").filter(Boolean);
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Главная", item: `${BASE}/ru` },
+      { "@type": "ListItem", position: 2, name: "Все гайды", item: `${BASE}/ru/guides` },
+      { "@type": "ListItem", position: 3, name: guide.title, item: `${BASE}/ru/guides/${slug}` },
+    ],
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-5 pt-5 pb-14">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
       {/* Breadcrumb */}
       <div className="flex items-center justify-between mb-4 -mx-1">

@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-07 — SEO/analytics foundation deployed to production
+
+GTM support: `components/GoogleTagManager.tsx` (GTMScript + GTMNoScript, reads `NEXT_PUBLIC_GTM_ID`, renders nothing if unset) + `app/layout.tsx` wired. `lib/gtm.ts`: `pushEvent` dataLayer helper. Organization JSON-LD: `components/OrgSchema.tsx` injected via both `app/(public)/layout.tsx` and `app/ru/layout.tsx`. BreadcrumbList JSON-LD: added to EN and RU guide `[slug]/page.tsx` — 3-level (Home → All Guides → Guide Title), RU uses Russian labels. OG/Twitter metadata: added to root layout (site-level defaults) + EN/RU guide `generateMetadata` (og:type article, og:locale en_AE/ru_RU, twitter:card summary). Event tracking: `Header.tsx` → `language_switch_click` + `whatsapp_click`; `RouteFinderFlow.tsx` → `route_finder_start` (first answer), `route_finder_result_view` (useEffect on result phase), `route_finder_whatsapp_click` (3 WA links in results); `StickyRouteCta.tsx` → `route_finder_start` (source: sticky_cta). GTM inactive on production until `NEXT_PUBLIC_GTM_ID` added to `.env.local` + clean rebuild. Build: 72 pages, 0 errors. DB: unchanged (17 guides / 115 steps).
+
+---
+
 ## 2026-05-07 — pre-GSC SEO cleanup deployed to production
 
 `app/sitemap.ts`: `/ru/find-my-visa` added to `RU_STATIC` at priority 0.6 (was absent, asymmetric with `/find-my-visa` in EN). `app/(public)/guides/child-dependent-visa-dubai/page.tsx` + `spouse-dependent-visa-dubai/page.tsx`: `alternates` with `en`/`ru`/`x-default` hreflang added (both were missing — RU counterparts already had them). `lib/localize-value.ts`: 2 newborn guide-level mappings added — timeline `"4–10 weeks from birth (depends on consulate passport speed)"` → Russian; price `"AED 900–1,500 (UAE government fees...)"` → Russian. `components/RouteFinderFlow.tsx`: `localizeValue` imported; `guide.price` and `guide.timeline` in result card now wrapped with `localizeValue(_, locale)` (previously raw strings). No DB changes. No content scripts. Full clean build (cold cache): 72 pages, 0 errors. All 4 fixes verified pre-commit. Deployed to production. Smoke tests: 10/10 routes 200. DB: 17 guides / 115 steps (unchanged).

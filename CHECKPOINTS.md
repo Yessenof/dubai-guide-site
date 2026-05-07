@@ -5,6 +5,26 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-SEO-ANALYTICS-FOUNDATION — SEO/analytics foundation live on production
+
+**Date:** 2026-05-07
+**Status:** Live — guidex-consulting.ae
+
+- `lib/gtm.ts` — `pushEvent(event, payload?)` dataLayer helper; no-ops on server
+- `components/GoogleTagManager.tsx` — GTMScript (afterInteractive) + GTMNoScript; reads `NEXT_PUBLIC_GTM_ID`; renders nothing if unset
+- `components/OrgSchema.tsx` — Organization JSON-LD using `NEXT_PUBLIC_SITE_URL`
+- `app/layout.tsx` — GTM wired; root OG (siteName, type: website) + Twitter (card: summary) defaults
+- `app/(public)/layout.tsx` + `app/ru/layout.tsx` — OrgSchema added
+- `app/(public)/guides/[slug]/page.tsx` — OG (article, en_AE) + Twitter + BreadcrumbList in EN
+- `app/ru/guides/[slug]/page.tsx` — OG (article, ru_RU) + Twitter + BreadcrumbList in Russian
+- `components/Header.tsx` — `language_switch_click` + `whatsapp_click` events
+- `components/RouteFinderFlow.tsx` — `route_finder_start`, `route_finder_result_view`, `route_finder_whatsapp_click` events
+- `components/StickyRouteCta.tsx` — `route_finder_start` event (source: sticky_cta)
+- DB: unchanged (17 guides / 115 steps). No content scripts.
+- Build: 72 pages, 0 errors.
+
+---
+
 ## CP-PRE-GSC-CLEANUP — pre-GSC SEO cleanup live on production
 
 **Date:** 2026-05-07

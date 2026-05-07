@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { pushEvent } from "@/lib/gtm";
 
 const WHATSAPP_HREF = "https://wa.me/971506304817";
 
@@ -76,6 +77,7 @@ export default function Header() {
         <div className="flex items-center gap-2.5 flex-shrink-0">
           <Link
             href={altPath}
+            onClick={() => pushEvent("language_switch_click", { to: isRu ? "en" : "ru" })}
             className="text-[12px] font-medium text-gray-400 hover:text-gray-700 transition-colors border border-gray-200 rounded-full px-2.5 py-1"
           >
             {isRu ? "EN" : "RU"}
@@ -85,6 +87,7 @@ export default function Header() {
             href={WHATSAPP_HREF}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => pushEvent("whatsapp_click", { source: "header" })}
             className="flex-shrink-0 flex items-center gap-1.5 bg-[#25D366] text-white text-[13px] font-semibold px-3.5 py-2 rounded-full hover:opacity-90 transition-opacity"
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

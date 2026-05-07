@@ -5,6 +5,23 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-RU-SPOUSE-VISA-PAIR — spouse dependent visa pair RU live on production
+
+**Date:** 2026-05-07
+**Commit:** TBD (updating after push)
+**Status:** Live — guidex-consulting.ae
+
+- `lib/guide-groups.ts`: spouse entry extended with `ruTitle?`, `ruSummary?`, `ruLabel?` on both variants
+- `lib/localize-value.ts`: 4 new mappings — "Depends on travel", "AED 1,100 (approx.)", "AED 640 (approx.)", "AED 320 (approx.)"
+- `app/ru/guides/spouse-dependent-visa-dubai/page.tsx`: metadata uses `group.ruTitle` / `group.ruSummary`
+- `scripts/add-ru-spouse-dependent-visa-outside.ts`: 7 steps + 4 guide `ru_*` fields. All guards passed. 0 em-dashes. No MOHRE clinic / ICA / stamp language.
+- `scripts/add-ru-spouse-dependent-visa-inside.ts`: 7 steps + 4 guide `ru_*` fields. All guards passed. Step 5 medical fitness: approved Medical Fitness Center (not Amer). 0 em-dashes.
+- DB: 17 guides, 115 steps (unchanged). Local backup: `backups/local/guides.db.pre-ru-spouse-20260507-140859`.
+- Build: 71 pages (+2 spouse variant slugs now SSG'd), 0 errors (full clean build). Smoke tests: 9/9 routes correct.
+- Variant slugs absent from sitemap. EN spouse group unchanged. Child group regression clean. 0 cost/time English leakage.
+
+---
+
 ## CP-RU-CHILD-VISA-PAIR — child dependent visa pair RU live on production
 
 **Date:** 2026-05-07

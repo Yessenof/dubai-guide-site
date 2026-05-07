@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-07 (employment-visa-dubai-outside-uae RU deployed — 6d76f66 — 11/11 production smoke tests green)
+Last updated: 2026-05-07 (spouse dependent visa pair RU deploying — commit TBD)
 
 ---
 
@@ -157,7 +157,7 @@ Group pages live:
 
 2. **`docs/admin-architecture.md` is partially outdated.** References `middleware.ts` (now `proxy.ts`) and describes old writer.ts patterns. Useful for architectural context but not a literal code reference.
 
-3. **Russian content partially populated.** 12 guides fully done (see RU status table in NEW_CHAT_TRANSFER.txt). 4 remaining guides need RU content: child/spouse dependent visa variants (outside/inside country).
+3. **Russian content partially populated.** All 17 guides have RU content. Spouse dependent visa pair deploying now — after deploy, all RU content will be live.
 
 4. **Category taxonomy not owner-approved as final.** Five categories are currently defined in code (`visas`, `company-setup`, `hiring`, `living`, `government`) but have not been explicitly confirmed by the owner as the permanent list. Treat as current working taxonomy, not a locked decision.
 
@@ -197,22 +197,19 @@ Group pages live:
 
 ## Current Next Step
 
-**Child dependent visa pair RU deployed to production (2026-05-07). Commit: 0b05cef.**
+**Spouse dependent visa pair RU deploying to production (2026-05-07).**
 
 Local state:
-- `components/GuideTabs.tsx`: locale-aware tab labels, `localizeValue` + `locale` wired into RouteSnapshot and StepCard
-- `lib/guide-groups.ts`: GuideGroupConfig/GuideVariant extended with optional RU fields; child group RU strings added
-- `app/ru/guides/child-dependent-visa-dubai/page.tsx`: metadata uses RU title/summary
-- `scripts/add-ru-child-dependent-visa-outside.ts` + `scripts/add-ru-child-dependent-visa-inside.ts`: run, guards passed
-- DB: 17 guides / 115 steps (unchanged); both child variants have full 6/6 RU step + 4 guide fields
-- Build: 69 pages (+2), 0 errors. Smoke tests: 8/8 routes correct
-- Local backup: `backups/local/guides.db.pre-ru-child-*`
+- `lib/guide-groups.ts`: spouse entry extended with `ruTitle`, `ruSummary`, `ruLabel` on both variants
+- `lib/localize-value.ts`: 4 new mappings (Depends on travel, AED 1,100/640/320 approx.)
+- `app/ru/guides/spouse-dependent-visa-dubai/page.tsx`: metadata uses RU title/summary
+- `scripts/add-ru-spouse-dependent-visa-outside.ts`: 7 steps + 4 guide `ru_*` fields; all guards passed
+- `scripts/add-ru-spouse-dependent-visa-inside.ts`: 7 steps + 4 guide `ru_*` fields; all guards passed
+- DB: 17 guides / 115 steps (unchanged); both spouse variants have full 7/7 RU steps + 4 guide fields
+- Build: 71 pages, 0 errors. Smoke tests: 9/9 routes correct
+- Local backup: `backups/local/guides.db.pre-ru-spouse-20260507-140859`
 
-Remaining RU content:
-- spouse-dependent-visa-dubai-outside-country
-- spouse-dependent-visa-dubai-inside-country
-
-After all dependent visa RU approved + deployed:
+All RU content complete. After deploy:
 1. Submit sitemap to Google Search Console
 2. Add Plausible analytics
 

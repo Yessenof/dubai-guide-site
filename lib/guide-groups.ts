@@ -16,19 +16,25 @@ export interface GuideGroupConfig {
 
 export const GUIDE_GROUPS: Record<string, GuideGroupConfig> = {
   "spouse-dependent-visa-dubai": {
-    title:    "How to Sponsor a Spouse Residence Visa in Dubai",
+    title:     "How to Sponsor a Spouse Residence Visa in Dubai",
+    ruTitle:   "Виза супруге или супругу в Дубае: spouse dependent visa внутри или из-за пределов ОАЭ",
     summary:
       "Compare inside-country and outside-country routes for sponsoring a spouse residence visa in Dubai. Includes full process, fees, and timelines.",
+    ruSummary:
+      "Выберите маршрут в зависимости от того, где сейчас находится супруг или супруга: за пределами ОАЭ или уже внутри страны. " +
+      "Guidex помогает подготовить документы, пройти medical fitness, подать заявки через Amer и завершить residence visa и Emirates ID.",
     category: "visas",
     variants: [
       {
         slug:     "spouse-dependent-visa-dubai-outside-country",
         label:    "Outside UAE",
+        ruLabel:  "Из-за пределов ОАЭ",
         routeKey: "outside",
       },
       {
         slug:     "spouse-dependent-visa-dubai-inside-country",
         label:    "Inside UAE",
+        ruLabel:  "Внутри ОАЭ",
         routeKey: "inside",
       },
     ],

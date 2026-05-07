@@ -8,8 +8,8 @@ const GROUP_KEY = "spouse-dependent-visa-dubai";
 const group = GUIDE_GROUPS[GROUP_KEY];
 
 export const metadata: Metadata = {
-  title: `${group.title} — Guidex Consulting`,
-  description: group.summary,
+  title: `${group.ruTitle ?? group.title} — Guidex Consulting`,
+  description: group.ruSummary ?? group.summary,
   alternates: {
     canonical: `${BASE}/ru/guides/${GROUP_KEY}`,
     languages: {

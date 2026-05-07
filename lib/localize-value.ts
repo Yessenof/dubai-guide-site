@@ -33,6 +33,11 @@ const EXACT_MAP: Record<string, string> = {
   "Varies by free zone and next step":        "Зависит от зоны и следующего шага",
   "Payment processed same day":               "Оплата в тот же день",
 
+  // ── spouse visa guide — step cost ────────────────────────────────────────
+  "AED 1,100 (approx.)":                      "AED 1,100 (ориентировочно)",
+  "AED 640 (approx.)":                        "AED 640 (ориентировочно)",
+  "AED 320 (approx.)":                        "AED 320 (ориентировочно)",
+
   // ── step cost — AED + English context ─────────────────────────────────────
   "AED 189 insurance + AED 1,285 (Cat 1/2) or AED 3,555 (Cat 3) labor fee":
     "AED 189 (страховка) + сбор MOHRE: AED 1,285 (категория 1/2) или AED 3,555 (категория 3)",
@@ -66,6 +71,7 @@ const EXACT_MAP: Record<string, string> = {
   "3–5 working days":                         "3–5 рабочих дней",
   "Travel day":                               "День перелёта",
   "Depends on travel arrangements":           "Зависит от перелёта",
+  "Depends on travel":                        "Зависит от перелёта",
   "1–4 weeks (varies)":                       "1–4 недели (зависит от страны)",
   "2–3 days (card delivered in 5–10 days)":   "2–3 дня (карта доставляется за 5–10 дней)",
   "3–5 working days for card delivery":       "3–5 рабочих дней до получения карты",

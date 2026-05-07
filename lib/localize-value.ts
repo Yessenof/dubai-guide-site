@@ -132,6 +132,12 @@ const EXACT_MAP: Record<string, string> = {
   "DET lists 1 business day as the target service delivery time. Review, comments, payment confirmation and record issuance can add additional days.":
     "DET указывает 1 рабочий день как целевой срок оказания услуги. Проверка, комментарии, подтверждение оплаты и выпуск записи могут добавить дни к сроку.",
 
+  // ── newborn visa guide — guide-level price and timeline ─────────────────
+  "AED 900–1,500 (UAE government fees for residence visa and Emirates ID; varies by family file status). Consulate and birth registration fees are additional and vary by nationality.":
+    "AED 900–1,500 (государственные сборы ОАЭ за residence visa и Emirates ID; зависит от статуса family file). Консульские сборы и регистрация рождения оплачиваются отдельно и зависят от гражданства.",
+  "4–10 weeks from birth (depends on consulate passport speed)":
+    "4–10 недель с рождения (зависит от скорости оформления паспорта в консульстве)",
+
   // ── newborn visa guide — step cost ───────────────────────────────────────
   "AED 50–100 (birth certificate fee; often included in hospital discharge process)":
     "AED 50–100 (сбор за свидетельство о рождении, часто входит в процесс выписки из больницы)",

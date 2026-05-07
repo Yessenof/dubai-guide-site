@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-07 (RU route finder deployed — /ru/find-my-visa live, all RU CTAs updated)
+Last updated: 2026-05-07 (pre-GSC SEO cleanup deployed — sitemap, hreflang, newborn localization, RouteFinderFlow localizeValue)
 
 ---
 
@@ -197,23 +197,20 @@ Group pages live:
 
 ## Current Next Step
 
-**RU route finder deployed to production (2026-05-07).**
+**Pre-GSC SEO cleanup deployed to production (2026-05-07).**
 
-What was added:
-- `app/ru/find-my-visa/page.tsx` — new RU route finder page (was 404 before)
-- `lib/route-finder-config.ts` — `ROUTE_FINDER_CONFIG_RU` added: parallel RU config with all 15 resolution paths, Russian question/option/result strings, RU hub URLs
-- `lib/guide-groups.ts` — `RU_GROUP_HREFS` added: maps spouse/child variant slugs to `/ru/guides/[group]?route=...`
-- `components/RouteFinderFlow.tsx` — `locale` prop added; RU config + UI strings switched at runtime; guide/hub/supporting-service hrefs locale-aware
-- `components/Header.tsx` — "Найти маршрут" added to RU desktop + mobile nav
-- `components/StickyRouteCta.tsx` — href locale-aware; HIDDEN_ON extended to include `/ru/find-my-visa`
-- `components/GuideTabs.tsx` — `findVisaHref` locale-aware
-- `app/ru/visas/page.tsx`, `app/ru/visas/family/page.tsx`, `app/ru/visas/golden/page.tsx`, `app/ru/company-setup/page.tsx` — all route finder CTAs updated to RU paths with correct ?flow= params
-- `app/ru/guides/[slug]/page.tsx` — 2 hrefs updated to `/ru/find-my-visa`; footer body: "медосмотры" → "сопровождение этапов"
+What was fixed:
+- `app/sitemap.ts` — `/ru/find-my-visa` added to `RU_STATIC` at priority 0.6 (was missing, asymmetric with EN)
+- `app/(public)/guides/child-dependent-visa-dubai/page.tsx` — `alternates` (en/ru/x-default) added to metadata (was missing)
+- `app/(public)/guides/spouse-dependent-visa-dubai/page.tsx` — `alternates` (en/ru/x-default) added to metadata (was missing)
+- `lib/localize-value.ts` — newborn guide-level timeline + price added to EXACT_MAP ("4–10 weeks from birth..." and "AED 900–1,500...")
+- `components/RouteFinderFlow.tsx` — `guide.price` and `guide.timeline` now pass through `localizeValue(_, locale)` in result cards
 - DB: unchanged (17 guides / 115 steps). No content scripts run.
-- Build: 72 pages, 0 errors. All 15 RU flow paths verified. 12/12 smoke tests 200.
+- Build: 72 pages, 0 errors (full clean build from cold cache).
 
-Confirmed ready. After this deploy:
-1. Submit sitemap to Google Search Console (both EN and RU)
+**Next steps:**
+1. Submit sitemap to Google Search Console:
+   https://guidex-consulting.ae/sitemap.xml
 2. Add Plausible analytics
 
 ---

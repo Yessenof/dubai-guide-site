@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-07 — pre-GSC SEO cleanup deployed to production
+
+`app/sitemap.ts`: `/ru/find-my-visa` added to `RU_STATIC` at priority 0.6 (was absent, asymmetric with `/find-my-visa` in EN). `app/(public)/guides/child-dependent-visa-dubai/page.tsx` + `spouse-dependent-visa-dubai/page.tsx`: `alternates` with `en`/`ru`/`x-default` hreflang added (both were missing — RU counterparts already had them). `lib/localize-value.ts`: 2 newborn guide-level mappings added — timeline `"4–10 weeks from birth (depends on consulate passport speed)"` → Russian; price `"AED 900–1,500 (UAE government fees...)"` → Russian. `components/RouteFinderFlow.tsx`: `localizeValue` imported; `guide.price` and `guide.timeline` in result card now wrapped with `localizeValue(_, locale)` (previously raw strings). No DB changes. No content scripts. Full clean build (cold cache): 72 pages, 0 errors. All 4 fixes verified pre-commit. Deployed to production. Smoke tests: 10/10 routes 200. DB: 17 guides / 115 steps (unchanged).
+
+---
+
 ## 2026-05-07 — RU route finder deployed to production
 
 `app/ru/find-my-visa/page.tsx` created (was 404). `lib/route-finder-config.ts`: `ROUTE_FINDER_CONFIG_RU` added — parallel RU config with 15 resolution paths (all flows traced and verified). `lib/guide-groups.ts`: `RU_GROUP_HREFS` added — spouse/child variant slugs map to `/ru/guides/[group]?route=...`. `components/RouteFinderFlow.tsx`: `locale` prop added; selects RU config + RU UI strings at runtime; guide/hub/supporting hrefs locale-aware. `components/Header.tsx`: "Найти маршрут" added to `RU_NAV`. `components/StickyRouteCta.tsx`: href locale-aware, `HIDDEN_ON` extended. `components/GuideTabs.tsx`: `findVisaHref` locale-aware. 5 RU hub pages updated (visas, visas/family, visas/golden, company-setup, guides/[slug]): all route finder CTAs now point to `/ru/find-my-visa` with correct `?flow=` params. Em-dash in `r-hub-golden` heading fixed (colon). No DB changes. Build: 72 pages, 0 errors (full clean build from cold cache). 15/15 RU flow paths verified via config tracing. EN regression clean. 0 banned EN strings in RU rendered page.

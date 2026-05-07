@@ -11,6 +11,7 @@ import {
   type RouteFinderConfig,
 } from "@/lib/route-finder-config";
 import { GROUP_HREFS, RU_GROUP_HREFS } from "@/lib/guide-groups";
+import { localizeValue } from "@/lib/localize-value";
 
 const UI = {
   en: {
@@ -311,13 +312,13 @@ export default function RouteFinderFlow({ guideDataMap, startFlow, locale = "en"
               <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">
                 {ui.estCost}
               </p>
-              <p className="text-[17px] font-bold text-navy">{guide.price}</p>
+              <p className="text-[17px] font-bold text-navy">{localizeValue(guide.price, locale)}</p>
             </div>
             <div className="px-5 py-4">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">
                 {ui.timeline}
               </p>
-              <p className="text-[17px] font-bold text-navy">{guide.timeline}</p>
+              <p className="text-[17px] font-bold text-navy">{localizeValue(guide.timeline, locale)}</p>
             </div>
           </div>
         )}

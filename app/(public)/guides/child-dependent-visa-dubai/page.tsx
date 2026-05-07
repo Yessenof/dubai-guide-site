@@ -3,12 +3,21 @@ import { getGuideGroup } from "@/lib/db/reader";
 import GuideTabs from "@/components/GuideTabs";
 import type { Metadata } from "next";
 
+const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const GROUP_KEY = "child-dependent-visa-dubai";
 const group = GUIDE_GROUPS[GROUP_KEY];
 
 export const metadata: Metadata = {
   title: `${group.title} — Guidex Consulting`,
   description: group.summary,
+  alternates: {
+    canonical: `${BASE}/guides/${GROUP_KEY}`,
+    languages: {
+      "en":        `${BASE}/guides/${GROUP_KEY}`,
+      "ru":        `${BASE}/ru/guides/${GROUP_KEY}`,
+      "x-default": `${BASE}/guides/${GROUP_KEY}`,
+    },
+  },
 };
 
 interface Props {

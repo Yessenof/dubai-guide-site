@@ -39,6 +39,7 @@ const RU_STATIC: Array<{ path: string; priority: number }> = [
   { path: "/ru/company-setup",                   priority: 0.7 },
   { path: "/ru/banking-tax",                     priority: 0.7 },
   { path: "/ru/tourism",                         priority: 0.7 },
+  { path: "/ru/find-my-visa",                    priority: 0.6 },
   { path: "/ru/contact",                         priority: 0.4 },
 ];
 

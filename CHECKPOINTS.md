@@ -5,6 +5,21 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PRE-GSC-CLEANUP — pre-GSC SEO cleanup live on production
+
+**Date:** 2026-05-07
+**Status:** Live — guidex-consulting.ae
+
+- `app/sitemap.ts` — `/ru/find-my-visa` added to `RU_STATIC` at priority 0.6
+- `app/(public)/guides/child-dependent-visa-dubai/page.tsx` — `alternates` (en/ru/x-default) added
+- `app/(public)/guides/spouse-dependent-visa-dubai/page.tsx` — `alternates` (en/ru/x-default) added
+- `lib/localize-value.ts` — newborn guide-level timeline + price mappings added
+- `components/RouteFinderFlow.tsx` — result card `guide.price` and `guide.timeline` wrapped with `localizeValue(_, locale)`
+- DB: unchanged (17 guides / 115 steps). No content scripts run.
+- Build: 72 pages, 0 errors (full clean build, cold cache). 10/10 smoke tests 200.
+
+---
+
 ## CP-RU-ROUTE-FINDER — RU route finder live on production
 
 **Date:** 2026-05-07

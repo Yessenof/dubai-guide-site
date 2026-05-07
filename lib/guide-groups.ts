@@ -66,7 +66,7 @@ export const GUIDE_GROUPS: Record<string, GuideGroupConfig> = {
 };
 
 /**
- * Canonical group page URLs for each variant slug.
+ * Canonical group page URLs for each variant slug — EN.
  * Used by RouteFinderFlow and guide lists to avoid redirect hops.
  */
 export const GROUP_HREFS: Record<string, string> = Object.fromEntries(
@@ -74,6 +74,19 @@ export const GROUP_HREFS: Record<string, string> = Object.fromEntries(
     group.variants.map((v) => [
       v.slug,
       `/guides/${groupKey}?route=${v.routeKey}`,
+    ])
+  )
+);
+
+/**
+ * Canonical RU group page URLs for each variant slug.
+ * Used by RouteFinderFlow when locale === "ru".
+ */
+export const RU_GROUP_HREFS: Record<string, string> = Object.fromEntries(
+  Object.entries(GUIDE_GROUPS).flatMap(([groupKey, group]) =>
+    group.variants.map((v) => [
+      v.slug,
+      `/ru/guides/${groupKey}?route=${v.routeKey}`,
     ])
   )
 );

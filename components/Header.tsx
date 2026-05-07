@@ -14,6 +14,7 @@ const EN_NAV = [
 ];
 
 const RU_NAV = [
+  { label: "Найти маршрут",    href: "/ru/find-my-visa" },
   { label: "Визы",             href: "/ru/visas" },
   { label: "Компании",         href: "/ru/company-setup" },
   { label: "Гайды",            href: "/ru/guides" },

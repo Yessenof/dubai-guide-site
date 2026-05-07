@@ -78,7 +78,7 @@ export default function RuGoldenVisaHubPage() {
       </p>
 
       <Link
-        href="/find-my-visa?flow=golden"
+        href="/ru/find-my-visa?flow=golden"
         className="flex items-center justify-between w-full mb-7 px-4 py-3.5 bg-navy rounded-xl group"
       >
         <div>

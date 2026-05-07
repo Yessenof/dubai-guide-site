@@ -4,21 +4,62 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import {
   ROUTE_FINDER_CONFIG,
+  ROUTE_FINDER_CONFIG_RU,
   type CalcGuideData,
   type GuideResolution,
   type Resolution,
+  type RouteFinderConfig,
 } from "@/lib/route-finder-config";
-import { GROUP_HREFS } from "@/lib/guide-groups";
+import { GROUP_HREFS, RU_GROUP_HREFS } from "@/lib/guide-groups";
+
+const UI = {
+  en: {
+    back:         "← Back",
+    step:         "Step",
+    loading1:     "Finding your route…",
+    loading2:     "Matching your answers to the right route",
+    yourRoute:    "Your route",
+    estCost:      "Est. cost",
+    timeline:     "Timeline",
+    viewGuide:    "View Step-by-Step Guide →",
+    contactUs:    "Contact Us →",
+    askExpert:    "Ask an expert on WhatsApp →",
+    yourNextStep: "Your next step",
+    nextStep:     "Next step",
+    seeAllRoutes: "See All Routes →",
+    messageWA:    "Message Us on WhatsApp →",
+    noResult:     "No result found.",
+    startOver:    "Start over",
+  },
+  ru: {
+    back:         "← Назад",
+    step:         "Шаг",
+    loading1:     "Подбираем маршрут…",
+    loading2:     "Анализируем ваши ответы",
+    yourRoute:    "Ваш маршрут",
+    estCost:      "Стоимость",
+    timeline:     "Срок",
+    viewGuide:    "Читать пошаговый гайд →",
+    contactUs:    "Связаться с нами →",
+    askExpert:    "Написать эксперту в WhatsApp →",
+    yourNextStep: "Следующий шаг",
+    nextStep:     "Следующий шаг",
+    seeAllRoutes: "Все маршруты →",
+    messageWA:    "Написать в WhatsApp →",
+    noResult:     "Маршрут не найден.",
+    startOver:    "Начать заново",
+  },
+};
 
 interface Props {
   guideDataMap: Record<string, CalcGuideData>;
-  /** Q1 option value to pre-select. Skips Q1. */
-  startFlow?: string;
+  startFlow?:   string;
+  locale?:      "en" | "ru";
 }
 
 interface AnswerRecord {
-  questionId: string;
-  value: string;
+  questionId:  string;
+  value:       string;
   contextKey?: string;
 }
 
@@ -26,32 +67,36 @@ type Phase = "question" | "loading" | "result";
 
 interface FlowState {
   currentId: string;
-  answers: AnswerRecord[];
-  context: Record<string, string>;
-  phase: Phase;
+  answers:   AnswerRecord[];
+  context:   Record<string, string>;
+  phase:     Phase;
 }
 
-function buildInitialState(startFlow: string | undefined): FlowState {
+function buildInitialState(startFlow: string | undefined, config: RouteFinderConfig): FlowState {
   if (!startFlow) {
-    return { currentId: ROUTE_FINDER_CONFIG.startQuestion, answers: [], context: {}, phase: "question" };
+    return { currentId: config.startQuestion, answers: [], context: {}, phase: "question" };
   }
-  const q1 = ROUTE_FINDER_CONFIG.questions[ROUTE_FINDER_CONFIG.startQuestion];
+  const q1     = config.questions[config.startQuestion];
   const option = q1?.options.find((o) => o.value === startFlow);
   if (!option) {
-    return { currentId: ROUTE_FINDER_CONFIG.startQuestion, answers: [], context: {}, phase: "question" };
+    return { currentId: config.startQuestion, answers: [], context: {}, phase: "question" };
   }
   return {
     currentId: option.next,
-    answers: [{ questionId: ROUTE_FINDER_CONFIG.startQuestion, value: option.value, contextKey: option.contextKey }],
-    context: option.contextKey ? { [option.contextKey]: option.value } : {},
-    phase: "question",
+    answers:   [{ questionId: config.startQuestion, value: option.value, contextKey: option.contextKey }],
+    context:   option.contextKey ? { [option.contextKey]: option.value } : {},
+    phase:     "question",
   };
 }
 
-export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
-  const [state, setState] = useState<FlowState>(() => buildInitialState(startFlow));
+export default function RouteFinderFlow({ guideDataMap, startFlow, locale = "en" }: Props) {
+  const config     = locale === "ru" ? ROUTE_FINDER_CONFIG_RU : ROUTE_FINDER_CONFIG;
+  const ui         = locale === "ru" ? UI.ru : UI.en;
+  const groupHrefs = locale === "ru" ? RU_GROUP_HREFS : GROUP_HREFS;
+
+  const [state, setState] = useState<FlowState>(() => buildInitialState(startFlow, config));
   const loadingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const whatsappHref = ROUTE_FINDER_CONFIG.whatsappHref;
+  const whatsappHref = config.whatsappHref;
 
   function handleOption(option: { value: string; next: string; contextKey?: string }) {
     const newContext = option.contextKey
@@ -61,7 +106,7 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
       ...state.answers,
       { questionId: state.currentId, value: option.value, contextKey: option.contextKey },
     ];
-    const isNextQuestion = option.next in ROUTE_FINDER_CONFIG.questions;
+    const isNextQuestion = option.next in config.questions;
 
     if (isNextQuestion) {
       setState({ currentId: option.next, answers: newAnswers, context: newContext, phase: "question" });
@@ -86,7 +131,7 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
 
   function handleReset() {
     if (loadingTimer.current) { clearTimeout(loadingTimer.current); loadingTimer.current = null; }
-    setState({ currentId: ROUTE_FINDER_CONFIG.startQuestion, answers: [], context: {}, phase: "question" });
+    setState({ currentId: config.startQuestion, answers: [], context: {}, phase: "question" });
   }
 
   function resolveGuideSlug(resolution: GuideResolution): string | undefined {
@@ -104,9 +149,9 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
     return (
       <div className="px-6 py-14 flex flex-col items-center text-center">
         <div className="w-10 h-10 rounded-full border-[2.5px] border-stone-200 border-t-navy animate-spin mb-6" />
-        <p className="text-[17px] font-semibold text-gray-900 mb-1.5">Finding your route…</p>
+        <p className="text-[17px] font-semibold text-gray-900 mb-1.5">{ui.loading1}</p>
         <p className="text-[13px] text-gray-400 max-w-[200px] leading-relaxed">
-          Matching your answers to the right route
+          {ui.loading2}
         </p>
       </div>
     );
@@ -114,10 +159,10 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
 
   // ─── Question screen ──────────────────────────────────────────────────────
 
-  if (state.phase === "question" && state.currentId in ROUTE_FINDER_CONFIG.questions) {
-    const question = ROUTE_FINDER_CONFIG.questions[state.currentId];
-    const hasAnswers = state.answers.length > 0;
-    const stepNumber = startFlow ? state.answers.length : state.answers.length + 1;
+  if (state.phase === "question" && state.currentId in config.questions) {
+    const question      = config.questions[state.currentId];
+    const hasAnswers    = state.answers.length > 0;
+    const stepNumber    = startFlow ? state.answers.length : state.answers.length + 1;
     const filledSegments = Math.min(state.answers.length, 3);
 
     return (
@@ -143,10 +188,10 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
                 style={{ touchAction: "manipulation" }}
                 className="text-[13px] text-gray-400 hover:text-gray-700 py-2 pr-3 -ml-0.5 flex items-center gap-1 select-none"
               >
-                ← Back
+                {ui.back}
               </button>
               <span className="text-[11px] font-medium text-gray-300 uppercase tracking-wide">
-                Step {stepNumber}
+                {ui.step} {stepNumber}
               </span>
             </div>
           )}
@@ -193,20 +238,20 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
 
   // ─── Result screens ───────────────────────────────────────────────────────
 
-  const resolution: Resolution | undefined = ROUTE_FINDER_CONFIG.resolutions[state.currentId];
+  const resolution: Resolution | undefined = config.resolutions[state.currentId];
 
   if (!resolution) {
     return (
       <div className="p-6 text-center">
         <p className="text-[14px] text-gray-500">
-          No result found.{" "}
+          {ui.noResult}{" "}
           <button
             type="button"
             onClick={handleReset}
             className="text-brass underline"
             style={{ touchAction: "manipulation" }}
           >
-            Start over
+            {ui.startOver}
           </button>
         </p>
       </div>
@@ -222,7 +267,7 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
         style={{ touchAction: "manipulation" }}
         className="w-full text-center text-[12px] text-gray-300 hover:text-gray-500 py-3 select-none"
       >
-        Start over
+        {ui.startOver}
       </button>
     </div>
   );
@@ -230,8 +275,11 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
   // ── Guide result ──────────────────────────────────────────────────────────
 
   if (resolution.type === "guide") {
-    const slug = resolveGuideSlug(resolution);
-    const guide = slug ? guideDataMap[slug] : undefined;
+    const slug      = resolveGuideSlug(resolution);
+    const guide     = slug ? guideDataMap[slug] : undefined;
+    const guideHref = slug
+      ? (groupHrefs[slug] ?? (locale === "ru" ? `/ru/guides/${slug}` : `/guides/${slug}`))
+      : undefined;
 
     return (
       <div>
@@ -243,10 +291,10 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
             style={{ touchAction: "manipulation" }}
             className="text-[12px] text-white/40 hover:text-white/70 mb-4 flex items-center gap-1 select-none -ml-0.5"
           >
-            ← Back
+            {ui.back}
           </button>
           <p className="text-[10px] font-semibold uppercase tracking-widest text-white/40 mb-2">
-            Your route
+            {ui.yourRoute}
           </p>
           <h2 className="text-[18px] font-bold text-white leading-snug mb-1">
             {guide?.title ?? "Route found"}
@@ -261,13 +309,13 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
           <div className="grid grid-cols-2 border-b border-stone-100">
             <div className="px-5 py-4 border-r border-stone-100">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">
-                Est. cost
+                {ui.estCost}
               </p>
               <p className="text-[17px] font-bold text-navy">{guide.price}</p>
             </div>
             <div className="px-5 py-4">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1">
-                Timeline
+                {ui.timeline}
               </p>
               <p className="text-[17px] font-bold text-navy">{guide.timeline}</p>
             </div>
@@ -276,12 +324,12 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
 
         {/* Main CTA — visible before key facts */}
         <div className="px-6 pt-5 pb-4">
-          {slug ? (
+          {guideHref ? (
             <Link
-              href={GROUP_HREFS[slug] ?? `/guides/${slug}`}
+              href={guideHref}
               className="block w-full text-center bg-navy text-white text-[15px] font-bold py-3.5 rounded-xl"
             >
-              View Step-by-Step Guide →
+              {ui.viewGuide}
             </Link>
           ) : (
             <a
@@ -290,7 +338,7 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
               rel="noopener noreferrer"
               className="block w-full text-center bg-navy text-white text-[15px] font-bold py-3.5 rounded-xl"
             >
-              Contact Us →
+              {ui.contactUs}
             </a>
           )}
         </div>
@@ -317,7 +365,7 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
             rel="noopener noreferrer"
             className="block text-center text-[13px] text-gray-400 hover:text-gray-600 py-2"
           >
-            Ask an expert on WhatsApp →
+            {ui.askExpert}
           </a>
 
           {resolution.supportingServices.length > 0 && (
@@ -326,12 +374,13 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
                 {resolution.supportingNote ?? "You may also need:"}
               </p>
               {resolution.supportingServices.map((serviceSlug) => {
-                const service = guideDataMap[serviceSlug];
+                const service     = guideDataMap[serviceSlug];
                 if (!service) return null;
+                const serviceHref = locale === "ru" ? `/ru/guides/${serviceSlug}` : `/guides/${serviceSlug}`;
                 return (
                   <Link
                     key={serviceSlug}
-                    href={`/guides/${serviceSlug}`}
+                    href={serviceHref}
                     className="flex items-center gap-1.5 text-[13px] text-brass hover:opacity-70 py-1"
                   >
                     <span>→</span>
@@ -360,10 +409,10 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
             style={{ touchAction: "manipulation" }}
             className="text-[12px] text-white/40 hover:text-white/70 mb-4 flex items-center gap-1 select-none -ml-0.5"
           >
-            ← Back
+            {ui.back}
           </button>
           <p className="text-[10px] font-semibold uppercase tracking-widest text-white/40 mb-2">
-            Your next step
+            {ui.yourNextStep}
           </p>
           <h2 className="text-[18px] font-bold text-white leading-snug">
             {resolution.heading}
@@ -379,7 +428,7 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
             href={resolution.hubUrl}
             className="block w-full text-center bg-navy text-white text-[15px] font-bold py-3.5 rounded-xl"
           >
-            {resolution.ctaLabel ?? "See All Routes →"}
+            {resolution.ctaLabel ?? ui.seeAllRoutes}
           </Link>
           {resolution.whatsapp && (
             <a
@@ -388,7 +437,7 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
               rel="noopener noreferrer"
               className="block text-center text-[13px] text-gray-400 hover:text-gray-600 py-2"
             >
-              Ask an expert on WhatsApp →
+              {ui.askExpert}
             </a>
           )}
         </div>
@@ -409,10 +458,10 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
           style={{ touchAction: "manipulation" }}
           className="text-[12px] text-white/40 hover:text-white/70 mb-4 flex items-center gap-1 select-none -ml-0.5"
         >
-          ← Back
+          {ui.back}
         </button>
         <p className="text-[10px] font-semibold uppercase tracking-widest text-white/40 mb-2">
-          Next step
+          {ui.nextStep}
         </p>
         <h2 className="text-[18px] font-bold text-white leading-snug">
           {resolution.heading}
@@ -430,7 +479,7 @@ export default function RouteFinderFlow({ guideDataMap, startFlow }: Props) {
           rel="noopener noreferrer"
           className="block w-full text-center bg-navy text-white text-[15px] font-bold py-3.5 rounded-xl"
         >
-          Message Us on WhatsApp →
+          {ui.messageWA}
         </a>
       </div>
 

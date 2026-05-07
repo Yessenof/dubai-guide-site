@@ -113,7 +113,7 @@ export default function RuCompanySetupHubPage() {
       </p>
 
       <Link
-        href="/find-my-visa?flow=company"
+        href="/ru/find-my-visa?flow=company"
         className="flex items-center justify-between w-full mb-7 px-4 py-3.5 bg-navy rounded-xl group"
       >
         <div>

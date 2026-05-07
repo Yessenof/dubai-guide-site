@@ -5,6 +5,24 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-RU-ROUTE-FINDER — RU route finder live on production
+
+**Date:** 2026-05-07
+**Status:** Live — guidex-consulting.ae
+
+- `app/ru/find-my-visa/page.tsx` — new RU route finder page (was 404). Russian metadata. `locale="ru"` prop passed to `RouteFinderFlow`. Close button links to `/ru`.
+- `lib/route-finder-config.ts` — `ROUTE_FINDER_CONFIG_RU` added (lines 360–580): parallel RU config, 15 resolution paths, all strings Russian, RU hub URLs (`/ru/visas/golden`, `/ru/company-setup`). No em-dash in any user-visible string.
+- `lib/guide-groups.ts` — `RU_GROUP_HREFS` added: `spouse-dependent-visa-dubai-outside-country` → `/ru/guides/spouse-dependent-visa-dubai?route=outside`, etc.
+- `components/RouteFinderFlow.tsx` — `locale?: "en" | "ru"` prop. RU config + UI strings selected at runtime. Guide result hrefs use `RU_GROUP_HREFS` with `/ru/guides/${slug}` fallback. Supporting service hrefs locale-aware.
+- `components/Header.tsx` — "Найти маршрут" added to `RU_NAV` with `href: "/ru/find-my-visa"`.
+- `components/StickyRouteCta.tsx` — `HIDDEN_ON` extended to `["/find-my-visa", "/ru/find-my-visa"]`. Href locale-aware.
+- `components/GuideTabs.tsx` — `findVisaHref` locale-aware (`/ru/find-my-visa` for RU).
+- 5 RU hub pages — route finder CTAs updated: `/ru/visas` → `/ru/find-my-visa`, `/ru/visas/family` → `?flow=family-new`, `/ru/visas/golden` → `?flow=golden`, `/ru/company-setup` → `?flow=company`, `/ru/guides/[slug]` → `/ru/find-my-visa` (×2) + footer body fixed.
+- DB: unchanged (17 guides / 115 steps). No content scripts run.
+- Build: 72 pages (+1 for `/ru/find-my-visa`), 0 errors. 15 RU flows verified via config tracing. EN regression clean.
+
+---
+
 ## CP-RU-SPOUSE-VISA-PAIR — spouse dependent visa pair RU live on production
 
 **Date:** 2026-05-07

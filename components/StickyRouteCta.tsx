@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { getLocaleFromPathname } from "@/lib/locale-path";
 
-const HIDDEN_ON = ["/find-my-visa"];
+const HIDDEN_ON = ["/find-my-visa", "/ru/find-my-visa"];
 const SCROLL_THRESHOLD = 100;
 
 export default function StickyRouteCta() {
@@ -38,7 +38,7 @@ export default function StickyRouteCta() {
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
       <Link
-        href="/find-my-visa"
+        href={isRu ? "/ru/find-my-visa" : "/find-my-visa"}
         className="flex items-center justify-between gap-4 bg-navy px-5 py-3 text-white"
       >
         <div className="min-w-0">

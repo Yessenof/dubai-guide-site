@@ -354,6 +354,232 @@ export const ROUTE_FINDER_CONFIG: RouteFinderConfig = {
 };
 
 // ---------------------------------------------------------------------------
+// Russian config — parallel to EN, all strings translated
+// ---------------------------------------------------------------------------
+
+export const ROUTE_FINDER_CONFIG_RU: RouteFinderConfig = {
+  startQuestion: "q1",
+  whatsappHref: "https://wa.me/971506304817",
+
+  questions: {
+    q1: {
+      id: "q1",
+      text: "Что вам нужно оформить?",
+      options: [
+        { value: "family-new",   label: "Оформить визу для супруга или ребёнка",  sublabel: "Entry permit и residence visa",                 next: "q2-family-type" },
+        { value: "family-renew", label: "Продлить семейную визу",                  sublabel: "Для супруга или ребёнка с действующей визой",   next: "r-renew"        },
+        { value: "newborn",      label: "Зарегистрировать новорождённого в ОАЭ",   sublabel: "Регистрация рождения и первая residence visa",   next: "r-newborn"      },
+        { value: "employment",   label: "Получить рабочую визу",                   sublabel: "Работодатель на материке Дубая",                next: "q2-emp-loc"     },
+        { value: "golden",       label: "Получить Золотую визу",                   sublabel: "10-летнее резидентство ОАЭ",                    next: "q2-golden"      },
+        { value: "company",      label: "Открыть компанию",                        sublabel: "Mainland, free zone или банковский счёт",        next: "q2-company"     },
+        { value: "other",        label: "Другое или не уверен",                    sublabel: "Поможем найти правильный путь",                 next: "r-advisor"      },
+      ],
+    },
+
+    "q2-family-type": {
+      id: "q2-family-type",
+      text: "Кого вы спонсируете?",
+      options: [
+        { value: "spouse", label: "Супруга или супругу", sublabel: "Муж или жена",                          next: "q3-location", contextKey: "familyType" },
+        { value: "child",  label: "Ребёнка",             sublabel: "Сын, дочь или студент на иждивении",    next: "q3-location", contextKey: "familyType" },
+      ],
+    },
+
+    "q3-location": {
+      id: "q3-location",
+      text: "Где они находятся сейчас?",
+      options: [
+        { value: "outside", label: "За пределами ОАЭ", sublabel: "Въедут в Дубай после одобрения",  next: "r-family-outside" },
+        { value: "inside",  label: "В ОАЭ",            sublabel: "Смена статуса без выезда",         next: "r-family-inside"  },
+      ],
+    },
+
+    "q2-emp-loc": {
+      id: "q2-emp-loc",
+      text: "Где вы находитесь сейчас?",
+      options: [
+        { value: "inside",  label: "Я в ОАЭ",            sublabel: "Выезд не нужен",      next: "r-employment-inside"  },
+        { value: "outside", label: "Я за пределами ОАЭ", sublabel: "Подача из-за рубежа", next: "r-employment-outside" },
+      ],
+    },
+
+    "q2-golden": {
+      id: "q2-golden",
+      text: "Как вы планируете получить Золотую визу?",
+      options: [
+        { value: "property",     label: "У меня недвижимость от AED 2M",      sublabel: "Готовая или строящаяся недвижимость",          next: "r-golden-property" },
+        { value: "professional", label: "Я специалист или топ-менеджер",       sublabel: "На основе зарплаты, должности или инвестиций", next: "r-hub-golden"      },
+        { value: "unsure",       label: "Не уверен, какой маршрут подходит",   sublabel: "Посмотреть все варианты Золотой визы",         next: "r-hub-golden"      },
+      ],
+    },
+
+    "q2-company": {
+      id: "q2-company",
+      text: "Что вам нужно?",
+      options: [
+        { value: "mainland",    label: "Mainland компания",            sublabel: "Лицензия DED, торговля по всему ОАЭ",    next: "r-mainland"    },
+        { value: "freezone",    label: "Компания в свободной зоне",    sublabel: "100% иностранное владение",               next: "r-freezone"    },
+        { value: "bankaccount", label: "Открыть бизнес-счёт",         sublabel: "Требуется действующая торговая лицензия",  next: "r-bankaccount" },
+        { value: "unsure",      label: "Не уверен, что нужно",        sublabel: "Посмотреть сравнение маршрутов",           next: "r-hub-company" },
+      ],
+    },
+  },
+
+  resolutions: {
+    "r-family-outside": {
+      type: "guide",
+      contextSlugMap: {
+        contextKey: "familyType",
+        slugs: {
+          spouse: "spouse-dependent-visa-dubai-outside-country",
+          child:  "child-dependent-visa-dubai-outside-country",
+        },
+      },
+      keyFacts: [
+        "Член семьи въезжает в Дубай после одобрения entry permit",
+        "Свидетельство о браке или рождении необходимо аттестовать до начала процесса",
+        "Вы подаёте заявку на entry permit как спонсор",
+      ],
+      supportingServices: ["document-attestation-dubai"],
+      supportingNote: "Аттестация документов необходима до начала процесса:",
+    },
+
+    "r-family-inside": {
+      type: "guide",
+      contextSlugMap: {
+        contextKey: "familyType",
+        slugs: {
+          spouse: "spouse-dependent-visa-dubai-inside-country",
+          child:  "child-dependent-visa-dubai-inside-country",
+        },
+      },
+      keyFacts: [
+        "Выезд не нужен: член семьи остаётся в ОАЭ",
+        "Статус меняется внутри страны, entry permit не нужен",
+        "Подача через сервисный центр Amer",
+      ],
+      supportingServices: ["amer-center-dubai"],
+      supportingNote: "Подача через Amer:",
+    },
+
+    "r-renew": {
+      type: "guide",
+      guideSlug: "renew-family-visa-dubai",
+      keyFacts: [
+        "Подходит для продления визы супруга и ребёнка",
+        "Лица от 18 лет обязаны пройти medical fitness test",
+        "Дети до 18 лет освобождены от медосмотра",
+      ],
+      supportingServices: ["amer-center-dubai"],
+      supportingNote: "Продление оформляется через Amer:",
+    },
+
+    "r-newborn": {
+      type: "guide",
+      guideSlug: "newborn-visa-dubai",
+      keyFacts: [
+        "Для детей, рождённых в ОАЭ",
+        "Регистрация рождения, постановка на учёт в DHA и residence visa",
+        "Подайте документы до 120 дней со дня рождения, чтобы избежать штрафов",
+      ],
+      supportingServices: [],
+    },
+
+    "r-employment-inside": {
+      type: "guide",
+      guideSlug: "employment-visa",
+      keyFacts: [
+        "Только для работодателей на материке Дубая: сотрудники free zone проходят другой процесс",
+        "Работодатель выполняет шаги в Tasheel и Amer от вашего имени",
+        "Выезд из ОАЭ не нужен",
+      ],
+      supportingServices: [],
+    },
+
+    "r-employment-outside": {
+      type: "guide",
+      guideSlug: "employment-visa-dubai-outside-uae",
+      keyFacts: [
+        "Работодатель начинает процесс в Дубае: ваше присутствие в ОАЭ не требуется",
+        "Сначала оформляется entry permit, затем вы въезжаете в Дубай",
+        "Медосмотр, Emirates ID и оформление визы проходят после приезда",
+      ],
+      supportingServices: [],
+    },
+
+    "r-golden-property": {
+      type: "guide",
+      guideSlug: "golden-visa-dubai-property",
+      keyFacts: [
+        "Стоимость недвижимости от AED 2M",
+        "Подходит как готовая, так и строящаяся недвижимость",
+        "Основной документ: DLD title deed или Oqood",
+      ],
+      supportingServices: [],
+    },
+
+    "r-hub-golden": {
+      type: "hub",
+      hubUrl: "/ru/visas/golden",
+      heading: "Золотая виза: выберите маршрут",
+      body: "Маршруты: через недвижимость (от AED 2M), профессиональный статус, владение компанией и признанные таланты. Гайд по маршруту через недвижимость готов. По другим маршрутам свяжитесь с нами.",
+      whatsapp: true,
+    },
+
+    "r-mainland": {
+      type: "guide",
+      guideSlug: "mainland-company-setup-dubai",
+      keyFacts: [
+        "Mainland компании работают по всему ОАЭ без ограничений",
+        "Лицензируется Dubai DED",
+        "Некоторые виды деятельности требуют местного сервисного агента",
+      ],
+      supportingServices: ["pro-services-dubai"],
+      supportingNote: "PRO услуги возьмут на себя подачу документов:",
+    },
+
+    "r-freezone": {
+      type: "guide",
+      guideSlug: "free-zone-company-setup-dubai",
+      keyFacts: [
+        "100% иностранное владение в большинстве свободных зон",
+        "Деятельность ограничена зоной или международной торговлей",
+        "У каждой зоны своя администрация и структура сборов",
+      ],
+      supportingServices: ["pro-services-dubai"],
+      supportingNote: "PRO услуги возьмут на себя подачу документов:",
+    },
+
+    "r-bankaccount": {
+      type: "guide",
+      guideSlug: "open-business-bank-account-dubai",
+      keyFacts: [
+        "Для подачи нужна действующая торговая лицензия",
+        "Требования к документам зависят от банка",
+        "KYC-процесс обычно занимает 2–6 недель",
+      ],
+      supportingServices: [],
+    },
+
+    "r-hub-company": {
+      type: "hub",
+      hubUrl: "/ru/company-setup",
+      heading: "Открытие компании в Дубае",
+      body: "Три маршрута: mainland компания, компания в свободной зоне и бизнес-счёт. Полное сравнение на странице company setup.",
+      ctaLabel: "Сравнить маршруты →",
+      whatsapp: false,
+    },
+
+    "r-advisor": {
+      type: "advisor",
+      heading: "Поможем найти правильный маршрут",
+      body: "Опишите вашу ситуацию в WhatsApp, и мы определим правильный процесс, сборы и первый шаг. Обычно отвечаем в течение нескольких часов.",
+      whatsapp: true,
+    },
+  },
+};
+
+// ---------------------------------------------------------------------------
 // Slugs pre-fetched server-side for the calculator
 // ---------------------------------------------------------------------------
 

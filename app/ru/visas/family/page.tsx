@@ -61,7 +61,7 @@ export default function RuFamilyVisaHubPage() {
       </p>
 
       <Link
-        href="/find-my-visa?flow=family-new"
+        href="/ru/find-my-visa?flow=family-new"
         className="flex items-center justify-between w-full mb-7 px-4 py-3.5 bg-navy rounded-xl group"
       >
         <div>

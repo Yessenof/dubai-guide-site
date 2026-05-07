@@ -58,7 +58,7 @@ export default function GuideTabs({
   const t        = STRINGS[locale];
 
   const guidesHref    = locale === "ru" ? "/ru/guides" : "/guides";
-  const findVisaHref  = "/find-my-visa";
+  const findVisaHref  = locale === "ru" ? "/ru/find-my-visa" : "/find-my-visa";
 
   const groupTitle   = locale === "ru" ? (group.ruTitle   ?? group.title)   : group.title;
   const groupSummary = locale === "ru" ? (group.ruSummary ?? group.summary) : group.summary;

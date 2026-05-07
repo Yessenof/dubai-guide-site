@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-07 (spouse dependent visa pair RU deployed — a231560 — 13/13 production smoke tests green)
+Last updated: 2026-05-07 (RU route finder deployed — /ru/find-my-visa live, all RU CTAs updated)
 
 ---
 
@@ -197,20 +197,23 @@ Group pages live:
 
 ## Current Next Step
 
-**Spouse dependent visa pair RU deployed to production (2026-05-07). Commit: a231560.**
+**RU route finder deployed to production (2026-05-07).**
 
-Local state:
-- `lib/guide-groups.ts`: spouse entry extended with `ruTitle`, `ruSummary`, `ruLabel` on both variants
-- `lib/localize-value.ts`: 4 new mappings (Depends on travel, AED 1,100/640/320 approx.)
-- `app/ru/guides/spouse-dependent-visa-dubai/page.tsx`: metadata uses RU title/summary
-- `scripts/add-ru-spouse-dependent-visa-outside.ts`: 7 steps + 4 guide `ru_*` fields; all guards passed
-- `scripts/add-ru-spouse-dependent-visa-inside.ts`: 7 steps + 4 guide `ru_*` fields; all guards passed
-- DB: 17 guides / 115 steps (unchanged); both spouse variants have full 7/7 RU steps + 4 guide fields
-- Build: 71 pages, 0 errors. Smoke tests: 9/9 routes correct
-- Local backup: `backups/local/guides.db.pre-ru-spouse-20260507-140859`
+What was added:
+- `app/ru/find-my-visa/page.tsx` — new RU route finder page (was 404 before)
+- `lib/route-finder-config.ts` — `ROUTE_FINDER_CONFIG_RU` added: parallel RU config with all 15 resolution paths, Russian question/option/result strings, RU hub URLs
+- `lib/guide-groups.ts` — `RU_GROUP_HREFS` added: maps spouse/child variant slugs to `/ru/guides/[group]?route=...`
+- `components/RouteFinderFlow.tsx` — `locale` prop added; RU config + UI strings switched at runtime; guide/hub/supporting-service hrefs locale-aware
+- `components/Header.tsx` — "Найти маршрут" added to RU desktop + mobile nav
+- `components/StickyRouteCta.tsx` — href locale-aware; HIDDEN_ON extended to include `/ru/find-my-visa`
+- `components/GuideTabs.tsx` — `findVisaHref` locale-aware
+- `app/ru/visas/page.tsx`, `app/ru/visas/family/page.tsx`, `app/ru/visas/golden/page.tsx`, `app/ru/company-setup/page.tsx` — all route finder CTAs updated to RU paths with correct ?flow= params
+- `app/ru/guides/[slug]/page.tsx` — 2 hrefs updated to `/ru/find-my-visa`; footer body: "медосмотры" → "сопровождение этапов"
+- DB: unchanged (17 guides / 115 steps). No content scripts run.
+- Build: 72 pages, 0 errors. All 15 RU flow paths verified. 12/12 smoke tests 200.
 
-All RU content complete. After deploy:
-1. Submit sitemap to Google Search Console
+Confirmed ready. After this deploy:
+1. Submit sitemap to Google Search Console (both EN and RU)
 2. Add Plausible analytics
 
 ---

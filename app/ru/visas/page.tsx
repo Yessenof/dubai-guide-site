@@ -73,7 +73,7 @@ export default function RuVisasHubPage() {
       </p>
 
       <Link
-        href="/find-my-visa"
+        href="/ru/find-my-visa"
         className="flex items-center justify-between w-full mb-7 px-4 py-3.5 bg-navy rounded-xl group"
       >
         <div>

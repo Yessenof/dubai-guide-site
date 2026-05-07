@@ -59,7 +59,7 @@ export default async function RuGuidePage({ params }: Props) {
           ← Все гайды
         </Link>
         <Link
-          href="/find-my-visa"
+          href="/ru/find-my-visa"
           className="text-xs text-brass hover:opacity-70 transition-opacity px-1 py-3"
         >
           Найти маршрут →
@@ -89,7 +89,7 @@ export default async function RuGuidePage({ params }: Props) {
       {/* 3. CTAs */}
       <div className="mt-4 flex gap-2.5">
         <Link
-          href="/find-my-visa"
+          href="/ru/find-my-visa"
           className="flex-1 text-center text-[13px] font-semibold text-navy border-2 border-navy/20 py-3 rounded-xl hover:border-navy/40 transition-colors"
         >
           Найти маршрут
@@ -167,7 +167,7 @@ export default async function RuGuidePage({ params }: Props) {
       {/* 7. Footer CTA */}
       <div className="mt-10 bg-navy rounded-2xl px-5 py-5">
         <p className="text-[14px] font-semibold text-white mb-1">Нужна помощь?</p>
-        <p className="text-[12px] text-white/60 mb-3">Берём на себя подачу документов, медосмотры и оформление.</p>
+        <p className="text-[12px] text-white/60 mb-3">Берём на себя подачу документов, сопровождение этапов и оформление.</p>
         <a
           href={WHATSAPP_HREF}
           target="_blank"

@@ -5,10 +5,11 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
-## CP-RU-CHILD-VISA-PAIR — child dependent visa pair RU complete locally
+## CP-RU-CHILD-VISA-PAIR — child dependent visa pair RU live on production
 
 **Date:** 2026-05-07
-**Status:** Local only — pending owner review and deploy
+**Commit:** 0b05cef
+**Status:** Live — guidex-consulting.ae
 
 - `components/GuideTabs.tsx`: locale-aware tab labels via `v.ruLabel`; `localizeValue`+`locale` passed to RouteSnapshot and StepCard
 - `lib/guide-groups.ts`: `GuideGroupConfig.ruTitle?`, `ruSummary?` and `GuideVariant.ruLabel?` added; child group RU strings populated

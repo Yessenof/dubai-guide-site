@@ -40,7 +40,7 @@ SQLite. No external services.
 Stack: Next.js 16.2.3 (App Router, Turbopack) + TypeScript + Tailwind CSS v4 +
 better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
 
-CURRENT STATE (as of 2026-05-07) — EMPLOYMENT OUTSIDE-UAE RU DEPLOYED
+CURRENT STATE (as of 2026-05-07) — CHILD DEPENDENT VISA RU DEPLOYED (0b05cef)
 --------------------------------------------------------
 Site is fully live on guidex-consulting.ae with HTTPS.
 17 guides published. Production DB: 17 guides / 115 steps.
@@ -62,8 +62,6 @@ RU content complete (12 guides):
 /ru/government: all 3 cards linked (0 "Скоро").
 
 RU content pending:
-  - child-dependent-visa-dubai-outside-country     EN only
-  - child-dependent-visa-dubai-inside-country      EN only
   - spouse-dependent-visa-dubai-outside-country    EN only
   - spouse-dependent-visa-dubai-inside-country     EN only
 
@@ -83,14 +81,9 @@ Clearing only .next is insufficient — Turbopack persists compiled modules in n
 
 CURRENT NEXT STEPS
 ------------------
-1. Owner review + deploy: child-dependent-visa-dubai pair RU
-   - Local: complete. Build 69 pages, 8/8 smoke tests, 0 em-dashes.
-   - Files changed: GuideTabs.tsx, guide-groups.ts, child page.tsx metadata, 2 scripts, DB
-   - Deploy: git pull + scripts on server + npm run build + pm2 restart
+1. spouse-dependent-visa-dubai-outside-country RU
 
-2. spouse-dependent-visa-dubai-outside-country RU
-
-3. spouse-dependent-visa-dubai-inside-country RU
+2. spouse-dependent-visa-dubai-inside-country RU
 
 5. Submit sitemap to Google Search Console:
    https://guidex-consulting.ae/sitemap.xml

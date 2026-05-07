@@ -197,7 +197,7 @@ Group pages live:
 
 ## Current Next Step
 
-**Child dependent visa pair RU complete locally (2026-05-07). Pending owner review and deploy.**
+**Child dependent visa pair RU deployed to production (2026-05-07). Commit: 0b05cef.**
 
 Local state:
 - `components/GuideTabs.tsx`: locale-aware tab labels, `localizeValue` + `locale` wired into RouteSnapshot and StepCard
@@ -209,8 +209,8 @@ Local state:
 - Local backup: `backups/local/guides.db.pre-ru-child-*`
 
 Remaining RU content:
-- spouse-dependent-visa-dubai-outside-country (after child approval)
-- spouse-dependent-visa-dubai-inside-country (after child approval)
+- spouse-dependent-visa-dubai-outside-country
+- spouse-dependent-visa-dubai-inside-country
 
 After all dependent visa RU approved + deployed:
 1. Submit sitemap to Google Search Console

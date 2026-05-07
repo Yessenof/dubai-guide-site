@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-07 (spouse dependent visa pair RU deploying — commit TBD)
+Last updated: 2026-05-07 (spouse dependent visa pair RU deployed — a231560 — 13/13 production smoke tests green)
 
 ---
 
@@ -197,7 +197,7 @@ Group pages live:
 
 ## Current Next Step
 
-**Spouse dependent visa pair RU deploying to production (2026-05-07).**
+**Spouse dependent visa pair RU deployed to production (2026-05-07). Commit: a231560.**
 
 Local state:
 - `lib/guide-groups.ts`: spouse entry extended with `ruTitle`, `ruSummary`, `ruLabel` on both variants

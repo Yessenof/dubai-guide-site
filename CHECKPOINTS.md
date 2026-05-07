@@ -8,7 +8,7 @@ safely restored to or continued from. Add a new entry only after full verificati
 ## CP-RU-SPOUSE-VISA-PAIR — spouse dependent visa pair RU live on production
 
 **Date:** 2026-05-07
-**Commit:** TBD (updating after push)
+**Commit:** a231560
 **Status:** Live — guidex-consulting.ae
 
 - `lib/guide-groups.ts`: spouse entry extended with `ruTitle?`, `ruSummary?`, `ruLabel?` on both variants

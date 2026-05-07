@@ -40,7 +40,7 @@ SQLite. No external services.
 Stack: Next.js 16.2.3 (App Router, Turbopack) + TypeScript + Tailwind CSS v4 +
 better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
 
-CURRENT STATE (as of 2026-05-07) — SPOUSE DEPENDENT VISA RU DEPLOYING (commit TBD)
+CURRENT STATE (as of 2026-05-07) — SPOUSE DEPENDENT VISA RU DEPLOYED (a231560)
 --------------------------------------------------------
 Site is fully live on guidex-consulting.ae with HTTPS.
 17 guides published. Production DB: 17 guides / 115 steps.
@@ -61,8 +61,8 @@ RU content complete — ALL 17 GUIDES:
   - holiday-home-permit-dubai                      RU live
   - child-dependent-visa-dubai-outside-country     RU live (group page: /ru/guides/child-dependent-visa-dubai)
   - child-dependent-visa-dubai-inside-country      RU live (group page: /ru/guides/child-dependent-visa-dubai)
-  - spouse-dependent-visa-dubai-outside-country    RU deploying (group page: /ru/guides/spouse-dependent-visa-dubai)
-  - spouse-dependent-visa-dubai-inside-country     RU deploying (group page: /ru/guides/spouse-dependent-visa-dubai)
+  - spouse-dependent-visa-dubai-outside-country    RU live (group page: /ru/guides/spouse-dependent-visa-dubai)
+  - spouse-dependent-visa-dubai-inside-country     RU live (group page: /ru/guides/spouse-dependent-visa-dubai)
 
 /ru/government: all 3 cards linked (0 "Скоро").
 

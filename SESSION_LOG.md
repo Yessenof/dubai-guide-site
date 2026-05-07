@@ -5,7 +5,7 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
-## 2026-05-07 — spouse dependent visa pair RU deployed to production (commit TBD — updating after push)
+## 2026-05-07 — spouse dependent visa pair RU deployed to production (a231560)
 
 `scripts/add-ru-spouse-dependent-visa-outside.ts` + `scripts/add-ru-spouse-dependent-visa-inside.ts` committed + run on production. Both guides: 7/7 RU steps + 4 guide fields written. Spouse group page at `/ru/guides/spouse-dependent-visa-dubai` renders Russian title, summary, tab labels ("Из-за пределов ОАЭ" / "Внутри ОАЭ"). `lib/guide-groups.ts`: spouse entry extended with `ruTitle`, `ruSummary`, `ruLabel` on both variants. `lib/localize-value.ts`: 4 new mappings (Depends on travel, AED 1,100/640/320 approx.). `app/ru/guides/spouse-dependent-visa-dubai/page.tsx`: metadata uses RU title/summary. Factual cleanup: inside medical fitness step uses "Approved Medical Fitness Center" (not Amer), correct ru_where/address/advice. No MOHRE clinic, no ICA, no physical stamp, no guarantee language, no em-dashes. Build: 71 pages, 0 errors (full clean build). Smoke tests: 9/9 routes 200. Cost/time: 0 English leakage on RU pages. Variant slugs excluded from sitemap. EN spouse group unchanged. Child group regression clean. DB: 17 guides / 115 steps (unchanged).
 

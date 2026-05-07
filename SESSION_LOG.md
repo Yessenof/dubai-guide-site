@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-07 — employment-visa-dubai-outside-uae RU deployed to production (6d76f66)
+
+`scripts/add-ru-employment-visa-outside-uae.ts` committed + pushed. Production DB backup: `/var/backups/guidex/guides.db.pre-ru-employment-outside-20260507-115242`. Script run on server: 7 steps + 4 guide fields populated. Factual cleanup applied: no MOHRE-approved clinic wording (replaced with approved Medical Fitness Center), ICA replaced with ICP framing, WPS correctly described as salary payment channel not contract registry. `lib/localize-value.ts`: 8 new cost/time mappings (4–8 weeks, 1–2/2–4/3–5 working days, Travel day, Flight costs, 3–5 working days for card delivery, Included in MOHRE work permit). Build: 67 pages, 0 errors (full clean build). PM2 restarted. Smoke tests: 11/11 routes 200. Hreflang: en + ru + x-default correct. Sitemap: 2 entries for slug (EN + RU). RU page: 8/8 RU cost/time strings present, 0 EN leakage, 0 risky phrases. DB: 17 guides / 115 steps (unchanged). Em-dashes in guide content: 0 (2 in page title template — site-wide pattern, expected).
+
+---
+
 ## 2026-05-07 — government RU batch deployed to production (6b510b8)
 
 3 government guides translated: `document-attestation-dubai` (3 steps), `amer-center-dubai` (4 steps), `pro-services-dubai` (5 steps). 25 new exact-match mappings in `lib/localize-value.ts`. `app/ru/government/page.tsx` flipped all 3 cards from "Скоро" to live hrefs. Factual cleanup applied: no apostille-replaces claims, no unverified amer.ae URL. Full clean build required (node_modules/.cache must be cleared with localize-value.ts changes). Production DB backup created. All 3 scripts run on server. Build: 0 errors. PM2 restarted. Smoke tests: 13/13 routes 200. /ru/government: 3 live links, 0 "Скоро". Sitemap: all 6 RU/EN government guide URLs present. DB: 17 guides / 115 steps (unchanged).

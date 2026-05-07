@@ -5,6 +5,19 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-RU-EMPLOYMENT-OUTSIDE-UAE — outside-UAE employment visa RU live on production
+
+**Date:** 2026-05-07
+**Commit:** 6d76f66
+
+- `scripts/add-ru-employment-visa-outside-uae.ts`: 7 steps + 4 guide `ru_*` fields. All guards passed. EN fields untouched.
+- `lib/localize-value.ts`: 8 new cost/time exact-match mappings added (4–8 weeks, 1–2/2–4/3–5 working days, Travel day, Flight costs, 3–5 working days for card delivery, Included in MOHRE work permit).
+- Factual cleanup: no MOHRE-approved clinic, ICA → ICP, WPS correctly described as salary payment not contract registry.
+- DB: 17 guides, 115 steps (unchanged). Production backup: `/var/backups/guidex/guides.db.pre-ru-employment-outside-20260507-115242`.
+- Build: 67 pages, 0 errors (full clean build — node_modules/.cache cleared). Smoke tests: 11/11 routes 200.
+
+---
+
 ## CP-RU-GOVERNMENT-BATCH — government RU batch live on production
 
 **Date:** 2026-05-07

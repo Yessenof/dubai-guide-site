@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-07 (government RU batch deployed — 6b510b8 — 13/13 production smoke tests green)
+Last updated: 2026-05-07 (employment-visa-dubai-outside-uae RU deployed — 6d76f66 — 11/11 production smoke tests green)
 
 ---
 
@@ -157,7 +157,7 @@ Group pages live:
 
 2. **`docs/admin-architecture.md` is partially outdated.** References `middleware.ts` (now `proxy.ts`) and describes old writer.ts patterns. Useful for architectural context but not a literal code reference.
 
-3. **Russian content partially populated.** `employment-visa`, `golden-visa-dubai-property`, and `mainland-company-setup-dubai` fully done. Remaining 6 priority guides still need RU content. See `docs/ru-launch-plan.md` for order.
+3. **Russian content partially populated.** 12 guides fully done (see RU status table in NEW_CHAT_TRANSFER.txt). 4 remaining guides need RU content: child/spouse dependent visa variants (outside/inside country).
 
 4. **Category taxonomy not owner-approved as final.** Five categories are currently defined in code (`visas`, `company-setup`, `hiring`, `living`, `government`) but have not been explicitly confirmed by the owner as the permanent list. Treat as current working taxonomy, not a locked decision.
 

@@ -159,6 +159,76 @@ const EXACT_MAP: Record<string, string> = {
   "Visa stamp: 2–5 working days after Amer submission. Emirates ID: delivered by post within 5–10 working days after visa approval.":
     "Штамп визы: 2–5 рабочих дней после подачи в Amer. Emirates ID: доставляется по почте в течение 5–10 рабочих дней после одобрения визы.",
 
+  // ── document-attestation guide — guide-level price and timeline ──────────
+  "AED 150 (UAE MOFA, standard processing). Home-country and UAE Embassy fees vary by nationality.":
+    "AED 150 (UAE MOFA, стандартная обработка). Расходы на стороне страны выдачи и сбор UAE Embassy зависят от гражданства.",
+  "2–6 weeks end-to-end. UAE MOFA step: 1–3 working days.":
+    "2–6 недель от начала до конца. Шаг UAE MOFA: 1–3 рабочих дня.",
+
+  // ── document-attestation guide — step cost ────────────────────────────────
+  "Varies by country. Notarization typically equivalent to USD 20–80. UAE Embassy attestation fee typically USD 30–100.":
+    "Зависит от страны. Нотариальное заверение: обычно эквивалент USD 20–80. Сбор UAE Embassy: обычно USD 30–100.",
+  "AED 150 per document (standard, 1–3 working days). Express processing is available for a higher fee. Approved typing centers charge an additional service fee of AED 50–150.":
+    "AED 150 за документ (стандарт, 1–3 рабочих дня). Экспресс-обработка доступна за доп. сбор. Авторизованные typing centers берут сервисный сбор AED 50–150.",
+
+  // ── document-attestation guide — step timeEst ─────────────────────────────
+  "1–4 weeks depending on your country and UAE Embassy workload":
+    "1–4 недели в зависимости от страны и загруженности UAE Embassy",
+  "1–3 working days (standard); same-day or next-day (express)":
+    "1–3 рабочих дня (стандарт); в тот же день или на следующий (экспресс)",
+  "Included in step 2 processing time":
+    "Включено в срок обработки шага 2",
+
+  // ── amer-center guide — guide-level price and timeline ────────────────────
+  "Service fee + applicable UAE government fee per transaction. Total varies by service — see the guide for your specific procedure.":
+    "Сбор Amer + государственный сбор ОАЭ за транзакцию. Итоговая сумма зависит от услуги.",
+  "1–5 working days. Walk-in: 30–90 min wait; appointment: 10–20 min.":
+    "1–5 рабочих дней. Без записи: 30–90 минут ожидания; по записи: 10–20 минут.",
+
+  // ── amer-center guide — step cost ─────────────────────────────────────────
+  "No booking fee":
+    "Запись бесплатна",
+  "AED 2–5 per page for photocopies at Amer, if needed":
+    "AED 2–5 за страницу для копий в Amer (при необходимости)",
+  "Amer typing fee plus applicable UAE government fees. Staff confirm the total before payment. See the guide for your specific transaction for a detailed fee breakdown.":
+    "Сбор Amer за оформление плюс государственные сборы ОАЭ. Сотрудник подтверждает итоговую сумму до оплаты.",
+
+  // ── amer-center guide — step timeEst ──────────────────────────────────────
+  "Appointments typically available within 1–3 working days":
+    "Запись, как правило, доступна в течение 1–3 рабочих дней",
+  "15–30 minutes to prepare":
+    "15–30 минут на подготовку",
+  "Counter transaction 15–30 minutes once called. Total branch time 30–90 minutes including wait (less with appointment).":
+    "Транзакция у стойки: 15–30 минут после вызова. Общее время в центре: 30–90 минут с очередью (меньше по записи).",
+  "1–5 working days for most transactions. Emirates ID takes an additional 5–10 working days after residence visa approval and is delivered by post.":
+    "1–5 рабочих дней для большинства транзакций. Emirates ID: ещё 5–10 рабочих дней после одобрения визы, доставляется по почте.",
+
+  // ── pro-services guide — guide-level price and timeline ───────────────────
+  "Set by provider — not government-regulated. Typically per-transaction or monthly retainer. Request written quotes before committing.":
+    "Устанавливается провайдером. Обычно за транзакцию или ежемесячный абонемент. Запросите письменные предложения до подписания.",
+  "PRO engagement: 1–3 working days to set up. Transaction timelines depend on the relevant government department.":
+    "Привлечение PRO: 1–3 рабочих дня. Сроки транзакций зависят от соответствующего госоргана.",
+
+  // ── pro-services guide — step cost ────────────────────────────────────────
+  "No cost to research and request quotes":
+    "Без сборов за исследование и запрос предложений",
+  "Letter of authorization: no cost to issue. Notarized power of attorney: notary fees apply if required. Confirm the exact cost with the notary center before proceeding.":
+    "Письмо о полномочиях: без стоимости выдачи. Нотариальная доверенность: нотариальный сбор при необходимости. Уточните стоимость в нотариальном центре до подписания.",
+  "No additional fee beyond the agreed service charge":
+    "Без дополнительных сборов сверх согласованной стоимости услуг",
+
+  // ── pro-services guide — step timeEst ─────────────────────────────────────
+  "30–60 minutes to assess":
+    "30–60 минут на оценку",
+  "1–3 working days to collect and compare quotes":
+    "1–3 рабочих дня на сбор и сравнение предложений",
+  "Same-day to 2 working days":
+    "В тот же день или до 2 рабочих дней",
+  "Document handover: same-day. Government processing time varies by transaction. See the guide for your specific procedure.":
+    "Передача документов: в тот же день. Срок обработки в госоргане зависит от транзакции.",
+  "Varies by transaction. See individual guides for government processing timelines.":
+    "Зависит от транзакции. Сроки по конкретным процессам указаны в соответствующих гайдах.",
+
   // ── bank account guide — guide-level timeline and price ───────────────────
   "2–6 weeks (varies by bank, compliance review, and business activity)":
     "2–6 недель (зависит от банка, compliance-проверки и вида деятельности)",

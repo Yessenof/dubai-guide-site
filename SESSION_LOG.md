@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-07 — government RU batch deployed to production
+
+3 government guides translated: `document-attestation-dubai` (3 steps), `amer-center-dubai` (4 steps), `pro-services-dubai` (5 steps). 25 new exact-match mappings in `lib/localize-value.ts`. `app/ru/government/page.tsx` flipped all 3 cards from "Скоро" to live hrefs. Factual cleanup applied: no apostille-replaces claims, no unverified amer.ae URL. Full clean build required (node_modules/.cache must be cleared with localize-value.ts changes). Production DB backup created. All 3 scripts run on server. Build: 0 errors. PM2 restarted. Smoke tests: 13/13 routes 200. /ru/government: 3 live links, 0 "Скоро". Sitemap: all 6 RU/EN government guide URLs present. DB: 17 guides / 115 steps (unchanged).
+
+---
+
 ## 2026-05-05 — renew-family-visa-dubai RU deployed to production (daa9cf3)
 
 `scripts/add-ru-renew-family-visa.ts` committed + pushed. Production DB backup: `/var/backups/guidex/guides.db.pre-ru-renew-family-20260505-071227`. Script run on server: 4 steps + 4 guide fields populated. Factual cleanup applied: no "GDRFA медцентр", no "система ICA", no "ica.gov.ae". `lib/localize-value.ts` 9 renew-family cost/time mappings deployed. Build: 63 pages, 0 errors. PM2 restarted. Smoke tests: 9/9 routes 200. Hreflang: en + ru + x-default on EN page. Sitemap includes both `/guides/renew-family-visa-dubai` and `/ru/guides/renew-family-visa-dubai`. RU page: all 7 target RU strings present, 0 EN cost/time leakage, 0 risky medical/ICA phrases. DB: 17 guides / 115 steps (unchanged).

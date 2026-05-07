@@ -28,21 +28,21 @@ const guides: GuideCard[] = [
     description:
       "MOFA, консульская легализация, переводы и подготовка документов для ОАЭ.",
     meta: "Документы · MOFA",
-    soon: true,
+    href: "/ru/guides/document-attestation-dubai",
   },
   {
     title: "Amer Services",
     description:
       "Визовые заявки, Emirates ID, изменение статуса и резидентские процедуры через Amer.",
     meta: "Визы · Emirates ID",
-    soon: true,
+    href: "/ru/guides/amer-center-dubai",
   },
   {
     title: "PRO услуги",
     description:
       "Сопровождение заявок, государственных процедур и документов для частных лиц и компаний.",
     meta: "PRO · Госуслуги",
-    soon: true,
+    href: "/ru/guides/pro-services-dubai",
   },
 ];
 

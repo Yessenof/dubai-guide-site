@@ -197,6 +197,27 @@ Group pages live:
 
 ## Current Next Step
 
+**Child dependent visa pair RU complete locally (2026-05-07). Pending owner review and deploy.**
+
+Local state:
+- `components/GuideTabs.tsx`: locale-aware tab labels, `localizeValue` + `locale` wired into RouteSnapshot and StepCard
+- `lib/guide-groups.ts`: GuideGroupConfig/GuideVariant extended with optional RU fields; child group RU strings added
+- `app/ru/guides/child-dependent-visa-dubai/page.tsx`: metadata uses RU title/summary
+- `scripts/add-ru-child-dependent-visa-outside.ts` + `scripts/add-ru-child-dependent-visa-inside.ts`: run, guards passed
+- DB: 17 guides / 115 steps (unchanged); both child variants have full 6/6 RU step + 4 guide fields
+- Build: 69 pages (+2), 0 errors. Smoke tests: 8/8 routes correct
+- Local backup: `backups/local/guides.db.pre-ru-child-*`
+
+Remaining RU content:
+- spouse-dependent-visa-dubai-outside-country (after child approval)
+- spouse-dependent-visa-dubai-inside-country (after child approval)
+
+After all dependent visa RU approved + deployed:
+1. Submit sitemap to Google Search Console
+2. Add Plausible analytics
+
+---
+
 **RU hub parity batch deployed (commit 60deb84). All systems green.**
 
 Batch added: `/ru/banking-tax`, `/ru/tourism` hub pages. Fixed sitemap (4 new entries), added canonical + hreflang to all 4 hub pages. Activated RU homepage cards. Build: 60 pages, 0 errors. All 9 smoke test routes 200.

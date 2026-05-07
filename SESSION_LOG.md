@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-07 — child dependent visa pair RU complete locally (not yet deployed)
+
+`components/GuideTabs.tsx`: added locale-aware tab labels (`v.ruLabel`), passed `locale` prop and `localizeValue`-wrapped values to both `RouteSnapshot` and `StepCard`. `lib/guide-groups.ts`: extended `GuideGroupConfig` with `ruTitle?`/`ruSummary?` and `GuideVariant` with `ruLabel?`; child group entry populated with full RU strings. `app/ru/guides/child-dependent-visa-dubai/page.tsx`: metadata updated to use `group.ruTitle`/`group.ruSummary`. `scripts/add-ru-child-dependent-visa-outside.ts` + `scripts/add-ru-child-dependent-visa-inside.ts` created and run: 6 steps + 4 guide `ru_*` fields each. All guards passed (0 em-dashes, 0 guarantee language). ICA replaced with ICP throughout RU content. No new `localize-value.ts` mappings needed (all step cost/time values already mapped). Build: 69 pages (+2 from child variant slugs now SSG'd), 0 errors (full clean build). Smoke tests: 8/8 routes correct (RU group page 200, EN group page 200, EN variant slugs 308, RU variant slugs 200). Tab labels: "Из-за пределов ОАЭ" / "Внутри ОАЭ" confirmed rendering. DB: 17 guides / 115 steps (unchanged). Local backup: `backups/local/guides.db.pre-ru-child-*`.
+
+---
+
 ## 2026-05-07 — employment-visa-dubai-outside-uae RU deployed to production (6d76f66)
 
 `scripts/add-ru-employment-visa-outside-uae.ts` committed + pushed. Production DB backup: `/var/backups/guidex/guides.db.pre-ru-employment-outside-20260507-115242`. Script run on server: 7 steps + 4 guide fields populated. Factual cleanup applied: no MOHRE-approved clinic wording (replaced with approved Medical Fitness Center), ICA replaced with ICP framing, WPS correctly described as salary payment channel not contract registry. `lib/localize-value.ts`: 8 new cost/time mappings (4–8 weeks, 1–2/2–4/3–5 working days, Travel day, Flight costs, 3–5 working days for card delivery, Included in MOHRE work permit). Build: 67 pages, 0 errors (full clean build). PM2 restarted. Smoke tests: 11/11 routes 200. Hreflang: en + ru + x-default correct. Sitemap: 2 entries for slug (EN + RU). RU page: 8/8 RU cost/time strings present, 0 EN leakage, 0 risky phrases. DB: 17 guides / 115 steps (unchanged). Em-dashes in guide content: 0 (2 in page title template — site-wide pattern, expected).

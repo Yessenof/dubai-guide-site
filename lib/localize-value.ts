@@ -8,6 +8,7 @@ const EXACT_MAP: Record<string, string> = {
 
   // ── guide-level timeline ───────────────────────────────────────────────────
   "2–4 weeks":                                "2–4 недели",
+  "3–6 weeks":                                "3–6 недель",
   "4–8 weeks":                                "4–8 недель",
   "7–10 business days":                       "7–10 рабочих дней",
   "2–4 weeks (without external approvals)":   "2–4 недели (без внешних согласований)",
@@ -22,6 +23,11 @@ const EXACT_MAP: Record<string, string> = {
   "Included in Step 7":                       "Включено в шаг 7",
   "Included in MOHRE work permit":            "Включено в разрешение на работу MOHRE",
   "Flight costs (not government fee)":        "Стоимость перелёта (не государственный сбор)",
+  "Varies by country":                        "Зависит от страны",
+  "AED 1,586 (government fees, excl. attestation)":
+    "AED 1,586 (государственные сборы, без учёта аттестации)",
+  "AED 2,875 (government fees, excl. attestation)":
+    "AED 2,875 (государственные сборы, без учёта аттестации)",
   "Varies (if required)":                     "По необходимости",
   "Varies by sector":                         "Зависит от сектора",
   "Varies by free zone and next step":        "Зависит от зоны и следующего шага",
@@ -59,6 +65,9 @@ const EXACT_MAP: Record<string, string> = {
   "2–4 working days":                         "2–4 рабочих дня",
   "3–5 working days":                         "3–5 рабочих дней",
   "Travel day":                               "День перелёта",
+  "Depends on travel arrangements":           "Зависит от перелёта",
+  "1–4 weeks (varies)":                       "1–4 недели (зависит от страны)",
+  "2–3 days (card delivered in 5–10 days)":   "2–3 дня (карта доставляется за 5–10 дней)",
   "3–5 working days for card delivery":       "3–5 рабочих дней до получения карты",
 
   // ── step timeEst — duration + context ─────────────────────────────────────

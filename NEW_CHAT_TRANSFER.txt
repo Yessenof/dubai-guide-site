@@ -83,13 +83,14 @@ Clearing only .next is insufficient — Turbopack persists compiled modules in n
 
 CURRENT NEXT STEPS
 ------------------
-1. child-dependent-visa-dubai-outside-country RU
+1. Owner review + deploy: child-dependent-visa-dubai pair RU
+   - Local: complete. Build 69 pages, 8/8 smoke tests, 0 em-dashes.
+   - Files changed: GuideTabs.tsx, guide-groups.ts, child page.tsx metadata, 2 scripts, DB
+   - Deploy: git pull + scripts on server + npm run build + pm2 restart
 
-2. child-dependent-visa-dubai-inside-country RU
+2. spouse-dependent-visa-dubai-outside-country RU
 
-3. spouse-dependent-visa-dubai-outside-country RU
-
-4. spouse-dependent-visa-dubai-inside-country RU
+3. spouse-dependent-visa-dubai-inside-country RU
 
 5. Submit sitemap to Google Search Console:
    https://guidex-consulting.ae/sitemap.xml

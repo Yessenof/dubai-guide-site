@@ -6,6 +6,7 @@ import Link from "next/link";
 import CategoryIcon from "@/components/CategoryIcon";
 import RouteSnapshot from "@/components/RouteSnapshot";
 import StepCard from "@/components/StepCard";
+import { localizeValue } from "@/lib/localize-value";
 import type { GuideData } from "@/lib/db/reader";
 import type { GuideGroupConfig } from "@/lib/guide-groups";
 import type { Locale } from "@/lib/db/reader";
@@ -34,7 +35,7 @@ const STRINGS = {
     stepByStep:  "Пошагово",
     overview:    "Обзор",
     helpHeading: "Нужна помощь?",
-    helpBody:    "Берём на себя подачу документов, медосмотры и оформление.",
+    helpBody:    "Берём на себя подачу документов, сопровождение этапов и оформление.",
     whatsapp:    "Написать в WhatsApp →",
   },
 };
@@ -58,6 +59,9 @@ export default function GuideTabs({
 
   const guidesHref    = locale === "ru" ? "/ru/guides" : "/guides";
   const findVisaHref  = "/find-my-visa";
+
+  const groupTitle   = locale === "ru" ? (group.ruTitle   ?? group.title)   : group.title;
+  const groupSummary = locale === "ru" ? (group.ruSummary ?? group.summary) : group.summary;
 
   const [activeRoute, setActiveRoute] = useState(defaultRoute);
 
@@ -103,10 +107,10 @@ export default function GuideTabs({
 
       {/* Title + summary */}
       <h1 className="text-[26px] font-bold text-gray-900 leading-snug mb-3">
-        {group.title}
+        {groupTitle}
       </h1>
       <p className="text-[15px] text-gray-600 leading-relaxed">
-        {group.summary}
+        {groupSummary}
       </p>
 
       {/* Sticky variant tab bar */}
@@ -123,7 +127,7 @@ export default function GuideTabs({
                   : "bg-stone-100 text-gray-500 hover:bg-stone-200"
               }`}
             >
-              {v.label}
+              {locale === "ru" ? (v.ruLabel ?? v.label) : v.label}
             </button>
           ))}
         </div>
@@ -131,11 +135,12 @@ export default function GuideTabs({
 
       {/* Quick-answer block */}
       <RouteSnapshot
-        price={activeGuide.price}
-        timeline={activeGuide.timeline}
+        price={localizeValue(activeGuide.price, locale)}
+        timeline={localizeValue(activeGuide.timeline, locale)}
         audience={activeGuide.audience}
         steps={activeGuide.steps}
-        lastUpdated={activeGuide.lastUpdated}
+        lastUpdated={localizeValue(activeGuide.lastUpdated, locale)}
+        locale={locale}
       />
 
       {/* CTAs */}
@@ -192,10 +197,11 @@ export default function GuideTabs({
             what={step.what}
             where={step.where}
             address={step.address}
-            cost={step.cost}
-            time={step.timeEst}
+            cost={localizeValue(step.cost, locale)}
+            time={localizeValue(step.timeEst, locale)}
             advice={step.advice}
             warning={step.warning || undefined}
+            locale={locale}
           />
         ))}
       </div>

@@ -1,14 +1,17 @@
 export interface GuideVariant {
   slug:     string;
   label:    string;
+  ruLabel?: string;
   routeKey: string;
 }
 
 export interface GuideGroupConfig {
-  title:    string;
-  summary:  string;
-  category: string;
-  variants: GuideVariant[];
+  title:      string;
+  ruTitle?:   string;
+  summary:    string;
+  ruSummary?: string;
+  category:   string;
+  variants:   GuideVariant[];
 }
 
 export const GUIDE_GROUPS: Record<string, GuideGroupConfig> = {
@@ -31,19 +34,25 @@ export const GUIDE_GROUPS: Record<string, GuideGroupConfig> = {
     ],
   },
   "child-dependent-visa-dubai": {
-    title:    "How to Sponsor a Child Dependent Visa in Dubai",
+    title:     "How to Sponsor a Child Dependent Visa in Dubai",
+    ruTitle:   "Виза ребёнку в Дубае: dependent visa внутри или из-за пределов ОАЭ",
     summary:
       "Step-by-step guide to sponsoring a child residence visa in Dubai. Two routes: outside the UAE (child travels in on a permit) and inside the UAE (change of status, no travel required).",
+    ruSummary:
+      "Выберите маршрут в зависимости от того, где сейчас находится ребёнок: за пределами ОАЭ или уже внутри страны. " +
+      "Guidex помогает подготовить документы, подать заявку через правильный канал и завершить residence visa и Emirates ID.",
     category: "visas",
     variants: [
       {
         slug:     "child-dependent-visa-dubai-outside-country",
         label:    "Outside UAE",
+        ruLabel:  "Из-за пределов ОАЭ",
         routeKey: "outside",
       },
       {
         slug:     "child-dependent-visa-dubai-inside-country",
         label:    "Inside UAE",
+        ruLabel:  "Внутри ОАЭ",
         routeKey: "inside",
       },
     ],

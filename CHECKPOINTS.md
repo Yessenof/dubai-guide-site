@@ -5,6 +5,22 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-RU-CHILD-VISA-PAIR — child dependent visa pair RU complete locally
+
+**Date:** 2026-05-07
+**Status:** Local only — pending owner review and deploy
+
+- `components/GuideTabs.tsx`: locale-aware tab labels via `v.ruLabel`; `localizeValue`+`locale` passed to RouteSnapshot and StepCard
+- `lib/guide-groups.ts`: `GuideGroupConfig.ruTitle?`, `ruSummary?` and `GuideVariant.ruLabel?` added; child group RU strings populated
+- `app/ru/guides/child-dependent-visa-dubai/page.tsx`: metadata uses `group.ruTitle`/`group.ruSummary`
+- `scripts/add-ru-child-dependent-visa-outside.ts`: 6 steps + 4 guide `ru_*` fields. All guards passed. 0 em-dashes. ICP (not ICA).
+- `scripts/add-ru-child-dependent-visa-inside.ts`: 6 steps + 4 guide `ru_*` fields. All guards passed. 0 em-dashes. ICP (not ICA).
+- No new `localize-value.ts` mappings needed — all step cost/time values already mapped.
+- DB: 17 guides, 115 steps (unchanged). Local backup: `backups/local/guides.db.pre-ru-child-*`.
+- Build: 69 pages (+2 child variant slugs now SSG'd), 0 errors (full clean build). Smoke tests: 8/8 routes correct.
+
+---
+
 ## CP-RU-EMPLOYMENT-OUTSIDE-UAE — outside-UAE employment visa RU live on production
 
 **Date:** 2026-05-07

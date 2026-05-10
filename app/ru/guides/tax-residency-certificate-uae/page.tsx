@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getPublishedGuideBySlug } from "@/lib/db/reader";
 import StepCard from "@/components/StepCard";
 import { localizeValue } from "@/lib/localize-value";
+import { GuideCta } from "@/components/GuideCta";
 import type { Metadata } from "next";
 
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -92,22 +93,26 @@ export default function RuTrcPage() {
 
       {/* CTA block */}
       <div className="flex gap-2.5 mb-6">
-        <a
+        <GuideCta
           href={WHATSAPP_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
+          guideSlug={SLUG}
+          ctaType="whatsapp"
+          locale="ru"
+          isExternal
           className="flex-1 text-center text-[13px] font-semibold bg-navy text-white py-3 rounded-xl hover:opacity-90 transition-opacity"
         >
           Разобрать мой кейс
-        </a>
-        <a
+        </GuideCta>
+        <GuideCta
           href={WHATSAPP_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
+          guideSlug={SLUG}
+          ctaType="whatsapp"
+          locale="ru"
+          isExternal
           className="flex-1 text-center text-[13px] font-semibold text-navy border-2 border-navy/20 py-3 rounded-xl hover:border-navy/40 transition-colors"
         >
           Написать в WhatsApp
-        </a>
+        </GuideCta>
       </div>
 
       {/* Two-stat strip */}
@@ -196,14 +201,16 @@ export default function RuTrcPage() {
       <div className="mt-10 bg-navy rounded-2xl px-5 py-5">
         <p className="text-[14px] font-semibold text-white mb-1">Готовы начать оформление TRC?</p>
         <p className="text-[12px] text-white/60 mb-3">Проверим право на получение, подготовим досье и возьмём на себя процесс с FTA.</p>
-        <a
+        <GuideCta
           href={WHATSAPP_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
+          guideSlug={SLUG}
+          ctaType="whatsapp"
+          locale="ru"
+          isExternal
           className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity py-2"
         >
           Написать в WhatsApp →
-        </a>
+        </GuideCta>
       </div>
 
     </div>

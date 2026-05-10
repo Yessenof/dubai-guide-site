@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPublishedGuideBySlug } from "@/lib/db/reader";
 import StepCard from "@/components/StepCard";
+import { GuideCta } from "@/components/GuideCta";
 import type { Metadata } from "next";
 
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -91,22 +92,26 @@ export default function TrcPage() {
 
       {/* CTA block */}
       <div className="flex gap-2.5 mb-6">
-        <a
+        <GuideCta
           href={WHATSAPP_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
+          guideSlug={SLUG}
+          ctaType="whatsapp"
+          locale="en"
+          isExternal
           className="flex-1 text-center text-[13px] font-semibold bg-navy text-white py-3 rounded-xl hover:opacity-90 transition-opacity"
         >
           Check My Case
-        </a>
-        <a
+        </GuideCta>
+        <GuideCta
           href={WHATSAPP_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
+          guideSlug={SLUG}
+          ctaType="whatsapp"
+          locale="en"
+          isExternal
           className="flex-1 text-center text-[13px] font-semibold text-navy border-2 border-navy/20 py-3 rounded-xl hover:border-navy/40 transition-colors"
         >
           Chat on WhatsApp
-        </a>
+        </GuideCta>
       </div>
 
       {/* Two-stat strip */}
@@ -190,14 +195,16 @@ export default function TrcPage() {
       <div className="mt-10 bg-navy rounded-2xl px-5 py-5">
         <p className="text-[14px] font-semibold text-white mb-1">Ready to start your TRC application?</p>
         <p className="text-[12px] text-white/60 mb-3">We review your eligibility, prepare the file, and manage the FTA process for you.</p>
-        <a
+        <GuideCta
           href={WHATSAPP_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
+          guideSlug={SLUG}
+          ctaType="whatsapp"
+          locale="en"
+          isExternal
           className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity py-2"
         >
           Chat on WhatsApp →
-        </a>
+        </GuideCta>
       </div>
 
     </div>

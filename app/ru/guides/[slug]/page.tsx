@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getRuPublishedGuidesSlugs, getPublishedGuideBySlug } from "@/lib/db/reader";
+import { GuideCta } from "@/components/GuideCta";
 import { localizeValue } from "@/lib/localize-value";
 import GuideHeader from "@/components/GuideHeader";
 import RouteSnapshot from "@/components/RouteSnapshot";
@@ -115,20 +116,25 @@ export default async function RuGuidePage({ params }: Props) {
 
       {/* 3. CTAs */}
       <div className="mt-4 flex gap-2.5">
-        <Link
+        <GuideCta
           href="/ru/find-my-visa"
+          guideSlug={slug}
+          ctaType="route_finder"
+          locale="ru"
           className="flex-1 text-center text-[13px] font-semibold text-navy border-2 border-navy/20 py-3 rounded-xl hover:border-navy/40 transition-colors"
         >
           Найти маршрут
-        </Link>
-        <a
+        </GuideCta>
+        <GuideCta
           href={WHATSAPP_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
+          guideSlug={slug}
+          ctaType="whatsapp"
+          locale="ru"
+          isExternal
           className="flex-1 text-center text-[13px] font-semibold bg-navy text-white py-3 rounded-xl hover:opacity-90 transition-opacity"
         >
           Спросить эксперта
-        </a>
+        </GuideCta>
       </div>
 
       {/* 4. Step outline */}
@@ -195,14 +201,16 @@ export default async function RuGuidePage({ params }: Props) {
       <div className="mt-10 bg-navy rounded-2xl px-5 py-5">
         <p className="text-[14px] font-semibold text-white mb-1">Нужна помощь?</p>
         <p className="text-[12px] text-white/60 mb-3">Берём на себя подачу документов, сопровождение этапов и оформление.</p>
-        <a
+        <GuideCta
           href={WHATSAPP_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
+          guideSlug={slug}
+          ctaType="whatsapp"
+          locale="ru"
+          isExternal
           className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity py-2"
         >
           Написать в WhatsApp →
-        </a>
+        </GuideCta>
       </div>
 
     </div>

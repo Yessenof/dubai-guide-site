@@ -4,6 +4,7 @@ import FreeAdviceCta from "@/components/FreeAdviceCta";
 import RouteSnapshotBand from "@/components/RouteSnapshotBand";
 import Link from "next/link";
 import { getPublishedGuidesForBand } from "@/lib/db/reader";
+import { ServiceCardLink } from "@/components/ServiceCardLink";
 import type { Metadata } from "next";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -96,9 +97,11 @@ export default function HomePage() {
                 </span>
               </div>
             ) : (
-              <Link
+              <ServiceCardLink
                 key={s.label}
                 href={s.href}
+                serviceKey={s.href.split("/").pop() ?? s.href}
+                locale="en"
                 className="block group border border-stone-200 rounded-2xl p-5 bg-stone-50 hover:border-stone-300 hover:bg-stone-100 transition-all"
               >
                 <div className="flex items-start justify-between gap-3 mb-1.5">
@@ -115,7 +118,7 @@ export default function HomePage() {
                 <span className="inline-block text-[11px] text-brass/80 bg-brass/[.08] px-2.5 py-1 rounded-full">
                   {s.meta}
                 </span>
-              </Link>
+              </ServiceCardLink>
             )
           )}
         </div>

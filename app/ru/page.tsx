@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
+import { ServiceCardLink } from "@/components/ServiceCardLink";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -111,9 +112,11 @@ export default function RuHomePage() {
                 </span>
               </div>
             ) : (
-              <Link
+              <ServiceCardLink
                 key={s.label}
                 href={s.href}
+                serviceKey={s.href.split("/").pop() ?? s.href}
+                locale="ru"
                 className="block group border border-stone-200 rounded-2xl p-5 bg-stone-50 hover:border-stone-300 hover:bg-stone-100 transition-all"
               >
                 <div className="flex items-start justify-between gap-3 mb-1.5">
@@ -130,7 +133,7 @@ export default function RuHomePage() {
                 <span className="inline-block text-[11px] text-brass/80 bg-brass/[.08] px-2.5 py-1 rounded-full">
                   {s.meta}
                 </span>
-              </Link>
+              </ServiceCardLink>
             )
           )}
         </div>

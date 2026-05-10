@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllPublishedGuides, getPublishedGuideBySlug } from "@/lib/db/reader";
+import { GuideCta } from "@/components/GuideCta";
 import GuideHeader from "@/components/GuideHeader";
 import RouteSnapshot from "@/components/RouteSnapshot";
 import StepCard from "@/components/StepCard";
@@ -113,20 +114,25 @@ export default async function GuidePage({ params }: Props) {
 
       {/* 3. CTAs — immediately after the answer */}
       <div className="mt-4 flex gap-2.5">
-        <Link
+        <GuideCta
           href="/find-my-visa"
+          guideSlug={slug}
+          ctaType="route_finder"
+          locale="en"
           className="flex-1 text-center text-[13px] font-semibold text-navy border-2 border-navy/20 py-3 rounded-xl hover:border-navy/40 transition-colors"
         >
           Find My Route
-        </Link>
-        <a
+        </GuideCta>
+        <GuideCta
           href={WHATSAPP_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
+          guideSlug={slug}
+          ctaType="whatsapp"
+          locale="en"
+          isExternal
           className="flex-1 text-center text-[13px] font-semibold bg-navy text-white py-3 rounded-xl hover:opacity-90 transition-opacity"
         >
           Ask an Expert
-        </a>
+        </GuideCta>
       </div>
 
       {/* 4. Step outline — process at a glance before diving in */}
@@ -192,14 +198,16 @@ export default async function GuidePage({ params }: Props) {
       <div className="mt-10 bg-navy rounded-2xl px-5 py-5">
         <p className="text-[14px] font-semibold text-white mb-1">Need help with this process?</p>
         <p className="text-[12px] text-white/60 mb-3">We manage government submissions, medicals, and filings on your behalf.</p>
-        <a
+        <GuideCta
           href={WHATSAPP_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
+          guideSlug={slug}
+          ctaType="whatsapp"
+          locale="en"
+          isExternal
           className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity py-2"
         >
           Chat on WhatsApp →
-        </a>
+        </GuideCta>
       </div>
 
     </div>

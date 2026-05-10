@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-07 (SEO/analytics foundation deployed — GTM, Organization schema, BreadcrumbList, OG metadata, dataLayer events)
+Last updated: 2026-05-10 (analytics hooks for service cards and guide CTAs deployed)
 
 ---
 
@@ -197,40 +197,27 @@ Group pages live:
 
 ## Current Next Step
 
-**Pre-GSC SEO cleanup deployed to production (2026-05-07).**
+**Analytics hooks deployed to production (2026-05-10, commit 85f5519).**
 
-What was fixed:
-- `app/sitemap.ts` — `/ru/find-my-visa` added to `RU_STATIC` at priority 0.6 (was missing, asymmetric with EN)
-- `app/(public)/guides/child-dependent-visa-dubai/page.tsx` — `alternates` (en/ru/x-default) added to metadata (was missing)
-- `app/(public)/guides/spouse-dependent-visa-dubai/page.tsx` — `alternates` (en/ru/x-default) added to metadata (was missing)
-- `lib/localize-value.ts` — newborn guide-level timeline + price added to EXACT_MAP ("4–10 weeks from birth..." and "AED 900–1,500...")
-- `components/RouteFinderFlow.tsx` — `guide.price` and `guide.timeline` now pass through `localizeValue(_, locale)` in result cards
-- DB: unchanged (17 guides / 115 steps). No content scripts run.
-- Build: 72 pages, 0 errors (full clean build from cold cache).
+Analytics layer complete — all GTM/GA4 dataLayer events are wired:
 
-**SEO/analytics foundation added (2026-05-07):**
-- `lib/gtm.ts` — `pushEvent` dataLayer helper
-- `components/GoogleTagManager.tsx` — GTM script + noscript, reads `NEXT_PUBLIC_GTM_ID`, renders nothing if unset
-- `components/OrgSchema.tsx` — Organization JSON-LD, injected in both public layouts
-- `app/layout.tsx` — GTM components wired; root OG/Twitter metadata added
-- `app/(public)/layout.tsx` + `app/ru/layout.tsx` — OrgSchema imported
-- `app/(public)/guides/[slug]/page.tsx` + `app/ru/guides/[slug]/page.tsx` — OG/Twitter metadata + BreadcrumbList JSON-LD per guide
-- `components/Header.tsx` — `language_switch_click` + `whatsapp_click` (source: header) events
-- `components/RouteFinderFlow.tsx` — `route_finder_start`, `route_finder_result_view`, `route_finder_whatsapp_click` events
-- `components/StickyRouteCta.tsx` — `route_finder_start` (source: sticky_cta) event
-- GTM renders nothing until `NEXT_PUBLIC_GTM_ID` is set in `.env.local` on server + rebuild
+| Event | Source |
+|---|---|
+| `language_switch_click` | `Header.tsx` |
+| `whatsapp_click` (source: header) | `Header.tsx` |
+| `route_finder_start` | `RouteFinderFlow.tsx` (first answer), `StickyRouteCta.tsx` |
+| `route_finder_result_view` | `RouteFinderFlow.tsx` (useEffect on result phase) |
+| `route_finder_whatsapp_click` | `RouteFinderFlow.tsx` (3 WA links in results) |
+| `homepage_service_card_click` | `components/ServiceCardLink.tsx` (EN + RU homepages) |
+| `guide_cta_click` | `components/GuideCta.tsx` (all guide pages — route_finder, whatsapp CTAs) |
+| `whatsapp_click` (source: guide) | `components/GuideCta.tsx` (guide WhatsApp CTAs, dual-fires with guide_cta_click) |
 
-**To activate GTM on production:**
-1. Create GTM container → get GTM-XXXXXXX ID
-2. On server: add `NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX` to `/var/www/guidex/.env.local`
-3. Run full clean build (both caches) + pm2 restart
-4. Verify GTM script appears in page source
+GTM container: `GTM-M7F5X37N` — active in production, wired to `NEXT_PUBLIC_GTM_ID` in `.env.local`.
 
 **Next steps:**
 1. Submit sitemap to Google Search Console: https://guidex-consulting.ae/sitemap.xml
-2. Create GTM container + configure it (WA click trigger, guide CTA trigger, service card trigger)
-3. Wire GA4 via GTM
-4. Add Plausible analytics (optional, parallel to GTM/GA4)
+2. Configure GTM: set up triggers for each event, wire GA4 G-33C9N3B68T
+3. Add Plausible analytics (optional, parallel to GTM/GA4)
 
 ---
 

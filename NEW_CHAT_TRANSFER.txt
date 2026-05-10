@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-07 (SEO/analytics foundation deployed)
+Last updated: 2026-05-10 (analytics hooks for service cards and guide CTAs deployed)
 
 WHAT TO ATTACH
 --------------
@@ -90,21 +90,27 @@ When lib/localize-value.ts is changed, both caches must be cleared:
   rm -rf .next && rm -rf node_modules/.cache && npm run build
 Clearing only .next is insufficient — Turbopack persists compiled modules in node_modules/.cache.
 
+ANALYTICS LAYER STATUS (as of 2026-05-10)
+------------------------------------------
+GTM container GTM-M7F5X37N is LIVE on production.
+All dataLayer events are wired and deployed (commit 85f5519):
+  - homepage_service_card_click  (ServiceCardLink — EN + RU homepages)
+  - guide_cta_click              (GuideCta — all guide pages and TRC custom pages)
+  - whatsapp_click               (Header, GuideCta — dual-fires with guide_cta_click)
+  - language_switch_click        (Header)
+  - route_finder_start           (RouteFinderFlow, StickyRouteCta)
+  - route_finder_result_view     (RouteFinderFlow)
+  - route_finder_whatsapp_click  (RouteFinderFlow)
+
 CURRENT NEXT STEPS
 ------------------
 1. Submit sitemap to Google Search Console:
    https://guidex-consulting.ae/sitemap.xml
 
-2. Create GTM container → get GTM-XXXXXXX ID.
-   Add NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX to /var/www/guidex/.env.local on server.
-   Run: rm -rf .next && rm -rf node_modules/.cache && npm run build
-   Then: pm2 restart guidex-production
-   Verify GTM script in page source.
+2. Configure GTM: set up triggers for each dataLayer event listed above,
+   wire GA4 tag (G-33C9N3B68T).
 
-3. Configure GTM: WA click trigger (Click URL contains wa.me), guide CTA click
-   trigger, service card click trigger, GA4 tag.
-
-4. Add Plausible analytics (optional, parallel to GTM/GA4).
+3. Add Plausible analytics (optional, parallel to GTM/GA4).
 
 RULES THAT MUST NOT BE BROKEN
 ------------------------------

@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-10 — Analytics hooks for service cards and guide CTAs deployed (commit 85f5519)
+
+`components/ServiceCardLink.tsx` created — "use client" wrapper for homepage service card `<Link>`; fires `homepage_service_card_click` with `{service, destination, locale, source:"homepage"}`. Service key derived from last href segment. `components/GuideCta.tsx` created — "use client" wrapper for guide CTAs; fires `guide_cta_click` always + `whatsapp_click` (source: guide) for WhatsApp; renders `<a target="_blank">` when `isExternal`, otherwise `<Link>`. Wired in 6 server-component pages: EN + RU homepages (5 active service cards each → ServiceCardLink), EN + RU guide `[slug]/page.tsx` (3 CTAs each: route_finder, whatsapp×2 → GuideCta), EN + RU `tax-residency-certificate-uae/page.tsx` (3 WA CTAs each → GuideCta). No DB changes. No content scripts. Build: 72 pages, 0 errors. DB: 17 guides / 115 steps (unchanged before and after). Smoke tests: 6/6 routes 200. PM2 online.
+
+---
+
 ## 2026-05-07 — SEO/analytics foundation deployed to production
 
 GTM support: `components/GoogleTagManager.tsx` (GTMScript + GTMNoScript, reads `NEXT_PUBLIC_GTM_ID`, renders nothing if unset) + `app/layout.tsx` wired. `lib/gtm.ts`: `pushEvent` dataLayer helper. Organization JSON-LD: `components/OrgSchema.tsx` injected via both `app/(public)/layout.tsx` and `app/ru/layout.tsx`. BreadcrumbList JSON-LD: added to EN and RU guide `[slug]/page.tsx` — 3-level (Home → All Guides → Guide Title), RU uses Russian labels. OG/Twitter metadata: added to root layout (site-level defaults) + EN/RU guide `generateMetadata` (og:type article, og:locale en_AE/ru_RU, twitter:card summary). Event tracking: `Header.tsx` → `language_switch_click` + `whatsapp_click`; `RouteFinderFlow.tsx` → `route_finder_start` (first answer), `route_finder_result_view` (useEffect on result phase), `route_finder_whatsapp_click` (3 WA links in results); `StickyRouteCta.tsx` → `route_finder_start` (source: sticky_cta). GTM inactive on production until `NEXT_PUBLIC_GTM_ID` added to `.env.local` + clean rebuild. Build: 72 pages, 0 errors. DB: unchanged (17 guides / 115 steps).

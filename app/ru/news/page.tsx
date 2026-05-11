@@ -33,45 +33,45 @@ const relatedHubs = [
 
 export default function RuNewsPage() {
   return (
-    <div className="max-w-2xl mx-auto px-5 py-10">
+    <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
 
       <Link
         href="/ru"
-        className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors mb-4 py-3 -mt-1"
+        className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors mb-3 py-1.5"
       >
         ← Главная
       </Link>
 
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
+      <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-1.5">
         Обновления ОАЭ
       </p>
-      <h1 className="text-[26px] font-bold text-gray-900 leading-snug mb-3">
+      <h1 className="text-[24px] font-bold text-gray-900 leading-snug mb-2">
         Обновления законодательства ОАЭ
       </h1>
-      <p className="text-[15px] text-gray-600 leading-snug mb-7">
+      <p className="text-[14px] text-gray-600 leading-snug mb-4">
         Изменения визовых правил, налогов, корпоративных требований и государственных регламентов для резидентов и инвесторов.
       </p>
 
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex flex-wrap gap-1.5 mb-4">
         {categories.map((chip) => (
           <span
             key={chip}
-            className="inline-block text-[11px] text-gray-500 bg-stone-100 border border-stone-200 px-3 py-1.5 rounded-full"
+            className="inline-block text-[11px] text-gray-500 bg-stone-100 border border-stone-200 px-2.5 py-1 rounded-full"
           >
             {chip}
           </span>
         ))}
       </div>
 
-      <div className="border border-dashed border-stone-200 rounded-2xl px-5 py-8 text-center mb-8">
-        <p className="text-[13px] text-gray-400 leading-snug">
+      <div className="border border-dashed border-stone-200 rounded-xl px-4 py-4 text-center mb-5">
+        <p className="text-[12px] text-gray-400 leading-snug">
           Обновления готовятся. Актуальные изменения законодательства и практические новости появятся здесь после публикации.
         </p>
       </div>
 
       <Link
         href="/ru/find-my-visa"
-        className="flex items-center justify-between w-full mb-3 px-4 py-3.5 bg-navy rounded-xl group"
+        className="flex items-center justify-between w-full mb-5 px-4 py-3 bg-navy rounded-xl group"
       >
         <div>
           <p className="text-[14px] font-semibold text-white leading-tight">Найти маршрут</p>
@@ -80,9 +80,9 @@ export default function RuNewsPage() {
         <span className="text-white/60 text-sm">→</span>
       </Link>
 
-      <div className="pt-8 border-t border-stone-100 mb-8 mt-8">
-        <div className="w-6 h-0.5 bg-brass rounded-full mb-2" />
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-4">
+      <div className="pt-5 border-t border-stone-100 mb-5">
+        <div className="w-5 h-0.5 bg-brass rounded-full mb-2" />
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
           Гайды по процедурам
         </h2>
         <div className="space-y-0.5">
@@ -90,7 +90,7 @@ export default function RuNewsPage() {
             <Link
               key={link.href}
               href={link.href}
-              className="flex items-center justify-between py-2.5 group border-b border-stone-100 last:border-0"
+              className="flex items-center justify-between py-2 group border-b border-stone-100 last:border-0"
             >
               <span className="text-[14px] text-gray-700 group-hover:text-gray-900 transition-colors">
                 {link.label}

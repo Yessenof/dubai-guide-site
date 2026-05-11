@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getPublishedEvents } from "@/lib/db/news-events-calendar";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -14,6 +15,20 @@ export const metadata: Metadata = {
   },
 };
 
+const CONFIDENCE_BADGE_RU: Partial<Record<string, string>> = {
+  expected:                        "ориентировочно",
+  subject_to_official_confirmation: "ожидает подтверждения",
+};
+
+const CATEGORY_LABELS_RU: Record<string, string> = {
+  holiday:       "Праздник",
+  deadline:      "Срок",
+  festival:      "Фестиваль",
+  government:    "Госмероприятие",
+  school:        "Школьные каникулы",
+  "dubai-event": "Событие Дубая",
+};
+
 const categories = [
   "Праздники",
   "Важные даты",
@@ -21,7 +36,9 @@ const categories = [
   "События Дубая",
 ];
 
-export default function RuEventsPage() {
+export default async function RuEventsPage() {
+  const events = getPublishedEvents("ru");
+
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
 
@@ -53,11 +70,51 @@ export default function RuEventsPage() {
         ))}
       </div>
 
-      <div className="border border-dashed border-stone-200 rounded-xl px-4 py-4 text-center mb-4">
-        <p className="text-[12px] text-gray-400 leading-snug">
-          Ключевые даты ОАЭ добавляются. Государственные праздники и важные сроки появятся здесь. Смотрите также календарь.
-        </p>
-      </div>
+      {events.length === 0 ? (
+        <div className="border border-dashed border-stone-200 rounded-xl px-4 py-4 text-center mb-4">
+          <p className="text-[12px] text-gray-400 leading-snug">
+            Ключевые даты ОАЭ добавляются. Государственные праздники и важные сроки появятся здесь. Смотрите также календарь.
+          </p>
+        </div>
+      ) : (
+        <ul className="space-y-1.5 mb-4">
+          {events.map((event) => {
+            const isSingleDay =
+              !event.eventDateEnd || event.eventDateStart === event.eventDateEnd;
+            const dateLabel = isSingleDay
+              ? event.eventDateStart
+              : `${event.eventDateStart} – ${event.eventDateEnd}`;
+            const confidenceBadge = CONFIDENCE_BADGE_RU[event.dateConfidence];
+            const catLabel =
+              CATEGORY_LABELS_RU[event.category] ??
+              (event.category.charAt(0).toUpperCase() + event.category.slice(1).replace(/-/g, " "));
+            return (
+              <li key={event.slug}>
+                <Link
+                  href={`/ru/events/${event.slug}`}
+                  className="flex items-start gap-3 border border-stone-100 rounded-xl px-3 py-2.5 bg-stone-50/50 hover:border-stone-200 hover:bg-stone-50 transition-colors"
+                >
+                  <span className="flex-shrink-0 text-[12px] font-medium text-gray-500 tabular-nums w-[88px] pt-0.5 leading-snug">
+                    {dateLabel}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[14px] font-semibold text-gray-900 leading-snug">
+                      {event.title}
+                      {confidenceBadge && (
+                        <span className="ml-1.5 text-[10px] font-normal text-amber-600">
+                          ({confidenceBadge})
+                        </span>
+                      )}
+                    </p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">{catLabel}</p>
+                  </div>
+                  <span className="text-gray-300 text-sm flex-shrink-0 mt-0.5">→</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      )}
 
       <Link
         href="/ru/calendar"

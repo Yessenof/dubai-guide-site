@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getPublishedCalendarPages } from "@/lib/db/news-events-calendar";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -14,14 +15,22 @@ export const metadata: Metadata = {
   },
 };
 
-const placeholderCards = [
-  { title: "Государственные праздники ОАЭ", meta: "2025–2026" },
-  { title: "Этот месяц", meta: "Ключевые даты" },
-  { title: "Рамадан и Ид", meta: "Зависит от лунного наблюдения" },
-  { title: "Школьные каникулы", meta: "Календарь KHDA" },
+const MONTH_NAMES_RU = [
+  "", "янв", "фев", "мар", "апр", "май", "июн",
+  "июл", "авг", "сен", "окт", "ноя", "дек",
 ];
 
-export default function RuCalendarPage() {
+const TYPE_LABELS_RU: Record<string, string> = {
+  monthly:         "Ежемесячный",
+  yearly:          "Годовой",
+  holidays:        "Праздники",
+  important_dates: "Важные даты",
+  ramadan:         "Рамадан",
+};
+
+export default async function RuCalendarPage() {
+  const pages = getPublishedCalendarPages("ru");
+
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
 
@@ -44,32 +53,66 @@ export default function RuCalendarPage() {
 
       <div className="border border-amber-100 bg-amber-50 rounded-xl px-4 py-3 mb-4">
         <p className="text-[12px] text-amber-800 leading-snug">
-          Даты исламских праздников (Ид аль-Фитр, Ид аль-Адха, Рамадан) зависят от официального решения властей ОАЭ по наблюдению луны и могут быть изменены. Предварительные даты следует считать ориентировочными до официального подтверждения.
+          Даты исламских праздников (Ид аль-Фитр, Ид аль-Адха, Рамадан) зависят от официального решения
+          властей ОАЭ по наблюдению луны и могут быть изменены. Предварительные даты следует считать
+          ориентировочными до официального подтверждения.
         </p>
       </div>
 
-      <div className="space-y-2 mb-4">
-        {placeholderCards.map((card) => (
-          <div
-            key={card.title}
-            className="flex items-center justify-between border border-stone-200 rounded-xl px-4 py-3 bg-stone-50"
-          >
-            <div>
-              <p className="text-[13px] font-semibold text-gray-600 leading-snug">{card.title}</p>
-              <span className="inline-block text-[10px] text-gray-400 mt-0.5">{card.meta}</span>
-            </div>
-            <span className="text-[10px] font-medium text-gray-400 bg-stone-200 px-2 py-0.5 rounded-full leading-none whitespace-nowrap flex-shrink-0">
-              Скоро
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <div className="border border-dashed border-stone-200 rounded-xl px-4 py-4 text-center mb-4">
-        <p className="text-[12px] text-gray-400 leading-snug">
-          Страницы календаря готовятся. Полные списки праздников и сводки по месяцам появятся здесь.
-        </p>
-      </div>
+      {pages.length === 0 ? (
+        <div className="border border-dashed border-stone-200 rounded-xl px-4 py-4 text-center mb-4">
+          <p className="text-[12px] text-gray-400 leading-snug">
+            Страницы календаря готовятся. Полные списки праздников и сводки по месяцам появятся здесь.
+          </p>
+        </div>
+      ) : (
+        <ul className="space-y-1.5 mb-4">
+          {pages.map((page) => {
+            const monthName = page.month ? MONTH_NAMES_RU[page.month] ?? String(page.month) : null;
+            const periodLabel = monthName ? `${page.year} · ${monthName}` : `${page.year}`;
+            const typeLabel = TYPE_LABELS_RU[page.calendarType] ?? page.calendarType;
+            const dateCount = page.dates.length;
+            return (
+              <li key={page.slug}>
+                <Link
+                  href={`/ru/calendar/${page.slug}`}
+                  className="flex items-start justify-between gap-3 border border-stone-100 rounded-xl px-3 py-2.5 bg-stone-50/50 hover:border-stone-200 hover:bg-stone-50 transition-colors"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-brass">
+                        {typeLabel}
+                      </span>
+                      <span className="text-gray-300 text-[10px]">·</span>
+                      <span className="text-[11px] text-gray-400">{periodLabel}</span>
+                      {page.hasIslamicDates === 1 && (
+                        <>
+                          <span className="text-gray-300 text-[10px]">·</span>
+                          <span className="text-[10px] text-amber-600">исламские даты</span>
+                        </>
+                      )}
+                    </div>
+                    <p className="text-[14px] font-semibold text-gray-900 leading-snug">
+                      {page.title}
+                    </p>
+                    {page.summary && (
+                      <p className="text-[12px] text-gray-500 leading-snug mt-0.5">
+                        {page.summary}
+                      </p>
+                    )}
+                    {dateCount > 0 && (
+                      <p className="text-[11px] text-gray-400 mt-1">
+                        {dateCount} {dateCount === 1 ? "дата" : dateCount < 5 ? "даты" : "дат"}
+                      </p>
+                    )}
+                  </div>
+                  <span className="text-gray-300 text-sm flex-shrink-0 mt-0.5">→</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      )}
 
       <div className="flex gap-2.5 mb-5">
         <Link

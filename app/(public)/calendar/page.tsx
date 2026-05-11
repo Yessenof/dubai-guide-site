@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getPublishedCalendarPages } from "@/lib/db/news-events-calendar";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -14,14 +15,22 @@ export const metadata: Metadata = {
   },
 };
 
-const placeholderCards = [
-  { title: "UAE Public Holidays", meta: "2025–2026" },
-  { title: "This Month", meta: "Key dates" },
-  { title: "Ramadan and Eid", meta: "Subject to moon sighting" },
-  { title: "School Holidays", meta: "KHDA calendar" },
+const MONTH_NAMES = [
+  "", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ];
 
-export default function CalendarPage() {
+const TYPE_LABELS: Record<string, string> = {
+  monthly:          "Monthly",
+  yearly:           "Annual",
+  holidays:         "Holidays",
+  important_dates:  "Important dates",
+  ramadan:          "Ramadan",
+};
+
+export default async function CalendarPage() {
+  const pages = getPublishedCalendarPages("en");
+
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
 
@@ -44,34 +53,66 @@ export default function CalendarPage() {
 
       <div className="border border-amber-100 bg-amber-50 rounded-xl px-4 py-3 mb-4">
         <p className="text-[12px] text-amber-800 leading-snug">
-          Islamic holiday dates (Eid al-Fitr, Eid al-Adha, Ramadan) depend on official UAE moon-sighting announcements and are subject to change. Treat expected dates as provisional until confirmed by UAE authorities.
+          Islamic holiday dates (Eid al-Fitr, Eid al-Adha, Ramadan) depend on official UAE moon-sighting
+          announcements and are subject to change. Treat expected dates as provisional until confirmed by
+          UAE authorities.
         </p>
       </div>
 
-      <div className="space-y-2 mb-4">
-        {placeholderCards.map((card) => (
-          <div
-            key={card.title}
-            className="flex items-center justify-between border border-stone-200 rounded-xl px-4 py-3 bg-stone-50"
-          >
-            <div className="flex items-center gap-3">
-              <div>
-                <p className="text-[13px] font-semibold text-gray-600 leading-snug">{card.title}</p>
-                <span className="inline-block text-[10px] text-gray-400 mt-0.5">{card.meta}</span>
-              </div>
-            </div>
-            <span className="text-[10px] font-medium text-gray-400 bg-stone-200 px-2 py-0.5 rounded-full leading-none whitespace-nowrap flex-shrink-0">
-              Coming soon
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <div className="border border-dashed border-stone-200 rounded-xl px-4 py-4 text-center mb-4">
-        <p className="text-[12px] text-gray-400 leading-snug">
-          Calendar pages are being prepared. Full holiday lists and monthly date summaries will appear here.
-        </p>
-      </div>
+      {pages.length === 0 ? (
+        <div className="border border-dashed border-stone-200 rounded-xl px-4 py-4 text-center mb-4">
+          <p className="text-[12px] text-gray-400 leading-snug">
+            Calendar pages are being prepared. Full holiday lists and monthly date summaries will appear here.
+          </p>
+        </div>
+      ) : (
+        <ul className="space-y-1.5 mb-4">
+          {pages.map((page) => {
+            const monthName = page.month ? MONTH_NAMES[page.month] ?? String(page.month) : null;
+            const periodLabel = monthName ? `${page.year} · ${monthName}` : `${page.year}`;
+            const typeLabel = TYPE_LABELS[page.calendarType] ?? page.calendarType;
+            const dateCount = page.dates.length;
+            return (
+              <li key={page.slug}>
+                <Link
+                  href={`/calendar/${page.slug}`}
+                  className="flex items-start justify-between gap-3 border border-stone-100 rounded-xl px-3 py-2.5 bg-stone-50/50 hover:border-stone-200 hover:bg-stone-50 transition-colors"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-brass">
+                        {typeLabel}
+                      </span>
+                      <span className="text-gray-300 text-[10px]">·</span>
+                      <span className="text-[11px] text-gray-400">{periodLabel}</span>
+                      {page.hasIslamicDates === 1 && (
+                        <>
+                          <span className="text-gray-300 text-[10px]">·</span>
+                          <span className="text-[10px] text-amber-600">Islamic dates</span>
+                        </>
+                      )}
+                    </div>
+                    <p className="text-[14px] font-semibold text-gray-900 leading-snug">
+                      {page.title}
+                    </p>
+                    {page.summary && (
+                      <p className="text-[12px] text-gray-500 leading-snug mt-0.5">
+                        {page.summary}
+                      </p>
+                    )}
+                    {dateCount > 0 && (
+                      <p className="text-[11px] text-gray-400 mt-1">
+                        {dateCount} {dateCount === 1 ? "date" : "dates"}
+                      </p>
+                    )}
+                  </div>
+                  <span className="text-gray-300 text-sm flex-shrink-0 mt-0.5">→</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      )}
 
       <div className="flex gap-2.5 mb-5">
         <Link

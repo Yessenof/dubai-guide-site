@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getPublishedEvents } from "@/lib/db/news-events-calendar";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -14,6 +15,11 @@ export const metadata: Metadata = {
   },
 };
 
+const CONFIDENCE_BADGE: Partial<Record<string, string>> = {
+  expected:                        "expected",
+  subject_to_official_confirmation: "subject to confirmation",
+};
+
 const categories = [
   "Public holidays",
   "Important dates",
@@ -21,7 +27,9 @@ const categories = [
   "Dubai events",
 ];
 
-export default function EventsPage() {
+export default async function EventsPage() {
+  const events = getPublishedEvents("en");
+
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
 
@@ -53,11 +61,51 @@ export default function EventsPage() {
         ))}
       </div>
 
-      <div className="border border-dashed border-stone-200 rounded-xl px-4 py-4 text-center mb-4">
-        <p className="text-[12px] text-gray-400 leading-snug">
-          UAE dates and events are being added. Check the calendar for upcoming public holidays and key dates.
-        </p>
-      </div>
+      {events.length === 0 ? (
+        <div className="border border-dashed border-stone-200 rounded-xl px-4 py-4 text-center mb-4">
+          <p className="text-[12px] text-gray-400 leading-snug">
+            UAE dates and events are being added. Check the calendar for upcoming public holidays and key dates.
+          </p>
+        </div>
+      ) : (
+        <ul className="space-y-1.5 mb-4">
+          {events.map((event) => {
+            const isSingleDay =
+              !event.eventDateEnd || event.eventDateStart === event.eventDateEnd;
+            const dateLabel = isSingleDay
+              ? event.eventDateStart
+              : `${event.eventDateStart} – ${event.eventDateEnd}`;
+            const confidenceBadge = CONFIDENCE_BADGE[event.dateConfidence];
+            const catLabel =
+              event.category.charAt(0).toUpperCase() +
+              event.category.slice(1).replace(/-/g, " ");
+            return (
+              <li key={event.slug}>
+                <Link
+                  href={`/events/${event.slug}`}
+                  className="flex items-start gap-3 border border-stone-100 rounded-xl px-3 py-2.5 bg-stone-50/50 hover:border-stone-200 hover:bg-stone-50 transition-colors"
+                >
+                  <span className="flex-shrink-0 text-[12px] font-medium text-gray-500 tabular-nums w-[88px] pt-0.5 leading-snug">
+                    {dateLabel}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[14px] font-semibold text-gray-900 leading-snug">
+                      {event.title}
+                      {confidenceBadge && (
+                        <span className="ml-1.5 text-[10px] font-normal text-amber-600">
+                          ({confidenceBadge})
+                        </span>
+                      )}
+                    </p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">{catLabel}</p>
+                  </div>
+                  <span className="text-gray-300 text-sm flex-shrink-0 mt-0.5">→</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      )}
 
       <Link
         href="/calendar"

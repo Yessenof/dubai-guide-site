@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getPublishedNewsPosts } from "@/lib/db/news-events-calendar";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -14,6 +15,15 @@ export const metadata: Metadata = {
   },
 };
 
+const CATEGORY_LABELS: Record<string, string> = {
+  visa:       "Visa",
+  company:    "Business",
+  tax:        "Tax",
+  government: "Government",
+  tourism:    "Tourism",
+  banking:    "Banking",
+};
+
 const categories = [
   "Visa updates",
   "Business",
@@ -24,14 +34,16 @@ const categories = [
 ];
 
 const relatedHubs = [
-  { label: "Visas", href: "/visas" },
-  { label: "Company Setup", href: "/company-setup" },
-  { label: "Banking & Tax", href: "/banking-tax" },
-  { label: "Government Services", href: "/government" },
+  { label: "Visas",                   href: "/visas" },
+  { label: "Company Setup",           href: "/company-setup" },
+  { label: "Banking & Tax",           href: "/banking-tax" },
+  { label: "Government Services",     href: "/government" },
   { label: "Tourism & Holiday Homes", href: "/tourism" },
 ];
 
-export default function NewsPage() {
+export default async function NewsPage() {
+  const posts = getPublishedNewsPosts("en");
+
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
 
@@ -63,11 +75,50 @@ export default function NewsPage() {
         ))}
       </div>
 
-      <div className="border border-dashed border-stone-200 rounded-xl px-4 py-4 text-center mb-5">
-        <p className="text-[12px] text-gray-400 leading-snug">
-          Updates are being prepared. Regulatory and practical news will appear here as published.
-        </p>
-      </div>
+      {posts.length === 0 ? (
+        <div className="border border-dashed border-stone-200 rounded-xl px-4 py-4 text-center mb-5">
+          <p className="text-[12px] text-gray-400 leading-snug">
+            Updates are being prepared. Regulatory and practical news will appear here as published.
+          </p>
+        </div>
+      ) : (
+        <ul className="space-y-1.5 mb-5">
+          {posts.map((post) => {
+            const catLabel = CATEGORY_LABELS[post.category] ?? post.category;
+            return (
+              <li key={post.slug}>
+                <Link
+                  href={`/news/${post.slug}`}
+                  className="flex items-start justify-between gap-3 border border-stone-100 rounded-xl px-3 py-2.5 bg-stone-50/50 hover:border-stone-200 hover:bg-stone-50 transition-colors"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-brass">
+                        {catLabel}
+                      </span>
+                      {post.datePublished && (
+                        <>
+                          <span className="text-gray-300 text-[10px]">·</span>
+                          <span className="text-[11px] text-gray-400">{post.datePublished}</span>
+                        </>
+                      )}
+                    </div>
+                    <p className="text-[14px] font-semibold text-gray-900 leading-snug">
+                      {post.title}
+                    </p>
+                    {post.summary && (
+                      <p className="text-[12px] text-gray-500 leading-snug mt-0.5">
+                        {post.summary}
+                      </p>
+                    )}
+                  </div>
+                  <span className="text-gray-300 text-sm flex-shrink-0 mt-0.5">→</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      )}
 
       <Link
         href="/find-my-visa"

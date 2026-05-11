@@ -5,6 +5,42 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE3C-READERS — Phase 3C reader layer verified and committed
+
+**Date:** 2026-05-11
+**Commit:** e0ecd26
+**Status:** Committed — not wired into public routes, not deployed
+
+- `lib/db/news-events-calendar.ts`: 9 reader functions for news_posts, events, calendar_pages
+- EN gate: `status='published'`. RU gate: `status='published' AND ru_published=1`
+- `field()` helper: no EN fallback — `locale === "ru" ? ru : en` returns locale field as-is
+- RU list functions filter out rows with empty `ru_title` at application layer
+- RU detail functions return null if `ru_title` OR `ru_body` is empty
+- Calendar `ru_notes` / `ru_image_alt`: returned as-is (empty string valid on RU)
+- `scripts/verify-news-events-calendar-readers.ts`: 138/138 checks passed
+- SAVEPOINT-based tests confirm no EN fallback and no data persists in guides.db
+- Build: 78 pages, 0 errors, TypeScript clean
+- No routes wired, no sitemap changes, no homepage changes, no DB writes
+
+---
+
+## CP-PHASE3A-SCHEMA — Phase 3A local schema migration verified
+
+**Date:** 2026-05-11
+**Status:** Local only — not committed, not deployed to production
+
+- `scripts/migrate-add-news-events-calendar.sql` created — 3 tables + 13 indexes, `IF NOT EXISTS` guards
+- `lib/db/schema.ts` appended — `newsPosts`, `eventsTable`, `calendarPages` + type exports
+- `data/guides.db` (local): 3 new tables created, 0 rows each
+- `data/guides.db.backup-before-news-events-calendar-schema-20260511-113849` created before migration
+- `PRAGMA integrity_check` = ok; guides = 17 (unchanged); steps = 115 (unchanged)
+- All 3 `status` CHECK constraints: draft/published/archived
+- `events.date_confidence` CHECK: confirmed/expected/subject_to_official_confirmation
+- Build: 72 pages, 0 errors — same page count as before
+- No routes added, no sitemap changes, no production changes, no Drizzle Kit commands run
+
+---
+
 ## CP-SEO-ANALYTICS-FOUNDATION — SEO/analytics foundation live on production
 
 **Date:** 2026-05-07

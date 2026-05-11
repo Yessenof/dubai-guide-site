@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-10 (analytics hooks for service cards and guide CTAs deployed)
+Last updated: 2026-05-11 (Phase 3B skeleton pages — /news /events /calendar + RU, not yet committed)
 
 WHAT TO ATTACH
 --------------
@@ -102,15 +102,47 @@ All dataLayer events are wired and deployed (commit 85f5519):
   - route_finder_result_view     (RouteFinderFlow)
   - route_finder_whatsapp_click  (RouteFinderFlow)
 
+PHASE 3C STATUS (2026-05-11) — COMMITTED (e0ecd26), NOT DEPLOYED
+-----------------------------------------------------------------
+Reader layer for news_posts, events, calendar_pages committed.
+Files: lib/db/news-events-calendar.ts + scripts/verify-news-events-calendar-readers.ts
+9 reader functions. EN gate: status='published'. RU gate: status='published' AND ru_published=1.
+field() helper: no EN fallback. RU list: filters empty ru_title. RU detail: null if ru_title or ru_body empty.
+138/138 verification checks passed (incl. SAVEPOINT-based no-fallback proofs).
+Build: 78 pages, 0 errors. No routes wired. No sitemap changes. No homepage changes. No DB writes.
+
+PHASE 3B STATUS (2026-05-11) — COMMITTED (524a741 + 563a10f), NOT DEPLOYED
+----------------------------------------------------------------------------
+6 static skeleton pages created (zero DB reads, zero sitemap changes):
+  app/(public)/news/page.tsx      → /news
+  app/(public)/events/page.tsx    → /events
+  app/(public)/calendar/page.tsx  → /calendar
+  app/ru/news/page.tsx            → /ru/news
+  app/ru/events/page.tsx          → /ru/events
+  app/ru/calendar/page.tsx        → /ru/calendar
+
+Build: 78 pages, 0 errors (+6). Smoke: 6/6 routes 200. Not committed.
+robots: noindex on all 6 (skeleton guard until content is live).
+
+PHASE 3A STATUS (2026-05-11) — COMMITTED (ed434d6)
+----------------------------------------------------
+Schema migration: 3 new SQLite tables + Drizzle definitions added.
+Local DB verified: integrity_check ok, guides=17, steps=115 unchanged.
+
 CURRENT NEXT STEPS
 ------------------
-1. Submit sitemap to Google Search Console:
+1. Phase 3D: Wire readers into the 6 skeleton pages (/news, /events, /calendar + RU).
+   Or Phase 3E: Admin UI for news_posts / events / calendar_pages.
+
+2. Submit sitemap to Google Search Console:
    https://guidex-consulting.ae/sitemap.xml
 
-2. Configure GTM: set up triggers for each dataLayer event listed above,
+3. Configure GTM: set up triggers for each dataLayer event listed above,
    wire GA4 tag (G-33C9N3B68T).
 
-3. Add Plausible analytics (optional, parallel to GTM/GA4).
+4. Phase 3B: Admin UI for news_posts / events / calendar_pages.
+
+5. Add Plausible analytics (optional, parallel to GTM/GA4).
 
 RULES THAT MUST NOT BE BROKEN
 ------------------------------

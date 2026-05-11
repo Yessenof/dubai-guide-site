@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-10 (analytics hooks for service cards and guide CTAs deployed)
+Last updated: 2026-05-11 (Phase 3C reader layer — news/events/calendar readers committed, no routes wired)
 
 ---
 
@@ -53,7 +53,7 @@ components/
 
 lib/
   db/
-    schema.ts         ← Drizzle table definitions + inferred types (Guide, Step)
+    schema.ts         ← Drizzle table definitions + inferred types (Guide, Step, NewsPost, HubEvent, CalendarPage)
     connection.ts     ← SQLite singleton (WAL mode, FK enforcement)
     reader.ts         ← read-only queries for public pages
     writer.ts         ← admin read queries (writes go through actions.ts directly)
@@ -197,9 +197,45 @@ Group pages live:
 
 ## Current Next Step
 
-**Analytics hooks deployed to production (2026-05-10, commit 85f5519).**
+**Phase 3C reader layer committed (2026-05-11, commit e0ecd26). Not wired into public routes yet.**
 
-Analytics layer complete — all GTM/GA4 dataLayer events are wired:
+`lib/db/news-events-calendar.ts`: 9 reader functions, EN/RU two-gate model, no EN fallback on RU routes, SAVEPOINT-verified. `scripts/verify-news-events-calendar-readers.ts`: 138/138 checks passed.
+
+**Next:** Phase 3D — wire readers into the 6 skeleton pages (/news, /events, /calendar + RU). Or Phase 3E — admin UI for news_posts / events / calendar_pages.
+
+---
+
+**Phase 3B skeleton pages (2026-05-11, commits 524a741 + 563a10f). Local only — committed, not deployed.**
+
+6 static skeleton pages created (all committed, not deployed):
+
+| Route | File |
+|---|---|
+| `/news` | `app/(public)/news/page.tsx` |
+| `/events` | `app/(public)/events/page.tsx` |
+| `/calendar` | `app/(public)/calendar/page.tsx` |
+| `/ru/news` | `app/ru/news/page.tsx` |
+| `/ru/events` | `app/ru/events/page.tsx` |
+| `/ru/calendar` | `app/ru/calendar/page.tsx` |
+
+All 6: zero DB reads, zero sitemap entries, zero homepage changes. Compact inline header, category chips, empty state, WhatsApp CTA. Calendar pages include Islamic holiday amber disclaimer. `robots: { index: false, follow: true }` on all 6. Build: 78 pages (was 72 + 6). Smoke: 6/6 routes 200.
+
+---
+
+**Phase 3A local schema migration (2026-05-11, commit ed434d6).**
+
+Three new tables added to `data/guides.db` (local) via `scripts/migrate-add-news-events-calendar.sql`:
+- `news_posts` — news/regulatory updates content type
+- `events` — UAE public holidays and business events
+- `calendar_pages` — yearly and monthly calendar landing pages
+
+`lib/db/schema.ts` appended with Drizzle definitions for all three tables. Type exports: `NewsPost`, `HubEvent`, `CalendarPage`.
+
+Verification: `integrity_check` = ok, guides = 17, steps = 115 (unchanged), all 3 new tables = 0 rows. All 13 indexes created. All 3 tables have `status` CHECK (draft/published/archived). `events.date_confidence` CHECK (confirmed/expected/subject_to_official_confirmation). Build: 72 pages, 0 errors. No routes added. No sitemap changes. No production changes.
+
+Local DB backup: `data/guides.db.backup-before-news-events-calendar-schema-20260511-113849`.
+
+**Analytics layer (2026-05-10, commit 85f5519):** All GTM/GA4 dataLayer events wired:
 
 | Event | Source |
 |---|---|
@@ -212,12 +248,13 @@ Analytics layer complete — all GTM/GA4 dataLayer events are wired:
 | `guide_cta_click` | `components/GuideCta.tsx` (all guide pages — route_finder, whatsapp CTAs) |
 | `whatsapp_click` (source: guide) | `components/GuideCta.tsx` (guide WhatsApp CTAs, dual-fires with guide_cta_click) |
 
-GTM container: `GTM-M7F5X37N` — active in production, wired to `NEXT_PUBLIC_GTM_ID` in `.env.local`.
+GTM container: `GTM-M7F5X37N` — active in production.
 
 **Next steps:**
 1. Submit sitemap to Google Search Console: https://guidex-consulting.ae/sitemap.xml
 2. Configure GTM: set up triggers for each event, wire GA4 G-33C9N3B68T
-3. Add Plausible analytics (optional, parallel to GTM/GA4)
+3. Phase 3B: admin UI for news_posts / events / calendar_pages (routes, forms, server actions)
+4. Phase 3C: public-facing pages for new content types
 
 ---
 

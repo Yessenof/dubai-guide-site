@@ -5,6 +5,30 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-11 — Phase 3C reader layer corrected and committed (e0ecd26)
+
+`lib/db/news-events-calendar.ts` rewritten: replaced `pick()` (had EN fallback when RU field empty) with `field()` (no fallback — `locale === "ru" ? ru : en` always). All 6 list/featured functions add `.filter((r) => locale === "ru" ? r.ruTitle.trim() !== "" : true)` after `.all()` — RU rows with empty `ru_title` are excluded at application layer, not shown with EN title. All 3 detail functions now check BOTH `ru_title.trim() !== ""` AND `ru_body.trim() !== ""` before returning data — previously only checked `ru_title`. Calendar `ru_notes` and `ru_image_alt` returned via `field()` — empty string is valid on RU, no EN fallback. `scripts/verify-news-events-calendar-readers.ts` rewritten: removed `{ readonly: true }`, added 3 SAVEPOINT-based test blocks that insert test rows, verify no-fallback behavior, then ROLLBACK — no data persists. Tests cover: RU list filter (empty `ru_title` excluded), RU detail null when `ru_body` empty, calendar `ru_notes` returns empty string not `en_notes`. Final DB counts confirmed unchanged (0/0/0 new tables, 17 guides, 115 steps). 138/138 checks passed. Build: 78 pages, 0 errors. Committed: `lib/db/news-events-calendar.ts` + `scripts/verify-news-events-calendar-readers.ts` only. No routes wired. No sitemap changes. No homepage changes. No DB writes.
+
+---
+
+## 2026-05-11 — Phase 3C reader layer created (not committed)
+
+`lib/db/news-events-calendar.ts` created following the exact existing reader.ts pattern (Drizzle ORM, `pick()` locale helper, plain TS interfaces). 9 exported reader functions: `getPublishedNewsPosts`, `getFeaturedNewsPosts`, `getNewsPostBySlug`, `getPublishedEvents`, `getFeaturedEvents`, `getEventBySlug`, `getPublishedCalendarPages`, `getFeaturedCalendarPages`, `getCalendarPageBySlug`. EN gate: `status='published'`. RU gate: `status='published' AND ru_published=1`. Strict RU detail gate: returns null if `ru_title.trim()===''` (no EN fallback on RU detail pages). `parseDatesJson()` safe parser: returns [] on invalid JSON or non-array, logs warning. `dateConfidence` exposed as-is — never transformed. `CalendarDateItem` interface defined. 7 exported interfaces: `NewsPostSummary`, `NewsPostDetail`, `EventSummary`, `EventDetail`, `CalendarPageSummary`, `CalendarPageDetail` + `CalendarDateItem`. `scripts/verify-news-events-calendar-readers.ts` created: 117 checks (table existence, row counts, all 31 news_posts columns, all 29 events columns, all 29 calendar_pages columns, EN/RU/featured query simulation, dates_json parse safety x4, CHECK constraint enforcement x3, PRAGMA integrity_check). Result: 117/117 passed. Build: 78 pages, 0 errors, TypeScript clean. Not committed. No routes wired. No sitemap changes. No homepage changes. No DB writes.
+
+---
+
+## 2026-05-11 — Phase 3B skeleton pages created (6 routes, not committed)
+
+`app/(public)/news/page.tsx`, `app/(public)/events/page.tsx`, `app/(public)/calendar/page.tsx`, `app/ru/news/page.tsx`, `app/ru/events/page.tsx`, `app/ru/calendar/page.tsx` created. All 6 are static, zero DB reads, zero sitemap entries, zero homepage changes. Compact inline header pattern (overline + h1 + subtext), category chip pills, dashed empty-state block, WhatsApp navy CTA. Calendar pages include Islamic holiday disclaimer (amber block). News pages include hub links section + Find My Route CTA. Events pages cross-link to /calendar. RU pages fully translated — no English fallback. `robots: { index: false, follow: true }` on all 6 (skeleton guard). Build: 78 pages, 0 errors (+6 from 72). TypeScript clean. Smoke test: 6/6 routes 200. No production changes. Not committed.
+
+---
+
+## 2026-05-11 — Phase 3A local schema migration complete (local only, not committed)
+
+`scripts/migrate-add-news-events-calendar.sql` created — full SQL with `CREATE TABLE IF NOT EXISTS` for `news_posts`, `events`, `calendar_pages` + 13 `CREATE INDEX IF NOT EXISTS` statements. All 3 tables have `status` CHECK constraint (draft/published/archived). `events.date_confidence` has CHECK (confirmed/expected/subject_to_official_confirmation). Zero INSERT statements. Zero ALTER to existing tables. `lib/db/schema.ts` appended with Drizzle table definitions for all 3 new tables (`newsPosts`, `eventsTable`, `calendarPages`) + type exports (`NewsPost`, `HubEvent`, `CalendarPage`). `eventsTable` export name chosen to avoid collision with Node.js `events` module. `ru_published` and flag fields kept as `integer` 0/1, not boolean mode (two-gate model explicit). `calendar_pages.month` intentionally nullable (no `.notNull()`). Local DB backup created: `data/guides.db.backup-before-news-events-calendar-schema-20260511-113849`. Migration run against local `data/guides.db`. Verification: `PRAGMA integrity_check` = ok; guides = 17; steps = 115 (both unchanged); all 3 new tables = 0 rows; all 13 indexes present. Build: 72 pages, 0 errors. No routes added. No sitemap changes. Not committed. Production DB untouched.
+
+---
+
 ## 2026-05-10 — Analytics hooks for service cards and guide CTAs deployed (commit 85f5519)
 
 `components/ServiceCardLink.tsx` created — "use client" wrapper for homepage service card `<Link>`; fires `homepage_service_card_click` with `{service, destination, locale, source:"homepage"}`. Service key derived from last href segment. `components/GuideCta.tsx` created — "use client" wrapper for guide CTAs; fires `guide_cta_click` always + `whatsapp_click` (source: guide) for WhatsApp; renders `<a target="_blank">` when `isExternal`, otherwise `<Link>`. Wired in 6 server-component pages: EN + RU homepages (5 active service cards each → ServiceCardLink), EN + RU guide `[slug]/page.tsx` (3 CTAs each: route_finder, whatsapp×2 → GuideCta), EN + RU `tax-residency-certificate-uae/page.tsx` (3 WA CTAs each → GuideCta). No DB changes. No content scripts. Build: 72 pages, 0 errors. DB: 17 guides / 115 steps (unchanged before and after). Smoke tests: 6/6 routes 200. PM2 online.

@@ -454,4 +454,61 @@ This checklist must be completed before any content item moves from `draft` to `
 
 ---
 
+## 16. Old Admin Deprecation Plan
+
+### Long-term target
+
+The project must have one unified editorial admin system. All content types — guides, news, events, calendar, services, tools, reference pages — are managed from a single interface with a single auth model, a single publish workflow, and a single AI content assistant. Separate admin systems per content type are not the target and must not be built.
+
+### Current rule
+
+The existing admin (`app/admin/`) remains in place until the new unified admin reaches full feature parity and is verified in production. The old admin must not be deleted, disabled, or partially dismantled until the checklist below is fully satisfied and explicit human approval is given.
+
+### Do not delete the old admin until all of the following are true
+
+- [ ] The new unified admin can manage all existing guides safely (create, edit, publish, unpublish, delete, step management)
+- [ ] The new unified admin can manage news posts, events, and calendar pages
+- [ ] EN/RU publishing gates work correctly (EN gate: `status='published'`; RU gate: `status='published' AND ru_published=1`)
+- [ ] No English fallback appears on RU-locale public routes under any content state
+- [ ] Admin preview works for all content types before publish
+- [ ] Draft / published / archived workflow works end-to-end
+- [ ] Auth and permission model works (at minimum: manager role required for publish)
+- [ ] Production backup and rollback plan is documented and tested
+- [ ] `npm run build` passes with 0 errors after old admin is removed from the route tree
+- [ ] Explicit human approval is given in a dedicated removal task — not inferred from any other instruction
+
+### Freeze rule
+
+Do not expand the old admin. While the old admin remains in place:
+- Do not add new content type forms to `app/admin/`
+- Do not add new server actions to `app/admin/actions.ts` for new content types
+- Do not wire new DB tables (news, events, calendar) into the old admin UI
+- The old admin manages guides only and stays exactly as it is
+
+### Migration phases
+
+| Phase | What happens |
+|---|---|
+| **Phase A** | Freeze old admin structure — no new features added to `app/admin/` |
+| **Phase B** | Build new unified admin behind a safe route (e.g. `/admin/v2/` or similar) — no public exposure |
+| **Phase C** | Connect news, events, calendar to new admin first — new content types, no risk to existing guides |
+| **Phase D** | Connect guides, services, tools — migrate guide management to new admin |
+| **Phase E** | Test new admin with real editorial workflow — at least one full publish cycle per content type |
+| **Phase F** | Mark old admin deprecated — add a deprecation notice in `app/admin/` but do not remove code |
+| **Phase G** | Remove old admin code — only after all checklist items above are satisfied and approval is given |
+
+### Hard prohibition for Claude
+
+Claude must never remove, rename, disable, or modify the following as part of any task unless a dedicated removal task explicitly authorizes it:
+
+- `app/admin/` routes and page files
+- `app/admin/actions.ts` server actions
+- `components/admin/` components
+- `proxy.ts` admin route protection
+- NextAuth configuration (`lib/auth.ts`) insofar as it protects admin routes
+
+If a task description could be interpreted as requiring the deletion of old admin code, Claude must stop and ask for explicit clarification before proceeding. "Refactor", "simplify", "clean up", or "migrate" do not constitute authorization to delete old admin routes or components.
+
+---
+
 *This document is the authoritative rulebook for the Guidex AI Editorial Admin. Any implementation of the content assistant must embed these rules in the system prompt and enforce forbidden-task refusal at the application level.*

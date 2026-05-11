@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-11 (Phase 3C reader layer — news/events/calendar readers committed, no routes wired)
+Last updated: 2026-05-11 (Phase 3D dynamic detail routes — 6 detail pages for news/events/calendar EN+RU committed, not deployed)
 
 ---
 
@@ -197,11 +197,11 @@ Group pages live:
 
 ## Current Next Step
 
-**Phase 3C reader layer committed (2026-05-11, commit e0ecd26). Not wired into public routes yet.**
+**Phase 3D dynamic detail route skeletons committed (2026-05-11, commit 80d7cec). Not deployed.**
 
-`lib/db/news-events-calendar.ts`: 9 reader functions, EN/RU two-gate model, no EN fallback on RU routes, SAVEPOINT-verified. `scripts/verify-news-events-calendar-readers.ts`: 138/138 checks passed.
+6 dynamic detail pages created for news, events, calendar (EN + RU). `generateStaticParams` returns `[]` on all 6 — SSR on demand. Unknown slugs → `notFound()` → 404. `robots: { index: false, follow: true }` on all 6. No structured data. RU pages enforce no EN fallback (return `notFound()` if reader returns null). Build: 78 pages, 0 errors. 404 smoke: 6/6. No sitemap/homepage/admin/DB changes.
 
-**Next:** Phase 3D — wire readers into the 6 skeleton pages (/news, /events, /calendar + RU). Or Phase 3E — admin UI for news_posts / events / calendar_pages.
+**Next:** Phase 3D wire-up — wire readers into the 6 list skeleton pages (/news, /events, /calendar + RU). Or Phase 3E — admin UI for news_posts / events / calendar_pages.
 
 ---
 

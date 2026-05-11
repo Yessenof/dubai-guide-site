@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-11 — Phase 3D dynamic detail route skeletons committed (80d7cec)
+
+6 dynamic detail pages created for news, events, and calendar (EN + RU). `generateStaticParams` returns `[]` on all 6 — zero static pre-renders, SSR on demand. Unknown slugs hit `notFound()` → 404. `robots: { index: false, follow: true }` on all 6 — noindex guard until content launch approved. No structured data added. RU pages call reader with `"ru"` locale and call `notFound()` if reader returns null (enforces no EN fallback). EN news: source attribution pill, body, related guide box, WA CTA. EN events: amber confidence notice for `expected` and `subject_to_official_confirmation` dates. EN calendar: Islamic disclaimer if `has_islamic_dates === 1`, HTML dates list with color-coded type pills and confidence badges. RU equivalents: all UI text in Russian, source labels in Russian, Islamic disclaimer in Russian. Build: 78 pages, 0 errors (6 new `●` SSG routes with 0 pre-rendered paths). 404 smoke: 6/6 unknown slugs returned 404. No sitemap changes. No homepage changes. No DB writes. No admin changes.
+
+---
+
 ## 2026-05-11 — Phase 3C reader layer corrected and committed (e0ecd26)
 
 `lib/db/news-events-calendar.ts` rewritten: replaced `pick()` (had EN fallback when RU field empty) with `field()` (no fallback — `locale === "ru" ? ru : en` always). All 6 list/featured functions add `.filter((r) => locale === "ru" ? r.ruTitle.trim() !== "" : true)` after `.all()` — RU rows with empty `ru_title` are excluded at application layer, not shown with EN title. All 3 detail functions now check BOTH `ru_title.trim() !== ""` AND `ru_body.trim() !== ""` before returning data — previously only checked `ru_title`. Calendar `ru_notes` and `ru_image_alt` returned via `field()` — empty string is valid on RU, no EN fallback. `scripts/verify-news-events-calendar-readers.ts` rewritten: removed `{ readonly: true }`, added 3 SAVEPOINT-based test blocks that insert test rows, verify no-fallback behavior, then ROLLBACK — no data persists. Tests cover: RU list filter (empty `ru_title` excluded), RU detail null when `ru_body` empty, calendar `ru_notes` returns empty string not `en_notes`. Final DB counts confirmed unchanged (0/0/0 new tables, 17 guides, 115 steps). 138/138 checks passed. Build: 78 pages, 0 errors. Committed: `lib/db/news-events-calendar.ts` + `scripts/verify-news-events-calendar-readers.ts` only. No routes wired. No sitemap changes. No homepage changes. No DB writes.

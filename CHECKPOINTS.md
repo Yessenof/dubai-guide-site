@@ -5,6 +5,28 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE3D-DETAIL-ROUTES — Phase 3D dynamic detail route skeletons committed
+
+**Date:** 2026-05-11
+**Commit:** 80d7cec
+**Status:** Committed — not deployed, not wired into list pages
+
+- 6 dynamic detail pages: `/news/[slug]`, `/events/[slug]`, `/calendar/[slug]`, `/ru/news/[slug]`, `/ru/events/[slug]`, `/ru/calendar/[slug]`
+- `generateStaticParams` returns `[]` on all 6 — SSR on demand, no pre-rendered paths
+- Unknown slugs reach `notFound()` → 404 (verified: 6/6 unknown detail slugs returned 404)
+- `robots: { index: false, follow: true }` on all 6 — noindex guard until content launch
+- No structured data added
+- RU pages: call reader with `"ru"` locale; if reader returns null → `notFound()` (no EN fallback)
+- EN news: source attribution pill, body paragraphs, related guide box, WhatsApp CTA
+- EN events: amber confidence notice for `expected` and `subject_to_official_confirmation` dates
+- EN calendar: Islamic disclaimer if `has_islamic_dates === 1`; HTML dates list with color-coded type pills and confidence badges
+- RU equivalents: all UI text in Russian, source labels in Russian, Islamic disclaimer in Russian
+- RU calendar: `label_ru || label_en` for individual date entry labels (data-level acceptable; page content has no fallback)
+- Build: 78 pages, 0 errors (6 new ● SSG routes with 0 pre-rendered paths)
+- No sitemap changes, no homepage changes, no DB writes, no admin changes
+
+---
+
 ## CP-PHASE3C-READERS — Phase 3C reader layer verified and committed
 
 **Date:** 2026-05-11

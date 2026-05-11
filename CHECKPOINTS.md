@@ -5,6 +5,25 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE3E-LIST-WIRING — Phase 3E reader wiring on 6 list pages committed
+
+**Date:** 2026-05-12
+**Commit:** 5a2a49d
+**Status:** Committed — not deployed
+
+- 6 list pages converted to `async` server components and wired to readers
+- EN pages: `getPublishedNewsPosts("en")`, `getPublishedEvents("en")`, `getPublishedCalendarPages("en")`
+- RU pages: same readers with `"ru"` locale — RU gate (`ru_published=1`) enforced in reader, no EN fallback
+- Empty DB (0 rows) → reader returns `[]` → existing dashed empty-state renders, no errors
+- When rows exist → compact card list: news (category + date + title + summary), events (date + title + confidence + category), calendar (type + period + Islamic flag + title + summary + date count)
+- Static placeholder card arrays removed from calendar pages
+- `robots: { index: false, follow: true }` preserved on all 6
+- No structured data, no sitemap changes, no homepage changes, no DB writes, no admin changes
+- Build: 78 pages, 0 errors, TypeScript clean
+- Smoke: 6/6 list routes 200
+
+---
+
 ## CP-PHASE3D-DETAIL-ROUTES — Phase 3D dynamic detail route skeletons committed
 
 **Date:** 2026-05-11

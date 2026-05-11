@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-11 (Phase 3D dynamic detail routes — 6 detail pages for news/events/calendar EN+RU committed, not deployed)
+Last updated: 2026-05-12 (Phase 3E — 6 list pages wired to readers, committed, not deployed)
 
 ---
 
@@ -197,11 +197,11 @@ Group pages live:
 
 ## Current Next Step
 
-**Phase 3D dynamic detail route skeletons committed (2026-05-11, commit 80d7cec). Not deployed.**
+**Phase 3E reader wiring committed (2026-05-12, commit 5a2a49d). Not deployed.**
 
-6 dynamic detail pages created for news, events, calendar (EN + RU). `generateStaticParams` returns `[]` on all 6 — SSR on demand. Unknown slugs → `notFound()` → 404. `robots: { index: false, follow: true }` on all 6. No structured data. RU pages enforce no EN fallback (return `notFound()` if reader returns null). Build: 78 pages, 0 errors. 404 smoke: 6/6. No sitemap/homepage/admin/DB changes.
+All 6 list pages wired to readers. Empty DB → empty state renders. When rows exist → compact card list renders. `robots: noindex/follow` preserved. No sitemap/homepage/admin/DB changes.
 
-**Next:** Phase 3D wire-up — wire readers into the 6 list skeleton pages (/news, /events, /calendar + RU). Or Phase 3E — admin UI for news_posts / events / calendar_pages.
+**Next:** Phase 3F — admin UI for news_posts / events / calendar_pages. Or: insert first content rows via script and verify list + detail pages end-to-end locally.
 
 ---
 

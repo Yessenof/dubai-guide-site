@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-12 — Phase 3E reader wiring committed to 6 list pages (5a2a49d)
+
+6 existing list skeleton pages converted from static to `async` server components and wired to readers. EN pages call `getPublishedNewsPosts("en")`, `getPublishedEvents("en")`, `getPublishedCalendarPages("en")`. RU pages call the same with `"ru"` — RU gate (`ru_published=1`) enforced inside the reader, no EN fallback possible. When DB has 0 rows (current state), reader returns `[]` → existing dashed empty-state block renders unchanged. When rows exist, compact portal-style card list renders instead: news cards (category chip + date + title + summary), event cards (date column + title + confidence badge + category), calendar cards (type + period + Islamic flag + title + summary + date count). Static placeholder/preview card arrays removed from calendar pages (were illustrative only). `robots: { index: false, follow: true }` preserved on all 6. No structured data. No sitemap changes. No homepage changes. No old admin changes. No DB writes. Build: 78 pages, 0 errors, TypeScript clean. Smoke: 6/6 list routes 200.
+
+---
+
 ## 2026-05-11 — Phase 3D dynamic detail route skeletons committed (80d7cec)
 
 6 dynamic detail pages created for news, events, and calendar (EN + RU). `generateStaticParams` returns `[]` on all 6 — zero static pre-renders, SSR on demand. Unknown slugs hit `notFound()` → 404. `robots: { index: false, follow: true }` on all 6 — noindex guard until content launch approved. No structured data added. RU pages call reader with `"ru"` locale and call `notFound()` if reader returns null (enforces no EN fallback). EN news: source attribution pill, body, related guide box, WA CTA. EN events: amber confidence notice for `expected` and `subject_to_official_confirmation` dates. EN calendar: Islamic disclaimer if `has_islamic_dates === 1`, HTML dates list with color-coded type pills and confidence badges. RU equivalents: all UI text in Russian, source labels in Russian, Islamic disclaimer in Russian. Build: 78 pages, 0 errors (6 new `●` SSG routes with 0 pre-rendered paths). 404 smoke: 6/6 unknown slugs returned 404. No sitemap changes. No homepage changes. No DB writes. No admin changes.

@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-11 (Phase 3D detail routes — 6 dynamic detail pages for news/events/calendar EN+RU committed, not deployed)
+Last updated: 2026-05-12 (Phase 3E — 6 list pages wired to readers, committed, not deployed)
 
 WHAT TO ATTACH
 --------------
@@ -102,6 +102,14 @@ All dataLayer events are wired and deployed (commit 85f5519):
   - route_finder_result_view     (RouteFinderFlow)
   - route_finder_whatsapp_click  (RouteFinderFlow)
 
+PHASE 3E STATUS (2026-05-12) — COMMITTED (5a2a49d), NOT DEPLOYED
+-----------------------------------------------------------------
+6 list pages wired to readers. Empty DB → empty state renders (no errors).
+When rows exist → compact card list: news (category+date+title+summary),
+events (date+title+confidence badge+category), calendar (type+period+Islamic
+flag+title+summary+date count). robots: noindex on all 6. No sitemap. No DB.
+Build: 78 pages, 0 errors. Smoke: 6/6 list routes 200.
+
 PHASE 3D STATUS (2026-05-11) — COMMITTED (80d7cec), NOT DEPLOYED
 -----------------------------------------------------------------
 6 dynamic detail route pages created and committed.
@@ -147,8 +155,8 @@ Local DB verified: integrity_check ok, guides=17, steps=115 unchanged.
 
 CURRENT NEXT STEPS
 ------------------
-1. Phase 3D wire-up: Wire readers into the 6 list skeleton pages (/news, /events, /calendar + RU).
-   Or Phase 3E: Admin UI for news_posts / events / calendar_pages.
+1. Phase 3F: Admin UI for news_posts / events / calendar_pages.
+   Or: insert first content rows via script and verify list + detail pages end-to-end locally.
 
 2. Submit sitemap to Google Search Console:
    https://guidex-consulting.ae/sitemap.xml

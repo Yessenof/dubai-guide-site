@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-12 (Phase 3E — 6 list pages wired to readers, committed, not deployed)
+Last updated: 2026-05-12 (Phase 4A-3 — Unified Admin Shell at /admin/content, committed, not deployed)
 
 ---
 
@@ -31,6 +31,14 @@ app/
       new/page.tsx    ← create guide form
       [slug]/page.tsx ← edit guide (thin server component, passes guide + steps)
     actions.ts        ← all Server Actions (guide + step create/update/delete/publish)
+    content/          ← unified content admin shell (Phase 4A+)
+      layout.tsx      ← sidebar nav layout (Guidex Content Admin label)
+      page.tsx        ← dashboard: status cards for all content type sections
+      _components/
+        ContentAdminNav.tsx ← "use client" sidebar nav with usePathname active state
+      news/page.tsx   ← News admin placeholder
+      events/page.tsx ← Events admin placeholder
+      calendar/page.tsx ← Calendar Visual Posts admin placeholder
   api/auth/[...nextauth]/ ← NextAuth handler
   layout.tsx          ← root layout (no Header)
 
@@ -148,6 +156,7 @@ Group pages live:
 | Timeline (guide) required | Working — `required` on input + server-side throw if empty |
 | Timeline (step) required | Working — `required` on input + server-side throw if empty |
 | RU content fields | Present in the form — editable but not rendered on public site yet |
+| Content Admin shell (`/admin/content`) | Working — sidebar nav, dashboard, 3 placeholder sections (news/events/calendar) |
 
 ---
 
@@ -197,11 +206,13 @@ Group pages live:
 
 ## Current Next Step
 
-**Phase 3E reader wiring committed (2026-05-12, commit 5a2a49d). Not deployed.**
+**Phase 4A-3 Unified Admin Shell committed (2026-05-12). Not deployed.**
 
-All 6 list pages wired to readers. Empty DB → empty state renders. When rows exist → compact card list renders. `robots: noindex/follow` preserved. No sitemap/homepage/admin/DB changes.
+`/admin/content` protected by proxy.ts (2 new matcher lines). Content admin layout nests inside existing admin layout's `<main>`. Sidebar nav: 4 active sections + 7 planned (with "planned" badge). Dashboard: status cards for all content types. 3 placeholder section pages (news, events, calendar). Build: 82 pages, 0 errors.
 
-**Next:** Phase 3F — admin UI for news_posts / events / calendar_pages. Or: insert first content rows via script and verify list + detail pages end-to-end locally.
+**Phase 4A-2 (committed 2026-05-12, fdbc4a9):** Validation layer + admin writer functions for news/events/calendar. `lib/admin-validation/news-events-calendar.ts` + `lib/db/news-events-calendar-admin.ts` (6 writers: create/update for each type). `scripts/verify-news-events-calendar-admin.ts` (SAVEPOINT tests). `lib/db/connection.ts` safety fix: `sqliteForVerificationOnly` export.
+
+**Next:** Phase 4A-4 — News admin CRUD forms at `/admin/content/news`. Or: insert first content rows via script and verify list + detail pages end-to-end locally.
 
 ---
 

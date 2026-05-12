@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-12 (Phase 3E — 6 list pages wired to readers, committed, not deployed)
+Last updated: 2026-05-12 (Phase 4A-3 — Unified Admin Shell at /admin/content, committed, not deployed)
 
 WHAT TO ATTACH
 --------------
@@ -153,9 +153,26 @@ PHASE 3A STATUS (2026-05-11) — COMMITTED (ed434d6)
 Schema migration: 3 new SQLite tables + Drizzle definitions added.
 Local DB verified: integrity_check ok, guides=17, steps=115 unchanged.
 
+PHASE 4A-3 STATUS (2026-05-12) — COMMITTED, NOT DEPLOYED
+---------------------------------------------------------
+Unified Admin Shell at /admin/content built and protected.
+proxy.ts: 2 new matcher lines ("/admin/content", "/admin/content/:path*").
+Files: layout.tsx (sidebar flex, Guidex Content Admin label), page.tsx (dashboard 6 cards),
+_components/ContentAdminNav.tsx ("use client", usePathname active state, 4 active + 7 planned),
+news/page.tsx, events/page.tsx, calendar/page.tsx (placeholders, no forms/DB).
+Build: 82 pages, 0 errors. Old guide admin unaffected.
+
+PHASE 4A-2 STATUS (2026-05-12) — COMMITTED (fdbc4a9), NOT DEPLOYED
+--------------------------------------------------------------------
+Validation layer + admin writer functions for news/events/calendar.
+lib/admin-validation/news-events-calendar.ts: pure TS validation.
+lib/db/news-events-calendar-admin.ts: 6 readers + 6 writers.
+lib/db/connection.ts: sqliteForVerificationOnly export (scripts-only).
+scripts/verify-news-events-calendar-admin.ts: 100+ SAVEPOINT-based tests, all passed.
+
 CURRENT NEXT STEPS
 ------------------
-1. Phase 3F: Admin UI for news_posts / events / calendar_pages.
+1. Phase 4A-4: News admin CRUD forms at /admin/content/news.
    Or: insert first content rows via script and verify list + detail pages end-to-end locally.
 
 2. Submit sitemap to Google Search Console:
@@ -164,9 +181,7 @@ CURRENT NEXT STEPS
 3. Configure GTM: set up triggers for each dataLayer event listed above,
    wire GA4 tag (G-33C9N3B68T).
 
-4. Phase 3B: Admin UI for news_posts / events / calendar_pages.
-
-5. Add Plausible analytics (optional, parallel to GTM/GA4).
+4. Add Plausible analytics (optional, parallel to GTM/GA4).
 
 RULES THAT MUST NOT BE BROKEN
 ------------------------------

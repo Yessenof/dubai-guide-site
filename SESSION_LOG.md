@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-12 — Phase 4A-3 Unified Admin Shell committed
+
+`app/admin/content/` shell created and protected. Files: `_components/ContentAdminNav.tsx` ("use client", `usePathname` active state, 4 active sections + 7 planned-badge items), `layout.tsx` (server component, sidebar flex layout, "Guidex Content Admin" label, nests inside existing admin `<main>`), `page.tsx` (dashboard: 6 status cards — 3 active with "Open" links, 3 planned with phase badge), `news/page.tsx`, `events/page.tsx`, `calendar/page.tsx` (placeholder pages describing future workflow, no forms/DB). `proxy.ts` extended with exactly 2 lines: `"/admin/content"` and `"/admin/content/:path*"`. Build: 82 pages, 0 errors. All 4 new admin routes render as dynamic (ƒ) server routes. Old guide admin unaffected. No DB reads from new pages. No public page changes.
+
+---
+
 ## 2026-05-12 — Phase 3E reader wiring committed to 6 list pages (5a2a49d)
 
 6 existing list skeleton pages converted from static to `async` server components and wired to readers. EN pages call `getPublishedNewsPosts("en")`, `getPublishedEvents("en")`, `getPublishedCalendarPages("en")`. RU pages call the same with `"ru"` — RU gate (`ru_published=1`) enforced inside the reader, no EN fallback possible. When DB has 0 rows (current state), reader returns `[]` → existing dashed empty-state block renders unchanged. When rows exist, compact portal-style card list renders instead: news cards (category chip + date + title + summary), event cards (date column + title + confidence badge + category), calendar cards (type + period + Islamic flag + title + summary + date count). Static placeholder/preview card arrays removed from calendar pages (were illustrative only). `robots: { index: false, follow: true }` preserved on all 6. No structured data. No sitemap changes. No homepage changes. No old admin changes. No DB writes. Build: 78 pages, 0 errors, TypeScript clean. Smoke: 6/6 list routes 200.

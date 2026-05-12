@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-12 — Phase 4A-4a News admin draft workflow (not committed)
+
+News draft CRUD workflow at `/admin/content/news`. Files created: `app/admin/content/actions/news.ts` ("use server" — `saveNewsDraftAction` handles both create and update via `_id` hidden field, calls `createNewsDraft`/`updateNewsDraft`, redirects to edit page on success with `?saved=<ts>`), `app/admin/content/_components/NewsForm.tsx` ("use client" — `useActionState`, 9 form sections: core/EN content/EN SEO/source/dates/RU content/RU SEO/flags/tags, saved banner with 3s auto-hide, red error box, amber warning box), `app/admin/content/news/page.tsx` (list with status badges + RU live indicator + Edit links + empty state), `app/admin/content/news/new/page.tsx` (create shell), `app/admin/content/news/[id]/page.tsx` (edit shell — loads by id, passes `key={saved}` for remount after save). No publish/archive/AI/image. `related_*` fields excluded from form (not in current `NewsInput` writer API). Build: 83 pages (+1), 0 errors. Verify script: 100/100. DB: news=0, events=0, calendar=0.
+
+---
+
 ## 2026-05-12 — Phase 4A-3 Unified Admin Shell committed
 
 `app/admin/content/` shell created and protected. Files: `_components/ContentAdminNav.tsx` ("use client", `usePathname` active state, 4 active sections + 7 planned-badge items), `layout.tsx` (server component, sidebar flex layout, "Guidex Content Admin" label, nests inside existing admin `<main>`), `page.tsx` (dashboard: 6 status cards — 3 active with "Open" links, 3 planned with phase badge), `news/page.tsx`, `events/page.tsx`, `calendar/page.tsx` (placeholder pages describing future workflow, no forms/DB). `proxy.ts` extended with exactly 2 lines: `"/admin/content"` and `"/admin/content/:path*"`. Build: 82 pages, 0 errors. All 4 new admin routes render as dynamic (ƒ) server routes. Old guide admin unaffected. No DB reads from new pages. No public page changes.

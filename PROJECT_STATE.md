@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-14 (Phase 4A-6 — Calendar Visual Posts admin full workflow committed)
+Last updated: 2026-05-15 (Phase 4B-2B — Real AI Runtime MVP for AI Inbox — not committed)
 
 ---
 
@@ -178,6 +178,7 @@ Group pages live:
 | Content Admin shell (`/admin/content`) | Working — sidebar nav, dashboard, 3 placeholder sections (news/events/calendar) |
 | News admin — draft (`/admin/content/news`) | Working — list, create draft, edit draft; validation errors/warnings; saved banner |
 | News admin — publish/archive | Working — publish gate (validateNewsPublish + date auto-fill), archive; NewsStatusPanel + NewsPreview on edit page |
+| AI Inbox (`/admin/content/ai-inbox`) | Working — two-click AI flow (classify → generate → refine → save); disabled mode uses local classifier; runtimeStatus prop from page.tsx; save via useActionState + _draft_json |
 
 ---
 
@@ -226,6 +227,24 @@ Group pages live:
 ---
 
 ## Current Next Step
+
+**Phase 4B-2B — Real AI Runtime MVP for AI Inbox — complete (2026-05-15). Not committed.**
+
+Full AI runtime wired into `/admin/content/ai-inbox`. Two-mode system: when `AI_EDITOR_ENABLED=true` + `ANTHROPIC_API_KEY` set → real Anthropic API calls; otherwise → local deterministic classifier fallback.
+
+**lib/ai/ module (4 new files):**
+- `editor-types.ts` — all type definitions: `AiInputType`, `AiSuggestedType`, `ClassificationResult`, `GeneratedNewsDraft`, `GeneratedEventDraft`, `GeneratedCalendarDraft`, `GeneratedDraft`, `AiRuntimeStatus`, action result types, `AiSaveActionState`
+- `editor-prompts.ts` — system prompt + classification/draft-generation/refinement prompt builders; type-specific JSON schemas embedded in prompts; three content types: news/event/calendar
+- `editor-schemas.ts` — full validation, sanitization, normalization: `extractJson()` (strips AI markdown fences), `validateClassificationJson()`, `validateGeneratedDraftJson()`, `validateRefinementJson()`, `normalizeGeneratedDraftForSave()` (forces `ru_published=0`); em-dash stripping; field length enforcement
+- `editor-runtime.ts` — `getAiRuntimeStatus()`, in-memory daily rate limiter, native fetch to Anthropic Messages API (`https://api.anthropic.com/v1/messages`), `classifyWithAi()`, `generateDraftWithAi()`, `refineDraftWithAi()`; env vars: `AI_EDITOR_ENABLED`, `ANTHROPIC_API_KEY`, `AI_EDITOR_CLASSIFY_MODEL` (haiku default), `AI_EDITOR_DRAFT_MODEL` (sonnet default), `AI_EDITOR_MAX_INPUT_CHARS` (8000), `AI_EDITOR_MAX_OUTPUT_TOKENS` (4096), `AI_EDITOR_DAILY_LIMIT` (50)
+
+**Rewritten actions.ts:** `classifyInputAction`, `generateDraftAction`, `refineDraftAction` (programmatic, via startTransition); `saveGeneratedNewsDraftAction`, `saveGeneratedEventDraftAction`, `saveGeneratedCalendarDraftAction` (useActionState + `_draft_json` FormData field → redirect pattern); legacy actions kept for disabled-mode fallback.
+
+**Updated page.tsx:** imports `getAiRuntimeStatus()` server-side, passes `runtimeStatus` prop to AiInboxClient.
+
+**Rewritten AiInboxClient.tsx:** Two-click flow when connected: Step 1 (Analyze with AI → classification card + type selector) → Step 2 (Generate draft → full bilingual draft view with all fields, verification notes, missing fields, RU draft, refine textarea); disabled mode falls back to local deterministic classifier (same as before). Phase state machine: "input" | "classifying" | "classified" | "generating" | "draft" | "refining". Save forms use `useActionState` with `_draft_json` hidden field in connected mode; legacy FormData actions in disabled mode.
+
+**QA:** `scripts/qa-phase-4b2-ai-runtime.ts` — 82/82 checks: runtime status gating, extractJson fence stripping, normalizeSlug/sanitizeText/sanitizeStringArray, validateClassificationJson (valid + coercion + high-risk forcing), validateGeneratedDraftJson (news/event/calendar, schema_eligible rules, calendar date filtering), validateRefinementJson, normalizeGeneratedDraftForSave (ru_published=0 invariant, bad slug fallback, tampering protection), em-dash stripping, field length caps. All 5 QA scripts: 381/381. Build: 86 pages, TypeScript clean. DB: guides=17, steps=115, news_posts=1, events=1, calendar_pages=1 — unchanged. 3 drafts: all status=draft, ru_published=0.
 
 **Phase 4A-4a + 4A-4b News admin complete (2026-05-12). Not committed.**
 

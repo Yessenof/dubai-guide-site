@@ -1,4 +1,5 @@
 import AiInboxClient from "./_components/AiInboxClient";
+import { getAiRuntimeStatus } from "@/lib/ai/editor-runtime";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = { title: "AI Inbox — Content Admin" };
@@ -9,6 +10,7 @@ interface Props {
 
 export default async function AiInboxPage({ searchParams }: Props) {
   const { save_error } = await searchParams;
+  const runtimeStatus = getAiRuntimeStatus();
 
   return (
     <div>
@@ -18,7 +20,7 @@ export default async function AiInboxPage({ searchParams }: Props) {
           Paste any input — URL, article, note, event link — and get a classified, structured draft.
         </p>
       </div>
-      <AiInboxClient saveError={save_error} />
+      <AiInboxClient saveError={save_error} runtimeStatus={runtimeStatus} />
     </div>
   );
 }

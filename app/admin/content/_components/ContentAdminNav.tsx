@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const ACTIVE_SECTIONS = [
+  { label: "AI Inbox", href: "/admin/content/ai-inbox" },
   { label: "Dashboard", href: "/admin/content" },
   { label: "News", href: "/admin/content/news" },
   { label: "Events", href: "/admin/content/events" },
@@ -34,16 +35,20 @@ export default function ContentAdminNav() {
             href === "/admin/content"
               ? pathname === "/admin/content"
               : pathname === href || pathname.startsWith(href + "/");
+          const isInbox = href === "/admin/content/ai-inbox";
           return (
             <li key={href}>
               <Link
                 href={href}
-                className={`block rounded px-2 py-1.5 text-sm transition-colors ${
+                className={`flex items-center gap-1.5 rounded px-2 py-1.5 text-sm transition-colors ${
                   isActive
                     ? "bg-gray-100 font-medium text-gray-900"
                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 }`}
               >
+                {isInbox && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+                )}
                 {label}
               </Link>
             </li>

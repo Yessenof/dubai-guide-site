@@ -45,17 +45,25 @@ export default function CalendarAdminPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">Calendar Visual Posts</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Calendar visual posts</h2>
           <p className="text-sm text-gray-500 mt-0.5">
             Monthly and yearly calendar pages with verified date lists.
           </p>
         </div>
-        <Link
-          href="/admin/content/calendar/new"
-          className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-xl hover:bg-gray-700 transition-colors"
-        >
-          + Create draft
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/content/ai-inbox"
+            className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-xl hover:bg-gray-700 transition-colors"
+          >
+            Create with AI
+          </Link>
+          <Link
+            href="/admin/content/calendar/new"
+            className="text-sm font-medium text-gray-600 border border-gray-200 px-4 py-2 rounded-xl hover:bg-gray-50 transition-colors"
+          >
+            Advanced manual draft
+          </Link>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">

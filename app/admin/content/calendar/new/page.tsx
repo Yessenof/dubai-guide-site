@@ -2,12 +2,12 @@ import CalendarForm from "@/app/admin/content/_components/CalendarForm";
 import Link from "next/link";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Create Calendar Draft — Content Admin" };
+export const metadata: Metadata = { title: "Advanced Manual Draft — Calendar Admin" };
 
 export default function NewCalendarPage() {
   return (
     <div>
-      <div className="flex items-center gap-2 mb-6">
+      <div className="flex items-center gap-2 mb-4">
         <Link
           href="/admin/content/calendar"
           className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
@@ -15,8 +15,19 @@ export default function NewCalendarPage() {
           ← Calendar
         </Link>
         <span className="text-xs text-gray-300">/</span>
-        <span className="text-xs text-gray-500">Create draft</span>
+        <span className="text-xs text-gray-500">Advanced manual draft</span>
       </div>
+
+      <div className="mb-6 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-800 leading-relaxed">
+        <span className="font-semibold">Advanced Manual Editor.</span>{" "}
+        Recommended workflow: start in{" "}
+        <Link href="/admin/content/ai-inbox" className="underline font-medium">
+          AI Inbox
+        </Link>{" "}
+        to classify and prepare a draft first. Use this form only for corrections, overrides,
+        emergency edits, or final review.
+      </div>
+
       <CalendarForm />
     </div>
   );

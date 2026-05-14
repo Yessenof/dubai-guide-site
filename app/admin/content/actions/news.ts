@@ -45,6 +45,9 @@ function buildNewsInput(formData: FormData): NewsInput {
     featured_homepage:   fdn(formData, "featured_homepage"),
     featured_digest:     fdn(formData, "featured_digest"),
     noindex:             fdn(formData, "noindex"),
+    image_path:          fd(formData, "image_path"),
+    image_alt:           fd(formData, "image_alt"),
+    ru_image_alt:        fd(formData, "ru_image_alt"),
   };
 }
 

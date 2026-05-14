@@ -53,6 +53,13 @@ export default async function EditCalendarPage({ params, searchParams }: Props) 
         <span className="text-xs font-mono text-gray-500">{page.slug}</span>
       </div>
 
+      <div className="mb-4 rounded-xl bg-amber-50 border border-amber-200 px-4 py-2.5 text-xs text-amber-800">
+        <span className="font-semibold">Advanced Manual Editor.</span>{" "}
+        Use{" "}
+        <a href="/admin/content/ai-inbox" className="underline font-medium">AI Inbox</a>{" "}
+        for new content. This form is for corrections, overrides, and final review only.
+      </div>
+
       <div className="flex items-center gap-3 mb-4 px-4 py-2.5 bg-white rounded-xl border border-gray-100 text-xs">
         <span className={`inline-flex items-center gap-1.5 font-medium px-2 py-0.5 rounded-full ${
           page.status === "published" ? "text-emerald-700 bg-emerald-50"

@@ -89,7 +89,13 @@ export default function NewsAdminListPage() {
               {posts.map((post) => (
                 <tr
                   key={post.id}
-                  className="border-b border-gray-100 last:border-0 hover:bg-gray-50/60 transition-colors"
+                  className={`border-b border-gray-100 last:border-0 transition-colors ${
+                    post.status === "published"
+                      ? "bg-emerald-50/30 hover:bg-emerald-50/50"
+                      : post.status === "archived"
+                        ? "opacity-55 hover:opacity-75"
+                        : "hover:bg-gray-50/60"
+                  }`}
                 >
                   <td className="px-5 py-3.5 font-medium text-gray-900 max-w-xs">
                     <span className="line-clamp-1">

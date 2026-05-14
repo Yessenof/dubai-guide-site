@@ -5,6 +5,26 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE4A4B-NEWS-PUBLISH — Phase 4A-4a+4b News admin complete (not committed)
+
+**Date:** 2026-05-12
+**Commit:** pending approval
+**Status:** Not committed — pending approval
+
+- `publishNews(id)` writer: RU gate → date auto-fill (empty → today's ISO date) → `validateNewsPublish` → sets status=published
+- `archiveNews(id)` writer: sets status=archived (permanent in this phase; archived→draft blocked)
+- `newsRowToInput` exported from admin writer (needed by edit page for pre-compute)
+- `publishNewsAction` + `archiveNewsAction` server actions in `app/admin/content/actions/news.ts`
+- `NewsStatusPanel.tsx`: "use client", two `useActionState` hooks, status badge, pre-computed publish errors (blocking), warnings, conditional publish button (disabled if errors), archive button (hidden if archived), "no further actions" for archived state
+- `NewsPreview.tsx`: server component, EN preview card + RU preview card with live/not-published badge
+- Edit page `news/[id]/page.tsx`: `xl:grid-cols-[1fr_320px]` grid, pre-computes `validateNewsPublish` with empty-date auto-fill for panel props
+- List page: emerald tint for published rows, `opacity-55` for archived rows
+- `scripts/qa-phase-4a4b-news-publish.ts`: 60/60 checks passed
+- All 4 verification scripts pass (100+86+60+verify = 246 total checks)
+- Build: 83 pages, 0 errors, TypeScript clean
+
+---
+
 ## CP-PHASE3E-LIST-WIRING — Phase 3E reader wiring on 6 list pages committed
 
 **Date:** 2026-05-12

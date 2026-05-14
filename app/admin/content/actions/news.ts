@@ -3,6 +3,8 @@
 import {
   createNewsDraft,
   updateNewsDraft,
+  publishNews,
+  archiveNews,
 } from "@/lib/db/news-events-calendar-admin";
 import type { NewsInput } from "@/lib/admin-validation/news-events-calendar";
 import { redirect } from "next/navigation";
@@ -60,4 +62,30 @@ export async function saveNewsDraftAction(
   }
 
   redirect(`/admin/content/news/${id || result.id}?saved=${Date.now()}`);
+}
+
+export async function publishNewsAction(
+  _prevState: NewsActionState,
+  formData: FormData,
+): Promise<NewsActionState> {
+  const id = fd(formData, "_id").trim();
+  if (!id) return { errors: ["Missing post id."], warnings: [] };
+
+  const result = publishNews(id);
+  if (!result.ok) return { errors: result.errors, warnings: result.warnings };
+
+  redirect(`/admin/content/news/${id}?saved=${Date.now()}`);
+}
+
+export async function archiveNewsAction(
+  _prevState: NewsActionState,
+  formData: FormData,
+): Promise<NewsActionState> {
+  const id = fd(formData, "_id").trim();
+  if (!id) return { errors: ["Missing post id."], warnings: [] };
+
+  const result = archiveNews(id);
+  if (!result.ok) return { errors: result.errors, warnings: result.warnings };
+
+  redirect(`/admin/content/news/${id}?saved=${Date.now()}`);
 }

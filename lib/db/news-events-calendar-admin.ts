@@ -12,6 +12,7 @@ import {
   validateCalendarDraft,
   validateEventDraft,
   validateNewsDraft,
+  validateNewsPublish,
   type CalendarInput,
   type EventInput,
   type NewsInput,
@@ -69,7 +70,7 @@ export function getNewsPostById(id: string): NewsPost | null {
 
 // ─── News writes ──────────────────────────────────────────────────────────────
 
-function newsRowToInput(row: NewsPost): NewsInput {
+export function newsRowToInput(row: NewsPost): NewsInput {
   return {
     slug: row.slug,
     category: row.category,
@@ -235,6 +236,72 @@ export function updateNewsDraft(id: string, input: NewsInput): WriteResult {
   }
 
   return { ok: true, id, errors: [], warnings: validation.warnings };
+}
+
+/**
+ * Publishes a draft news post. Runs full publish validation.
+ * Auto-fills empty date_published / date_updated with today before validating.
+ * Archived posts cannot be published.
+ */
+export function publishNews(id: string): WriteResult {
+  const existing = getNewsPostById(id);
+  if (!existing) {
+    return { ok: false, errors: [`News post not found: ${id}`], warnings: [] };
+  }
+  if (existing.status === "archived") {
+    return {
+      ok: false,
+      errors: ["Cannot publish an archived post. Archive is permanent in this phase."],
+      warnings: [],
+    };
+  }
+
+  if (existing.ruPublished === 1) {
+    if (!existing.ruTitle.trim() || !existing.ruBody.trim()) {
+      return {
+        ok: false,
+        errors: ["ru_published = 1 requires non-empty ru_title and ru_body."],
+        warnings: [],
+      };
+    }
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+  const datePublished = existing.datePublished.trim() || today;
+  const dateUpdated   = existing.dateUpdated.trim()   || today;
+
+  const input: NewsInput = {
+    ...newsRowToInput(existing),
+    date_published: datePublished,
+    date_updated:   dateUpdated,
+  };
+
+  const validation = validateNewsPublish(input);
+  if (!validation.ok) {
+    return { ok: false, errors: validation.errors, warnings: validation.warnings };
+  }
+
+  db.update(newsPosts)
+    .set({ status: "published", datePublished, dateUpdated, updatedAt: nowIso() })
+    .where(eq(newsPosts.id, id))
+    .run();
+
+  return { ok: true, id, errors: [], warnings: validation.warnings };
+}
+
+/** Archives a news post (draft or published). Status becomes "archived" permanently in this phase. */
+export function archiveNews(id: string): WriteResult {
+  const existing = getNewsPostById(id);
+  if (!existing) {
+    return { ok: false, errors: [`News post not found: ${id}`], warnings: [] };
+  }
+
+  db.update(newsPosts)
+    .set({ status: "archived", updatedAt: nowIso() })
+    .where(eq(newsPosts.id, id))
+    .run();
+
+  return { ok: true, id, errors: [], warnings: [] };
 }
 
 // ─── Events reads ─────────────────────────────────────────────────────────────

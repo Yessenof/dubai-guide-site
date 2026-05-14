@@ -405,8 +405,8 @@ assert(
   "action calls updateNewsDraft writer",
 );
 assert(
-  !actionCode.includes("publishNews") && !actionCode.includes("status = \"published\""),
-  "action has no publish logic",
+  !actionCode.includes("status = \"published\""),
+  "saveNewsDraftAction has no inline status=published logic",
 );
 
 const listCode = readFileSync(

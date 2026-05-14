@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-12 (Phase 4A-3 — Unified Admin Shell at /admin/content, committed, not deployed)
+Last updated: 2026-05-12 (Phase 4A-4a+4b — News admin draft + publish/archive complete, not committed)
 
 WHAT TO ATTACH
 --------------
@@ -170,10 +170,18 @@ lib/db/news-events-calendar-admin.ts: 6 readers + 6 writers.
 lib/db/connection.ts: sqliteForVerificationOnly export (scripts-only).
 scripts/verify-news-events-calendar-admin.ts: 100+ SAVEPOINT-based tests, all passed.
 
+PHASE 4A-4a + 4A-4b STATUS (2026-05-12) — NOT COMMITTED
+---------------------------------------------------------
+Full News admin workflow complete. Pending approval to commit.
+
+4A-4a: list page (status + visual tint), create draft, edit draft. saveNewsDraftAction (create+update via _id). Validation errors/warnings. Saved banner. QA: 86/86.
+4A-4b: publishNews(id) writer (RU gate + date auto-fill + validateNewsPublish). archiveNews(id) writer. publishNewsAction + archiveNewsAction. NewsStatusPanel.tsx ("use client", two useActionState hooks, status badge, blocking errors, conditional buttons). NewsPreview.tsx (server component, EN+RU cards). Edit page: xl:grid-cols-[1fr_320px] grid + side panels. QA: 60/60. Build: 83 pages, 0 errors.
+
 CURRENT NEXT STEPS
 ------------------
-1. Phase 4A-4: News admin CRUD forms at /admin/content/news.
-   Or: insert first content rows via script and verify list + detail pages end-to-end locally.
+1. Approve commit for Phase 4A-4a+4b (News admin draft + publish/archive).
+2. Phase 4A-4c: Events admin draft workflow at /admin/content/events.
+   Or: insert first news rows via script and smoke-test list + detail public pages.
 
 2. Submit sitemap to Google Search Console:
    https://guidex-consulting.ae/sitemap.xml

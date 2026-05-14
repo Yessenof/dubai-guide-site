@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-12 (Phase 4A-4a — News admin draft workflow at /admin/content/news, not committed)
+Last updated: 2026-05-12 (Phase 4A-4b — News publish/archive gates, not committed)
 
 ---
 
@@ -35,14 +35,16 @@ app/
       layout.tsx      ← sidebar nav layout (Guidex Content Admin label)
       page.tsx        ← dashboard: status cards for all content type sections
       actions/
-        news.ts       ← "use server" — saveNewsDraftAction (create + update by _id)
+        news.ts       ← "use server" — saveNewsDraftAction, publishNewsAction, archiveNewsAction
       _components/
-        ContentAdminNav.tsx ← "use client" sidebar nav with usePathname active state
-        NewsForm.tsx  ← "use client" — create/edit form, useActionState, 9 sections
+        ContentAdminNav.tsx  ← "use client" sidebar nav with usePathname active state
+        NewsForm.tsx         ← "use client" — create/edit form, useActionState, 9 sections
+        NewsStatusPanel.tsx  ← "use client" — status badge, publish errors, publish/archive buttons
+        NewsPreview.tsx      ← server component — EN + RU preview panels
       news/
-        page.tsx      ← News list (getAllNewsPosts, status badges, Edit links)
+        page.tsx      ← News list (status badges, emerald tint for published, opacity for archived)
         new/page.tsx  ← Create draft shell (renders NewsForm)
-        [id]/page.tsx ← Edit draft shell (loads post by id, passes to NewsForm)
+        [id]/page.tsx ← Edit page — grid layout: NewsForm + NewsStatusPanel + NewsPreview
       events/page.tsx ← Events admin placeholder
       calendar/page.tsx ← Calendar Visual Posts admin placeholder
   api/auth/[...nextauth]/ ← NextAuth handler
@@ -163,7 +165,8 @@ Group pages live:
 | Timeline (step) required | Working — `required` on input + server-side throw if empty |
 | RU content fields | Present in the form — editable but not rendered on public site yet |
 | Content Admin shell (`/admin/content`) | Working — sidebar nav, dashboard, 3 placeholder sections (news/events/calendar) |
-| News admin (`/admin/content/news`) | Working — list, create draft, edit draft; validation errors/warnings; saved banner |
+| News admin — draft (`/admin/content/news`) | Working — list, create draft, edit draft; validation errors/warnings; saved banner |
+| News admin — publish/archive | Working — publish gate (validateNewsPublish + date auto-fill), archive; NewsStatusPanel + NewsPreview on edit page |
 
 ---
 
@@ -213,19 +216,19 @@ Group pages live:
 
 ## Current Next Step
 
-**Phase 4A-4a News admin draft workflow (2026-05-12). Not committed.**
+**Phase 4A-4a + 4A-4b News admin complete (2026-05-12). Not committed.**
 
-`/admin/content/news` — list page reads all news posts (status badges, RU live indicator, Edit links, empty state). `/admin/content/news/new` — create draft form. `/admin/content/news/[id]` — edit draft form. Single `saveNewsDraftAction` handles both create and update via `_id` hidden field. Validation errors shown in red box at top. Warnings in amber box. Draft saved banner (auto-hides after 3s). Form fields: slug, category, EN content (title/summary/body), EN SEO, source, dates, RU content (title/summary/body), RU SEO, flags (ru_published/featured_homepage/featured_digest/noindex), tags_json. No publish button. No archive. No image upload. Build: 83 pages, 0 errors. Verify script: 100/100. DB: news=0, events=0, calendar=0.
+Full News admin workflow at `/admin/content/news`. Phases 4A-4a and 4A-4b complete in one session.
 
-Note: `related_guide_slug`, `related_service_slug`, `related_tool_slug` are not in the form — the current `NewsInput` type and writer do not expose them. These will be added when the writer is extended.
+**4A-4a (draft workflow):** list page (status badges, emerald tint for published, opacity for archived), create draft form, edit draft form. `saveNewsDraftAction` handles both create and update via `_id` hidden field. Validation errors/warnings inline. Saved banner auto-hides after 3s. QA: 86/86.
+
+**4A-4b (publish/archive gates):** `publishNews(id)` writer — RU gate, date auto-fill, `validateNewsPublish`, sets status=published. `archiveNews(id)` writer — sets status=archived (permanent). `publishNewsAction` + `archiveNewsAction` server actions. `NewsStatusPanel.tsx` — "use client", status badge, pre-computed publish errors, publish/archive button forms with `useActionState`. `NewsPreview.tsx` — server component, EN+RU preview. Edit page: grid layout (`xl:grid-cols-[1fr_320px]`), form + side panels. List page: emerald tint for published, opacity-55 for archived. QA: 60/60. Build: 83 pages, 0 errors.
 
 **Phase 4A-3 Unified Admin Shell committed (2026-05-12, 6ff1154). Not deployed.**
 
-`/admin/content` protected by proxy.ts (2 new matcher lines). Content admin layout nests inside existing admin layout's `<main>`. Sidebar nav: 4 active sections + 7 planned (with "planned" badge). Dashboard: status cards for all content types. 3 placeholder section pages (news, events, calendar). Build: 82 pages, 0 errors.
+**Phase 4A-2 (committed 2026-05-12, fdbc4a9):** Validation layer + admin writer functions for news/events/calendar.
 
-**Phase 4A-2 (committed 2026-05-12, fdbc4a9):** Validation layer + admin writer functions for news/events/calendar. `lib/admin-validation/news-events-calendar.ts` + `lib/db/news-events-calendar-admin.ts` (6 writers: create/update for each type). `scripts/verify-news-events-calendar-admin.ts` (SAVEPOINT tests). `lib/db/connection.ts` safety fix: `sqliteForVerificationOnly` export.
-
-**Next:** Commit Phase 4A-4a after approval. Then Phase 4A-4b — Events admin draft workflow at `/admin/content/events`. Or: insert first content rows via script to smoke-test list + detail pages end-to-end.
+**Next:** Approve + commit Phase 4A-4a+4b. Then Phase 4A-4c — Events admin draft workflow at `/admin/content/events`.
 
 ---
 

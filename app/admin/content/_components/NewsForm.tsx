@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { saveNewsDraftAction, type NewsActionState } from "../actions/news";
 import type { NewsPost } from "@/lib/db/schema";
 
@@ -38,6 +38,17 @@ const sectionCls =
 
 const cardCls = "bg-white rounded-2xl border border-gray-100 p-6 space-y-4";
 
+function toSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 80);
+}
+
 function CheckboxField({
   name,
   label,
@@ -72,12 +83,32 @@ export default function NewsForm({ defaultValues: dv, savedTs }: Props) {
   const [state, formAction] = useActionState(saveNewsDraftAction, INITIAL_STATE);
   const [showSaved, setShowSaved] = useState(false);
 
+  // Auto-fill state for slug, SEO title, meta description
+  const [slugVal, setSlugVal] = useState(dv?.slug ?? "");
+  const [seoTitleVal, setSeoTitleVal] = useState(dv?.enSeoTitle ?? "");
+  const [metaDescVal, setMetaDescVal] = useState(dv?.enMetaDescription ?? "");
+
+  // Track manual edits — if field already has content, it's "edited"
+  const slugEdited = useRef(!!dv?.slug);
+  const seoEdited = useRef(!!dv?.enSeoTitle);
+  const metaEdited = useRef(!!dv?.enMetaDescription);
+
   useEffect(() => {
     if (!savedTs) return;
     setShowSaved(true);
     const t = setTimeout(() => setShowSaved(false), 3000);
     return () => clearTimeout(t);
   }, [savedTs]);
+
+  function handleTitleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const title = e.target.value;
+    if (!slugEdited.current) setSlugVal(toSlug(title));
+    if (!seoEdited.current) setSeoTitleVal(title.slice(0, 60));
+  }
+
+  function handleSummaryChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    if (!metaEdited.current) setMetaDescVal(e.target.value.slice(0, 160));
+  }
 
   return (
     <div className="space-y-4">
@@ -124,13 +155,20 @@ export default function NewsForm({ defaultValues: dv, savedTs }: Props) {
               <div>
                 <label htmlFor="slug" className={labelCls}>
                   Slug *
+                  <span className="ml-1 text-gray-400 font-normal normal-case tracking-normal">
+                    (auto-fills from title when empty)
+                  </span>
                 </label>
                 <input
                   id="slug"
                   name="slug"
                   type="text"
                   required
-                  defaultValue={dv?.slug ?? ""}
+                  value={slugVal}
+                  onChange={(e) => {
+                    slugEdited.current = true;
+                    setSlugVal(e.target.value);
+                  }}
                   className={inputCls}
                   placeholder="golden-visa-rule-change-2026"
                 />
@@ -170,6 +208,7 @@ export default function NewsForm({ defaultValues: dv, savedTs }: Props) {
                 type="text"
                 required
                 defaultValue={dv?.enTitle ?? ""}
+                onChange={handleTitleChange}
                 className={inputCls}
                 placeholder="UAE Announces New Visa Rule for Remote Workers"
               />
@@ -183,6 +222,7 @@ export default function NewsForm({ defaultValues: dv, savedTs }: Props) {
                 name="en_summary"
                 rows={2}
                 defaultValue={dv?.enSummary ?? ""}
+                onChange={handleSummaryChange}
                 className={inputCls}
                 placeholder="1-2 sentences. Used as meta description on publish."
               />
@@ -210,12 +250,19 @@ export default function NewsForm({ defaultValues: dv, savedTs }: Props) {
             <div>
               <label htmlFor="en_seo_title" className={labelCls}>
                 SEO title (EN)
+                <span className="ml-1 text-gray-400 font-normal normal-case tracking-normal">
+                  (auto-fills from title when empty)
+                </span>
               </label>
               <input
                 id="en_seo_title"
                 name="en_seo_title"
                 type="text"
-                defaultValue={dv?.enSeoTitle ?? ""}
+                value={seoTitleVal}
+                onChange={(e) => {
+                  seoEdited.current = true;
+                  setSeoTitleVal(e.target.value);
+                }}
                 className={inputCls}
                 placeholder="Under 60 characters. No em-dashes."
               />
@@ -223,12 +270,19 @@ export default function NewsForm({ defaultValues: dv, savedTs }: Props) {
             <div>
               <label htmlFor="en_meta_description" className={labelCls}>
                 Meta description (EN)
+                <span className="ml-1 text-gray-400 font-normal normal-case tracking-normal">
+                  (auto-fills from summary when empty)
+                </span>
               </label>
               <textarea
                 id="en_meta_description"
                 name="en_meta_description"
                 rows={2}
-                defaultValue={dv?.enMetaDescription ?? ""}
+                value={metaDescVal}
+                onChange={(e) => {
+                  metaEdited.current = true;
+                  setMetaDescVal(e.target.value);
+                }}
                 className={inputCls}
                 placeholder="Under 160 characters."
               />
@@ -243,7 +297,7 @@ export default function NewsForm({ defaultValues: dv, savedTs }: Props) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="source_url" className={labelCls}>
-                  Source URL
+                  Source URL <span className="text-red-400">(required to publish)</span>
                 </label>
                 <input
                   id="source_url"
@@ -430,8 +484,12 @@ export default function NewsForm({ defaultValues: dv, savedTs }: Props) {
           </div>
         </div>
 
-        {/* ── Actions ───────────────────────────────────────────────── */}
-        <div className="pt-2">
+        {/* ── Draft guidance + Actions ───────────────────────────────── */}
+        <div className="space-y-3 pt-2">
+          <div className="rounded-xl bg-gray-50 border border-gray-200 px-4 py-3 text-xs text-gray-500">
+            <span className="font-medium text-gray-700">Draft</span> saves freely with title and slug only.{" "}
+            <span className="font-medium text-gray-700">Publish</span> requires source URL, SEO title, meta description, and 150+ word body.
+          </div>
           <button
             type="submit"
             className="text-sm font-semibold bg-gray-900 text-white px-5 py-2.5 rounded-xl hover:bg-gray-700 transition-colors"

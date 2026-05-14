@@ -64,9 +64,13 @@ const FULL_BODY =
 
 // ── Baseline ──────────────────────────────────────────────────────────────────
 
+const baselineNews   = countTable("news_posts");
+const baselineEvents = countTable("events");
+const baselineCals   = countTable("calendar_pages");
+
 section("Baseline counts");
-assert(countTable("news_posts") === 0, "news_posts starts at 0");
-assert(getAllNewsPosts().length === 0, "getAllNewsPosts() returns []");
+assert(countTable("news_posts") === baselineNews, `news_posts baseline = ${baselineNews}`);
+assert(getAllNewsPosts().length === baselineNews, "getAllNewsPosts() returns baseline rows");
 
 // ── Publish blocked: minimal draft ────────────────────────────────────────────
 
@@ -304,8 +308,8 @@ assert(
 
 section("DB counts mid-test");
 assert(
-  countTable("news_posts") === createdIds.length,
-  `news_posts = ${createdIds.length} (all created rows present)`,
+  countTable("news_posts") === baselineNews + createdIds.length,
+  `news_posts = baseline+${createdIds.length} (all created rows present)`,
 );
 
 // ── Code inspection ────────────────────────────────────────────────────────────
@@ -425,7 +429,7 @@ for (const id of createdIds) {
   raw.prepare("DELETE FROM news_posts WHERE id = ?").run(id);
 }
 
-assert(countTable("news_posts") === 0, "news_posts = 0 after cleanup");
+assert(countTable("news_posts") === baselineNews, "news_posts = baseline after cleanup");
 
 // ── Final DB integrity ─────────────────────────────────────────────────────────
 
@@ -437,11 +441,11 @@ const events = countTable("events");
 const cals   = countTable("calendar_pages");
 const news   = countTable("news_posts");
 
-assert(guides === 17,  `guides = 17 (got ${guides})`);
-assert(steps  === 115, `steps = 115 (got ${steps})`);
-assert(news   === 0,   `news_posts = 0 (got ${news})`);
-assert(events === 0,   `events = 0 (got ${events})`);
-assert(cals   === 0,   `calendar_pages = 0 (got ${cals})`);
+assert(guides === 17,             `guides = 17 (got ${guides})`);
+assert(steps  === 115,            `steps = 115 (got ${steps})`);
+assert(news   === baselineNews,   `news_posts = ${baselineNews} (got ${news})`);
+assert(events === baselineEvents, `events = ${baselineEvents} (got ${events})`);
+assert(cals   === baselineCals,   `calendar_pages = ${baselineCals} (got ${cals})`);
 
 const integrity = (
   raw.prepare("PRAGMA integrity_check").get() as { integrity_check: string }

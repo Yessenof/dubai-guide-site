@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { saveCalendarDraftAction, type CalendarActionState } from "../actions/calendar";
 import type { CalendarPage } from "@/lib/db/schema";
 
@@ -12,12 +12,12 @@ type Props = {
 const INITIAL_STATE: CalendarActionState = { errors: [], warnings: [] };
 
 const CALENDAR_TYPES = [
-  { value: "monthly",        label: "Monthly" },
-  { value: "yearly",         label: "Yearly" },
-  { value: "holidays",       label: "Holidays" },
+  { value: "monthly",         label: "Monthly" },
+  { value: "yearly",          label: "Yearly" },
+  { value: "holidays",        label: "Holidays" },
   { value: "important_dates", label: "Important Dates" },
-  { value: "ramadan",        label: "Ramadan" },
-  { value: "school",         label: "School" },
+  { value: "ramadan",         label: "Ramadan" },
+  { value: "school",          label: "School" },
 ];
 
 const inputCls =
@@ -27,6 +27,17 @@ const inputCls =
 const labelCls = "block text-xs text-gray-500 mb-1.5";
 const sectionCls = "text-xs font-medium uppercase tracking-widest text-gray-400 mb-4";
 const cardCls = "bg-white rounded-2xl border border-gray-100 p-6 space-y-4";
+
+function toSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 80);
+}
 
 function CheckboxField({
   name,
@@ -62,12 +73,31 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
   const [state, formAction] = useActionState(saveCalendarDraftAction, INITIAL_STATE);
   const [showSaved, setShowSaved] = useState(false);
 
+  // Auto-fill state
+  const [slugVal, setSlugVal] = useState(dv?.slug ?? "");
+  const [seoTitleVal, setSeoTitleVal] = useState(dv?.enSeoTitle ?? "");
+  const [metaDescVal, setMetaDescVal] = useState(dv?.enMetaDescription ?? "");
+
+  const slugEdited = useRef(!!dv?.slug);
+  const seoEdited = useRef(!!dv?.enSeoTitle);
+  const metaEdited = useRef(!!dv?.enMetaDescription);
+
   useEffect(() => {
     if (!savedTs) return;
     setShowSaved(true);
     const t = setTimeout(() => setShowSaved(false), 3000);
     return () => clearTimeout(t);
   }, [savedTs]);
+
+  function handleTitleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const title = e.target.value;
+    if (!slugEdited.current) setSlugVal(toSlug(title));
+    if (!seoEdited.current) setSeoTitleVal(title.slice(0, 60));
+  }
+
+  function handleSummaryChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    if (!metaEdited.current) setMetaDescVal(e.target.value.slice(0, 160));
+  }
 
   return (
     <div className="space-y-4">
@@ -114,13 +144,20 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
               <div>
                 <label htmlFor="slug" className={labelCls}>
                   Slug *
+                  <span className="ml-1 text-gray-400 font-normal normal-case tracking-normal">
+                    (auto-fills from title when empty)
+                  </span>
                 </label>
                 <input
                   id="slug"
                   name="slug"
                   type="text"
                   required
-                  defaultValue={dv?.slug ?? ""}
+                  value={slugVal}
+                  onChange={(e) => {
+                    slugEdited.current = true;
+                    setSlugVal(e.target.value);
+                  }}
                   className={inputCls}
                   placeholder="uae-public-holidays-2026"
                 />
@@ -159,7 +196,7 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
               </div>
               <div>
                 <label htmlFor="month" className={labelCls}>
-                  Month (1–12, leave blank for non-monthly)
+                  Month (1–12, leave blank for yearly)
                 </label>
                 <input
                   id="month"
@@ -182,7 +219,7 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
           <div className={cardCls}>
             <div>
               <label htmlFor="official_source_url" className={labelCls}>
-                Official source URL (required before publishing)
+                Official source URL <span className="text-red-400">(required before publishing)</span>
               </label>
               <input
                 id="official_source_url"
@@ -195,7 +232,7 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
             </div>
             <div>
               <label htmlFor="last_verified_date" className={labelCls}>
-                Last verified date (YYYY-MM-DD, required before publishing)
+                Last verified date <span className="text-red-400">(required before publishing)</span>
               </label>
               <input
                 id="last_verified_date"
@@ -214,7 +251,7 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
           <div className={cardCls}>
             <div>
               <label htmlFor="image_path" className={labelCls}>
-                Image path (required before publishing)
+                Image path <span className="text-red-400">(required before publishing)</span>
               </label>
               <input
                 id="image_path"
@@ -227,7 +264,7 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
             </div>
             <div>
               <label htmlFor="image_alt" className={labelCls}>
-                Image alt (EN, required if image_path is set)
+                Image alt (EN) <span className="text-gray-400">(required if image path is set)</span>
               </label>
               <input
                 id="image_alt"
@@ -240,7 +277,7 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
             </div>
             <div>
               <label htmlFor="ru_image_alt" className={labelCls}>
-                Image alt (RU, required if image_path set and ru_published = 1)
+                Image alt (RU) <span className="text-gray-400">(required if image path set and RU published)</span>
               </label>
               <input
                 id="ru_image_alt"
@@ -259,7 +296,7 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
           <div className={cardCls}>
             <div>
               <label htmlFor="dates_json" className={labelCls}>
-                dates_json (JSON array, required before publishing)
+                dates_json <span className="text-red-400">(required before publishing — at least 1 entry)</span>
               </label>
               <textarea
                 id="dates_json"
@@ -299,6 +336,7 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
                 type="text"
                 required
                 defaultValue={dv?.enTitle ?? ""}
+                onChange={handleTitleChange}
                 className={inputCls}
                 placeholder="UAE Public Holidays 2026"
               />
@@ -312,6 +350,7 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
                 name="en_summary"
                 rows={2}
                 defaultValue={dv?.enSummary ?? ""}
+                onChange={handleSummaryChange}
                 className={inputCls}
                 placeholder="1-2 sentences. Used as meta description on publish."
               />
@@ -331,9 +370,8 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
             </div>
             <div>
               <label htmlFor="en_notes" className={labelCls}>
-                Notes (EN)
-                {" "}
-                <span className="text-gray-400">(Islamic dates disclaimer goes here when has_islamic_dates = 1)</span>
+                Notes (EN){" "}
+                <span className="text-gray-400">(Islamic dates disclaimer goes here when has_islamic_dates is on)</span>
               </label>
               <textarea
                 id="en_notes"
@@ -341,7 +379,7 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
                 rows={3}
                 defaultValue={dv?.enNotes ?? ""}
                 className={inputCls}
-                placeholder='Islamic holiday dates depend on official UAE moon-sighting announcements and are subject to moon sighting. Dates may change.'
+                placeholder="Islamic holiday dates are subject to moon sighting. Dates may change."
               />
             </div>
           </div>
@@ -354,12 +392,19 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
             <div>
               <label htmlFor="en_seo_title" className={labelCls}>
                 SEO title (EN)
+                <span className="ml-1 text-gray-400 font-normal normal-case tracking-normal">
+                  (auto-fills from title when empty)
+                </span>
               </label>
               <input
                 id="en_seo_title"
                 name="en_seo_title"
                 type="text"
-                defaultValue={dv?.enSeoTitle ?? ""}
+                value={seoTitleVal}
+                onChange={(e) => {
+                  seoEdited.current = true;
+                  setSeoTitleVal(e.target.value);
+                }}
                 className={inputCls}
                 placeholder="Under 60 characters."
               />
@@ -367,12 +412,19 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
             <div>
               <label htmlFor="en_meta_description" className={labelCls}>
                 Meta description (EN)
+                <span className="ml-1 text-gray-400 font-normal normal-case tracking-normal">
+                  (auto-fills from summary when empty)
+                </span>
               </label>
               <textarea
                 id="en_meta_description"
                 name="en_meta_description"
                 rows={2}
-                defaultValue={dv?.enMetaDescription ?? ""}
+                value={metaDescVal}
+                onChange={(e) => {
+                  metaEdited.current = true;
+                  setMetaDescVal(e.target.value);
+                }}
                 className={inputCls}
                 placeholder="Under 160 characters."
               />
@@ -385,52 +437,20 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
           <p className={sectionCls}>Russian content</p>
           <div className={cardCls}>
             <div>
-              <label htmlFor="ru_title" className={labelCls}>
-                Title (RU)
-              </label>
-              <input
-                id="ru_title"
-                name="ru_title"
-                type="text"
-                defaultValue={dv?.ruTitle ?? ""}
-                className={inputCls}
-              />
+              <label htmlFor="ru_title" className={labelCls}>Title (RU)</label>
+              <input id="ru_title" name="ru_title" type="text" defaultValue={dv?.ruTitle ?? ""} className={inputCls} />
             </div>
             <div>
-              <label htmlFor="ru_summary" className={labelCls}>
-                Summary (RU)
-              </label>
-              <textarea
-                id="ru_summary"
-                name="ru_summary"
-                rows={2}
-                defaultValue={dv?.ruSummary ?? ""}
-                className={inputCls}
-              />
+              <label htmlFor="ru_summary" className={labelCls}>Summary (RU)</label>
+              <textarea id="ru_summary" name="ru_summary" rows={2} defaultValue={dv?.ruSummary ?? ""} className={inputCls} />
             </div>
             <div>
-              <label htmlFor="ru_body" className={labelCls}>
-                Body (RU)
-              </label>
-              <textarea
-                id="ru_body"
-                name="ru_body"
-                rows={10}
-                defaultValue={dv?.ruBody ?? ""}
-                className={inputCls}
-              />
+              <label htmlFor="ru_body" className={labelCls}>Body (RU)</label>
+              <textarea id="ru_body" name="ru_body" rows={10} defaultValue={dv?.ruBody ?? ""} className={inputCls} />
             </div>
             <div>
-              <label htmlFor="ru_notes" className={labelCls}>
-                Notes (RU)
-              </label>
-              <textarea
-                id="ru_notes"
-                name="ru_notes"
-                rows={3}
-                defaultValue={dv?.ruNotes ?? ""}
-                className={inputCls}
-              />
+              <label htmlFor="ru_notes" className={labelCls}>Notes (RU)</label>
+              <textarea id="ru_notes" name="ru_notes" rows={3} defaultValue={dv?.ruNotes ?? ""} className={inputCls} />
             </div>
           </div>
         </div>
@@ -440,28 +460,12 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
           <p className={sectionCls}>Russian SEO</p>
           <div className={cardCls}>
             <div>
-              <label htmlFor="ru_seo_title" className={labelCls}>
-                SEO title (RU)
-              </label>
-              <input
-                id="ru_seo_title"
-                name="ru_seo_title"
-                type="text"
-                defaultValue={dv?.ruSeoTitle ?? ""}
-                className={inputCls}
-              />
+              <label htmlFor="ru_seo_title" className={labelCls}>SEO title (RU)</label>
+              <input id="ru_seo_title" name="ru_seo_title" type="text" defaultValue={dv?.ruSeoTitle ?? ""} className={inputCls} />
             </div>
             <div>
-              <label htmlFor="ru_meta_description" className={labelCls}>
-                Meta description (RU)
-              </label>
-              <textarea
-                id="ru_meta_description"
-                name="ru_meta_description"
-                rows={2}
-                defaultValue={dv?.ruMetaDescription ?? ""}
-                className={inputCls}
-              />
+              <label htmlFor="ru_meta_description" className={labelCls}>Meta description (RU)</label>
+              <textarea id="ru_meta_description" name="ru_meta_description" rows={2} defaultValue={dv?.ruMetaDescription ?? ""} className={inputCls} />
             </div>
           </div>
         </div>
@@ -490,8 +494,12 @@ export default function CalendarForm({ defaultValues: dv, savedTs }: Props) {
           </div>
         </div>
 
-        {/* ── Actions ───────────────────────────────────────────────── */}
-        <div className="pt-2">
+        {/* ── Draft guidance + Actions ───────────────────────────────── */}
+        <div className="space-y-3 pt-2">
+          <div className="rounded-xl bg-gray-50 border border-gray-200 px-4 py-3 text-xs text-gray-500">
+            <span className="font-medium text-gray-700">Draft</span> saves freely with title and slug only.{" "}
+            <span className="font-medium text-gray-700">Publish</span> requires source URL, verified date, image path, image alt, SEO fields, and at least 1 date entry.
+          </div>
           <button
             type="submit"
             className="text-sm font-semibold bg-gray-900 text-white px-5 py-2.5 rounded-xl hover:bg-gray-700 transition-colors"

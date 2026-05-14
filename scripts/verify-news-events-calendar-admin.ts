@@ -97,11 +97,15 @@ assert(tableNames.has("calendar_pages"), "calendar_pages table exists");
 
 console.log("\n── Baseline row counts ─────────────────────────────────────────");
 
+const baselineNews   = countOuter("news_posts");
+const baselineEvents = countOuter("events");
+const baselineCals   = countOuter("calendar_pages");
+
 assert(countOuter("guides")         === 17,  "guides = 17",        `got ${countOuter("guides")}`);
 assert(countOuter("steps")          === 115, "steps = 115",        `got ${countOuter("steps")}`);
-assert(countOuter("news_posts")     === 0,   "news_posts = 0",     `got ${countOuter("news_posts")}`);
-assert(countOuter("events")         === 0,   "events = 0",         `got ${countOuter("events")}`);
-assert(countOuter("calendar_pages") === 0,   "calendar_pages = 0", `got ${countOuter("calendar_pages")}`);
+assert(countOuter("news_posts")     === baselineNews,   `news_posts = ${baselineNews}`,     `got ${countOuter("news_posts")}`);
+assert(countOuter("events")         === baselineEvents, `events = ${baselineEvents}`,         `got ${countOuter("events")}`);
+assert(countOuter("calendar_pages") === baselineCals,   `calendar_pages = ${baselineCals}`, `got ${countOuter("calendar_pages")}`);
 
 // ─── 3. Admin SELECT queries ──────────────────────────────────────────────────
 
@@ -111,7 +115,7 @@ try {
   const rows = drizzleDb
     .prepare("SELECT id, slug, status, updated_at FROM news_posts ORDER BY updated_at DESC")
     .all();
-  assert(rows.length === 0, "getAllNewsPosts() returns [] with empty table");
+  assert(rows.length === baselineNews, `getAllNewsPosts() returns ${baselineNews} baseline row(s)`);
 } catch (e) {
   fail("getAllNewsPosts() threw", String(e));
 }
@@ -129,7 +133,7 @@ try {
   const rows = drizzleDb
     .prepare("SELECT id, slug, status, event_date_start FROM events ORDER BY event_date_start ASC")
     .all();
-  assert(rows.length === 0, "getAllEvents() returns [] with empty table");
+  assert(rows.length === baselineEvents, `getAllEvents() returns ${baselineEvents} baseline row(s)`);
 } catch (e) {
   fail("getAllEvents() threw", String(e));
 }
@@ -145,7 +149,7 @@ try {
   const rows = drizzleDb
     .prepare("SELECT id, slug, status, year, month FROM calendar_pages ORDER BY year DESC, month DESC")
     .all();
-  assert(rows.length === 0, "getAllCalendarPages() returns [] with empty table");
+  assert(rows.length === baselineCals, `getAllCalendarPages() returns ${baselineCals} baseline row(s)`);
 } catch (e) {
   fail("getAllCalendarPages() threw", String(e));
 }
@@ -172,7 +176,7 @@ try {
     )
     .run();
   const after = countInner("news_posts");
-  assert(after === 1, "news_posts raw INSERT succeeded inside SAVEPOINT (count = 1)", `got ${after}`);
+  assert(after === baselineNews + 1, "news_posts raw INSERT succeeded inside SAVEPOINT (count = baseline+1)", `got ${after}`);
   const row = drizzleDb
     .prepare("SELECT slug, status FROM news_posts WHERE id = 'adm-news-raw-1'")
     .get() as { slug: string; status: string } | undefined;
@@ -182,7 +186,7 @@ try {
   drizzleDb.prepare("ROLLBACK TO SAVEPOINT test_news_raw").run();
   drizzleDb.prepare("RELEASE SAVEPOINT test_news_raw").run();
 }
-assert(countOuter("news_posts") === 0, "news_posts = 0 after raw SAVEPOINT rollback");
+assert(countOuter("news_posts") === baselineNews, "news_posts = baseline after raw SAVEPOINT rollback");
 
 console.log("\n── SAVEPOINT raw write: events ─────────────────────────────────");
 
@@ -195,7 +199,7 @@ try {
     )
     .run();
   const after = countInner("events");
-  assert(after === 1, "events raw INSERT succeeded inside SAVEPOINT (count = 1)", `got ${after}`);
+  assert(after === baselineEvents + 1, "events raw INSERT succeeded inside SAVEPOINT (count = baseline+1)", `got ${after}`);
   const row = drizzleDb
     .prepare("SELECT slug, schema_eligible FROM events WHERE id = 'adm-event-raw-1'")
     .get() as { slug: string; schema_eligible: number } | undefined;
@@ -205,7 +209,7 @@ try {
   drizzleDb.prepare("ROLLBACK TO SAVEPOINT test_events_raw").run();
   drizzleDb.prepare("RELEASE SAVEPOINT test_events_raw").run();
 }
-assert(countOuter("events") === 0, "events = 0 after raw SAVEPOINT rollback");
+assert(countOuter("events") === baselineEvents, "events = baseline after raw SAVEPOINT rollback");
 
 console.log("\n── SAVEPOINT raw write: calendar_pages ─────────────────────────");
 
@@ -218,7 +222,7 @@ try {
     )
     .run();
   const after = countInner("calendar_pages");
-  assert(after === 1, "calendar_pages raw INSERT succeeded inside SAVEPOINT (count = 1)", `got ${after}`);
+  assert(after === baselineCals + 1, "calendar_pages raw INSERT succeeded inside SAVEPOINT (count = baseline+1)", `got ${after}`);
   const row = drizzleDb
     .prepare("SELECT slug, has_islamic_dates FROM calendar_pages WHERE id = 'adm-cal-raw-1'")
     .get() as { slug: string; has_islamic_dates: number } | undefined;
@@ -228,7 +232,7 @@ try {
   drizzleDb.prepare("ROLLBACK TO SAVEPOINT test_cal_raw").run();
   drizzleDb.prepare("RELEASE SAVEPOINT test_cal_raw").run();
 }
-assert(countOuter("calendar_pages") === 0, "calendar_pages = 0 after raw SAVEPOINT rollback");
+assert(countOuter("calendar_pages") === baselineCals, "calendar_pages = baseline after raw SAVEPOINT rollback");
 
 // ─── 5. Writer SAVEPOINT tests — createNewsDraft ──────────────────────────────
 
@@ -244,7 +248,7 @@ try {
   assert(typeof result.id === "string" && result.id.length > 0, "createNewsDraft returns a non-empty id");
 
   const after = countInner("news_posts");
-  assert(after === 1, "createNewsDraft: 1 row exists inside SAVEPOINT", `got ${after}`);
+  assert(after === baselineNews + 1, "createNewsDraft: baseline+1 rows exist inside SAVEPOINT", `got ${after}`);
 
   const row = drizzleDb
     .prepare("SELECT slug, status, ru_published FROM news_posts WHERE id = ?")
@@ -256,7 +260,7 @@ try {
   drizzleDb.prepare("ROLLBACK TO SAVEPOINT test_create_news").run();
   drizzleDb.prepare("RELEASE SAVEPOINT test_create_news").run();
 }
-assert(countOuter("news_posts") === 0, "news_posts = 0 after createNewsDraft SAVEPOINT rollback");
+assert(countOuter("news_posts") === baselineNews, "news_posts = baseline after createNewsDraft SAVEPOINT rollback");
 
 // ─── 6. Writer SAVEPOINT tests — updateNewsDraft ──────────────────────────────
 
@@ -284,12 +288,12 @@ try {
   assert(row?.en_summary === "Updated summary sentence.", "updateNewsDraft: en_summary updated correctly");
   assert(row?.status === "draft",                      "updateNewsDraft: status still 'draft' after update");
 
-  assert(countInner("news_posts") === 1, "updateNewsDraft: still 1 row inside SAVEPOINT");
+  assert(countInner("news_posts") === baselineNews + 1, "updateNewsDraft: still baseline+1 rows inside SAVEPOINT");
 } finally {
   drizzleDb.prepare("ROLLBACK TO SAVEPOINT test_update_news").run();
   drizzleDb.prepare("RELEASE SAVEPOINT test_update_news").run();
 }
-assert(countOuter("news_posts") === 0, "news_posts = 0 after updateNewsDraft SAVEPOINT rollback");
+assert(countOuter("news_posts") === baselineNews, "news_posts = baseline after updateNewsDraft SAVEPOINT rollback");
 
 // ─── 7. Writer SAVEPOINT tests — createEventDraft ────────────────────────────
 
@@ -305,7 +309,7 @@ try {
   assert(typeof result.id === "string" && result.id.length > 0, "createEventDraft returns a non-empty id");
 
   const after = countInner("events");
-  assert(after === 1, "createEventDraft: 1 row exists inside SAVEPOINT", `got ${after}`);
+  assert(after === baselineEvents + 1, "createEventDraft: baseline+1 rows exist inside SAVEPOINT", `got ${after}`);
 
   const row = drizzleDb
     .prepare("SELECT slug, status, schema_eligible FROM events WHERE id = ?")
@@ -317,7 +321,7 @@ try {
   drizzleDb.prepare("ROLLBACK TO SAVEPOINT test_create_event").run();
   drizzleDb.prepare("RELEASE SAVEPOINT test_create_event").run();
 }
-assert(countOuter("events") === 0, "events = 0 after createEventDraft SAVEPOINT rollback");
+assert(countOuter("events") === baselineEvents, "events = baseline after createEventDraft SAVEPOINT rollback");
 
 // ─── 8. Writer SAVEPOINT tests — updateEventDraft ────────────────────────────
 
@@ -344,12 +348,12 @@ try {
   assert(row?.en_summary === "Revised one-sentence summary.", "updateEventDraft: en_summary updated correctly");
   assert(row?.status === "draft",                      "updateEventDraft: status still 'draft' after update");
 
-  assert(countInner("events") === 1, "updateEventDraft: still 1 row inside SAVEPOINT");
+  assert(countInner("events") === baselineEvents + 1, "updateEventDraft: still baseline+1 rows inside SAVEPOINT");
 } finally {
   drizzleDb.prepare("ROLLBACK TO SAVEPOINT test_update_event").run();
   drizzleDb.prepare("RELEASE SAVEPOINT test_update_event").run();
 }
-assert(countOuter("events") === 0, "events = 0 after updateEventDraft SAVEPOINT rollback");
+assert(countOuter("events") === baselineEvents, "events = baseline after updateEventDraft SAVEPOINT rollback");
 
 // ─── 9. Writer SAVEPOINT tests — createCalendarDraft ─────────────────────────
 
@@ -365,7 +369,7 @@ try {
   assert(typeof result.id === "string" && result.id.length > 0, "createCalendarDraft returns a non-empty id");
 
   const after = countInner("calendar_pages");
-  assert(after === 1, "createCalendarDraft: 1 row exists inside SAVEPOINT", `got ${after}`);
+  assert(after === baselineCals + 1, "createCalendarDraft: baseline+1 rows exist inside SAVEPOINT", `got ${after}`);
 
   const row = drizzleDb
     .prepare("SELECT slug, status, has_islamic_dates FROM calendar_pages WHERE id = ?")
@@ -377,7 +381,7 @@ try {
   drizzleDb.prepare("ROLLBACK TO SAVEPOINT test_create_cal").run();
   drizzleDb.prepare("RELEASE SAVEPOINT test_create_cal").run();
 }
-assert(countOuter("calendar_pages") === 0, "calendar_pages = 0 after createCalendarDraft SAVEPOINT rollback");
+assert(countOuter("calendar_pages") === baselineCals, "calendar_pages = baseline after createCalendarDraft SAVEPOINT rollback");
 
 // ─── 10. Writer SAVEPOINT tests — updateCalendarDraft ────────────────────────
 
@@ -404,12 +408,12 @@ try {
   assert(row?.en_summary === "Concise one-sentence summary.", "updateCalendarDraft: en_summary updated correctly");
   assert(row?.status === "draft",                      "updateCalendarDraft: status still 'draft' after update");
 
-  assert(countInner("calendar_pages") === 1, "updateCalendarDraft: still 1 row inside SAVEPOINT");
+  assert(countInner("calendar_pages") === baselineCals + 1, "updateCalendarDraft: still baseline+1 rows inside SAVEPOINT");
 } finally {
   drizzleDb.prepare("ROLLBACK TO SAVEPOINT test_update_cal").run();
   drizzleDb.prepare("RELEASE SAVEPOINT test_update_cal").run();
 }
-assert(countOuter("calendar_pages") === 0, "calendar_pages = 0 after updateCalendarDraft SAVEPOINT rollback");
+assert(countOuter("calendar_pages") === baselineCals, "calendar_pages = baseline after updateCalendarDraft SAVEPOINT rollback");
 
 // ─── 11. ru_published gate — rejected without required RU fields ──────────────
 
@@ -426,7 +430,7 @@ console.log("\n── ru_published gate: writer rejection ───────�
   });
   assert(!r.ok && r.errors.some((e) => e.includes("ru_published")),
     "createNewsDraft: ru_published=1 with empty ru_title+ru_body rejected");
-  assert(countOuter("news_posts") === 0, "news_posts = 0 after rejected createNewsDraft");
+  assert(countOuter("news_posts") === baselineNews, "news_posts = baseline after rejected createNewsDraft");
 }
 
 {
@@ -452,7 +456,7 @@ console.log("\n── ru_published gate: writer rejection ───────�
   });
   assert(!r.ok && r.errors.some((e) => e.includes("ru_published")),
     "createEventDraft: ru_published=1 with empty ru_title rejected");
-  assert(countOuter("events") === 0, "events = 0 after rejected createEventDraft");
+  assert(countOuter("events") === baselineEvents, "events = baseline after rejected createEventDraft");
 }
 
 {
@@ -466,7 +470,7 @@ console.log("\n── ru_published gate: writer rejection ───────�
   });
   assert(!r.ok && r.errors.some((e) => e.includes("ru_published")),
     "createCalendarDraft: ru_published=1 with ru_title but empty ru_body rejected");
-  assert(countOuter("calendar_pages") === 0, "calendar_pages = 0 after rejected createCalendarDraft");
+  assert(countOuter("calendar_pages") === baselineCals, "calendar_pages = baseline after rejected createCalendarDraft");
 }
 
 // ─── 12. Validation layer — news ─────────────────────────────────────────────
@@ -724,11 +728,11 @@ console.log("\n── Validation: validateCalendarPublish ───────�
 
 console.log("\n── Final counts and integrity ──────────────────────────────────");
 
-assert(countOuter("guides")         === 17,  "guides still = 17",          `got ${countOuter("guides")}`);
-assert(countOuter("steps")          === 115, "steps still = 115",          `got ${countOuter("steps")}`);
-assert(countOuter("news_posts")     === 0,   "news_posts = 0 (final)",     `got ${countOuter("news_posts")}`);
-assert(countOuter("events")         === 0,   "events = 0 (final)",         `got ${countOuter("events")}`);
-assert(countOuter("calendar_pages") === 0,   "calendar_pages = 0 (final)", `got ${countOuter("calendar_pages")}`);
+assert(countOuter("guides")         === 17,           "guides still = 17",                          `got ${countOuter("guides")}`);
+assert(countOuter("steps")          === 115,          "steps still = 115",                          `got ${countOuter("steps")}`);
+assert(countOuter("news_posts")     === baselineNews, `news_posts = ${baselineNews} (final)`,      `got ${countOuter("news_posts")}`);
+assert(countOuter("events")         === baselineEvents, `events = ${baselineEvents} (final)`,      `got ${countOuter("events")}`);
+assert(countOuter("calendar_pages") === baselineCals, `calendar_pages = ${baselineCals} (final)`,  `got ${countOuter("calendar_pages")}`);
 
 const integrity = (
   drizzleDb.prepare("PRAGMA integrity_check").get() as { integrity_check: string }

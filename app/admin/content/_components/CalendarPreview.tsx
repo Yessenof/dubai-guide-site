@@ -25,6 +25,12 @@ function colorDot(type: string | undefined): string {
   return "bg-gray-300";
 }
 
+function confidenceLabel(confidence: string | undefined): string | null {
+  if (!confidence || confidence === "confirmed") return null;
+  if (confidence === "expected") return "expected";
+  return "needs confirmation";
+}
+
 export default function CalendarPreview({ page }: { page: CalendarPage }) {
   const hasRuContent = page.ruTitle.trim() && page.ruBody.trim();
   const dates = parseDates(page.datesJson);
@@ -38,10 +44,25 @@ export default function CalendarPreview({ page }: { page: CalendarPage }) {
           EN Preview
         </span>
 
+        {/* Image indicator */}
+        {page.imagePath ? (
+          <div className="rounded-xl bg-gray-50 border border-gray-200 px-4 py-3">
+            <p className="text-xs text-gray-500 font-mono truncate">{page.imagePath}</p>
+            {page.imageAlt && (
+              <p className="text-xs text-gray-400 mt-0.5">alt: {page.imageAlt}</p>
+            )}
+          </div>
+        ) : (
+          <div className="rounded-xl border-2 border-dashed border-gray-200 px-4 py-5 text-center">
+            <p className="text-sm font-medium text-gray-400">No calendar image yet</p>
+            <p className="text-xs text-red-400 mt-0.5">Image path is required before publishing</p>
+          </div>
+        )}
+
         {page.hasIslamicDates === 1 && (
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-2.5">
             <p className="text-xs text-amber-700">
-              Islamic dates: ensure EN notes include &ldquo;subject to moon sighting&rdquo; disclaimer.
+              Islamic dates: EN notes must include &ldquo;subject to moon sighting&rdquo; disclaimer.
             </p>
           </div>
         )}
@@ -68,20 +89,25 @@ export default function CalendarPreview({ page }: { page: CalendarPage }) {
         {dates.length > 0 && (
           <div className="space-y-1.5 border-t border-gray-100 pt-3">
             <p className="text-xs text-gray-400 mb-2">{dates.length} date entries:</p>
-            {dates.slice(0, 6).map((d, i) => (
-              <div key={i} className="flex items-start gap-2">
-                <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${colorDot(d.type)}`} />
-                <span className="text-xs text-gray-600">
-                  <span className="font-medium">{d.date || "?"}</span>
-                  {d.label_en ? ` — ${d.label_en}` : ""}
-                  {d.confidence && d.confidence !== "confirmed" ? (
-                    <span className="ml-1 text-amber-600">({d.confidence.replace(/_/g, " ")})</span>
-                  ) : null}
-                </span>
-              </div>
-            ))}
+            {dates.slice(0, 6).map((d, i) => {
+              const conf = confidenceLabel(d.confidence);
+              return (
+                <div key={i} className="flex items-start gap-2">
+                  <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${colorDot(d.type)}`} />
+                  <span className="text-xs text-gray-600">
+                    <span className="font-medium">{d.date || "?"}</span>
+                    {d.label_en ? ` — ${d.label_en}` : ""}
+                    {conf ? (
+                      <span className="ml-1.5 text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
+                        {conf}
+                      </span>
+                    ) : null}
+                  </span>
+                </div>
+              );
+            })}
             {dates.length > 6 && (
-              <p className="text-xs text-gray-400">…and {dates.length - 6} more</p>
+              <p className="text-xs text-gray-400 pl-4">...and {dates.length - 6} more</p>
             )}
           </div>
         )}

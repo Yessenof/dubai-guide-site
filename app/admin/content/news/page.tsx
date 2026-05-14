@@ -64,24 +64,12 @@ export default function NewsAdminListPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">
-                  Title
-                </th>
-                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">
-                  Slug
-                </th>
-                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">
-                  Status
-                </th>
-                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">
-                  RU
-                </th>
-                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">
-                  Source
-                </th>
-                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">
-                  Updated
-                </th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Title</th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Status</th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">RU</th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Source</th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Published</th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Updated</th>
                 <th className="px-5 py-3" />
               </tr>
             </thead>
@@ -104,23 +92,30 @@ export default function NewsAdminListPage() {
                       )}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 font-mono text-xs text-gray-400">
-                    {post.slug}
-                  </td>
                   <td className="px-5 py-3.5">
                     <StatusBadge status={post.status} />
                   </td>
                   <td className="px-5 py-3.5">
                     {post.ruPublished ? (
-                      <span className="text-xs font-medium text-emerald-600">
-                        live
-                      </span>
+                      <span className="text-xs font-medium text-emerald-600">live</span>
                     ) : (
                       <span className="text-xs text-gray-300">—</span>
                     )}
                   </td>
-                  <td className="px-5 py-3.5 text-xs text-gray-400 capitalize">
-                    {post.sourceLabel}
+                  <td className="px-5 py-3.5">
+                    {post.sourceUrl ? (
+                      <span className="inline-flex items-center gap-1 text-xs text-emerald-700">
+                        <span className="text-emerald-500">✓</span>
+                        <span className="capitalize text-gray-500">{post.sourceLabel}</span>
+                      </span>
+                    ) : (
+                      <span className="text-xs text-red-400">No source</span>
+                    )}
+                  </td>
+                  <td className="px-5 py-3.5 text-xs text-gray-400">
+                    {post.datePublished || (
+                      <span className="text-gray-300">not set</span>
+                    )}
                   </td>
                   <td className="px-5 py-3.5 text-xs text-gray-400">
                     {post.updatedAt.slice(0, 10)}

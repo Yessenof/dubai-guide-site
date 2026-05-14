@@ -70,24 +70,25 @@ export default function CalendarAdminPage() {
             </Link>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-100">
-                  <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Title</th>
-                  <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Slug</th>
-                  <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Status</th>
-                  <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">RU</th>
-                  <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Type</th>
-                  <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Year</th>
-                  <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Dates</th>
-                  <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Verified</th>
-                  <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Updated</th>
-                  <th className="px-5 py-3" />
-                </tr>
-              </thead>
-              <tbody>
-                {pages.map((page) => (
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-100">
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Title</th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Status</th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">RU</th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Type</th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Year</th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Dates</th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Image</th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Verified</th>
+                <th className="text-left text-xs font-medium text-gray-400 px-5 py-3">Updated</th>
+                <th className="px-5 py-3" />
+              </tr>
+            </thead>
+            <tbody>
+              {pages.map((page) => {
+                const count = datesCount(page.datesJson);
+                return (
                   <tr
                     key={page.id}
                     className={`border-b border-gray-100 last:border-0 transition-colors ${
@@ -104,9 +105,6 @@ export default function CalendarAdminPage() {
                           <span className="italic text-gray-400">Untitled</span>
                         )}
                       </span>
-                    </td>
-                    <td className="px-5 py-3.5 font-mono text-xs text-gray-400">
-                      {page.slug}
                     </td>
                     <td className="px-5 py-3.5">
                       <StatusBadge status={page.status} />
@@ -125,13 +123,28 @@ export default function CalendarAdminPage() {
                       {page.year || "—"}
                       {page.month ? `/${String(page.month).padStart(2, "0")}` : ""}
                     </td>
-                    <td className="px-5 py-3.5 text-xs text-gray-500">
-                      {datesCount(page.datesJson) || (
-                        <span className="text-red-400">0</span>
+                    <td className="px-5 py-3.5 text-xs">
+                      {count > 0 ? (
+                        <span className="font-medium text-gray-700">{count}</span>
+                      ) : (
+                        <span className="text-red-400">None</span>
+                      )}
+                    </td>
+                    <td className="px-5 py-3.5 text-xs">
+                      {page.imagePath ? (
+                        page.imageAlt ? (
+                          <span className="text-emerald-700 font-medium">Set</span>
+                        ) : (
+                          <span className="text-amber-600">Path, no alt</span>
+                        )
+                      ) : (
+                        <span className="text-red-400">Missing</span>
                       )}
                     </td>
                     <td className="px-5 py-3.5 text-xs text-gray-400">
-                      {page.lastVerifiedDate || <span className="text-red-400">—</span>}
+                      {page.lastVerifiedDate || (
+                        <span className="text-red-400">Not set</span>
+                      )}
                     </td>
                     <td className="px-5 py-3.5 text-xs text-gray-400">
                       {page.updatedAt.slice(0, 10)}
@@ -145,10 +158,10 @@ export default function CalendarAdminPage() {
                       </Link>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                );
+              })}
+            </tbody>
+          </table>
         )}
       </div>
     </div>

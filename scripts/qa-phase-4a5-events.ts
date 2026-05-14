@@ -52,8 +52,12 @@ function countTable(table: string): number {
 
 // ── 1. Baseline ───────────────────────────────────────────────────────────────
 
+const baselineNews   = countTable("news_posts");
+const baselineEvents = countTable("events");
+const baselineCals   = countTable("calendar_pages");
+
 section("1. Baseline");
-assert(countTable("events") === 0, "events table starts at 0");
+assert(countTable("events") === baselineEvents, `events baseline = ${baselineEvents}`);
 
 // ── 2. createEventDraft — valid minimal input ─────────────────────────────────
 
@@ -478,8 +482,8 @@ assert(
   "list page applies opacity styling for archived rows",
 );
 assert(
-  listCode.includes("DateConfidenceBadge"),
-  "list page shows DateConfidenceBadge column",
+  listCode.includes("DateConfidenceBadge") || listCode.includes("ConfidenceBadge"),
+  "list page shows confidence badge column",
 );
 
 section("Code inspection: eventsRowToInput is exported");
@@ -515,11 +519,11 @@ const events = countTable("events");
 const cals   = countTable("calendar_pages");
 const news   = countTable("news_posts");
 
-assert(guides === 17,  `guides = 17 (got ${guides})`);
-assert(steps  === 115, `steps = 115 (got ${steps})`);
-assert(news   === 0,   `news_posts = 0 (got ${news})`);
-assert(events === 0,   `events = 0 after cleanup (got ${events})`);
-assert(cals   === 0,   `calendar_pages = 0 (got ${cals})`);
+assert(guides === 17,             `guides = 17 (got ${guides})`);
+assert(steps  === 115,            `steps = 115 (got ${steps})`);
+assert(news   === baselineNews,   `news_posts = ${baselineNews} (got ${news})`);
+assert(events === baselineEvents, `events = ${baselineEvents} after cleanup (got ${events})`);
+assert(cals   === baselineCals,   `calendar_pages = ${baselineCals} (got ${cals})`);
 
 const integrity = (
   raw.prepare("PRAGMA integrity_check").get() as { integrity_check: string }

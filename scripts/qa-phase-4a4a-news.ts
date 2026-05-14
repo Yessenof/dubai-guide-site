@@ -49,9 +49,13 @@ function countTable(table: string): number {
 
 // ── Baseline ──────────────────────────────────────────────────────────────────
 
+const baselineNews   = countTable("news_posts");
+const baselineEvents = countTable("events");
+const baselineCals   = countTable("calendar_pages");
+
 section("Baseline counts");
-assert(countTable("news_posts") === 0, "news_posts starts at 0");
-assert(getAllNewsPosts().length === 0, "getAllNewsPosts() returns []");
+assert(countTable("news_posts") === baselineNews, `news_posts baseline = ${baselineNews}`);
+assert(getAllNewsPosts().length === baselineNews, "getAllNewsPosts() returns baseline rows");
 
 // ── Validation: draft required fields ─────────────────────────────────────────
 
@@ -100,7 +104,7 @@ section("Validation: draft required fields");
 }
 
 assert(
-  countTable("news_posts") === 0,
+  countTable("news_posts") === baselineNews,
   "no rows written after all rejected creates",
 );
 
@@ -135,7 +139,7 @@ section("Validation: RU gate rejection");
 }
 
 assert(
-  countTable("news_posts") === 0,
+  countTable("news_posts") === baselineNews,
   "no rows written after RU gate rejections",
 );
 
@@ -179,7 +183,7 @@ if (!createResult.ok || !createResult.id) {
 createdIds.push(createResult.id);
 const testId = createResult.id;
 
-assert(countTable("news_posts") === 1, "news_posts count = 1 after create");
+assert(countTable("news_posts") === baselineNews + 1, "news_posts count = baseline+1 after create");
 
 // ── Verify created row fields ─────────────────────────────────────────────────
 
@@ -216,12 +220,13 @@ if (row) {
 section("List view reflects created draft");
 
 const allPosts = getAllNewsPosts();
-assert(allPosts.length === 1, "getAllNewsPosts returns 1 row");
+assert(allPosts.length === baselineNews + 1, "getAllNewsPosts returns baseline+1 rows");
+const testPost = allPosts.find((p) => p.slug === "test-news-draft-delete-me");
 assert(
-  allPosts[0].slug === "test-news-draft-delete-me",
-  "list contains correct slug",
+  testPost !== undefined,
+  "list contains test draft slug",
 );
-assert(allPosts[0].status === "draft", "list shows draft status");
+assert(testPost?.status === "draft", "list shows draft status for test row");
 
 // ── Update draft ──────────────────────────────────────────────────────────────
 
@@ -249,7 +254,7 @@ assert(
 );
 assert(updateResult.id === testId, "update returns same id");
 assert(updateResult.errors.length === 0, "no errors on update");
-assert(countTable("news_posts") === 1, "still 1 row after update (no duplicate)");
+assert(countTable("news_posts") === baselineNews + 1, "still baseline+1 rows after update (no duplicate)");
 
 // ── Verify updated fields ──────────────────────────────────────────────────────
 
@@ -441,7 +446,7 @@ for (const id of createdIds) {
   raw.prepare("DELETE FROM news_posts WHERE id = ?").run(id);
 }
 
-assert(countTable("news_posts") === 0, "news_posts = 0 after cleanup");
+assert(countTable("news_posts") === baselineNews, "news_posts = baseline after cleanup");
 
 // ── Final DB integrity ─────────────────────────────────────────────────────────
 
@@ -453,11 +458,11 @@ const events = countTable("events");
 const cals   = countTable("calendar_pages");
 const news   = countTable("news_posts");
 
-assert(guides === 17,  `guides = 17 (got ${guides})`);
-assert(steps  === 115, `steps = 115 (got ${steps})`);
-assert(news   === 0,   `news_posts = 0 (got ${news})`);
-assert(events === 0,   `events = 0 (got ${events})`);
-assert(cals   === 0,   `calendar_pages = 0 (got ${cals})`);
+assert(guides === 17,             `guides = 17 (got ${guides})`);
+assert(steps  === 115,            `steps = 115 (got ${steps})`);
+assert(news   === baselineNews,   `news_posts = ${baselineNews} (got ${news})`);
+assert(events === baselineEvents, `events = ${baselineEvents} (got ${events})`);
+assert(cals   === baselineCals,   `calendar_pages = ${baselineCals} (got ${cals})`);
 
 const integrity = (
   raw.prepare("PRAGMA integrity_check").get() as { integrity_check: string }

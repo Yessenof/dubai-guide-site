@@ -47,6 +47,28 @@ export default async function EditNewsPage({ params, searchParams }: Props) {
         <span className="text-xs font-mono text-gray-500">{post.slug}</span>
       </div>
 
+      <div className="flex items-center gap-3 mb-4 px-4 py-2.5 bg-white rounded-xl border border-gray-100 text-xs">
+        <span className={`inline-flex items-center gap-1.5 font-medium px-2 py-0.5 rounded-full ${
+          post.status === "published" ? "text-emerald-700 bg-emerald-50"
+            : post.status === "archived" ? "text-gray-400 bg-gray-100"
+            : "text-gray-500 bg-gray-100"
+        }`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${
+            post.status === "published" ? "bg-emerald-500"
+              : post.status === "archived" ? "bg-gray-300"
+              : "bg-gray-400"
+          }`} />
+          {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
+        </span>
+        {pubValidation.errors.length > 0 ? (
+          <span className="text-gray-400">
+            {pubValidation.errors.length} publish requirement{pubValidation.errors.length !== 1 ? "s" : ""} not met — see right panel
+          </span>
+        ) : (
+          <span className="text-emerald-600 font-medium">Ready to publish</span>
+        )}
+      </div>
+
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6 items-start">
         <NewsForm
           key={saved ?? "init"}

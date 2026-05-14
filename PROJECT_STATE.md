@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-12 (Phase 4A-4b — News publish/archive gates, not committed)
+Last updated: 2026-05-14 (Phase 4A-5 — Events admin full workflow committed)
 
 ---
 
@@ -45,7 +45,11 @@ app/
         page.tsx      ← News list (status badges, emerald tint for published, opacity for archived)
         new/page.tsx  ← Create draft shell (renders NewsForm)
         [id]/page.tsx ← Edit page — grid layout: NewsForm + NewsStatusPanel + NewsPreview
-      events/page.tsx ← Events admin placeholder
+      events/page.tsx ← Events list (status/RU/category/confidence/dates/calendar columns)
+        new/page.tsx  ← Create event draft shell
+        [id]/page.tsx ← Edit event (grid: EventForm + EventStatusPanel + EventPreview)
+      actions/
+        events.ts     ← "use server" — saveEventDraftAction, publishEventAction, archiveEventAction
       calendar/page.tsx ← Calendar Visual Posts admin placeholder
   api/auth/[...nextauth]/ ← NextAuth handler
   layout.tsx          ← root layout (no Header)

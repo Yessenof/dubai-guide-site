@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-12 (Phase 4A-4a+4b — News admin draft + publish/archive complete, not committed)
+Last updated: 2026-05-14 (Phase 4A-5 — Events admin full workflow committed, not pushed)
 
 WHAT TO ATTACH
 --------------
@@ -40,7 +40,7 @@ SQLite. No external services.
 Stack: Next.js 16.2.3 (App Router, Turbopack) + TypeScript + Tailwind CSS v4 +
 better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
 
-CURRENT STATE (as of 2026-05-07) — PRE-GSC SEO CLEANUP DEPLOYED
+CURRENT STATE (as of 2026-05-14) — PHASE 4A-5 EVENTS ADMIN COMMITTED
 -----------------------------------------------------------------
 Site is fully live on guidex-consulting.ae with HTTPS.
 17 guides published. Production DB: 17 guides / 115 steps.

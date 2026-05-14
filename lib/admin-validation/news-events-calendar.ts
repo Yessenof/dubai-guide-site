@@ -247,6 +247,8 @@ export type EventInput = Partial<{
   featured_homepage: number;
   featured_calendar: number;
   featured_digest: number;
+  related_guide_slug: string;
+  related_news_slug: string;
 }>;
 
 export function validateEventDraft(input: EventInput): ValidationResult {
@@ -282,14 +284,25 @@ export function validateEventPublish(input: EventInput): ValidationResult {
       warnings.push("en_summary should be 1–2 sentences — currently longer.");
   }
 
-  const dateStartErr = checkIsoDate(
-    "event_date_start",
-    str(input.event_date_start),
-  );
+  if (!str(input.en_body).trim())
+    errors.push("en_body is required (at least one paragraph).");
+  if (!str(input.en_seo_title).trim()) errors.push("en_seo_title is required.");
+  if (!str(input.en_meta_description).trim())
+    errors.push("en_meta_description is required.");
+
+  const dateStart = str(input.event_date_start);
+  const dateEnd   = str(input.event_date_end);
+
+  const dateStartErr = checkIsoDate("event_date_start", dateStart);
   if (dateStartErr) errors.push(dateStartErr);
 
-  const dateEndErr = checkIsoDate("event_date_end", str(input.event_date_end));
-  if (dateEndErr) errors.push(dateEndErr);
+  if (dateEnd.trim()) {
+    if (!ISO_DATE.test(dateEnd)) {
+      errors.push("event_date_end must be a valid ISO 8601 date (YYYY-MM-DD).");
+    } else if (ISO_DATE.test(dateStart) && dateEnd < dateStart) {
+      errors.push("event_date_end cannot be before event_date_start.");
+    }
+  }
 
   if (num(input.year) <= 0) errors.push("year must be a positive integer.");
 

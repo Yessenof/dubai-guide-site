@@ -5,6 +5,29 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE4A5-EVENTS-ADMIN — Phase 4A-5 Events admin full workflow committed
+
+**Date:** 2026-05-14
+**Commit:** pending push
+**Status:** Committed — not pushed, not deployed
+
+- `publishEvent(id)` writer: archived gate → `validateEventPublish` → sets status=published
+- `archiveEvent(id)` writer: sets status=archived (permanent in this phase)
+- `eventsRowToInput` exported; related fields added to EventInput + writer functions
+- `validateEventPublish` fixed: `event_date_end` optional, date comparison, en_body/seo/meta required
+- `saveEventDraftAction` + `publishEventAction` + `archiveEventAction` in `actions/events.ts`
+- `EventForm.tsx`: 11 sections (core, dates, source, EN content+SEO, RU content+SEO, related, flags, tags)
+- `EventStatusPanel.tsx`: date confidence badge + non-confirmed warning + two `useActionState` hooks
+- `EventPreview.tsx`: EN preview with confidence warning + RU "saved, not published" badge
+- Events list page: full table with 11 columns, emerald/opacity/neutral status styling, DateConfidenceBadge
+- `/events/new` and `/events/[id]` pages created
+- `scripts/qa-phase-4a5-events.ts`: 41/41 checks passed
+- `scripts/verify-news-events-calendar-admin.ts`: updated stale test data, 100/100 checks
+- All 4 QA scripts pass: 100+86+60+41 = 287 total checks
+- Build: 84 pages, 0 errors, TypeScript clean
+
+---
+
 ## CP-PHASE4A4B-NEWS-PUBLISH — Phase 4A-4a+4b News admin complete (not committed)
 
 **Date:** 2026-05-12

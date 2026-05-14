@@ -11,6 +11,7 @@ import { type CalendarPage, type HubEvent, type NewsPost } from "./schema";
 import {
   validateCalendarDraft,
   validateEventDraft,
+  validateEventPublish,
   validateNewsDraft,
   validateNewsPublish,
   type CalendarInput,
@@ -324,32 +325,34 @@ export function getEventById(id: string): HubEvent | null {
 
 // ─── Events writes ────────────────────────────────────────────────────────────
 
-function eventsRowToInput(row: HubEvent): EventInput {
+export function eventsRowToInput(row: HubEvent): EventInput {
   return {
-    slug:               row.slug,
-    category:           row.category,
-    color_type:         row.colorType,
-    tags_json:          row.tagsJson,
-    en_title:           row.enTitle,
-    en_summary:         row.enSummary,
-    en_body:            row.enBody,
-    en_seo_title:       row.enSeoTitle,
+    slug:                row.slug,
+    category:            row.category,
+    color_type:          row.colorType,
+    tags_json:           row.tagsJson,
+    en_title:            row.enTitle,
+    en_summary:          row.enSummary,
+    en_body:             row.enBody,
+    en_seo_title:        row.enSeoTitle,
     en_meta_description: row.enMetaDescription,
-    ru_published:       row.ruPublished,
-    ru_title:           row.ruTitle,
-    ru_summary:         row.ruSummary,
-    ru_body:            row.ruBody,
-    ru_seo_title:       row.ruSeoTitle,
+    ru_published:        row.ruPublished,
+    ru_title:            row.ruTitle,
+    ru_summary:          row.ruSummary,
+    ru_body:             row.ruBody,
+    ru_seo_title:        row.ruSeoTitle,
     ru_meta_description: row.ruMetaDescription,
-    event_date_start:   row.eventDateStart,
-    event_date_end:     row.eventDateEnd,
-    date_confidence:    row.dateConfidence,
-    year:               row.year,
-    source_url:         row.sourceUrl,
-    schema_eligible:    row.schemaEligible,
-    featured_homepage:  row.featuredHomepage,
-    featured_calendar:  row.featuredCalendar,
-    featured_digest:    row.featuredDigest,
+    event_date_start:    row.eventDateStart,
+    event_date_end:      row.eventDateEnd,
+    date_confidence:     row.dateConfidence,
+    year:                row.year,
+    source_url:          row.sourceUrl,
+    schema_eligible:     row.schemaEligible,
+    featured_homepage:   row.featuredHomepage,
+    featured_calendar:   row.featuredCalendar,
+    featured_digest:     row.featuredDigest,
+    related_guide_slug:  row.relatedGuideSlug,
+    related_news_slug:   row.relatedNewsSlug,
   };
 }
 
@@ -381,6 +384,8 @@ function eventInputToPatch(
   if (input.featured_homepage !== undefined)   p.featuredHomepage  = input.featured_homepage;
   if (input.featured_calendar !== undefined)   p.featuredCalendar  = input.featured_calendar;
   if (input.featured_digest !== undefined)     p.featuredDigest    = input.featured_digest;
+  if (input.related_guide_slug !== undefined)  p.relatedGuideSlug  = input.related_guide_slug;
+  if (input.related_news_slug !== undefined)   p.relatedNewsSlug   = input.related_news_slug;
   return p;
 }
 
@@ -432,8 +437,8 @@ export function createEventDraft(input: EventInput): WriteResult {
       featuredDigest:   n(input.featured_digest),
       featuredCalendar: input.featured_calendar !== undefined ? n(input.featured_calendar) : 1,
       schemaEligible:   input.schema_eligible !== undefined ? n(input.schema_eligible) : 1,
-      relatedGuideSlug: "",
-      relatedNewsSlug:  "",
+      relatedGuideSlug: s(input.related_guide_slug),
+      relatedNewsSlug:  s(input.related_news_slug),
       createdAt:        ts,
       updatedAt:        ts,
     }).run();
@@ -489,6 +494,52 @@ export function updateEventDraft(id: string, input: EventInput): WriteResult {
   }
 
   return { ok: true, id, errors: [], warnings: validation.warnings };
+}
+
+/**
+ * Publishes a draft event. Runs full publish validation.
+ * Archived events cannot be published.
+ */
+export function publishEvent(id: string): WriteResult {
+  const existing = getEventById(id);
+  if (!existing) {
+    return { ok: false, errors: [`Event not found: ${id}`], warnings: [] };
+  }
+  if (existing.status === "archived") {
+    return {
+      ok: false,
+      errors: ["Cannot publish an archived event. Archive is permanent in this phase."],
+      warnings: [],
+    };
+  }
+
+  const input: EventInput = eventsRowToInput(existing);
+  const validation = validateEventPublish(input);
+  if (!validation.ok) {
+    return { ok: false, errors: validation.errors, warnings: validation.warnings };
+  }
+
+  db.update(eventsTable)
+    .set({ status: "published", updatedAt: nowIso() })
+    .where(eq(eventsTable.id, id))
+    .run();
+
+  return { ok: true, id, errors: [], warnings: validation.warnings };
+}
+
+/** Archives an event (draft or published). Status becomes "archived" permanently in this phase. */
+export function archiveEvent(id: string): WriteResult {
+  const existing = getEventById(id);
+  if (!existing) {
+    return { ok: false, errors: [`Event not found: ${id}`], warnings: [] };
+  }
+
+  db.update(eventsTable)
+    .set({ status: "archived", updatedAt: nowIso() })
+    .where(eq(eventsTable.id, id))
+    .run();
+
+  return { ok: true, id, errors: [], warnings: [] };
 }
 
 // ─── Calendar reads ───────────────────────────────────────────────────────────

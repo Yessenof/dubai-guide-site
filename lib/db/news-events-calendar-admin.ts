@@ -10,6 +10,7 @@ import { calendarPages, eventsTable, newsPosts } from "./schema";
 import { type CalendarPage, type HubEvent, type NewsPost } from "./schema";
 import {
   validateCalendarDraft,
+  validateCalendarPublish,
   validateEventDraft,
   validateEventPublish,
   validateNewsDraft,
@@ -566,7 +567,7 @@ export function getCalendarPageById(id: string): CalendarPage | null {
 
 // ─── Calendar writes ──────────────────────────────────────────────────────────
 
-function calendarRowToInput(row: CalendarPage): CalendarInput {
+export function calendarRowToInput(row: CalendarPage): CalendarInput {
   return {
     slug:                row.slug,
     calendar_type:       row.calendarType,
@@ -739,4 +740,50 @@ export function updateCalendarDraft(
   }
 
   return { ok: true, id, errors: [], warnings: validation.warnings };
+}
+
+/**
+ * Publishes a draft calendar page. Runs full publish validation.
+ * Archived pages cannot be published.
+ */
+export function publishCalendar(id: string): WriteResult {
+  const existing = getCalendarPageById(id);
+  if (!existing) {
+    return { ok: false, errors: [`Calendar page not found: ${id}`], warnings: [] };
+  }
+  if (existing.status === "archived") {
+    return {
+      ok: false,
+      errors: ["Cannot publish an archived calendar page. Archive is permanent in this phase."],
+      warnings: [],
+    };
+  }
+
+  const input: CalendarInput = calendarRowToInput(existing);
+  const validation = validateCalendarPublish(input);
+  if (!validation.ok) {
+    return { ok: false, errors: validation.errors, warnings: validation.warnings };
+  }
+
+  db.update(calendarPages)
+    .set({ status: "published", updatedAt: nowIso() })
+    .where(eq(calendarPages.id, id))
+    .run();
+
+  return { ok: true, id, errors: [], warnings: validation.warnings };
+}
+
+/** Archives a calendar page (draft or published). Status becomes "archived" permanently in this phase. */
+export function archiveCalendar(id: string): WriteResult {
+  const existing = getCalendarPageById(id);
+  if (!existing) {
+    return { ok: false, errors: [`Calendar page not found: ${id}`], warnings: [] };
+  }
+
+  db.update(calendarPages)
+    .set({ status: "archived", updatedAt: nowIso() })
+    .where(eq(calendarPages.id, id))
+    .run();
+
+  return { ok: true, id, errors: [], warnings: [] };
 }

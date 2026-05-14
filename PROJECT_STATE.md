@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-14 (Phase 4A-5 — Events admin full workflow committed)
+Last updated: 2026-05-14 (Phase 4A-6 — Calendar Visual Posts admin full workflow committed)
 
 ---
 
@@ -50,7 +50,14 @@ app/
         [id]/page.tsx ← Edit event (grid: EventForm + EventStatusPanel + EventPreview)
       actions/
         events.ts     ← "use server" — saveEventDraftAction, publishEventAction, archiveEventAction
-      calendar/page.tsx ← Calendar Visual Posts admin placeholder
+        calendar.ts   ← "use server" — saveCalendarDraftAction, publishCalendarAction, archiveCalendarAction
+      _components/
+        CalendarForm.tsx       ← "use client" — 10 sections: core, verification/source, image, dates_json, EN content+SEO, RU content+SEO, flags
+        CalendarStatusPanel.tsx ← "use client" — status, dates count, last_verified_date, image, Islamic warning, two useActionState hooks
+        CalendarPreview.tsx    ← server component — EN+RU preview, parsed dates list with color dots
+      calendar/page.tsx ← Calendar list (status/RU/type/year/dates count/verified/updated columns)
+        new/page.tsx  ← Create calendar draft shell
+        [id]/page.tsx ← Edit calendar (grid: CalendarForm + CalendarStatusPanel + CalendarPreview)
   api/auth/[...nextauth]/ ← NextAuth handler
   layout.tsx          ← root layout (no Header)
 

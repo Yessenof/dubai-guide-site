@@ -5,6 +5,28 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE4A6-CALENDAR-ADMIN — Phase 4A-6 Calendar Visual Posts admin full workflow committed
+
+**Date:** 2026-05-14
+**Commit:** `75f3e63`
+**Status:** Committed — not pushed, not deployed
+
+- `calendarRowToInput` exported from writer
+- `publishCalendar(id)`: archived gate → `validateCalendarPublish` → sets status=published
+- `archiveCalendar(id)`: sets status=archived (permanent in this phase)
+- `saveCalendarDraftAction` + `publishCalendarAction` + `archiveCalendarAction` in `actions/calendar.ts`
+- `CalendarForm.tsx`: 10 sections (core, verification/source, image, dates_json, EN content+SEO, RU content+SEO, flags)
+- `CalendarStatusPanel.tsx`: status badge, dates count, last_verified_date, image indicator, Islamic dates warning, two `useActionState` hooks
+- `CalendarPreview.tsx`: server component — dates list with color dots, EN+RU preview, JSON parse error indicator
+- Calendar list page: full table with status/RU/type/year/dates count/verified/updated columns
+- `/calendar/new` and `/calendar/[id]` pages created; grid layout `xl:grid-cols-[1fr_320px]`
+- `scripts/qa-phase-4a6-calendar.ts`: 112/112 checks passed
+- All 5 QA+verify scripts: 100+86+60+41+112 = 399 total checks, 0 failures
+- Build: 85 pages, 0 errors, TypeScript clean
+- DB: guides=17, steps=115, news=0, events=0, calendar=0
+
+---
+
 ## CP-PHASE4A5-EVENTS-ADMIN — Phase 4A-5 Events admin full workflow committed
 
 **Date:** 2026-05-14

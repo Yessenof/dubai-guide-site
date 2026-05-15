@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-15 (Phase 4B-2B — Real AI Runtime MVP for AI Inbox — not committed)
+Last updated: 2026-05-15 (Phase 4B-2D — No-API AI-Assisted Draft Import Mode — implementation complete, not committed)
 
 ---
 
@@ -228,7 +228,19 @@ Group pages live:
 
 ## Current Next Step
 
-**Phase 4B-2B — Real AI Runtime MVP for AI Inbox — complete (2026-05-15). Not committed.**
+**Phase 4B-2D — No-API AI-Assisted Draft Import Mode — complete (2026-05-15). Not committed yet.**
+
+Primary UX refactored: "Paste AI Draft Package" (no API required) is now the default flow. AI runtime flow (classify → generate → refine) retained and shown only when `runtimeStatus === "connected"`.
+
+**New file:** `lib/ai/import-parser.ts` — `parseImportedDraft(raw): ImportParseResult` (client-safe JSON parser using `extractJson` + `validateGeneratedDraftJson` + `normalizeGeneratedDraftForSave`; accepts `content_type` snake_case alias; forces `ru_published=0`; returns helpful error messages); `buildImportPrompt(contentType): string` (copyable system prompt for Claude/ChatGPT, includes JSON schema template and content rules).
+
+**Rewritten AiInboxClient.tsx:** Local classifier removed. Primary section: "Paste AI Draft Package" — collapsible prompt builder (content type selector + read-only prompt textarea + copy-to-clipboard button), JSON import textarea, parse-on-click, error display. AI section: visible only when `isConnected`, same classify → generate flow. Shared draft view for both import and AI drafts (`draftSource: "import" | "ai"` determines label). Refine with AI: active if connected, grayed with note if not. Runtime notice: gray/neutral ("Import mode active. No API required.") instead of amber warning when disabled. All save forms use `useActionState` + `_draft_json` pattern (same path for import and AI drafts). Legacy local classifier actions removed from imports.
+
+**QA:** `scripts/qa-phase-4b2d-no-api-import.ts` — 79/79 checks: valid news/event/calendar parse, fenced JSON, content_type snake_case alias, empty/invalid/malformed/array inputs, missing/invalid contentType, ru_published forced to 0, slug normalization, em-dash stripping, optional fields default gracefully, admin-owned fields stripped, calendar dates_json preserved, schema_eligible rules, prompt builder content and field coverage, extractJson, normalizeGeneratedDraftForSave invariants. All 7 QA scripts: 560/560 clean tests. Build: 86 pages, TypeScript clean. DB: guides=17, steps=115, news_posts=1, events=1, calendar_pages=1 — unchanged.
+
+---
+
+**Phase 4B-2B — Real AI Runtime MVP for AI Inbox — complete (2026-05-15). Committed: 2b83518.**
 
 Full AI runtime wired into `/admin/content/ai-inbox`. Two-mode system: when `AI_EDITOR_ENABLED=true` + `ANTHROPIC_API_KEY` set → real Anthropic API calls; otherwise → local deterministic classifier fallback.
 

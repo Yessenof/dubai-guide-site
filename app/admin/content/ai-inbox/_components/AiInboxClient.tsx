@@ -133,6 +133,11 @@ export default function AiInboxClient({
   const [eventSaveState, eventSaveAction, eventIsPending] = useActionState(saveGeneratedEventDraftAction,    INITIAL_SAVE_STATE);
   const [calSaveState,   calSaveAction,   calIsPending]   = useActionState(saveGeneratedCalendarDraftAction, INITIAL_SAVE_STATE);
 
+  // Safe helper: useActionState with redirect()-based server actions can leave
+  // state as undefined when the action throws NEXT_REDIRECT instead of returning.
+  const toErrorList = (value: unknown): string[] =>
+    Array.isArray(value) ? value.filter(Boolean).map(String) : [];
+
   const anySavePending = newsIsPending || eventIsPending || calIsPending;
 
   // ── Derived ──────────────────────────────────────────────────────────────
@@ -380,7 +385,11 @@ export default function AiInboxClient({
       "expected":  "text-amber-700 bg-amber-50",
       "subject_to_official_confirmation": "text-red-600 bg-red-50",
     };
-    const allSaveErrors = [...newsSaveState.errors, ...eventSaveState.errors, ...calSaveState.errors];
+    const allSaveErrors = [
+      ...toErrorList(newsSaveState?.errors),
+      ...toErrorList(eventSaveState?.errors),
+      ...toErrorList(calSaveState?.errors),
+    ];
     const draftLabel = draftSource === "import" ? "Imported Draft" : "AI Draft";
 
     return (

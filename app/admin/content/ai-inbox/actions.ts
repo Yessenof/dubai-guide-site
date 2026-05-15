@@ -152,9 +152,6 @@ function calendarInputFromDraft(draft: GeneratedCalendarDraft) {
 
 // ── Save generated draft actions (useActionState + redirect pattern) ───────────
 
-const INITIAL_SAVE_STATE: AiSaveActionState = { errors: [], warnings: [] };
-export { INITIAL_SAVE_STATE };
-
 export async function saveGeneratedNewsDraftAction(
   _prevState: AiSaveActionState,
   formData: FormData,

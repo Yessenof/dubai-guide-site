@@ -8,18 +8,20 @@ import {
   saveGeneratedNewsDraftAction,
   saveGeneratedEventDraftAction,
   saveGeneratedCalendarDraftAction,
-  INITIAL_SAVE_STATE,
 } from "../actions";
 import { parseImportedDraft, buildImportPrompt } from "@/lib/ai/import-parser";
 import type {
   AiInputType,
   AiRuntimeStatus,
+  AiSaveActionState,
   ClassificationResult,
   GeneratedDraft,
   GeneratedNewsDraft,
   GeneratedEventDraft,
   GeneratedCalendarDraft,
 } from "@/lib/ai/editor-types";
+
+const INITIAL_SAVE_STATE: AiSaveActionState = { errors: [], warnings: [] };
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 

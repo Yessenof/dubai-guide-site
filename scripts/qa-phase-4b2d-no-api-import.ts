@@ -224,7 +224,7 @@ section("parseImportedDraft — missing contentType");
   const r = parseImportedDraft(JSON.stringify(obj));
   assert(r.ok === false, "fails when contentType missing");
   if (!r.ok) {
-    assert(r.error.includes("contentType"), "error message references contentType");
+    assert(r.error.includes("content_type"), "error message references content_type");
   }
 }
 
@@ -331,7 +331,7 @@ section("buildImportPrompt — returns non-empty strings for all types");
   for (const type of ["news", "event", "calendar"] as const) {
     const prompt = buildImportPrompt(type);
     assert(typeof prompt === "string" && prompt.length > 100, `${type}: prompt is non-empty string`);
-    assert(prompt.includes(`"contentType": "${type}"`), `${type}: prompt contains contentType field`);
+    assert(prompt.includes(`"content_type": "${type}"`), `${type}: prompt contains content_type field (snake_case)`);
     assert(prompt.includes("PASTE YOUR TEXT"), `${type}: prompt has source material placeholder`);
     assert(prompt.includes("em-dash"), `${type}: prompt mentions em-dash rule`);
     assert(prompt.includes("JSON"), `${type}: prompt mentions JSON output format`);
@@ -374,6 +374,265 @@ section("extractJson — passes through plain JSON");
   const raw = '{"a": 1}';
   const result = extractJson(raw);
   assert(result === raw, "plain JSON passes through unchanged");
+}
+
+// ── Phase 4B-2D-c: Alias normalization ───────────────────────────────────────
+
+section("parseImportedDraft — camelCase aliases: enTitle / enSummary / enBody");
+{
+  const obj = {
+    content_type: "news",
+    enTitle: "Alias Title",
+    enSummary: "Alias summary text.",
+    enBody: "Alias body content for the article.",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with enTitle/enSummary/enBody aliases");
+  if (r.ok) {
+    assert(r.draft.en_title === "Alias Title", "enTitle mapped to en_title");
+    assert(r.draft.en_summary === "Alias summary text.", "enSummary mapped to en_summary");
+    assert(r.draft.en_body === "Alias body content for the article.", "enBody mapped to en_body");
+    assert(r.saveable === true, "saveable = true when core fields present via aliases");
+    assert(r.coreErrors.length === 0, "no coreErrors when aliases fill required fields");
+  }
+}
+
+section("parseImportedDraft — flat aliases: title / summary / body");
+{
+  const obj = {
+    content_type: "news",
+    title: "Flat Title",
+    summary: "Flat summary text.",
+    body: "Flat body content for the article.",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with title/summary/body flat aliases");
+  if (r.ok) {
+    assert(r.draft.en_title === "Flat Title", "title mapped to en_title");
+    assert(r.draft.en_summary === "Flat summary text.", "summary mapped to en_summary");
+    assert(r.draft.en_body === "Flat body content for the article.", "body mapped to en_body");
+    assert(r.saveable === true, "saveable = true with flat aliases");
+  }
+}
+
+section("parseImportedDraft — Russian field aliases: ruTitle / ruSummary / ruBody");
+{
+  const obj = {
+    content_type: "news",
+    en_title: "RU alias test",
+    en_summary: "Summary.",
+    en_body: "Body text.",
+    ruTitle: "Русский заголовок",
+    ruSummary: "Краткое описание.",
+    ruBody: "Основной текст на русском.",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with ruTitle/ruSummary/ruBody aliases");
+  if (r.ok) {
+    assert(r.draft.ru_title === "Русский заголовок", "ruTitle mapped to ru_title");
+    assert(r.draft.ru_summary === "Краткое описание.", "ruSummary mapped to ru_summary");
+    assert(r.draft.ru_body === "Основной текст на русском.", "ruBody mapped to ru_body");
+  }
+}
+
+section("parseImportedDraft — Russian field aliases: russian_title / russian_body");
+{
+  const obj = {
+    content_type: "news",
+    en_title: "RU snake_case alias test",
+    en_summary: "Summary.",
+    en_body: "Body text.",
+    russian_title: "Заголовок из ChatGPT",
+    russian_summary: "Описание.",
+    russian_body: "Текст статьи.",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with russian_title/russian_summary/russian_body aliases");
+  if (r.ok) {
+    assert(r.draft.ru_title === "Заголовок из ChatGPT", "russian_title mapped to ru_title");
+    assert(r.draft.ru_summary === "Описание.", "russian_summary mapped to ru_summary");
+    assert(r.draft.ru_body === "Текст статьи.", "russian_body mapped to ru_body");
+  }
+}
+
+section("parseImportedDraft — tags alias: tagsJson");
+{
+  const obj = {
+    content_type: "news",
+    en_title: "Tags alias test",
+    en_summary: "Summary.",
+    en_body: "Body.",
+    tagsJson: ["alias-tag", "another-tag"],
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with tagsJson alias");
+  if (r.ok) {
+    assert(Array.isArray(r.draft.tags), "tags is an array");
+    assert(r.draft.tags.includes("alias-tag"), "tagsJson mapped to tags");
+  }
+}
+
+section("parseImportedDraft — tags alias: tags_json");
+{
+  const obj = {
+    content_type: "news",
+    en_title: "Tags snake alias test",
+    en_summary: "Summary.",
+    en_body: "Body.",
+    tags_json: ["snake-tag"],
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with tags_json alias");
+  if (r.ok) {
+    assert(Array.isArray(r.draft.tags), "tags is an array");
+    assert(r.draft.tags.includes("snake-tag"), "tags_json mapped to tags");
+  }
+}
+
+section("parseImportedDraft — SEO aliases: enSeoTitle / enMetaDescription");
+{
+  const obj = {
+    content_type: "news",
+    en_title: "SEO alias test",
+    en_summary: "Summary.",
+    en_body: "Body.",
+    enSeoTitle: "SEO Title Alias",
+    enMetaDescription: "Meta description alias text.",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with enSeoTitle/enMetaDescription aliases");
+  if (r.ok) {
+    assert(r.draft.en_seo_title === "SEO Title Alias", "enSeoTitle mapped to en_seo_title");
+    assert(r.draft.en_meta_description === "Meta description alias text.", "enMetaDescription mapped to en_meta_description");
+  }
+}
+
+section("parseImportedDraft — SEO aliases: seo_title / meta_description (flat)");
+{
+  const obj = {
+    content_type: "news",
+    en_title: "Flat SEO alias test",
+    en_summary: "Summary.",
+    en_body: "Body.",
+    seo_title: "Flat SEO Title",
+    meta_description: "Flat meta description.",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with seo_title/meta_description flat aliases");
+  if (r.ok) {
+    assert(r.draft.en_seo_title === "Flat SEO Title", "seo_title mapped to en_seo_title");
+    assert(r.draft.en_meta_description === "Flat meta description.", "meta_description mapped to en_meta_description");
+  }
+}
+
+// ── Phase 4B-2D-c: Completeness check ────────────────────────────────────────
+
+section("parseImportedDraft — incomplete: missing en_title → saveable=false");
+{
+  const obj = {
+    content_type: "news",
+    en_summary: "Summary present.",
+    en_body: "Body present.",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully (structural ok)");
+  if (r.ok) {
+    assert(r.saveable === false, "saveable = false when en_title missing");
+    assert(r.coreErrors.length > 0, "coreErrors non-empty");
+    assert(r.coreErrors.some(e => e.includes("en_title")), "coreErrors mentions en_title");
+  }
+}
+
+section("parseImportedDraft — incomplete: missing en_summary → saveable=false");
+{
+  const obj = {
+    content_type: "news",
+    en_title: "Title present.",
+    en_body: "Body present.",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully (structural ok)");
+  if (r.ok) {
+    assert(r.saveable === false, "saveable = false when en_summary missing");
+    assert(r.coreErrors.some(e => e.includes("en_summary")), "coreErrors mentions en_summary");
+  }
+}
+
+section("parseImportedDraft — incomplete: missing en_body → saveable=false");
+{
+  const obj = {
+    content_type: "news",
+    en_title: "Title present.",
+    en_summary: "Summary present.",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully (structural ok)");
+  if (r.ok) {
+    assert(r.saveable === false, "saveable = false when en_body missing");
+    assert(r.coreErrors.some(e => e.includes("en_body")), "coreErrors mentions en_body");
+  }
+}
+
+section("parseImportedDraft — incomplete: all core fields missing → 3 coreErrors");
+{
+  const obj = { content_type: "news" };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully (structural ok)");
+  if (r.ok) {
+    assert(r.saveable === false, "saveable = false");
+    assert(r.coreErrors.length === 3, "exactly 3 coreErrors (en_title, en_summary, en_body)");
+  }
+}
+
+section("parseImportedDraft — whitespace-only en_title treated as missing");
+{
+  const obj = {
+    content_type: "news",
+    en_title: "   ",
+    en_summary: "Summary.",
+    en_body: "Body.",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok) {
+    assert(r.saveable === false, "saveable = false for whitespace-only en_title");
+    assert(r.coreErrors.some(e => e.includes("en_title")), "coreErrors mentions en_title");
+  }
+}
+
+section("parseImportedDraft — complete draft has saveable=true and empty coreErrors");
+{
+  const r = parseImportedDraft(JSON.stringify(VALID_NEWS));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok) {
+    assert(r.saveable === true, "saveable = true for complete draft");
+    assert(r.coreErrors.length === 0, "coreErrors empty for complete draft");
+  }
+}
+
+section("parseImportedDraft — status/published fields ignored (not in draft)");
+{
+  const obj = { ...VALID_NEWS, status: "published", published: true };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with status/published in input");
+  if (r.ok) {
+    assert(!("status" in r.draft), "status field absent from draft");
+    assert(!("published" in r.draft), "published field absent from draft");
+    assert(r.draft.ru_published === 0, "ru_published still forced to 0");
+  }
+}
+
+section("parseImportedDraft — buildImportPrompt uses content_type (snake_case) in schema");
+{
+  for (const type of ["news", "event", "calendar"] as const) {
+    const prompt = buildImportPrompt(type);
+    // The schema block uses snake_case; "contentType" may appear in the CRITICAL_RULES warning only
+    assert(prompt.includes(`"content_type": "${type}"`), `${type}: schema block contains "content_type": "${type}"`);
+    assert(prompt.includes("en_title"), `${type}: prompt contains en_title`);
+    assert(prompt.includes("en_summary"), `${type}: prompt contains en_summary`);
+    assert(prompt.includes("en_body"), `${type}: prompt contains en_body`);
+    assert(prompt.includes("REQUIRED"), `${type}: prompt marks required fields`);
+  }
 }
 
 section("normalizeGeneratedDraftForSave — invariants");

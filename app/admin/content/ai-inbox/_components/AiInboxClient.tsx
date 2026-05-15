@@ -111,6 +111,8 @@ export default function AiInboxClient({
   const [importText,        setImportText]        = useState("");
   const [importError,       setImportError]       = useState<string | null>(null);
   const [importedDraft,     setImportedDraft]     = useState<(GeneratedDraft & { _forSave: true; ru_published: 0 }) | null>(null);
+  const [importSaveable,    setImportSaveable]    = useState(true);
+  const [importCoreErrors,  setImportCoreErrors]  = useState<string[]>([]);
   const [promptContentType, setPromptContentType] = useState<ContentType3>("news");
   const [promptCopied,      setPromptCopied]      = useState(false);
 
@@ -154,6 +156,8 @@ export default function AiInboxClient({
       return;
     }
     setImportedDraft(result.draft);
+    setImportSaveable(result.saveable);
+    setImportCoreErrors(result.coreErrors);
     setDraftSource("import");
     setPhase("draft");
   }
@@ -225,6 +229,8 @@ export default function AiInboxClient({
     setAiClassification(null);
     setAiDraft(null);
     setImportedDraft(null);
+    setImportSaveable(true);
+    setImportCoreErrors([]);
     setImportText("");
     setImportError(null);
     setChangeSummary(null);
@@ -391,6 +397,8 @@ export default function AiInboxClient({
       ...toErrorList(calSaveState?.errors),
     ];
     const draftLabel = draftSource === "import" ? "Imported Draft" : "AI Draft";
+    // Disable save when an imported draft is missing required core fields.
+    const saveDisabled = anySavePending || isRefining || (draftSource === "import" && !importSaveable);
 
     return (
       <div className="space-y-4">
@@ -412,6 +420,20 @@ export default function AiInboxClient({
         {allSaveErrors.length > 0 && (
           <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
             Save failed: {allSaveErrors.join("; ")}
+          </div>
+        )}
+
+        {draftSource === "import" && importCoreErrors.length > 0 && (
+          <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 space-y-1.5">
+            <p className="text-xs font-semibold text-red-700">Imported package is incomplete — fix in your AI tool before saving:</p>
+            <ul className="space-y-0.5">
+              {importCoreErrors.map((e, i) => (
+                <li key={i} className="text-xs text-red-600 flex items-center gap-1.5">
+                  <span className="w-1 h-1 rounded-full bg-red-400 shrink-0" />
+                  {e}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 
@@ -645,7 +667,7 @@ export default function AiInboxClient({
               {draftType === "news" && (
                 <form action={newsSaveAction}>
                   <input type="hidden" name="_draft_json" value={draftJson} />
-                  <button type="submit" disabled={anySavePending || isRefining} className="w-full text-sm font-semibold bg-gray-900 text-white rounded-xl px-4 py-2.5 hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-left">
+                  <button type="submit" disabled={saveDisabled} className="w-full text-sm font-semibold bg-gray-900 text-white rounded-xl px-4 py-2.5 hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-left">
                     {newsIsPending ? "Saving…" : "Save as News draft →"}
                   </button>
                 </form>
@@ -653,7 +675,7 @@ export default function AiInboxClient({
               {draftType === "event" && (
                 <form action={eventSaveAction}>
                   <input type="hidden" name="_draft_json" value={draftJson} />
-                  <button type="submit" disabled={anySavePending || isRefining} className="w-full text-sm font-semibold bg-gray-900 text-white rounded-xl px-4 py-2.5 hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-left">
+                  <button type="submit" disabled={saveDisabled} className="w-full text-sm font-semibold bg-gray-900 text-white rounded-xl px-4 py-2.5 hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-left">
                     {eventIsPending ? "Saving…" : "Save as Event draft →"}
                   </button>
                 </form>
@@ -661,7 +683,7 @@ export default function AiInboxClient({
               {draftType === "calendar" && (
                 <form action={calSaveAction}>
                   <input type="hidden" name="_draft_json" value={draftJson} />
-                  <button type="submit" disabled={anySavePending || isRefining} className="w-full text-sm font-semibold bg-gray-900 text-white rounded-xl px-4 py-2.5 hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-left">
+                  <button type="submit" disabled={saveDisabled} className="w-full text-sm font-semibold bg-gray-900 text-white rounded-xl px-4 py-2.5 hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-left">
                     {calIsPending ? "Saving…" : "Save as Calendar draft →"}
                   </button>
                 </form>
@@ -675,19 +697,19 @@ export default function AiInboxClient({
                   {draftType !== "news" && (
                     <form action={newsSaveAction}>
                       <input type="hidden" name="_draft_json" value={draftJson} />
-                      <button type="submit" disabled={anySavePending} className="w-full text-xs text-gray-500 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 text-left transition-colors disabled:opacity-40">Force save as News</button>
+                      <button type="submit" disabled={saveDisabled} className="w-full text-xs text-gray-500 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 text-left transition-colors disabled:opacity-40">Force save as News</button>
                     </form>
                   )}
                   {draftType !== "event" && (
                     <form action={eventSaveAction}>
                       <input type="hidden" name="_draft_json" value={draftJson} />
-                      <button type="submit" disabled={anySavePending} className="w-full text-xs text-gray-500 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 text-left transition-colors disabled:opacity-40">Force save as Event</button>
+                      <button type="submit" disabled={saveDisabled} className="w-full text-xs text-gray-500 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 text-left transition-colors disabled:opacity-40">Force save as Event</button>
                     </form>
                   )}
                   {draftType !== "calendar" && (
                     <form action={calSaveAction}>
                       <input type="hidden" name="_draft_json" value={draftJson} />
-                      <button type="submit" disabled={anySavePending} className="w-full text-xs text-gray-500 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 text-left transition-colors disabled:opacity-40">Force save as Calendar</button>
+                      <button type="submit" disabled={saveDisabled} className="w-full text-xs text-gray-500 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 text-left transition-colors disabled:opacity-40">Force save as Calendar</button>
                     </form>
                   )}
                 </div>

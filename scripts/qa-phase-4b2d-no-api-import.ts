@@ -644,6 +644,303 @@ section("normalizeGeneratedDraftForSave — invariants");
   assert(typeof normalized.slug === "string" && normalized.slug.length > 0, "slug non-empty");
 }
 
+// ── Phase 4B-2E: Image field aliases ─────────────────────────────────────────
+
+section("parseImportedDraft — image alias: imagePath → image_path");
+{
+  const obj = {
+    ...VALID_NEWS,
+    imagePath: "/images/mohre-building.jpg",
+  };
+  delete (obj as Record<string, unknown>).image_path;
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with imagePath alias");
+  if (r.ok) {
+    assert((r.draft as unknown as Record<string, unknown>).image_path === "/images/mohre-building.jpg", "imagePath mapped to image_path");
+  }
+}
+
+section("parseImportedDraft — image alias: image_url → image_path");
+{
+  const obj = {
+    ...VALID_NEWS,
+    image_url: "/images/test.jpg",
+  };
+  delete (obj as Record<string, unknown>).image_path;
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with image_url alias");
+  if (r.ok) {
+    assert((r.draft as unknown as Record<string, unknown>).image_path === "/images/test.jpg", "image_url mapped to image_path");
+  }
+}
+
+section("parseImportedDraft — image alias: imageUrl → image_path");
+{
+  const obj = {
+    ...VALID_NEWS,
+    imageUrl: "/images/test2.jpg",
+  };
+  delete (obj as Record<string, unknown>).image_path;
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with imageUrl alias");
+  if (r.ok) {
+    assert((r.draft as unknown as Record<string, unknown>).image_path === "/images/test2.jpg", "imageUrl mapped to image_path");
+  }
+}
+
+section("parseImportedDraft — image alias: imageAlt → image_alt");
+{
+  const obj = {
+    ...VALID_NEWS,
+    imageAlt: "Alias alt text",
+  };
+  delete (obj as Record<string, unknown>).image_alt;
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with imageAlt alias");
+  if (r.ok) {
+    assert(r.draft.image_alt === "Alias alt text", "imageAlt mapped to image_alt");
+  }
+}
+
+section("parseImportedDraft — image alias: ruImageAlt → ru_image_alt");
+{
+  const obj = {
+    ...VALID_NEWS,
+    ruImageAlt: "Русский альт",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses with ruImageAlt alias");
+  if (r.ok) {
+    assert(r.draft.ru_image_alt === "Русский альт", "ruImageAlt mapped to ru_image_alt");
+  }
+}
+
+// ── Phase 4B-2E: file:// path detection ──────────────────────────────────────
+
+section("parseImportedDraft — file:// image_path cleared + importWarnings populated");
+{
+  const obj = { ...VALID_NEWS, image_path: "file:///Users/batyr/Desktop/photo.jpg" };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok) {
+    assert((r.draft as unknown as Record<string, unknown>).image_path === "", "file:// path cleared");
+    assert(r.importWarnings.length > 0, "importWarnings non-empty for file:// path");
+    assert(r.importWarnings.some(w => w.includes("file://")), "importWarnings mentions file://");
+  }
+}
+
+section("parseImportedDraft — /images/ path accepted without warning");
+{
+  const obj = { ...VALID_NEWS, image_path: "/images/building.jpg" };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok) {
+    assert((r.draft as unknown as Record<string, unknown>).image_path === "/images/building.jpg", "/images/ path preserved");
+    assert(!r.importWarnings.some(w => w.includes("file://")), "no file:// warning for valid path");
+  }
+}
+
+section("parseImportedDraft — importWarnings is empty array when no issues");
+{
+  const r = parseImportedDraft(JSON.stringify(VALID_NEWS));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok) {
+    assert(Array.isArray(r.importWarnings), "importWarnings is an array");
+    assert(r.importWarnings.length === 0, "importWarnings empty for clean import");
+  }
+}
+
+// ── Phase 4B-2E: SEO fallbacks ────────────────────────────────────────────────
+
+section("parseImportedDraft — SEO fallback: en_seo_title from en_title when empty");
+{
+  const obj = {
+    content_type: "news",
+    en_title: "Dubai Employment Visa Update 2026",
+    en_summary: "MOHRE updates processing rules.",
+    en_body: "Full body text here.",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok) {
+    assert(r.draft.en_seo_title.length > 0, "en_seo_title filled from en_title fallback");
+    assert(r.draft.en_seo_title === "Dubai Employment Visa Update 2026".slice(0, 60), "en_seo_title is truncated en_title");
+  }
+}
+
+section("parseImportedDraft — SEO fallback: en_meta_description from en_summary when empty");
+{
+  const obj = {
+    content_type: "news",
+    en_title: "Title",
+    en_summary: "Summary for meta description fallback.",
+    en_body: "Body.",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok) {
+    assert(r.draft.en_meta_description.length > 0, "en_meta_description filled from en_summary fallback");
+    assert(r.draft.en_meta_description === "Summary for meta description fallback.", "en_meta_description equals en_summary");
+  }
+}
+
+section("parseImportedDraft — explicit SEO fields not overwritten by fallback");
+{
+  const obj = {
+    content_type: "news",
+    en_title: "Title",
+    en_summary: "Summary.",
+    en_body: "Body.",
+    en_seo_title: "Custom SEO Title",
+    en_meta_description: "Custom meta description.",
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok) {
+    assert(r.draft.en_seo_title === "Custom SEO Title", "explicit en_seo_title not overwritten");
+    assert(r.draft.en_meta_description === "Custom meta description.", "explicit en_meta_description not overwritten");
+  }
+}
+
+// ── Phase 4B-2E: has_islamic_dates accepts true ───────────────────────────────
+
+section("parseImportedDraft — has_islamic_dates: true (boolean) → 1");
+{
+  const obj = { ...VALID_CALENDAR, has_islamic_dates: true };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok && r.draft.contentType === "calendar") {
+    assert(r.draft.has_islamic_dates === 1, "has_islamic_dates true → 1");
+  }
+}
+
+section("parseImportedDraft — has_islamic_dates: 1 → 1");
+{
+  const obj = { ...VALID_CALENDAR, has_islamic_dates: 1 };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok && r.draft.contentType === "calendar") {
+    assert(r.draft.has_islamic_dates === 1, "has_islamic_dates 1 → 1");
+  }
+}
+
+section("parseImportedDraft — has_islamic_dates: 0 → 0");
+{
+  const obj = { ...VALID_CALENDAR, has_islamic_dates: 0 };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok && r.draft.contentType === "calendar") {
+    assert(r.draft.has_islamic_dates === 0, "has_islamic_dates 0 → 0");
+  }
+}
+
+// ── Phase 4B-2E: Islamic keyword auto-detection ───────────────────────────────
+
+section("parseImportedDraft — Islamic keywords in title auto-set has_islamic_dates=1");
+{
+  const obj = {
+    ...VALID_CALENDAR,
+    en_title: "Eid Al-Adha 2026 UAE Public Holiday",
+    has_islamic_dates: 0,
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok && r.draft.contentType === "calendar") {
+    assert(r.draft.has_islamic_dates === 1, "Eid keyword auto-sets has_islamic_dates=1");
+    assert(r.importWarnings.some(w => w.includes("Islamic")), "importWarnings mentions Islamic detection");
+  }
+}
+
+section("parseImportedDraft — Ramadan keyword auto-sets has_islamic_dates=1");
+{
+  const obj = {
+    ...VALID_CALENDAR,
+    en_title: "Ramadan 2026 Calendar UAE",
+    has_islamic_dates: 0,
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok && r.draft.contentType === "calendar") {
+    assert(r.draft.has_islamic_dates === 1, "Ramadan keyword auto-sets has_islamic_dates=1");
+  }
+}
+
+section("parseImportedDraft — Islamic detection: already has_islamic_dates=1 skips detection");
+{
+  const obj = {
+    ...VALID_CALENDAR,
+    en_title: "Eid Al-Adha 2026",
+    has_islamic_dates: 1,
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok && r.draft.contentType === "calendar") {
+    assert(r.draft.has_islamic_dates === 1, "has_islamic_dates stays 1");
+    assert(!r.importWarnings.some(w => w.includes("auto-set")), "no auto-set warning when already set");
+  }
+}
+
+// ── Phase 4B-2E: Yearly calendar month=null ───────────────────────────────────
+
+section("parseImportedDraft — calendar yearly type: month forced to null");
+{
+  const obj = { ...VALID_CALENDAR, calendar_type: "yearly", month: 6 };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok && r.draft.contentType === "calendar") {
+    assert(r.draft.month === null, "yearly calendar: month forced to null even if set");
+  }
+}
+
+section("parseImportedDraft — calendar monthly type: month preserved");
+{
+  const obj = { ...VALID_CALENDAR, calendar_type: "monthly", month: 6 };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok && r.draft.contentType === "calendar") {
+    assert(r.draft.month === 6, "monthly calendar: month 6 preserved");
+  }
+}
+
+// ── Phase 4B-2E: dates_json confidence values ─────────────────────────────────
+
+section("parseImportedDraft — dates_json confidence values preserved");
+{
+  const obj = {
+    ...VALID_CALENDAR,
+    dates_json: [
+      { date: "2026-06-05", label_en: "Arafah", label_ru: "Арафа", type: "public-holiday", confidence: "subject_to_official_confirmation", source: "u.ae" },
+      { date: "2026-06-06", label_en: "Eid Al-Adha", label_ru: "Ид аль-Адха", type: "public-holiday", confidence: "expected", source: "u.ae" },
+    ],
+  };
+  const r = parseImportedDraft(JSON.stringify(obj));
+  assert(r.ok === true, "parses successfully");
+  if (r.ok && r.draft.contentType === "calendar") {
+    assert(r.draft.dates_json[0].confidence === "subject_to_official_confirmation", "subject_to_official_confirmation preserved");
+    assert(r.draft.dates_json[1].confidence === "expected", "expected preserved");
+  }
+}
+
+// ── Phase 4B-2E: prompt includes image fields and file:// warning ─────────────
+
+section("buildImportPrompt — prompt includes image_path field");
+{
+  for (const type of ["news", "event", "calendar"] as const) {
+    const prompt = buildImportPrompt(type);
+    assert(prompt.includes("image_path"), `${type}: prompt includes image_path`);
+    assert(prompt.includes("image_alt"), `${type}: prompt includes image_alt`);
+    assert(prompt.includes("ru_image_alt"), `${type}: prompt includes ru_image_alt`);
+  }
+}
+
+section("buildImportPrompt — prompt includes file:// warning rule");
+{
+  for (const type of ["news", "event", "calendar"] as const) {
+    const prompt = buildImportPrompt(type);
+    assert(prompt.includes("file://"), `${type}: prompt mentions file:// restriction`);
+  }
+}
+
 // ── Summary ───────────────────────────────────────────────────────────────────
 
 console.log(`\n${"═".repeat(50)}`);

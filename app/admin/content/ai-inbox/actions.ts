@@ -57,6 +57,17 @@ export async function refineDraftAction(input: {
 
 // ── Field mappers (AI draft → writer input types) ─────────────────────────────
 
+// Accept /images/ and /uploads/ paths; reject file:// and absolute local paths.
+function sanitizeImagePath(raw: string | undefined): string {
+  const p = (raw ?? "").trim();
+  if (!p) return "";
+  if (p.startsWith("file://") || p.startsWith("/Users/") || p.startsWith("C:\\")) return "";
+  if (p.startsWith("/images/") || p.startsWith("/uploads/")) return p;
+  // Keep any other /... path but strip anything that looks absolute-local
+  if (p.startsWith("/")) return p;
+  return "";
+}
+
 function tagsToJson(tags: string[]): string {
   return JSON.stringify(Array.isArray(tags) ? tags : []);
 }
@@ -80,9 +91,9 @@ function newsInputFromDraft(draft: GeneratedNewsDraft) {
     source_label: draft.source_label,
     date_published: draft.date_published,
     date_updated: draft.date_updated,
+    image_path: sanitizeImagePath(draft.image_path),
     image_alt: draft.image_alt,
-    image_path: "",       // never set by AI — owner uploads
-    ru_image_alt: "",     // owner fills after review
+    ru_image_alt: draft.ru_image_alt || "",
     ru_published: 0,      // always 0 — AI never publishes RU
     featured_homepage: 0,
     featured_digest: 0,
@@ -141,9 +152,9 @@ function calendarInputFromDraft(draft: GeneratedCalendarDraft) {
     dates_json: JSON.stringify(Array.isArray(draft.dates_json) ? draft.dates_json : []),
     official_source_url: draft.official_source_url || draft.source_url,
     last_verified_date: draft.last_verified_date,
-    image_path: "",       // owner uploads
+    image_path: sanitizeImagePath(draft.image_path),
     image_alt: draft.image_alt,
-    ru_image_alt: "",
+    ru_image_alt: draft.ru_image_alt || "",
     has_islamic_dates: draft.has_islamic_dates,
     ru_published: 0,      // always 0
     featured_homepage: 0,

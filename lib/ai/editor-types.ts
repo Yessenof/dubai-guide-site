@@ -70,9 +70,11 @@ interface GeneratedDraftBase {
   ru_meta_description: string;
   source_url: string;
   source_label: string;
+  image_path: string;
   image_direction: string;
   image_prompt: string;
   image_alt: string;
+  ru_image_alt: string;
   publish_readiness: "ready" | "needs_review" | "incomplete";
   missing_fields: string[];
   verification_notes: string;

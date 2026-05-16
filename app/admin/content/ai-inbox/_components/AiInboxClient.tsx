@@ -44,17 +44,17 @@ const INPUT_TYPE_OPTIONS: { value: AiInputType; label: string }[] = [
 ];
 
 const RISK_COLORS: Record<string, string> = {
-  "low":    "text-emerald-700 bg-emerald-50",
-  "medium": "text-amber-700 bg-amber-50",
-  "high":   "text-red-700 bg-red-50",
+  "low":    "text-emerald-400 bg-emerald-950/40",
+  "medium": "text-amber-400 bg-amber-950/40",
+  "high":   "text-red-400 bg-red-950/40",
 };
 
 const RELIABILITY_COLORS: Record<string, string> = {
-  "official":             "text-emerald-700 bg-emerald-50",
-  "trusted_media":        "text-blue-700 bg-blue-50",
-  "public_social_signal": "text-amber-700 bg-amber-50",
-  "internal_note":        "text-gray-600 bg-gray-100",
-  "unknown":              "text-red-600 bg-red-50",
+  "official":             "text-emerald-400 bg-emerald-950/40",
+  "trusted_media":        "text-blue-400 bg-blue-950/40",
+  "public_social_signal": "text-amber-400 bg-amber-950/40",
+  "internal_note":        "text-slate-400 bg-slate-800",
+  "unknown":              "text-red-400 bg-red-950/40",
 };
 
 const RELIABILITY_LABELS: Record<string, string> = {
@@ -66,9 +66,9 @@ const RELIABILITY_LABELS: Record<string, string> = {
 };
 
 const READINESS_STYLES: Record<string, string> = {
-  "ready":        "text-emerald-700 bg-emerald-50 border-emerald-200",
-  "needs_review": "text-amber-700 bg-amber-50 border-amber-200",
-  "incomplete":   "text-red-700 bg-red-50 border-red-200",
+  "ready":        "text-emerald-400 bg-emerald-950/40 border-emerald-800",
+  "needs_review": "text-amber-400 bg-amber-950/40 border-amber-800",
+  "incomplete":   "text-red-400 bg-red-950/40 border-red-800",
 };
 
 const READINESS_LABELS: Record<string, string> = {
@@ -115,6 +115,7 @@ export default function AiInboxClient({
   const [importedDraft,     setImportedDraft]     = useState<(GeneratedDraft & { _forSave: true; ru_published: 0 }) | null>(null);
   const [importSaveable,    setImportSaveable]    = useState(true);
   const [importCoreErrors,  setImportCoreErrors]  = useState<string[]>([]);
+  const [importWarnings,    setImportWarnings]    = useState<string[]>([]);
   const [promptContentType, setPromptContentType] = useState<ContentType3>("news");
   const [promptCopied,      setPromptCopied]      = useState(false);
 
@@ -160,6 +161,7 @@ export default function AiInboxClient({
     setImportedDraft(result.draft);
     setImportSaveable(result.saveable);
     setImportCoreErrors(result.coreErrors);
+    setImportWarnings(result.importWarnings);
     setDraftSource("import");
     setPhase("draft");
   }
@@ -233,6 +235,7 @@ export default function AiInboxClient({
     setImportedDraft(null);
     setImportSaveable(true);
     setImportCoreErrors([]);
+    setImportWarnings([]);
     setImportText("");
     setImportError(null);
     setChangeSummary(null);
@@ -242,27 +245,27 @@ export default function AiInboxClient({
   // ── Shared CSS ────────────────────────────────────────────────────────────
 
   const inputCls =
-    "w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 " +
-    "placeholder-gray-300 focus:outline-none focus:border-gray-400 transition-colors bg-white";
+    "w-full border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 " +
+    "placeholder-slate-600 focus:outline-none focus:border-slate-500 transition-colors bg-slate-800";
 
   // ── Runtime notice ────────────────────────────────────────────────────────
 
   const runtimeNotice = isConnected ? (
-    <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-2.5 text-xs text-emerald-800">
+    <div className="rounded-xl bg-emerald-950/30 border border-emerald-800/50 px-4 py-2.5 text-xs text-emerald-400">
       <span className="font-semibold">AI runtime connected.</span>{" "}
       Paste a draft package directly, or use the AI analysis flow below.
     </div>
   ) : (
-    <div className="rounded-xl bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs text-gray-600">
-      <span className="font-semibold">Import mode active. No API required.</span>{" "}
+    <div className="rounded-xl bg-slate-800/50 border border-slate-700 px-4 py-2.5 text-xs text-slate-400">
+      <span className="font-semibold text-slate-300">Import mode active. No API required.</span>{" "}
       Use Claude Code or ChatGPT to generate a JSON draft, then paste it below.
     </div>
   );
 
   const errorBanner = aiError ? (
-    <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 flex items-start justify-between gap-3">
+    <div className="rounded-xl bg-red-950/40 border border-red-800/50 px-4 py-3 text-sm text-red-400 flex items-start justify-between gap-3">
       <span>{aiError}</span>
-      <button onClick={() => setAiError(null)} className="text-red-400 hover:text-red-600 shrink-0 text-xs">Dismiss</button>
+      <button onClick={() => setAiError(null)} className="text-red-600 hover:text-red-400 shrink-0 text-xs">Dismiss</button>
     </div>
   ) : null;
 
@@ -273,10 +276,10 @@ export default function AiInboxClient({
     return (
       <div className="space-y-4 max-w-2xl">
         {runtimeNotice}
-        <div className="bg-white rounded-2xl border border-gray-100 p-10 flex flex-col items-center gap-3 text-center">
-          <div className="w-6 h-6 border-2 border-gray-900 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-gray-600">{msg}</p>
-          <p className="text-xs text-gray-400">Usually 5–20 seconds.</p>
+        <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-10 flex flex-col items-center gap-3 text-center">
+          <div className="w-6 h-6 border-2 border-slate-300 border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-slate-400">{msg}</p>
+          <p className="text-xs text-slate-600">Usually 5–20 seconds.</p>
         </div>
       </div>
     );
@@ -289,17 +292,17 @@ export default function AiInboxClient({
 
     return (
       <div className="space-y-4 max-w-2xl">
-        <button onClick={reset} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">← Back to input</button>
+        <button onClick={reset} className="text-xs text-slate-500 hover:text-slate-300 transition-colors">← Back to input</button>
         {runtimeNotice}
         {errorBanner}
 
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+        <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-6 space-y-4">
           <div className="flex items-center gap-2">
-            <p className="text-xs font-medium uppercase tracking-widest text-gray-400">AI Classification</p>
+            <p className="text-xs font-medium uppercase tracking-widest text-slate-500">AI Classification</p>
             <span className={`text-[10px] font-semibold rounded-full px-2 py-0.5 border ${
-              aiClassification.confidence === "high"   ? "text-emerald-700 bg-emerald-50 border-emerald-200" :
-              aiClassification.confidence === "medium" ? "text-amber-700 bg-amber-50 border-amber-200" :
-                                                         "text-gray-600 bg-gray-100 border-gray-200"
+              aiClassification.confidence === "high"   ? "text-emerald-400 bg-emerald-950/40 border-emerald-800" :
+              aiClassification.confidence === "medium" ? "text-amber-400 bg-amber-950/40 border-amber-800" :
+                                                          "text-slate-400 bg-slate-800 border-slate-700"
             }`}>
               {CONFIDENCE_DOTS[aiClassification.confidence]} {aiClassification.confidence} confidence
             </span>
@@ -307,47 +310,47 @@ export default function AiInboxClient({
 
           <div className="grid grid-cols-2 gap-3 text-xs">
             <div>
-              <p className="text-gray-400 mb-0.5">Suggested type</p>
-              <p className="text-gray-800 font-semibold">{AI_TYPE_LABELS[aiClassification.suggestedType] ?? aiClassification.suggestedType}</p>
+              <p className="text-slate-500 mb-0.5">Suggested type</p>
+              <p className="text-slate-200 font-semibold">{AI_TYPE_LABELS[aiClassification.suggestedType] ?? aiClassification.suggestedType}</p>
             </div>
             <div>
-              <p className="text-gray-400 mb-0.5">Source reliability</p>
-              <span className={`inline-block text-[10px] font-semibold rounded-full px-2 py-0.5 ${RELIABILITY_COLORS[aiClassification.sourceReliability] ?? "text-gray-600 bg-gray-100"}`}>
+              <p className="text-slate-500 mb-0.5">Source reliability</p>
+              <span className={`inline-block text-[10px] font-semibold rounded-full px-2 py-0.5 ${RELIABILITY_COLORS[aiClassification.sourceReliability] ?? "text-slate-400 bg-slate-800"}`}>
                 {RELIABILITY_LABELS[aiClassification.sourceReliability] ?? aiClassification.sourceReliability}
               </span>
             </div>
             <div>
-              <p className="text-gray-400 mb-0.5">Risk level</p>
-              <span className={`inline-block text-[10px] font-semibold rounded-full px-2 py-0.5 ${RISK_COLORS[aiClassification.riskLevel] ?? "text-gray-600 bg-gray-100"}`}>
+              <p className="text-slate-500 mb-0.5">Risk level</p>
+              <span className={`inline-block text-[10px] font-semibold rounded-full px-2 py-0.5 ${RISK_COLORS[aiClassification.riskLevel] ?? "text-slate-400 bg-slate-800"}`}>
                 {aiClassification.riskLevel.charAt(0).toUpperCase() + aiClassification.riskLevel.slice(1)}
               </span>
             </div>
             <div>
-              <p className="text-gray-400 mb-0.5">Verification</p>
-              <span className={`text-xs font-semibold ${aiClassification.verificationRequired ? "text-red-600" : "text-emerald-600"}`}>
+              <p className="text-slate-500 mb-0.5">Verification</p>
+              <span className={`text-xs font-semibold ${aiClassification.verificationRequired ? "text-red-400" : "text-emerald-400"}`}>
                 {aiClassification.verificationRequired ? "Required" : "Not required"}
               </span>
             </div>
           </div>
 
           {aiClassification.reason && (
-            <p className="text-xs text-gray-500 border-t border-gray-100 pt-3 leading-relaxed">{aiClassification.reason}</p>
+            <p className="text-xs text-slate-400 border-t border-slate-700/50 pt-3 leading-relaxed">{aiClassification.reason}</p>
           )}
           {aiClassification.detectedDates.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-xs text-gray-400">Detected dates:</span>
+              <span className="text-xs text-slate-500">Detected dates:</span>
               {aiClassification.detectedDates.map((d) => (
-                <span key={d} className="text-xs font-mono text-gray-600 bg-gray-100 rounded px-2 py-0.5">{d}</span>
+                <span key={d} className="text-xs font-mono text-slate-300 bg-slate-800 rounded px-2 py-0.5">{d}</span>
               ))}
             </div>
           )}
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
-          <p className="text-xs font-medium uppercase tracking-widest text-gray-400">Generate draft as</p>
+        <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-6 space-y-4">
+          <p className="text-xs font-medium uppercase tracking-widest text-slate-500">Generate draft as</p>
 
           {isNonGeneratable && (
-            <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-700">
+            <div className="rounded-lg bg-amber-950/30 border border-amber-800/50 px-3 py-2 text-xs text-amber-400">
               AI suggested &ldquo;{AI_TYPE_LABELS[aiClassification.suggestedType]}&rdquo; — not directly saveable. Select the best fit below.
             </div>
           )}
@@ -359,8 +362,8 @@ export default function AiInboxClient({
                 onClick={() => setSelectedContentType(t)}
                 className={`flex-1 text-xs font-medium rounded-xl px-3 py-2.5 border transition-colors ${
                   selectedContentType === t
-                    ? "bg-gray-900 text-white border-gray-900"
-                    : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
+                    ? "bg-white text-slate-900 border-white"
+                    : "bg-slate-800 text-slate-400 border-slate-700 hover:border-slate-500 hover:text-slate-200"
                 }`}
               >
                 {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -370,7 +373,7 @@ export default function AiInboxClient({
 
           <button
             onClick={handleGenerateDraft}
-            className="w-full text-sm font-semibold bg-gray-900 text-white px-5 py-2.5 rounded-xl hover:bg-gray-700 transition-colors"
+            className="w-full text-sm font-semibold bg-white text-slate-900 px-5 py-2.5 rounded-xl hover:bg-slate-100 transition-colors"
           >
             Generate {selectedContentType} draft →
           </button>
@@ -389,9 +392,9 @@ export default function AiInboxClient({
     const eventD = draftType === "event"    ? (activeDraft as GeneratedEventDraft)    : null;
     const calD   = draftType === "calendar" ? (activeDraft as GeneratedCalendarDraft) : null;
     const confStyle: Record<string, string> = {
-      "confirmed": "text-emerald-700 bg-emerald-50",
-      "expected":  "text-amber-700 bg-amber-50",
-      "subject_to_official_confirmation": "text-red-600 bg-red-50",
+      "confirmed": "text-emerald-400 bg-emerald-950/40",
+      "expected":  "text-amber-400 bg-amber-950/40",
+      "subject_to_official_confirmation": "text-red-400 bg-red-950/40",
     };
     const allSaveErrors = [
       ...toErrorList(newsSaveState?.errors),
@@ -404,35 +407,49 @@ export default function AiInboxClient({
 
     return (
       <div className="space-y-4">
-        <button onClick={reset} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">← Back to input</button>
+        <button onClick={reset} className="text-xs text-slate-500 hover:text-slate-300 transition-colors">← Back to input</button>
         {runtimeNotice}
         {errorBanner}
 
         {isRefining && (
-          <div className="rounded-xl bg-blue-50 border border-blue-200 px-4 py-3 flex items-center gap-2.5">
-            <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin shrink-0" />
-            <p className="text-xs text-blue-700">Refining draft...</p>
+          <div className="rounded-xl bg-blue-950/30 border border-blue-800/50 px-4 py-3 flex items-center gap-2.5">
+            <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin shrink-0" />
+            <p className="text-xs text-blue-400">Refining draft...</p>
           </div>
         )}
         {changeSummary && !isRefining && (
-          <div className="rounded-xl bg-blue-50 border border-blue-200 px-4 py-2.5 text-xs text-blue-700">
+          <div className="rounded-xl bg-blue-950/30 border border-blue-800/50 px-4 py-2.5 text-xs text-blue-400">
             <span className="font-semibold">Refined: </span>{changeSummary}
           </div>
         )}
         {allSaveErrors.length > 0 && (
-          <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+          <div className="rounded-xl bg-red-950/40 border border-red-800/50 px-4 py-3 text-sm text-red-400">
             Save failed: {allSaveErrors.join("; ")}
           </div>
         )}
 
         {draftSource === "import" && importCoreErrors.length > 0 && (
-          <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 space-y-1.5">
-            <p className="text-xs font-semibold text-red-700">Imported package is incomplete — fix in your AI tool before saving:</p>
+          <div className="rounded-xl bg-red-950/30 border border-red-800/40 px-4 py-3 space-y-1.5">
+            <p className="text-xs font-semibold text-red-400">Imported package is incomplete — fix in your AI tool before saving:</p>
             <ul className="space-y-0.5">
               {importCoreErrors.map((e, i) => (
-                <li key={i} className="text-xs text-red-600 flex items-center gap-1.5">
-                  <span className="w-1 h-1 rounded-full bg-red-400 shrink-0" />
+                <li key={i} className="text-xs text-red-400 flex items-center gap-1.5">
+                  <span className="w-1 h-1 rounded-full bg-red-500 shrink-0" />
                   {e}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {draftSource === "import" && importWarnings.length > 0 && (
+          <div className="rounded-xl bg-amber-950/30 border border-amber-800/40 px-4 py-3 space-y-1.5">
+            <p className="text-xs font-semibold text-amber-400">Import notices — review before saving:</p>
+            <ul className="space-y-0.5">
+              {importWarnings.map((w, i) => (
+                <li key={i} className="text-xs text-amber-400 flex items-start gap-1.5">
+                  <span className="mt-1 w-1 h-1 rounded-full bg-amber-500 shrink-0" />
+                  {w}
                 </li>
               ))}
             </ul>
@@ -444,108 +461,108 @@ export default function AiInboxClient({
           {/* Left: draft content */}
           <div className="space-y-4">
 
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-3">
+            <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-6 space-y-3">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs font-medium uppercase tracking-widest text-gray-400">{draftLabel}</span>
-                <span className="text-xs font-semibold text-gray-700 bg-gray-100 rounded-full px-2.5 py-0.5 capitalize">{draftType}</span>
-                <span className={`text-[10px] font-semibold rounded-full px-2 py-0.5 border ${READINESS_STYLES[readiness] ?? "text-gray-600 bg-gray-100 border-gray-200"}`}>
+                <span className="text-xs font-medium uppercase tracking-widest text-slate-500">{draftLabel}</span>
+                <span className="text-xs font-semibold text-slate-300 bg-slate-800 rounded-full px-2.5 py-0.5 capitalize">{draftType}</span>
+                <span className={`text-[10px] font-semibold rounded-full px-2 py-0.5 border ${READINESS_STYLES[readiness] ?? "text-slate-400 bg-slate-800 border-slate-700"}`}>
                   {READINESS_LABELS[readiness] ?? readiness}
                 </span>
               </div>
               <div>
-                <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest mb-0.5">EN Title</p>
-                <p className="text-sm font-semibold text-gray-900">{activeDraft.en_title || <span className="text-red-500 italic">Empty</span>}</p>
+                <p className="text-[10px] font-medium text-slate-500 uppercase tracking-widest mb-0.5">EN Title</p>
+                <p className="text-sm font-semibold text-slate-100">{activeDraft.en_title || <span className="text-red-400 italic">Empty</span>}</p>
               </div>
               <div>
-                <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest mb-0.5">Slug</p>
-                <p className="text-xs font-mono text-gray-600">{activeDraft.slug}</p>
+                <p className="text-[10px] font-medium text-slate-500 uppercase tracking-widest mb-0.5">Slug</p>
+                <p className="text-xs font-mono text-slate-400">{activeDraft.slug}</p>
               </div>
               {activeDraft.en_summary && (
                 <div>
-                  <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest mb-0.5">EN Summary</p>
-                  <p className="text-sm text-gray-600">{activeDraft.en_summary}</p>
+                  <p className="text-[10px] font-medium text-slate-500 uppercase tracking-widest mb-0.5">EN Summary</p>
+                  <p className="text-sm text-slate-300">{activeDraft.en_summary}</p>
                 </div>
               )}
             </div>
 
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-2">
-              <p className="text-xs font-medium uppercase tracking-widest text-gray-400">EN Body</p>
-              <p className="text-xs text-gray-500 leading-relaxed whitespace-pre-wrap">
+            <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-6 space-y-2">
+              <p className="text-xs font-medium uppercase tracking-widest text-slate-500">EN Body</p>
+              <p className="text-xs text-slate-400 leading-relaxed whitespace-pre-wrap">
                 {activeDraft.en_body.slice(0, 600)}{activeDraft.en_body.length > 600 ? "…" : ""}
               </p>
               {activeDraft.en_body.length > 600 && (
-                <p className="text-[10px] text-gray-400">{activeDraft.en_body.length.toLocaleString()} chars total — full body saves to DB</p>
+                <p className="text-[10px] text-slate-600">{activeDraft.en_body.length.toLocaleString()} chars total — full body saves to DB</p>
               )}
             </div>
 
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-3">
-              <p className="text-xs font-medium uppercase tracking-widest text-gray-400">SEO</p>
+            <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-6 space-y-3">
+              <p className="text-xs font-medium uppercase tracking-widest text-slate-500">SEO</p>
               <div>
-                <p className="text-[10px] text-gray-400 mb-0.5">SEO title ({activeDraft.en_seo_title.length}/60)</p>
-                <p className="text-xs text-gray-700">{activeDraft.en_seo_title || <span className="text-gray-400 italic">Empty</span>}</p>
+                <p className="text-[10px] text-slate-500 mb-0.5">SEO title ({activeDraft.en_seo_title.length}/60)</p>
+                <p className="text-xs text-slate-300">{activeDraft.en_seo_title || <span className="text-slate-600 italic">Empty</span>}</p>
               </div>
               <div>
-                <p className="text-[10px] text-gray-400 mb-0.5">Meta description ({activeDraft.en_meta_description.length}/160)</p>
-                <p className="text-xs text-gray-700">{activeDraft.en_meta_description || <span className="text-gray-400 italic">Empty</span>}</p>
+                <p className="text-[10px] text-slate-500 mb-0.5">Meta description ({activeDraft.en_meta_description.length}/160)</p>
+                <p className="text-xs text-slate-300">{activeDraft.en_meta_description || <span className="text-slate-600 italic">Empty</span>}</p>
               </div>
             </div>
 
             {newsD && (
-              <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-3">
-                <p className="text-xs font-medium uppercase tracking-widest text-gray-400">News metadata</p>
+              <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-6 space-y-3">
+                <p className="text-xs font-medium uppercase tracking-widest text-slate-500">News metadata</p>
                 <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div><p className="text-gray-400 mb-0.5">Category</p><p className="text-gray-700 font-medium">{newsD.category}</p></div>
-                  <div><p className="text-gray-400 mb-0.5">Source label</p><p className="text-gray-700">{newsD.source_label}</p></div>
-                  <div><p className="text-gray-400 mb-0.5">Date published</p><p className="text-gray-700 font-mono">{newsD.date_published || "—"}</p></div>
-                  <div><p className="text-gray-400 mb-0.5">Date updated</p><p className="text-gray-700 font-mono">{newsD.date_updated || "—"}</p></div>
+                  <div><p className="text-slate-500 mb-0.5">Category</p><p className="text-slate-300 font-medium">{newsD.category}</p></div>
+                  <div><p className="text-slate-500 mb-0.5">Source label</p><p className="text-slate-300">{newsD.source_label}</p></div>
+                  <div><p className="text-slate-500 mb-0.5">Date published</p><p className="text-slate-300 font-mono">{newsD.date_published || "—"}</p></div>
+                  <div><p className="text-slate-500 mb-0.5">Date updated</p><p className="text-slate-300 font-mono">{newsD.date_updated || "—"}</p></div>
                 </div>
               </div>
             )}
 
             {eventD && (
-              <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-3">
-                <p className="text-xs font-medium uppercase tracking-widest text-gray-400">Event metadata</p>
+              <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-6 space-y-3">
+                <p className="text-xs font-medium uppercase tracking-widest text-slate-500">Event metadata</p>
                 <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div><p className="text-gray-400 mb-0.5">Category</p><p className="text-gray-700 font-medium">{eventD.category}</p></div>
-                  <div><p className="text-gray-400 mb-0.5">Color type</p><p className="text-gray-700">{eventD.color_type}</p></div>
-                  <div><p className="text-gray-400 mb-0.5">Start date</p><p className="text-gray-700 font-mono">{eventD.event_date_start || "—"}</p></div>
-                  <div><p className="text-gray-400 mb-0.5">End date</p><p className="text-gray-700 font-mono">{eventD.event_date_end || "—"}</p></div>
-                  <div><p className="text-gray-400 mb-0.5">Date confidence</p><p className="text-gray-700">{eventD.date_confidence}</p></div>
+                  <div><p className="text-slate-500 mb-0.5">Category</p><p className="text-slate-300 font-medium">{eventD.category}</p></div>
+                  <div><p className="text-slate-500 mb-0.5">Color type</p><p className="text-slate-300">{eventD.color_type}</p></div>
+                  <div><p className="text-slate-500 mb-0.5">Start date</p><p className="text-slate-300 font-mono">{eventD.event_date_start || "—"}</p></div>
+                  <div><p className="text-slate-500 mb-0.5">End date</p><p className="text-slate-300 font-mono">{eventD.event_date_end || "—"}</p></div>
+                  <div><p className="text-slate-500 mb-0.5">Date confidence</p><p className="text-slate-300">{eventD.date_confidence}</p></div>
                   <div>
-                    <p className="text-gray-400 mb-0.5">Schema eligible</p>
-                    <p className={eventD.schema_eligible ? "text-emerald-600 font-semibold" : "text-gray-500"}>{eventD.schema_eligible ? "Yes" : "No"}</p>
+                    <p className="text-slate-500 mb-0.5">Schema eligible</p>
+                    <p className={eventD.schema_eligible ? "text-emerald-400 font-semibold" : "text-slate-500"}>{eventD.schema_eligible ? "Yes" : "No"}</p>
                   </div>
                 </div>
               </div>
             )}
 
             {calD && (
-              <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-3">
-                <p className="text-xs font-medium uppercase tracking-widest text-gray-400">Calendar metadata</p>
+              <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-6 space-y-3">
+                <p className="text-xs font-medium uppercase tracking-widest text-slate-500">Calendar metadata</p>
                 <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div><p className="text-gray-400 mb-0.5">Calendar type</p><p className="text-gray-700 font-medium">{calD.calendar_type}</p></div>
-                  <div><p className="text-gray-400 mb-0.5">Year / Month</p><p className="text-gray-700">{calD.year}{calD.month != null ? ` / ${calD.month}` : " (yearly)"}</p></div>
+                  <div><p className="text-slate-500 mb-0.5">Calendar type</p><p className="text-slate-300 font-medium">{calD.calendar_type}</p></div>
+                  <div><p className="text-slate-500 mb-0.5">Year / Month</p><p className="text-slate-300">{calD.year}{calD.month != null ? ` / ${calD.month}` : " (yearly)"}</p></div>
                   <div>
-                    <p className="text-gray-400 mb-0.5">Islamic dates</p>
-                    <p className={calD.has_islamic_dates ? "text-amber-600" : "text-gray-500"}>{calD.has_islamic_dates ? "Yes — moon sighting applies" : "No"}</p>
+                    <p className="text-slate-500 mb-0.5">Islamic dates</p>
+                    <p className={calD.has_islamic_dates ? "text-amber-400" : "text-slate-500"}>{calD.has_islamic_dates ? "Yes — moon sighting applies" : "No"}</p>
                   </div>
-                  <div><p className="text-gray-400 mb-0.5">Dates in list</p><p className="text-gray-700 font-semibold">{calD.dates_json.length}</p></div>
+                  <div><p className="text-slate-500 mb-0.5">Dates in list</p><p className="text-slate-300 font-semibold">{calD.dates_json.length}</p></div>
                 </div>
                 {calD.en_notes && (
-                  <div><p className="text-[10px] text-gray-400 mb-0.5">EN Notes</p><p className="text-xs text-gray-600">{calD.en_notes}</p></div>
+                  <div><p className="text-[10px] text-slate-500 mb-0.5">EN Notes</p><p className="text-xs text-slate-400">{calD.en_notes}</p></div>
                 )}
                 {calD.dates_json.length > 0 && (
                   <div>
-                    <p className="text-[10px] text-gray-400 mb-1">First 3 dates</p>
+                    <p className="text-[10px] text-slate-500 mb-1">First 3 dates</p>
                     <div className="space-y-1">
                       {calD.dates_json.slice(0, 3).map((d, i) => (
                         <div key={i} className="flex items-center gap-2 text-xs">
-                          <span className="font-mono text-gray-600">{d.date}</span>
-                          <span className="text-gray-500">{d.label_en}</span>
-                          <span className={`text-[10px] rounded px-1.5 py-0.5 ${confStyle[d.confidence] ?? "text-gray-600 bg-gray-100"}`}>{d.confidence}</span>
+                          <span className="font-mono text-slate-400">{d.date}</span>
+                          <span className="text-slate-400">{d.label_en}</span>
+                          <span className={`text-[10px] rounded px-1.5 py-0.5 ${confStyle[d.confidence] ?? "text-slate-400 bg-slate-800"}`}>{d.confidence}</span>
                         </div>
                       ))}
-                      {calD.dates_json.length > 3 && <p className="text-[10px] text-gray-400">+{calD.dates_json.length - 3} more</p>}
+                      {calD.dates_json.length > 3 && <p className="text-[10px] text-slate-600">+{calD.dates_json.length - 3} more</p>}
                     </div>
                   </div>
                 )}
@@ -553,19 +570,19 @@ export default function AiInboxClient({
             )}
 
             {activeDraft.verification_notes?.trim() && (
-              <div className="bg-amber-50 rounded-2xl border border-amber-200 p-5 space-y-2">
-                <p className="text-xs font-medium uppercase tracking-widest text-amber-700">Verification required before publish</p>
-                <p className="text-xs text-amber-800 leading-relaxed">{activeDraft.verification_notes}</p>
+              <div className="bg-amber-950/20 rounded-2xl border border-amber-800/40 p-5 space-y-2">
+                <p className="text-xs font-medium uppercase tracking-widest text-amber-500">Verification required before publish</p>
+                <p className="text-xs text-amber-400 leading-relaxed">{activeDraft.verification_notes}</p>
               </div>
             )}
 
             {activeDraft.missing_fields.length > 0 && (
-              <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-2">
-                <p className="text-xs font-medium uppercase tracking-widest text-gray-400">Missing before publish</p>
+              <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-5 space-y-2">
+                <p className="text-xs font-medium uppercase tracking-widest text-slate-500">Missing before publish</p>
                 <ul className="space-y-1">
                   {activeDraft.missing_fields.map((f, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-gray-500">
-                      <span className="mt-0.5 w-3 h-3 rounded border border-gray-300 shrink-0" />
+                    <li key={i} className="flex items-start gap-2 text-xs text-slate-400">
+                      <span className="mt-0.5 w-3 h-3 rounded border border-slate-600 shrink-0" />
                       {f}
                     </li>
                   ))}
@@ -573,33 +590,40 @@ export default function AiInboxClient({
               </div>
             )}
 
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-2">
-              <p className="text-xs font-medium uppercase tracking-widest text-gray-400">Russian draft</p>
+            <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-6 space-y-2">
+              <p className="text-xs font-medium uppercase tracking-widest text-slate-500">Russian draft</p>
               {activeDraft.ru_title ? (
                 <div className="space-y-2">
-                  <div><p className="text-[10px] text-gray-400 mb-0.5">RU title</p><p className="text-sm font-semibold text-gray-700">{activeDraft.ru_title}</p></div>
-                  {activeDraft.ru_summary && <div><p className="text-[10px] text-gray-400 mb-0.5">RU summary</p><p className="text-xs text-gray-600">{activeDraft.ru_summary}</p></div>}
-                  <p className="text-[10px] text-gray-400">Full RU body saves to DB. ru_published stays off until you approve in the editor.</p>
+                  <div><p className="text-[10px] text-slate-500 mb-0.5">RU title</p><p className="text-sm font-semibold text-slate-300">{activeDraft.ru_title}</p></div>
+                  {activeDraft.ru_summary && <div><p className="text-[10px] text-slate-500 mb-0.5">RU summary</p><p className="text-xs text-slate-400">{activeDraft.ru_summary}</p></div>}
+                  <p className="text-[10px] text-slate-600">Full RU body saves to DB. ru_published stays off until you approve in the editor.</p>
                 </div>
               ) : (
-                <p className="text-xs text-gray-400 italic">No RU content in this draft.</p>
+                <p className="text-xs text-slate-600 italic">No RU content in this draft.</p>
               )}
             </div>
 
-            {(activeDraft.image_direction || activeDraft.tags.length > 0) && (
-              <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-3">
+            {(activeDraft.image_path || activeDraft.image_direction || activeDraft.tags.length > 0) && (
+              <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-5 space-y-3">
+                {activeDraft.image_path && (
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-widest text-slate-500 mb-1">Image path</p>
+                    <p className="text-xs font-mono text-slate-300">{activeDraft.image_path}</p>
+                    {activeDraft.image_alt && <p className="text-[10px] text-slate-500 mt-1">Alt: {activeDraft.image_alt}</p>}
+                  </div>
+                )}
                 {activeDraft.image_direction && (
                   <div>
-                    <p className="text-xs font-medium uppercase tracking-widest text-gray-400 mb-1">Image direction</p>
-                    <p className="text-xs text-gray-600 leading-relaxed">{activeDraft.image_direction}</p>
-                    {activeDraft.image_alt && <p className="text-[10px] text-gray-400 mt-1">Alt: {activeDraft.image_alt}</p>}
+                    <p className="text-xs font-medium uppercase tracking-widest text-slate-500 mb-1">Image direction</p>
+                    <p className="text-xs text-slate-400 leading-relaxed">{activeDraft.image_direction}</p>
+                    {!activeDraft.image_path && activeDraft.image_alt && <p className="text-[10px] text-slate-600 mt-1">Alt: {activeDraft.image_alt}</p>}
                   </div>
                 )}
                 {activeDraft.tags.length > 0 && (
                   <div>
-                    <p className="text-xs font-medium uppercase tracking-widest text-gray-400 mb-1">Tags</p>
+                    <p className="text-xs font-medium uppercase tracking-widest text-slate-500 mb-1">Tags</p>
                     <div className="flex flex-wrap gap-1.5">
-                      {activeDraft.tags.map((t) => <span key={t} className="text-xs font-mono text-gray-600 bg-gray-100 rounded px-2 py-0.5">{t}</span>)}
+                      {activeDraft.tags.map((t) => <span key={t} className="text-xs font-mono text-slate-400 bg-slate-800 rounded px-2 py-0.5">{t}</span>)}
                     </div>
                   </div>
                 )}
@@ -612,18 +636,18 @@ export default function AiInboxClient({
 
             {/* AI classification summary (AI mode only) */}
             {draftSource === "ai" && aiClassification && (
-              <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-3">
-                <p className="text-xs font-medium uppercase tracking-widest text-gray-400">Source analysis</p>
+              <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-5 space-y-3">
+                <p className="text-xs font-medium uppercase tracking-widest text-slate-500">Source analysis</p>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500">Source</span>
-                    <span className={`text-[10px] font-semibold rounded-full px-2 py-0.5 ${RELIABILITY_COLORS[aiClassification.sourceReliability] ?? "text-gray-600 bg-gray-100"}`}>
+                    <span className="text-xs text-slate-400">Source</span>
+                    <span className={`text-[10px] font-semibold rounded-full px-2 py-0.5 ${RELIABILITY_COLORS[aiClassification.sourceReliability] ?? "text-slate-400 bg-slate-800"}`}>
                       {RELIABILITY_LABELS[aiClassification.sourceReliability] ?? aiClassification.sourceReliability}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500">Risk</span>
-                    <span className={`text-[10px] font-semibold rounded-full px-2 py-0.5 ${RISK_COLORS[aiClassification.riskLevel] ?? "text-gray-600 bg-gray-100"}`}>
+                    <span className="text-xs text-slate-400">Risk</span>
+                    <span className={`text-[10px] font-semibold rounded-full px-2 py-0.5 ${RISK_COLORS[aiClassification.riskLevel] ?? "text-slate-400 bg-slate-800"}`}>
                       {aiClassification.riskLevel.charAt(0).toUpperCase() + aiClassification.riskLevel.slice(1)}
                     </span>
                   </div>
@@ -633,43 +657,43 @@ export default function AiInboxClient({
 
             {/* Refine */}
             {isConnected ? (
-              <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-3">
-                <p className="text-xs font-medium uppercase tracking-widest text-gray-400">Refine with AI</p>
+              <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-5 space-y-3">
+                <p className="text-xs font-medium uppercase tracking-widest text-slate-500">Refine with AI</p>
                 <textarea
                   rows={3}
                   value={refinePrompt}
                   onChange={(e) => setRefinePrompt(e.target.value)}
                   disabled={isRefining}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:border-gray-400 transition-colors bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-slate-500 transition-colors bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder='e.g. "Shorter body. Focus on employer obligations. Improve RU title."'
                 />
                 <button
                   onClick={handleRefineDraft}
                   disabled={isRefining || !refinePrompt.trim()}
-                  className="w-full text-sm font-medium bg-gray-900 text-white rounded-xl px-4 py-2.5 transition-colors hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="w-full text-sm font-medium bg-white text-slate-900 rounded-xl px-4 py-2.5 transition-colors hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {isRefining ? "Refining…" : "Refine draft →"}
                 </button>
               </div>
             ) : (
-              <div className="bg-gray-50 rounded-2xl border border-gray-100 p-5 space-y-2 opacity-60">
-                <p className="text-xs font-medium uppercase tracking-widest text-gray-400">Refine with AI</p>
-                <p className="text-xs text-gray-400">Connect AI runtime to refine. Edit manually in the Advanced Editor instead.</p>
-                <button disabled className="w-full text-sm font-medium bg-gray-200 text-gray-400 rounded-xl px-4 py-2.5 cursor-not-allowed">Refine draft — AI not connected</button>
+              <div className="bg-slate-800/30 rounded-2xl border border-slate-700/30 p-5 space-y-2 opacity-60">
+                <p className="text-xs font-medium uppercase tracking-widest text-slate-500">Refine with AI</p>
+                <p className="text-xs text-slate-500">Connect AI runtime to refine. Edit manually in the Advanced Editor instead.</p>
+                <button disabled className="w-full text-sm font-medium bg-slate-800 text-slate-600 rounded-xl px-4 py-2.5 cursor-not-allowed">Refine draft — AI not connected</button>
               </div>
             )}
 
             {/* Save */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-3">
-              <p className="text-xs font-medium uppercase tracking-widest text-gray-400">Save draft</p>
-              <p className="text-xs text-gray-400 leading-relaxed">
+            <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-5 space-y-3">
+              <p className="text-xs font-medium uppercase tracking-widest text-slate-500">Save draft</p>
+              <p className="text-xs text-slate-500 leading-relaxed">
                 Saves as status=draft. Complete remaining fields in the editor before publishing.
               </p>
 
               {draftType === "news" && (
                 <form action={newsSaveAction}>
                   <input type="hidden" name="_draft_json" value={draftJson} />
-                  <button type="submit" disabled={saveDisabled} className="w-full text-sm font-semibold bg-gray-900 text-white rounded-xl px-4 py-2.5 hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-left">
+                  <button type="submit" disabled={saveDisabled} className="w-full text-sm font-semibold bg-white text-slate-900 rounded-xl px-4 py-2.5 hover:bg-slate-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-left">
                     {newsIsPending ? "Saving…" : "Save as News draft →"}
                   </button>
                 </form>
@@ -677,7 +701,7 @@ export default function AiInboxClient({
               {draftType === "event" && (
                 <form action={eventSaveAction}>
                   <input type="hidden" name="_draft_json" value={draftJson} />
-                  <button type="submit" disabled={saveDisabled} className="w-full text-sm font-semibold bg-gray-900 text-white rounded-xl px-4 py-2.5 hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-left">
+                  <button type="submit" disabled={saveDisabled} className="w-full text-sm font-semibold bg-white text-slate-900 rounded-xl px-4 py-2.5 hover:bg-slate-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-left">
                     {eventIsPending ? "Saving…" : "Save as Event draft →"}
                   </button>
                 </form>
@@ -685,39 +709,39 @@ export default function AiInboxClient({
               {draftType === "calendar" && (
                 <form action={calSaveAction}>
                   <input type="hidden" name="_draft_json" value={draftJson} />
-                  <button type="submit" disabled={saveDisabled} className="w-full text-sm font-semibold bg-gray-900 text-white rounded-xl px-4 py-2.5 hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-left">
+                  <button type="submit" disabled={saveDisabled} className="w-full text-sm font-semibold bg-white text-slate-900 rounded-xl px-4 py-2.5 hover:bg-slate-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-left">
                     {calIsPending ? "Saving…" : "Save as Calendar draft →"}
                   </button>
                 </form>
               )}
 
               <details className="mt-1">
-                <summary className="text-[10px] text-gray-400 cursor-pointer select-none hover:text-gray-600">
+                <summary className="text-[10px] text-slate-500 cursor-pointer select-none hover:text-slate-400">
                   Save as different type (override)
                 </summary>
                 <div className="mt-2 space-y-2">
                   {draftType !== "news" && (
                     <form action={newsSaveAction}>
                       <input type="hidden" name="_draft_json" value={draftJson} />
-                      <button type="submit" disabled={saveDisabled} className="w-full text-xs text-gray-500 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 text-left transition-colors disabled:opacity-40">Force save as News</button>
+                      <button type="submit" disabled={saveDisabled} className="w-full text-xs text-slate-400 border border-slate-700 rounded-lg px-3 py-1.5 hover:bg-slate-800 text-left transition-colors disabled:opacity-40">Force save as News</button>
                     </form>
                   )}
                   {draftType !== "event" && (
                     <form action={eventSaveAction}>
                       <input type="hidden" name="_draft_json" value={draftJson} />
-                      <button type="submit" disabled={saveDisabled} className="w-full text-xs text-gray-500 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 text-left transition-colors disabled:opacity-40">Force save as Event</button>
+                      <button type="submit" disabled={saveDisabled} className="w-full text-xs text-slate-400 border border-slate-700 rounded-lg px-3 py-1.5 hover:bg-slate-800 text-left transition-colors disabled:opacity-40">Force save as Event</button>
                     </form>
                   )}
                   {draftType !== "calendar" && (
                     <form action={calSaveAction}>
                       <input type="hidden" name="_draft_json" value={draftJson} />
-                      <button type="submit" disabled={saveDisabled} className="w-full text-xs text-gray-500 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 text-left transition-colors disabled:opacity-40">Force save as Calendar</button>
+                      <button type="submit" disabled={saveDisabled} className="w-full text-xs text-slate-400 border border-slate-700 rounded-lg px-3 py-1.5 hover:bg-slate-800 text-left transition-colors disabled:opacity-40">Force save as Calendar</button>
                     </form>
                   )}
                 </div>
               </details>
 
-              <button onClick={reset} className="w-full text-xs text-gray-400 hover:text-gray-600 transition-colors text-left pt-1">
+              <button onClick={reset} className="w-full text-xs text-slate-500 hover:text-slate-400 transition-colors text-left pt-1">
                 ← Discard and start over
               </button>
             </div>
@@ -734,7 +758,7 @@ export default function AiInboxClient({
   return (
     <div className="space-y-4 max-w-2xl">
       {saveError && (
-        <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-xl bg-red-950/40 border border-red-800/50 px-4 py-3 text-sm text-red-400">
           Save failed: {saveError}. Please try again or use the Advanced Editor.
         </div>
       )}
@@ -742,18 +766,18 @@ export default function AiInboxClient({
       {errorBanner}
 
       {/* ── Import section (primary) ────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
-        <p className="text-xs font-medium uppercase tracking-widest text-gray-400">Paste AI Draft Package</p>
+      <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-6 space-y-5">
+        <p className="text-xs font-medium uppercase tracking-widest text-slate-500">Paste AI Draft Package</p>
 
         {/* Prompt builder (collapsible) */}
-        <details className="border border-gray-100 rounded-xl overflow-hidden">
-          <summary className="px-4 py-3 text-xs font-medium text-gray-600 cursor-pointer select-none hover:bg-gray-50 transition-colors flex items-center justify-between">
+        <details className="border border-slate-700/50 rounded-xl overflow-hidden">
+          <summary className="px-4 py-3 text-xs font-medium text-slate-400 cursor-pointer select-none hover:bg-slate-800 transition-colors flex items-center justify-between">
             <span>Get prompt for Claude / ChatGPT</span>
-            <span className="text-gray-400">▾</span>
+            <span className="text-slate-600">▾</span>
           </summary>
-          <div className="px-4 pb-4 pt-3 space-y-3 bg-gray-50">
+          <div className="px-4 pb-4 pt-3 space-y-3 bg-slate-800/50">
             <div>
-              <label className="block text-xs text-gray-500 mb-1.5">Content type</label>
+              <label className="block text-xs text-slate-500 mb-1.5">Content type</label>
               <div className="flex gap-2">
                 {(["news", "event", "calendar"] as ContentType3[]).map((t) => (
                   <button
@@ -761,8 +785,8 @@ export default function AiInboxClient({
                     onClick={() => setPromptContentType(t)}
                     className={`flex-1 text-xs font-medium rounded-lg px-3 py-1.5 border transition-colors ${
                       promptContentType === t
-                        ? "bg-gray-900 text-white border-gray-900"
-                        : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
+                        ? "bg-white text-slate-900 border-white"
+                        : "bg-slate-800 text-slate-400 border-slate-700 hover:border-slate-500"
                     }`}
                   >
                     {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -774,20 +798,20 @@ export default function AiInboxClient({
               readOnly
               rows={8}
               value={promptText}
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-xs font-mono text-gray-700 bg-white focus:outline-none resize-none leading-relaxed"
+              className="w-full border border-slate-700 rounded-xl px-4 py-3 text-xs font-mono text-slate-300 bg-slate-900 focus:outline-none resize-none leading-relaxed"
               onClick={(e) => (e.target as HTMLTextAreaElement).select()}
             />
             <button
               onClick={handleCopyPrompt}
               className={`text-xs font-medium px-4 py-2 rounded-lg border transition-colors ${
                 promptCopied
-                  ? "bg-emerald-50 border-emerald-200 text-emerald-700"
-                  : "bg-white border-gray-200 text-gray-600 hover:border-gray-400"
+                  ? "bg-emerald-950/40 border-emerald-800/50 text-emerald-400"
+                  : "bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500"
               }`}
             >
               {promptCopied ? "Copied ✓" : "Copy prompt →"}
             </button>
-            <p className="text-[10px] text-gray-400 leading-relaxed">
+            <p className="text-[10px] text-slate-600 leading-relaxed">
               Paste this prompt into Claude Code or ChatGPT, add your source material where indicated, then paste the JSON output below.
             </p>
           </div>
@@ -795,9 +819,9 @@ export default function AiInboxClient({
 
         {/* Import textarea */}
         <div>
-          <label className="block text-xs text-gray-500 mb-1.5">
+          <label className="block text-xs text-slate-500 mb-1.5">
             AI Draft Package (JSON)
-            <span className="ml-1 font-normal text-gray-400 normal-case tracking-normal">— paste the JSON from Claude or ChatGPT</span>
+            <span className="ml-1 font-normal text-slate-600 normal-case tracking-normal">— paste the JSON from Claude or ChatGPT</span>
           </label>
           <textarea
             rows={10}
@@ -806,11 +830,11 @@ export default function AiInboxClient({
             className={inputCls}
             placeholder={'{\n  "contentType": "news",\n  "en_title": "...",\n  ...\n}'}
           />
-          <p className="text-[10px] text-gray-400 mt-1">{importText.length.toLocaleString()} chars</p>
+          <p className="text-[10px] text-slate-600 mt-1">{importText.length.toLocaleString()} chars</p>
         </div>
 
         {importError && (
-          <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-xs text-red-700 leading-relaxed">
+          <div className="rounded-xl bg-red-950/30 border border-red-800/40 px-4 py-3 text-xs text-red-400 leading-relaxed">
             <span className="font-semibold">Parse error: </span>{importError}
           </div>
         )}
@@ -818,7 +842,7 @@ export default function AiInboxClient({
         <button
           onClick={handleParseImport}
           disabled={!importText.trim()}
-          className="text-sm font-semibold bg-gray-900 text-white px-5 py-2.5 rounded-xl hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="text-sm font-semibold bg-white text-slate-900 px-5 py-2.5 rounded-xl hover:bg-slate-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           Import draft →
         </button>
@@ -826,20 +850,20 @@ export default function AiInboxClient({
 
       {/* ── AI section (connected mode only) ───────────────────────────────── */}
       {isConnected && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
-          <p className="text-xs font-medium uppercase tracking-widest text-gray-400">Analyze with AI</p>
+        <div className="bg-slate-900 rounded-2xl border border-slate-700/50 p-6 space-y-4">
+          <p className="text-xs font-medium uppercase tracking-widest text-slate-500">Analyze with AI</p>
 
           <div>
-            <label className="block text-xs text-gray-500 mb-1.5">Input type</label>
+            <label className="block text-xs text-slate-500 mb-1.5">Input type</label>
             <select value={inputType} onChange={(e) => setInputType(e.target.value as AiInputType)} className={inputCls}>
               {INPUT_TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
           </div>
 
           <div>
-            <label className="block text-xs text-gray-500 mb-1.5">
+            <label className="block text-xs text-slate-500 mb-1.5">
               Main input
-              <span className="ml-1 font-normal text-gray-400 normal-case tracking-normal">
+              <span className="ml-1 font-normal text-slate-600 normal-case tracking-normal">
                 — paste URL, article, Telegram message, or notes
               </span>
             </label>
@@ -854,21 +878,21 @@ export default function AiInboxClient({
                 "Paste the full article, announcement, or your notes here..."
               }
             />
-            <p className="text-[10px] text-gray-400 mt-1">{mainInput.length.toLocaleString()} chars</p>
+            <p className="text-[10px] text-slate-600 mt-1">{mainInput.length.toLocaleString()} chars</p>
           </div>
 
           <div>
-            <label className="block text-xs text-gray-500 mb-1.5">
+            <label className="block text-xs text-slate-500 mb-1.5">
               Source URL
-              <span className="ml-1 font-normal text-gray-400 normal-case tracking-normal">(optional)</span>
+              <span className="ml-1 font-normal text-slate-600 normal-case tracking-normal">(optional)</span>
             </label>
             <input type="text" value={sourceUrl} onChange={(e) => setSourceUrl(e.target.value)} className={inputCls} placeholder="https://..." />
           </div>
 
           <div>
-            <label className="block text-xs text-gray-500 mb-1.5">
+            <label className="block text-xs text-slate-500 mb-1.5">
               Owner instruction
-              <span className="ml-1 font-normal text-gray-400 normal-case tracking-normal">(optional)</span>
+              <span className="ml-1 font-normal text-slate-600 normal-case tracking-normal">(optional)</span>
             </label>
             <textarea
               rows={2}
@@ -882,7 +906,7 @@ export default function AiInboxClient({
           <button
             onClick={handleAnalyzeWithAi}
             disabled={!mainInput.trim()}
-            className="text-sm font-semibold bg-gray-900 text-white px-5 py-2.5 rounded-xl hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="text-sm font-semibold bg-white text-slate-900 px-5 py-2.5 rounded-xl hover:bg-slate-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Analyze with AI →
           </button>

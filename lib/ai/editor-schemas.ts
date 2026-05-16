@@ -146,9 +146,11 @@ function validateNewsBase(r: Record<string, unknown>): Omit<GeneratedNewsDraft, 
     source_label: sourceLabel,
     date_published: validateIsoDate(r.date_published),
     date_updated: validateIsoDate(r.date_updated),
+    image_path: sanitizeText(r.image_path, 500),
     image_direction: sanitizeText(r.image_direction, 500),
     image_prompt: sanitizeText(r.image_prompt, 500),
     image_alt: sanitizeText(r.image_alt, 200),
+    ru_image_alt: sanitizeText(r.ru_image_alt, 200),
     publish_readiness: publishReadiness,
     missing_fields: Array.isArray(r.missing_fields) ? (r.missing_fields as unknown[]).map(String).filter(Boolean) : [],
     verification_notes: sanitizeText(r.verification_notes, 1000),
@@ -237,7 +239,7 @@ export function validateGeneratedDraftJson(
   const base = validateNewsBase(r);
   const calendarType = VALID_CALENDAR_TYPES.includes(str(r.calendar_type)) ? str(r.calendar_type) : "yearly";
   const monthRaw = r.month;
-  const month = monthRaw === null || monthRaw === undefined
+  const month = (calendarType === "yearly" || monthRaw === null || monthRaw === undefined)
     ? null
     : Math.min(12, Math.max(1, num(monthRaw, 0))) || null;
 
@@ -253,7 +255,7 @@ export function validateGeneratedDraftJson(
     last_verified_date: validateIsoDate(r.last_verified_date),
     en_notes: sanitizeText(r.en_notes, 1000),
     ru_notes: sanitizeText(r.ru_notes, 1000),
-    has_islamic_dates: r.has_islamic_dates === 1 ? 1 : 0,
+    has_islamic_dates: (r.has_islamic_dates === 1 || r.has_islamic_dates === true) ? 1 : 0,
   } satisfies GeneratedCalendarDraft;
 }
 

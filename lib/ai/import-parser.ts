@@ -3,7 +3,7 @@ import {
   validateGeneratedDraftJson,
   normalizeGeneratedDraftForSave,
 } from "./editor-schemas";
-import type { GeneratedDraft } from "./editor-types";
+import type { GeneratedDraft, GeneratedCalendarDraft } from "./editor-types";
 
 // ── Parse result ──────────────────────────────────────────────────────────────
 
@@ -13,6 +13,7 @@ export type ImportParseResult =
       draft: GeneratedDraft & { _forSave: true; ru_published: 0 };
       saveable: boolean;    // false when core required fields are empty
       coreErrors: string[]; // human-readable list of missing required fields
+      importWarnings: string[]; // non-fatal issues (file:// path, auto-detected flags)
     }
   | { ok: false; error: string };
 
@@ -52,9 +53,35 @@ function normalizeAliases(obj: Record<string, unknown>): Record<string, unknown>
       out.ruMetaDescription ?? out.russian_meta_description;
   }
 
+  // Image fields
+  if (!out.image_path) out.image_path = out.imagePath ?? out.image_url ?? out.imageUrl;
+  if (!out.image_alt)  out.image_alt  = out.imageAlt  ?? out.enImageAlt ?? out.en_image_alt;
+  if (!out.ru_image_alt) out.ru_image_alt = out.ruImageAlt ?? out.ru_image_alt_text;
+
   // Tags
   if (!out.tags) out.tags = out.tagsJson ?? out.tags_json;
 
+  return out;
+}
+
+// ── SEO fallbacks ─────────────────────────────────────────────────────────────
+// Fill empty SEO fields from core content fields so import drafts are never
+// left with blank SEO when the AI didn't generate separate SEO fields.
+
+function applySeoFallbacks(obj: Record<string, unknown>): Record<string, unknown> {
+  const out = { ...obj };
+  if (!String(out.en_seo_title ?? "").trim()) {
+    out.en_seo_title = String(out.en_title ?? "").slice(0, 60);
+  }
+  if (!String(out.en_meta_description ?? "").trim()) {
+    out.en_meta_description = String(out.en_summary ?? "").slice(0, 160);
+  }
+  if (!String(out.ru_seo_title ?? "").trim()) {
+    out.ru_seo_title = String(out.ru_title ?? "").slice(0, 60);
+  }
+  if (!String(out.ru_meta_description ?? "").trim()) {
+    out.ru_meta_description = String(out.ru_summary ?? "").slice(0, 160);
+  }
   return out;
 }
 
@@ -68,6 +95,24 @@ function checkImportCompleteness(draft: GeneratedDraft): string[] {
   if (!draft.en_summary?.trim()) errors.push("Imported package is missing en_summary");
   if (!draft.en_body?.trim())    errors.push("Imported package is missing en_body");
   return errors;
+}
+
+// ── Islamic date auto-detection ───────────────────────────────────────────────
+// Scans text content of a calendar draft for Islamic calendar keywords.
+
+const ISLAMIC_KEYWORDS = /\b(eid|arafah|ramadan|hijri|dhul\s*hijjah|moon\s*sighting)\b/i;
+
+function detectIslamicDates(draft: GeneratedDraft): boolean {
+  if (draft.contentType !== "calendar") return false;
+  const calDraft = draft as GeneratedCalendarDraft;
+  const texts = [
+    draft.en_title,
+    draft.en_summary,
+    draft.en_body,
+    draft.ru_title ?? "",
+    ...calDraft.dates_json.map((d) => `${d.label_en} ${d.label_ru}`),
+  ];
+  return ISLAMIC_KEYWORDS.test(texts.join(" "));
 }
 
 // ── Main parser ───────────────────────────────────────────────────────────────
@@ -93,26 +138,50 @@ export function parseImportedDraft(raw: string): ImportParseResult {
     return { ok: false, error: "Expected a JSON object. Got an array or primitive value." };
   }
 
-  const obj = normalizeAliases(parsed as Record<string, unknown>);
+  const withAliases = normalizeAliases(parsed as Record<string, unknown>);
 
-  const ct = String(obj.contentType ?? "");
+  const ct = String(withAliases.contentType ?? "");
   if (!["news", "event", "calendar"].includes(ct)) {
-    const got = JSON.stringify(obj.contentType ?? null);
+    const got = JSON.stringify(withAliases.contentType ?? null);
     return {
       ok: false,
       error: `Missing or invalid "content_type". Expected "news", "event", or "calendar". Got: ${got}.`,
     };
   }
 
-  const draft = validateGeneratedDraftJson(obj, ct as "news" | "event" | "calendar");
+  const withSeo = applySeoFallbacks(withAliases);
+  const draft = validateGeneratedDraftJson(withSeo, ct as "news" | "event" | "calendar");
   const normalized = normalizeGeneratedDraftForSave(draft);
   const coreErrors = checkImportCompleteness(normalized);
+
+  // Collect non-fatal import warnings and apply corrections
+  const importWarnings: string[] = [];
+  const mutableDraft = normalized as unknown as Record<string, unknown>;
+
+  // file:// image path detection: clear path + warn owner
+  const imagePath = String(mutableDraft.image_path ?? "").trim();
+  if (imagePath.startsWith("file://")) {
+    mutableDraft.image_path = "";
+    importWarnings.push(
+      "Image path uses file:// (local file). Local paths cannot be served by the site. " +
+      "Move the file to public/images/ and use a /images/... path instead.",
+    );
+  }
+
+  // Islamic date auto-detection for calendar drafts
+  if (normalized.contentType === "calendar" && !mutableDraft.has_islamic_dates) {
+    if (detectIslamicDates(normalized)) {
+      mutableDraft.has_islamic_dates = 1;
+      importWarnings.push("Islamic keywords detected in content — has_islamic_dates auto-set to 1.");
+    }
+  }
 
   return {
     ok: true,
     draft: normalized,
     saveable: coreErrors.length === 0,
     coreErrors,
+    importWarnings,
   };
 }
 
@@ -122,13 +191,14 @@ const CRITICAL_RULES = `CRITICAL OUTPUT RULES — follow exactly:
 1. Return ONLY a raw JSON object. No explanation, no markdown, no code fences.
 2. Use ONLY the exact snake_case field names shown below. Do NOT use camelCase.
 3. Do NOT leave en_title, en_summary, or en_body empty. Fill them with real content.
-4. Do NOT include any of these fields: status, published, ru_published, image_path.
+4. Do NOT include any of these fields: status, published, ru_published.
 5. Use "content_type": "news" | "event" | "calendar" — not "contentType".
 6. No em-dashes (— or –) in any field. Replace with commas or rephrase.
 7. No markdown headers (# ## ###) in body text. Use plain paragraphs.
 8. Dates in YYYY-MM-DD format only.
 9. slug: lowercase kebab-case only, max 70 chars.
-10. Russian fields: natural Russian, not word-for-word translation.`;
+10. Russian fields: natural Russian, not word-for-word translation.
+11. image_path: use /images/... paths only. Do NOT use file:// paths or absolute local paths. Leave empty string if no image is available.`;
 
 const BASE_FIELDS = `  "content_type": "[see valid values above]",
   "slug": "kebab-case-slug-max-70-chars",
@@ -146,9 +216,11 @@ const BASE_FIELDS = `  "content_type": "[see valid values above]",
   "ru_meta_description": "Russian meta description (max 160 chars)",
   "source_url": "https://source-url-or-empty-string",
   "source_label": "official | government | media | other",
+  "image_path": "/images/filename.jpg or empty string — do NOT use file:// paths",
   "image_direction": "Art direction for the featured image (describe style, no photos of people)",
   "image_prompt": "Detailed AI image generation prompt",
   "image_alt": "Alt text for the image (max 200 chars)",
+  "ru_image_alt": "Alt text in Russian (max 200 chars)",
   "publish_readiness": "ready | needs_review | incomplete",
   "missing_fields": ["list any fields you could not fill"],
   "verification_notes": "Facts that need human verification before publishing"`;

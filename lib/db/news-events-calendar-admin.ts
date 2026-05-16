@@ -656,7 +656,7 @@ export function createCalendarDraft(input: CalendarInput): WriteResult {
       status:             "draft",
       calendarType:       s(input.calendar_type) || "monthly",
       year:               n(input.year),
-      month:              input.month !== undefined ? n(input.month) : null,
+      month:              (input.month !== undefined && input.month !== null) ? n(input.month) : null,
       enTitle:            s(input.en_title),
       enSummary:          s(input.en_summary),
       enBody:             s(input.en_body),

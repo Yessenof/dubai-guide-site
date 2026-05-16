@@ -25,8 +25,8 @@ export default function ContentAdminNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="w-48 shrink-0 border-r border-gray-100 pr-6">
-      <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
+    <nav className="w-48 shrink-0 border-r border-slate-700/50 pr-6">
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-3">
         Active
       </p>
       <ul className="space-y-0.5 mb-6">
@@ -42,8 +42,8 @@ export default function ContentAdminNav() {
                 href={href}
                 className={`flex items-center gap-1.5 rounded px-2 py-1.5 text-sm transition-colors ${
                   isActive
-                    ? "bg-gray-100 font-medium text-gray-900"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    ? "bg-slate-800 font-medium text-slate-50"
+                    : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
                 }`}
               >
                 {isInbox && (
@@ -56,14 +56,14 @@ export default function ContentAdminNav() {
         })}
       </ul>
 
-      <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-600 mb-3">
         Planned
       </p>
       <ul className="space-y-0.5">
         {PLANNED_SECTIONS.map((label) => (
           <li key={label} className="flex items-center justify-between px-2 py-1.5">
-            <span className="text-sm text-gray-400">{label}</span>
-            <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-300 bg-gray-100 rounded px-1 py-0.5">
+            <span className="text-sm text-slate-600">{label}</span>
+            <span className="text-[9px] font-semibold uppercase tracking-wide text-slate-600 bg-slate-800 rounded px-1 py-0.5">
               planned
             </span>
           </li>

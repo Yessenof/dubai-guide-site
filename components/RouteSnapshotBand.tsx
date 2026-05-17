@@ -1,8 +1,9 @@
 import Link from "next/link";
 import CategoryIcon from "@/components/CategoryIcon";
 import type { BandGuideItem } from "@/lib/db/reader";
+import { localizeValue } from "@/lib/localize-value";
 
-const GROUP_HREFS: Record<string, string> = {
+const GROUP_HREFS_EN: Record<string, string> = {
   "child-dependent-visa-dubai-outside-country":
     "/guides/child-dependent-visa-dubai?route=outside",
   "child-dependent-visa-dubai-inside-country":
@@ -13,16 +14,39 @@ const GROUP_HREFS: Record<string, string> = {
     "/guides/spouse-dependent-visa-dubai?route=inside",
 };
 
-function guideHref(slug: string): string {
-  return GROUP_HREFS[slug] ?? `/guides/${slug}`;
+const GROUP_HREFS_RU: Record<string, string> = {
+  "child-dependent-visa-dubai-outside-country":
+    "/ru/guides/child-dependent-visa-dubai?route=outside",
+  "child-dependent-visa-dubai-inside-country":
+    "/ru/guides/child-dependent-visa-dubai?route=inside",
+  "spouse-dependent-visa-dubai-outside-country":
+    "/ru/guides/spouse-dependent-visa-dubai?route=outside",
+  "spouse-dependent-visa-dubai-inside-country":
+    "/ru/guides/spouse-dependent-visa-dubai?route=inside",
+};
+
+const CAT_LABEL_RU: Record<string, string> = {
+  visas:           "Визы",
+  "company-setup": "Компания",
+  government:      "Госуслуги",
+  living:          "Жизнь в Дубае",
+  hiring:          "Трудоустройство",
+};
+
+function guideHref(slug: string, locale: "en" | "ru" = "en"): string {
+  if (locale === "ru") return GROUP_HREFS_RU[slug] ?? `/ru/guides/${slug}`;
+  return GROUP_HREFS_EN[slug] ?? `/guides/${slug}`;
 }
 
 interface Props {
   guides: BandGuideItem[];
+  locale?: "en" | "ru";
 }
 
-export default function RouteSnapshotBand({ guides }: Props) {
+export default function RouteSnapshotBand({ guides, locale = "en" }: Props) {
   if (guides.length === 0) return null;
+
+  const isRu = locale === "ru";
 
   return (
     <section className="px-5 pb-10">
@@ -30,7 +54,7 @@ export default function RouteSnapshotBand({ guides }: Props) {
         <div className="mb-4">
           <div className="w-6 h-0.5 bg-brass rounded-full mb-2" />
           <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">
-            Common routes
+            {isRu ? "Популярные маршруты" : "Common routes"}
           </p>
         </div>
 
@@ -38,7 +62,7 @@ export default function RouteSnapshotBand({ guides }: Props) {
           {guides.map((guide) => (
             <Link
               key={guide.slug}
-              href={guideHref(guide.slug)}
+              href={guideHref(guide.slug, locale)}
               className="block group"
             >
               <div className="h-full border border-stone-200 rounded-2xl overflow-hidden bg-white hover:border-stone-300 hover:bg-stone-50 transition-all">
@@ -50,7 +74,9 @@ export default function RouteSnapshotBand({ guides }: Props) {
                       <CategoryIcon category={guide.category} />
                     </span>
                     <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 capitalize">
-                      {guide.category.replace(/-/g, " ")}
+                      {isRu
+                        ? (CAT_LABEL_RU[guide.category] ?? guide.category.replace(/-/g, " "))
+                        : guide.category.replace(/-/g, " ")}
                     </p>
                   </div>
                   <span className="text-gray-300 group-hover:text-gray-500 transition-colors text-sm">→</span>
@@ -66,12 +92,16 @@ export default function RouteSnapshotBand({ guides }: Props) {
                 {/* Cost / timeline — primary data */}
                 <div className="mx-4 mb-3 grid grid-cols-2 gap-px bg-stone-100 rounded-xl overflow-hidden">
                   <div className="bg-white px-3 py-2.5">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-0.5">Fee</p>
-                    <p className="text-[13px] font-bold text-navy leading-snug">{guide.price}</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-0.5">
+                      {isRu ? "Стоимость" : "Fee"}
+                    </p>
+                    <p className="text-[13px] font-bold text-navy leading-snug">{localizeValue(guide.price, locale)}</p>
                   </div>
                   <div className="bg-white px-3 py-2.5">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-0.5">Time</p>
-                    <p className="text-[13px] font-semibold text-gray-700 leading-snug">{guide.timeline}</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-0.5">
+                      {isRu ? "Срок" : "Time"}
+                    </p>
+                    <p className="text-[13px] font-semibold text-gray-700 leading-snug">{localizeValue(guide.timeline, locale)}</p>
                   </div>
                 </div>
 

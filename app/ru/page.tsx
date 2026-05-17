@@ -1,15 +1,30 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
-import PageHero from "@/components/PageHero";
 import { ServiceCardLink } from "@/components/ServiceCardLink";
+import FeaturedSlider from "@/components/FeaturedSlider";
+import RouteSnapshotBand from "@/components/RouteSnapshotBand";
+import { getPublishedGuidesForBand, getRecentPublishedGuidesLocale } from "@/lib/db/reader";
+import { localizeValue } from "@/lib/localize-value";
+import {
+  getPublishedNewsPosts,
+  getPublishedEvents,
+  getPublishedCalendarPages,
+} from "@/lib/db/news-events-calendar";
+import type {
+  CalendarDateItem,
+  CalendarPageSummary,
+  NewsPostSummary,
+  EventSummary,
+} from "@/lib/db/news-events-calendar";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
 
 export const metadata: Metadata = {
-  title: "Guidex Consulting — Гайды по Дубаю: визы, компании, документы",
+  title: "Guidex Consulting — Визы, компании и жизнь в Дубае",
   description:
-    "Пошаговые руководства по оформлению виз, регистрации компаний и работе с государственными органами ОАЭ.",
+    "Пошаговые руководства по визам в ОАЭ, открытию компании в Дубае и переезду. Официальные сборы, сроки и порядок действий.",
   alternates: {
     canonical: `${BASE}/ru`,
     languages: {
@@ -20,152 +35,411 @@ export const metadata: Metadata = {
   },
 };
 
-type ServiceCard =
-  | { label: string; description: string; meta: string; href: string }
-  | { label: string; description: string; meta: string; soon: true };
-
-const services: ServiceCard[] = [
-  {
-    label: "Визы",
-    description: "Рабочая виза, семейная виза, золотая виза, продление.",
-    href: "/ru/visas",
-    meta: "Резидентские визы ОАЭ",
-  },
-  {
-    label: "Открытие компании",
-    description: "Mainland или free zone. С банковским счётом.",
-    href: "/ru/company-setup",
-    meta: "Mainland · Free zone · Банковский счёт",
-  },
-  {
-    label: "Государственные услуги",
-    description: "Аттестация документов, Amer, PRO услуги и официальные процедуры.",
-    href: "/ru/government",
-    meta: "Документы · Amer · PRO",
-  },
-  {
-    label: "Туризм и аренда",
-    description: "Holiday homes, краткосрочная аренда и туристические разрешения.",
-    href: "/ru/tourism",
-    meta: "DTCM · Краткосрочная аренда",
-  },
-  {
-    label: "Банкинг и консультации",
-    description: "Банки, налоговое резидентство, корпоративный счёт и практические разборы.",
-    href: "/ru/banking-tax",
-    meta: "FTA · EmaraTax · Банки",
-  },
+const BAND_SLUGS = [
+  "employment-visa",
+  "spouse-dependent-visa-dubai-outside-country",
+  "child-dependent-visa-dubai-outside-country",
+  "golden-visa-dubai-property",
 ];
 
+const IMG_SKYLINE = "/images/hubs/dubai-skyline-downtown.webp";
+const IMG_JLT     = "/images/hubs/jlt-dubai-towers-sunset-reflection.webp";
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function formatShortDate(iso: string): string {
+  try {
+    const parts = iso.split("-");
+    const m = parseInt(parts[1], 10);
+    const d = parseInt(parts[2], 10);
+    const months = ["", "янв", "фев", "мар", "апр", "май", "июн",
+                    "июл", "авг", "сен", "окт", "ноя", "дек"];
+    return `${d} ${months[m] ?? ""}`;
+  } catch {
+    return iso;
+  }
+}
+
+function calendarDotColor(type: CalendarDateItem["type"]): string {
+  switch (type) {
+    case "public-holiday": return "bg-emerald-500";
+    case "deadline":       return "bg-red-500";
+    case "important-date": return "bg-blue-500";
+    default:               return "bg-slate-400";
+  }
+}
+
+// ─── This Month data ──────────────────────────────────────────────────────────
+
+type MonthItem = {
+  date: string; shortDate: string; label: string; dotColor: string; href?: string;
+};
+
+function buildThisMonthItems(
+  pages: CalendarPageSummary[],
+  events: EventSummary[],
+  limit = 4,
+): MonthItem[] {
+  const today     = new Date().toISOString().slice(0, 10);
+  const lookahead = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const items: MonthItem[] = [];
+
+  for (const page of pages) {
+    for (const d of page.dates) {
+      if (d.date >= today && d.date <= lookahead) {
+        const label = d.label_ru?.trim() || d.label_en;
+        items.push({ date: d.date, shortDate: formatShortDate(d.date), label, dotColor: calendarDotColor(d.type) });
+      }
+    }
+  }
+  for (const ev of events) {
+    if (ev.eventDateStart >= today && ev.eventDateStart <= lookahead)
+      items.push({ date: ev.eventDateStart, shortDate: formatShortDate(ev.eventDateStart), label: ev.title, dotColor: "bg-blue-500", href: `/ru/events/${ev.slug}` });
+  }
+  return items.sort((a, b) => a.date.localeCompare(b.date)).slice(0, limit);
+}
+
+// ─── Latest feed ──────────────────────────────────────────────────────────────
+
+type FeedItem = { href: string; label: string; category: string; title: string; meta: string; };
+
+const NEWS_CAT_RU: Record<string, string> = {
+  visa: "Визы", company: "Бизнес", tax: "Налоги",
+  government: "Госуслуги", tourism: "Туризм", banking: "Банки",
+};
+
+const CAT_LABEL_RU: Record<string, string> = {
+  visas:           "Визы",
+  "company-setup": "Компания",
+  government:      "Госуслуги",
+  living:          "Жизнь в Дубае",
+  hiring:          "Трудоустройство",
+};
+
+function buildFeed(news: NewsPostSummary[], events: EventSummary[], limit = 4): FeedItem[] {
+  const withDate = [
+    ...news.map(n => ({
+      _date: n.datePublished,
+      item: { href: `/ru/news/${n.slug}`, label: "Новость", category: NEWS_CAT_RU[n.category] ?? n.category, title: n.title, meta: formatShortDate(n.datePublished) } satisfies FeedItem,
+    })),
+    ...events.map(e => ({
+      _date: e.eventDateStart,
+      item: { href: `/ru/events/${e.slug}`, label: "Событие", category: "Дубай", title: e.title, meta: formatShortDate(e.eventDateStart) } satisfies FeedItem,
+    })),
+  ];
+  return withDate.sort((a, b) => b._date.localeCompare(a._date)).map(({ item }) => item).slice(0, limit);
+}
+
+// ─── Service tiles ────────────────────────────────────────────────────────────
+
+const TILES = [
+  { label: "Визы",              href: "/ru/visas",         chip: "Резидентские визы ОАЭ",  serviceKey: "visas",         dot: "#1B2E4B" },
+  { label: "Компания",          href: "/ru/company-setup", chip: "Mainland · Free zone",   serviceKey: "company-setup", dot: "#374151" },
+  { label: "Госуслуги",         href: "/ru/government",    chip: "Документы · PRO",        serviceKey: "government",    dot: "#57534E" },
+  { label: "Банки и налоги",    href: "/ru/banking-tax",   chip: "TRC · Банкинг",          serviceKey: "banking-tax",   dot: "#B5935A" },
+  { label: "Календарь",         href: "/ru/calendar",      chip: "Даты · Праздники",       serviceKey: "calendar",      dot: "#059669" },
+  { label: "Туризм и аренда",   href: "/ru/tourism",       chip: "DTCM · Краткосрочная",   serviceKey: "tourism",       dot: "#DC2626" },
+] as const;
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
 export default function RuHomePage() {
+  const bandGuides    = getPublishedGuidesForBand(BAND_SLUGS, "ru");
+  const recentGuides  = getRecentPublishedGuidesLocale(7, "ru");
+  const featuredGuides = recentGuides.slice(0, 3);
+  const latestGuides  = recentGuides.slice(3, 7);
+  const news          = getPublishedNewsPosts("ru");
+  const events        = getPublishedEvents("ru");
+  const calPages      = getPublishedCalendarPages("ru");
+  const monthItems    = buildThisMonthItems(calPages, events);
+  const feedItems     = buildFeed(news, events);
+
+  const latestDisplayItems: FeedItem[] = feedItems.length > 0
+    ? feedItems
+    : latestGuides.map((g): FeedItem => ({
+        href:     `/ru/guides/${g.slug}`,
+        label:    "Гайд",
+        category: CAT_LABEL_RU[g.category] ?? g.category,
+        title:    g.title,
+        meta:     localizeValue(g.price, "ru"),
+      }));
+
   return (
     <div>
 
-      {/* Hero */}
-      <section className="pt-8 pb-0 px-5">
+      {/* ── 1. Compact intro ─────────────────────────────────────────────────── */}
+      <section className="px-5 pt-2 pb-1">
         <div className="max-w-2xl mx-auto">
-          <PageHero
-            asset={{
-              src: "/images/hubs/dubai-skyline-downtown.webp",
-              alt: "Dubai Downtown skyline at dusk with Burj Khalifa rising above surrounding towers",
-              tone: "cool",
-            }}
-            gradientStyle="light"
-            overline="Дубай · ОАЭ"
-            heading="Гайды по Дубаю — визы, компании, документы"
-            subtext="Пошаговые руководства по оформлению виз, регистрации компаний и работе с государственными органами ОАЭ. Актуальные официальные сборы и сроки."
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-brass mb-1">
+            Дубай · ОАЭ
+          </p>
+          <h1 className="text-[22px] font-bold text-gray-900 leading-tight">
+            Визы, открытие компании и жизнь в Дубае.
+          </h1>
+        </div>
+      </section>
+
+      {/* ── 2. Primary product pair: Calendar + Life Setup ───────────────────── */}
+      <section className="px-5 pb-1.5">
+        <div className="max-w-2xl mx-auto grid grid-cols-2 gap-2.5">
+
+          {/* Dubai Life Calendar */}
+          <Link
+            href="/ru/calendar"
+            aria-labelledby="cal-card-heading-ru"
+            className="relative block h-[162px] rounded-2xl overflow-hidden shadow-sm group"
           >
+            <Image
+              src={IMG_SKYLINE}
+              alt="Дубай, вид на центр города на закате"
+              fill
+              priority
+              className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+              sizes="(max-width: 672px) 45vw, 310px"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy/97 via-navy/72 to-navy/20" />
+            <div className="absolute inset-0 flex flex-col justify-end p-3">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-white/65 mb-0.5">
+                Календарь
+              </p>
+              <h2
+                id="cal-card-heading-ru"
+                className="text-[19px] font-bold text-white leading-tight mb-1.5"
+                style={{ textShadow: "0 1px 4px rgba(0,0,0,0.4)" }}
+              >
+                Календарь Дубая
+              </h2>
+              <p className="text-[12px] text-white/80 leading-snug mb-3">
+                Праздники, события и важные даты.
+              </p>
+              <span className="self-start text-[13px] font-semibold text-white bg-white/[.18] border border-white/[.25] px-2.5 py-0.5 rounded-lg">
+                Открыть →
+              </span>
+            </div>
+          </Link>
+
+          {/* Dubai Life Setup */}
+          <Link
+            href="/ru/guides"
+            aria-labelledby="setup-card-heading-ru"
+            className="relative block h-[162px] rounded-2xl overflow-hidden shadow-sm group"
+          >
+            <Image
+              src={IMG_JLT}
+              alt="Башни JLT в Дубае на закате"
+              fill
+              className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+              sizes="(max-width: 672px) 45vw, 310px"
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(to top, rgba(75,40,5,0.97) 0%, rgba(105,60,12,0.62) 50%, rgba(165,105,38,0.10) 100%)" }}
+            />
+            <div className="absolute inset-0 flex flex-col justify-end p-3">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-white/65 mb-0.5">
+                Переезд
+              </p>
+              <h2
+                id="setup-card-heading-ru"
+                className="text-[19px] font-bold text-white leading-tight mb-1.5"
+                style={{ textShadow: "0 1px 4px rgba(0,0,0,0.4)" }}
+              >
+                Переезд и первые шаги
+              </h2>
+              <p className="text-[12px] text-white/80 leading-snug mb-3">
+                Первые 30 дней, дом и семья.
+              </p>
+              <span className="self-start text-[13px] font-semibold text-white bg-white/[.18] border border-white/[.25] px-2.5 py-0.5 rounded-lg">
+                Смотреть →
+              </span>
+            </div>
+          </Link>
+
+        </div>
+      </section>
+
+      {/* ── 3. Featured slider ───────────────────────────────────────────────── */}
+      <FeaturedSlider guides={featuredGuides} locale="ru" />
+
+      {/* ── 4. Выберите вашу задачу — service navigation ─────────────────────── */}
+      <section aria-labelledby="services-heading-ru" className="px-5 pb-2.5">
+        <div className="max-w-2xl mx-auto">
+          <h2
+            id="services-heading-ru"
+            className="text-[11px] font-semibold uppercase tracking-widest text-gray-500 mb-1.5"
+          >
+            Выберите вашу задачу
+          </h2>
+          <div className="grid grid-cols-2 gap-2.5">
+            {TILES.map((tile) => (
+              <ServiceCardLink
+                key={tile.label}
+                href={tile.href}
+                serviceKey={tile.serviceKey}
+                locale="ru"
+                className="block group bg-white border border-stone-200 rounded-2xl p-3 shadow-sm hover:shadow hover:border-stone-300 transition-all"
+              >
+                <div className="flex items-start justify-between mb-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="flex-shrink-0 w-2 h-2 rounded-full" style={{ background: tile.dot }} />
+                    <span className="text-[15px] font-bold text-gray-900">{tile.label}</span>
+                  </div>
+                  <span className="text-gray-300 group-hover:text-gray-600 text-sm ml-1 flex-shrink-0 transition-colors">→</span>
+                </div>
+                <span className="text-[12px] text-gray-600 bg-stone-100 px-2 py-0.5 rounded-full">
+                  {tile.chip}
+                </span>
+              </ServiceCardLink>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. В этом месяце в Дубае — calendar preview ──────────────────────── */}
+      <section aria-labelledby="this-month-heading-ru" className="px-5 pb-2.5">
+        <div className="max-w-2xl mx-auto">
+          <div
+            className="rounded-2xl p-4"
+            style={{ background: "linear-gradient(140deg, #0A1628 0%, #132035 60%, #1B2E4B 100%)" }}
+          >
+            <h2
+              id="this-month-heading-ru"
+              className="text-[11px] font-bold uppercase tracking-widest text-white/60 mb-2"
+            >
+              В этом месяце в Дубае
+            </h2>
+
+            {monthItems.length === 0 ? (
+              <>
+                <p className="text-[15px] font-medium text-white/80 leading-snug mb-1.5">
+                  Важные даты, дедлайны и события Дубая будут здесь.
+                </p>
+                <p className="text-[12px] text-white/50 mb-3">
+                  Обновления календаря готовятся.
+                </p>
+                <div className="flex flex-wrap gap-1.5 mb-3.5">
+                  {["Праздники ОАЭ", "Бизнес", "Госуслуги", "События Дубая"].map((t) => (
+                    <span
+                      key={t}
+                      className="text-[11px] font-medium text-white/75 bg-white/[0.12] border border-white/[0.18] px-2 py-0.5 rounded-full"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                <Link
+                  href="/ru/calendar"
+                  className="text-[15px] font-semibold text-brass hover:opacity-80 transition-opacity"
+                >
+                  Открыть календарь →
+                </Link>
+              </>
+            ) : (
+              <>
+                {monthItems.map((item, i) => (
+                  <div
+                    key={`${item.date}-${i}`}
+                    className="flex items-center gap-2.5 py-2 border-b border-white/[0.06] last:border-0"
+                  >
+                    <span className={`flex-shrink-0 w-1.5 h-1.5 rounded-full ${item.dotColor}`} />
+                    <span className="text-[11px] font-semibold text-white/50 w-10 flex-shrink-0">
+                      {item.shortDate}
+                    </span>
+                    <p className="flex-1 text-[14px] font-semibold text-white/85 leading-snug truncate">
+                      {item.label}
+                    </p>
+                    {item.href && (
+                      <Link href={item.href} className="flex-shrink-0 text-xs text-white/40 hover:text-white/70">
+                        →
+                      </Link>
+                    )}
+                  </div>
+                ))}
+                <div className="pt-2.5">
+                  <Link href="/ru/calendar" className="text-[14px] font-semibold text-brass hover:opacity-80">
+                    Весь календарь →
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. Latest guides ─────────────────────────────────────────────────── */}
+      <section aria-labelledby="latest-heading-ru" className="pb-5">
+        <div className="flex items-center justify-between px-5 mb-2.5 max-w-2xl mx-auto">
+          <h2
+            id="latest-heading-ru"
+            className="text-[10px] font-semibold uppercase tracking-widest text-gray-400"
+          >
+            {feedItems.length > 0 ? "Последние обновления" : "Новые гайды"}
+          </h2>
+          {feedItems.length > 0 && (
+            <Link href="/ru/news" className="text-[11px] text-gray-400 hover:text-gray-700 transition-colors">
+              Все →
+            </Link>
+          )}
+        </div>
+
+        <div className="overflow-x-auto sm:overflow-visible">
+          <div className="flex gap-3 px-5 pb-2 sm:grid sm:grid-cols-2 sm:max-w-2xl sm:mx-auto sm:px-5 sm:pb-0">
+            {latestDisplayItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex-shrink-0 w-56 sm:w-auto flex flex-col border border-stone-200 rounded-2xl p-3.5 bg-white shadow-sm hover:shadow hover:border-stone-300 transition-all group"
+              >
+                <div className="flex items-center gap-1.5 mb-2">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-brass">
+                    {item.label}
+                  </span>
+                  <span className="text-[9px] text-gray-200">·</span>
+                  <span className="text-[9px] text-gray-500 bg-stone-100 px-1.5 py-0.5 rounded-full">
+                    {item.category}
+                  </span>
+                </div>
+                <p className="flex-1 text-[13px] font-bold text-gray-900 leading-snug line-clamp-3 mb-2.5">
+                  {item.title}
+                </p>
+                <div className="flex items-center justify-between mt-auto">
+                  <span className="text-[10px] text-gray-400">{item.meta}</span>
+                  <span className="text-gray-300 group-hover:text-gray-600 text-sm transition-colors">→</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 7. Популярные маршруты ───────────────────────────────────────────── */}
+      <RouteSnapshotBand guides={bandGuides} locale="ru" />
+
+      {/* ── 8. WhatsApp CTA ──────────────────────────────────────────────────── */}
+      <section className="px-5 pb-10">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-navy rounded-2xl px-6 py-7">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-white/40 mb-3">
+              Бесплатная консультация
+            </p>
+            <h2 className="text-[20px] font-semibold text-white leading-snug mb-2">
+              Не знаете, какой маршрут подходит?
+            </h2>
+            <p className="text-[14px] text-white/60 leading-relaxed mb-6">
+              Опишите ситуацию в WhatsApp — подберём нужный процесс, стоимость и первый шаг. Отвечаем на русском.
+            </p>
             <a
               href={WHATSAPP_HREF}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-navy text-white text-[14px] font-semibold px-5 py-3 rounded-xl hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-2 bg-[#25D366] text-white text-[13px] font-semibold px-5 py-3 rounded-xl hover:opacity-90 transition-opacity"
             >
-              Получить консультацию →
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+              </svg>
+              Написать в WhatsApp
             </a>
-          </PageHero>
-        </div>
-      </section>
-
-      {/* Service links */}
-      <section className="px-5 pb-10">
-        <div className="max-w-2xl mx-auto space-y-3">
-          {services.map((s) =>
-            "soon" in s ? (
-              <div
-                key={s.label}
-                className="border border-stone-200 rounded-2xl p-5 bg-stone-50"
-              >
-                <div className="flex items-start justify-between gap-3 mb-1.5">
-                  <h2 className="text-[15px] font-semibold text-gray-400 leading-snug">
-                    {s.label}
-                  </h2>
-                  <span className="flex-shrink-0 text-[10px] font-medium text-gray-400 bg-stone-200 px-2 py-1 rounded-full leading-none whitespace-nowrap mt-0.5">
-                    Скоро
-                  </span>
-                </div>
-                <p className="text-[13px] text-gray-400 leading-snug mb-3">
-                  {s.description}
-                </p>
-                <span className="inline-block text-[11px] text-gray-400 bg-stone-100 px-2.5 py-1 rounded-full">
-                  {s.meta}
-                </span>
-              </div>
-            ) : (
-              <ServiceCardLink
-                key={s.label}
-                href={s.href}
-                serviceKey={s.href.split("/").pop() ?? s.href}
-                locale="ru"
-                className="block group border border-stone-200 rounded-2xl p-5 bg-stone-50 hover:border-stone-300 hover:bg-stone-100 transition-all"
-              >
-                <div className="flex items-start justify-between gap-3 mb-1.5">
-                  <h2 className="text-[15px] font-semibold text-gray-900 leading-snug">
-                    {s.label}
-                  </h2>
-                  <span className="text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0 text-sm mt-0.5">
-                    →
-                  </span>
-                </div>
-                <p className="text-[13px] text-gray-600 leading-snug mb-3">
-                  {s.description}
-                </p>
-                <span className="inline-block text-[11px] text-brass/80 bg-brass/[.08] px-2.5 py-1 rounded-full">
-                  {s.meta}
-                </span>
-              </ServiceCardLink>
-            )
-          )}
-        </div>
-      </section>
-
-      {/* All guides text link */}
-      <div className="px-5 pb-6">
-        <div className="max-w-2xl mx-auto">
-          <Link
-            href="/ru/guides"
-            className="inline-block text-sm font-semibold text-brass hover:opacity-75 transition-opacity py-3"
-          >
-            Все гайды →
-          </Link>
-        </div>
-      </div>
-
-      {/* WhatsApp CTA */}
-      <section className="px-5 pb-14">
-        <div className="max-w-2xl mx-auto">
-          <a
-            href={WHATSAPP_HREF}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-between w-full bg-gray-900 text-white rounded-2xl px-5 py-4 hover:bg-gray-700 transition-colors group"
-          >
-            <div>
-              <p className="text-sm font-semibold">Написать в WhatsApp</p>
-              <p className="text-xs text-gray-400 mt-0.5">Ответим на русском языке</p>
-            </div>
-            <span className="text-gray-500 group-hover:text-gray-300 transition-colors text-lg">→</span>
-          </a>
+          </div>
         </div>
       </section>
 

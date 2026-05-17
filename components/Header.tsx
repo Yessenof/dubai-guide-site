@@ -17,7 +17,7 @@ const EN_NAV = [
 const RU_NAV = [
   { label: "Найти маршрут",    href: "/ru/find-my-visa" },
   { label: "Визы",             href: "/ru/visas" },
-  { label: "Компании",         href: "/ru/company-setup" },
+  { label: "Компания",          href: "/ru/company-setup" },
   { label: "Гайды",            href: "/ru/guides" },
 ];
 
@@ -62,7 +62,7 @@ export default function Header() {
             <Link
               key={href}
               href={href}
-              className={`text-sm transition-colors ${
+              className={`text-sm whitespace-nowrap transition-colors ${
                 isActive(href)
                   ? "text-gray-900 font-medium"
                   : "text-gray-500 hover:text-gray-900"

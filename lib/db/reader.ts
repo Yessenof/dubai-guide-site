@@ -115,6 +115,43 @@ export function getRecentPublishedGuides(limit: number): GuideListItem[] {
     .all();
 }
 
+/** Like getRecentPublishedGuides but returns locale-aware fields.
+ *  For "ru": filters to guides with non-empty ru_title, returns RU fields. */
+export function getRecentPublishedGuidesLocale(
+  limit: number,
+  locale: Locale = "en",
+): GuideListItem[] {
+  if (locale !== "ru") return getRecentPublishedGuides(limit);
+
+  const rows = db
+    .select({
+      slug:      guides.slug,
+      enTitle:   guides.enTitle,
+      ruTitle:   guides.ruTitle,
+      enSummary: guides.enSummary,
+      ruSummary: guides.ruSummary,
+      price:     guides.price,
+      timeline:  guides.timeline,
+      category:  guides.category,
+    })
+    .from(guides)
+    .where(eq(guides.published, true))
+    .orderBy(desc(guides.updatedAt))
+    .all();
+
+  return rows
+    .filter((r) => r.ruTitle.trim() !== "")
+    .slice(0, limit)
+    .map((r) => ({
+      slug:     r.slug,
+      title:    r.ruTitle,
+      summary:  r.ruSummary,
+      price:    r.price,
+      timeline: r.timeline,
+      category: r.category,
+    }));
+}
+
 export function getAllPublishedGuides(locale: Locale = "en"): GuideListItem[] {
   const rows = db
     .select({

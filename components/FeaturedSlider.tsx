@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import type { GuideListItem } from "@/lib/db/reader";
+import { localizeValue } from "@/lib/localize-value";
 
 const IMG_DIFC = "/images/hubs/difc-business-bay-glass-towers.webp";
 
@@ -13,22 +14,33 @@ const SLIDE_GRADIENTS = [
   "linear-gradient(135deg, #1C1917 0%, #2C2825 100%)",
 ];
 
-function catLabel(cat: string): string {
-  const MAP: Record<string, string> = {
+function catLabel(cat: string, locale: "en" | "ru" = "en"): string {
+  if (locale === "ru") {
+    const RU: Record<string, string> = {
+      visas:           "Визы",
+      "company-setup": "Компания",
+      government:      "Госуслуги",
+      living:          "Жизнь в Дубае",
+      hiring:          "Трудоустройство",
+    };
+    return RU[cat] ?? cat.replace(/-/g, " ");
+  }
+  const EN: Record<string, string> = {
     visas:           "Visas",
     "company-setup": "Company Setup",
     government:      "Government",
     living:          "Dubai Life",
     hiring:          "Hiring",
   };
-  return MAP[cat] ?? cat.replace(/-/g, " ");
+  return EN[cat] ?? cat.replace(/-/g, " ");
 }
 
 interface Props {
   guides: GuideListItem[];
+  locale?: "en" | "ru";
 }
 
-export default function FeaturedSlider({ guides }: Props) {
+export default function FeaturedSlider({ guides, locale = "en" }: Props) {
   const [current, setCurrent] = useState(0);
   const pausedRef   = useRef(false);
   const touchXRef   = useRef<number | null>(null);
@@ -45,6 +57,13 @@ export default function FeaturedSlider({ guides }: Props) {
 
   if (!guides.length) return null;
 
+  const isRu        = locale === "ru";
+  const allHref     = isRu ? "/ru/guides" : "/guides";
+  const allText     = isRu ? "Все гайды →" : "All guides →";
+  const sectionLabel = isRu ? "Что важно знать" : "Dubai updates to know";
+  const ctaText     = isRu ? "Читать →" : "Read guide →";
+  const guideWord   = isRu ? "гайд" : "guide";
+
   const goNext = () => setCurrent((c) => (c + 1) % count);
   const goPrev = () => setCurrent((c) => (c - 1 + count) % count);
 
@@ -57,13 +76,13 @@ export default function FeaturedSlider({ guides }: Props) {
           id="featured-heading"
           className="text-[11px] font-semibold uppercase tracking-widest text-gray-500"
         >
-          Dubai updates to know
+          {sectionLabel}
         </h2>
         <Link
-          href="/guides"
+          href={allHref}
           className="text-[11px] text-gray-400 hover:text-gray-700 transition-colors"
         >
-          All guides →
+          {allText}
         </Link>
       </div>
 
@@ -98,7 +117,7 @@ export default function FeaturedSlider({ guides }: Props) {
                 style={{ width: `${100 / count}%` }}
               >
                 <Link
-                  href={`/guides/${guide.slug}`}
+                  href={isRu ? `/ru/guides/${guide.slug}` : `/guides/${guide.slug}`}
                   className="block h-full"
                   tabIndex={i === current ? 0 : -1}
                 >
@@ -125,7 +144,7 @@ export default function FeaturedSlider({ guides }: Props) {
                   {/* Content — pb-10 leaves room for the progress dots */}
                   <div className="absolute inset-0 flex flex-col justify-end px-4 pb-10">
                     <p className="text-[11px] font-bold uppercase tracking-widest text-white/70 mb-1">
-                      {catLabel(guide.category)} guide
+                      {catLabel(guide.category, locale)} {guideWord}
                     </p>
                     <p
                       className="text-[20px] font-bold text-white leading-tight line-clamp-2 mb-2"
@@ -136,14 +155,14 @@ export default function FeaturedSlider({ guides }: Props) {
                     <div className="flex items-end justify-between gap-2">
                       <div className="min-w-0 flex-1">
                         {guide.price && (
-                          <p className="text-[11px] text-white/65 truncate">{guide.price}</p>
+                          <p className="text-[11px] text-white/65 truncate">{localizeValue(guide.price, locale)}</p>
                         )}
                         {guide.timeline && (
-                          <p className="text-[11px] text-white/65 truncate">{guide.timeline}</p>
+                          <p className="text-[11px] text-white/65 truncate">{localizeValue(guide.timeline, locale)}</p>
                         )}
                       </div>
                       <span className="flex-shrink-0 text-[13px] font-semibold text-white">
-                        Read guide →
+                        {ctaText}
                       </span>
                     </div>
                   </div>

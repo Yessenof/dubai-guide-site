@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getEventBySlug } from "@/lib/db/news-events-calendar";
+import CalendarContextCta from "@/components/calendar/CalendarContextCta";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -55,6 +56,10 @@ export default async function EventDetailPage({ params }: Props) {
     ? event.eventDateStart
     : `${event.eventDateStart} – ${event.eventDateEnd}`;
   const confidenceNotice = CONFIDENCE_NOTICES[event.dateConfidence];
+  // Extract YYYY-MM for calendar link if date is in ISO format
+  const calendarMonth = /^\d{4}-\d{2}/.test(event.eventDateStart)
+    ? event.eventDateStart.slice(0, 7)
+    : undefined;
 
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
@@ -83,6 +88,13 @@ export default async function EventDetailPage({ params }: Props) {
           </p>
         </div>
       )}
+
+      <CalendarContextCta
+        locale="en"
+        contentType="event"
+        calendarBase="/calendar"
+        calendarMonth={calendarMonth}
+      />
 
       {bodyParagraphs.length > 0 && (
         <div className="space-y-4 mb-5">

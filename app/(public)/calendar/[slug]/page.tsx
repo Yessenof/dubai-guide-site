@@ -5,6 +5,7 @@ import {
   getCalendarPageBySlug,
   type CalendarDateItem,
 } from "@/lib/db/news-events-calendar";
+import CalendarContextCta from "@/components/calendar/CalendarContextCta";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -68,6 +69,9 @@ export default async function CalendarDetailPage({ params }: Props) {
 
   const bodyParagraphs = page.body.split("\n\n").filter(Boolean);
   const monthLabel = page.month ? ` · Month ${page.month}` : "";
+  const calendarMonth = page.month
+    ? `${page.year}-${String(page.month).padStart(2, "0")}`
+    : undefined;
 
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
@@ -98,6 +102,13 @@ export default async function CalendarDetailPage({ params }: Props) {
           </p>
         </div>
       )}
+
+      <CalendarContextCta
+        locale="en"
+        contentType="calendar"
+        calendarBase="/calendar"
+        calendarMonth={calendarMonth}
+      />
 
       {bodyParagraphs.length > 0 && (
         <div className="space-y-4 mb-5">

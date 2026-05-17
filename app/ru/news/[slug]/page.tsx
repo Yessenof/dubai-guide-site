@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getNewsPostBySlug } from "@/lib/db/news-events-calendar";
+import CalendarContextCta from "@/components/calendar/CalendarContextCta";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -82,6 +83,12 @@ export default async function RuNewsDetailPage({ params }: Props) {
           {SOURCE_LABELS_RU[post.sourceLabel] ?? "Источник"} →
         </a>
       )}
+
+      <CalendarContextCta
+        locale="ru"
+        contentType="news"
+        calendarBase="/ru/calendar"
+      />
 
       {bodyParagraphs.length > 0 && (
         <div className="space-y-4 mb-5">

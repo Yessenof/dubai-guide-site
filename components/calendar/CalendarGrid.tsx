@@ -128,19 +128,23 @@ function dayHeadingLabel(iso: string, locale: "en" | "ru"): string {
 interface Props {
   items: CalendarDateItemExtended[];
   locale: "en" | "ru";
+  // Optional initial state — used when navigating from a dated detail page
+  initialYear?: number;
+  initialMonth?: number;
+  initialDate?: string;  // "YYYY-MM-DD" — pre-selects that day
 }
 
-export default function CalendarGrid({ items, locale }: Props) {
+export default function CalendarGrid({ items, locale, initialYear, initialMonth, initialDate }: Props) {
   const isRu = locale === "ru";
   const currentTodayISO = todayISO();
   const today = new Date();
 
-  const [year, setYear] = useState(today.getFullYear());
-  const [month, setMonth] = useState(today.getMonth() + 1);
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [year, setYear] = useState(initialYear ?? today.getFullYear());
+  const [month, setMonth] = useState(initialMonth ?? today.getMonth() + 1);
+  const [selectedDay, setSelectedDay] = useState<string | null>(initialDate ?? null);
   const [activeFilter, setActiveFilter] = useState("all");
   const [showPicker, setShowPicker] = useState(false);
-  const [pickerYear, setPickerYear] = useState(today.getFullYear());
+  const [pickerYear, setPickerYear] = useState(initialYear ?? today.getFullYear());
 
   const filters = isRu ? FILTERS_RU : FILTERS_EN;
   const monthNames = isRu ? MONTHS_RU : MONTHS_EN;

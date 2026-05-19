@@ -450,6 +450,9 @@ Do not create any calendar item or content for these events until the official d
 | Dubai Yoga | 29 Nov 2026 | lifestyle_event | sub-event calendar item | 3 | No — part of DFC | Yes — DFC registration | dubaifitnesschallenge.com/en/ | Yes |
 | GITEX Global 2026 — Summit | 7 Dec 2026 | business_event | sub-event calendar item | 1 | Part of GITEX page | Yes — gitex.com | gitex.com/gitex-global-2026 | Yes |
 | GITEX Global 2026 — Expo | 8–11 Dec 2026 | business_event | standalone + calendar | 1 | Yes | Yes — gitex.com | gitex.com/gitex-global-2026 | Yes |
+| Abu Dhabi GP event window | 3–6 Dec 2026 | sports_event / tourism_event / major_annual_event | event | 1 | Yes | Yes — abudhabigp.com | Abu Dhabi GP official site | Yes |
+| F1 Abu Dhabi GP race weekend | 4–6 Dec 2026 | sports_event | event | 1 | Yes | Yes — abudhabigp.com | Formula 1 official race page | Yes |
+| F1 Abu Dhabi GP race day | 6 Dec 2026 | sports_event | key_date | 1 | Yes | Yes — abudhabigp.com | Formula 1 official race page | Yes |
 | Global Village Season 31 | TBC | citywide_event | on hold | 1 | Yes (when date confirmed) | Yes — globalvillage.ae | Source needed | Yes |
 | Dubai Shopping Festival 2026/27 | TBC | citywide_event | on hold | 1 | Yes (when date confirmed) | Yes — official DSF page | Source needed | Yes |
 
@@ -461,7 +464,8 @@ All items below are planned only. Do not create these files now. They are unlock
 
 | File | Type | Status | Unlock condition |
 |---|---|---|---|
-| `docs/content-drafts/events/gitex-global-2026.md` | Event draft | Not yet created | Source C rechecked; programme details available; owner review |
+| `docs/content-drafts/events/gitex-global-2026.md` | Event draft | Created — draft_file_only | Source C rechecked; programme, registration, venue details required before publish |
+| `docs/content-drafts/events/formula-1-abu-dhabi-grand-prix-2026.md` | Event draft | Not yet created | F1-Source-1 + F1-Source-2 rechecked; session times, ticket CTA confirmed; location labels verified; owner review |
 | `docs/content-drafts/events/dubai-design-week-2026.md` | Event draft | Not yet created | Source D rechecked; venue and programme confirmed; owner review |
 | `docs/content-drafts/events/international-property-show-2026.md` | Event draft | Not yet created | Source F rechecked; IPS official site or programme available; owner review |
 | `docs/content-drafts/events/wetex-2026.md` | Event draft | Not yet created | Source G rechecked; WETEX official source confirmed; owner review |
@@ -504,6 +508,16 @@ All items below are planned only. Do not create these files now. They are unlock
 **EN:** Dubai business events calendar 2026: GITEX, WETEX, Big 5 and more
 
 **RU:** Бизнес-события Дубая 2026: GITEX, WETEX, Big 5 и другие
+
+### Formula 1 Abu Dhabi Grand Prix 2026
+
+**EN:** Formula 1 Abu Dhabi Grand Prix 2026: dates, race weekend and Dubai travel planning
+
+**RU:** Formula 1 Abu Dhabi Grand Prix 2026: даты, гоночный уикенд и поездка из Дубая
+
+**EN calendar label:** Formula 1 Abu Dhabi GP 2026
+
+**RU calendar label:** Formula 1 Abu Dhabi GP 2026
 
 ---
 
@@ -764,7 +778,7 @@ Events in this section are part of the same content model as Dubai events. The o
 
 | Item | Emirate | Source status | Official source needed | Calendar role | Publish status |
 |---|---|---|---|---|---|
-| A. Formula 1 Abu Dhabi Grand Prix 2026 | Abu Dhabi | source_to_capture | Formula 1 official race page; Yas Marina Circuit / Abu Dhabi GP official page | sports_event / tourism_event / major_annual_event | blocked_until_official_source_captured |
+| A. Formula 1 Abu Dhabi Grand Prix 2026 | Abu Dhabi | official_source_captured | Formula 1 official race page; Abu Dhabi GP official site; Yas Marina Circuit — all captured below | sports_event / tourism_event / major_annual_event | can_prepare_event_draft_after_recheck |
 | B. Yas Island major events | Abu Dhabi | source_to_capture | Yas Island official events page; Etihad Arena official event pages where relevant | concert / sports_event / family_event / tourism_event | blocked_until_official_source_captured |
 | C. Dubai Duty Free Tennis Championships | Dubai | source_to_capture | Official tournament website; confirmed next tournament dates | sports_event / tourism_event | blocked_until_official_next_dates_captured |
 | D. Dubai Opera | Dubai | source_to_capture | Dubai Opera official event pages | ticketed_show / cultural_event | calendar_item_after_official_event_page |
@@ -773,7 +787,138 @@ Events in this section are part of the same content model as Dubai events. The o
 | G. Dubai Shopping Festival 2026/2027 | Dubai | hold | Visit Dubai official DSF dates | citywide_event / shopping_event / tourism_event | hold_until_official_dates |
 | H. Major Sharjah / RAK events | Sharjah / Ras Al Khaimah | source_to_capture | Official tourism authority or event organiser pages | other_emirates_event | include_only_if_relevant_to_Dubai_audience |
 
-**Sources still needed for all items in this table.** Do not create any calendar item or event draft for these until the official source is captured and recorded here.
+**Note:** Item A (Formula 1 Abu Dhabi GP) has been updated to `official_source_captured` — see dedicated source section below. Items B–H still require official sources before any calendar item or event draft is created.
+
+---
+
+### Formula 1 Abu Dhabi Grand Prix 2026 — official sources
+
+Three official sources captured. This section supports the future event draft:
+`docs/content-drafts/events/formula-1-abu-dhabi-grand-prix-2026.md`
+
+#### F1-Source-1 — Formula 1 official race page
+
+| Field | Value |
+|---|---|
+| Authority | Formula 1 (formula1.com) |
+| Purpose | Official Formula 1 race page for the 2026 Abu Dhabi Grand Prix |
+| Source type | official_formula1 |
+| Reliability | official |
+| URL | https://www.formula1.com/en/racing/2026/united-arab-emirates |
+| Access date | 2026-05-19 |
+| Verification status | captured_url_present |
+
+**Captured facts:**
+- Event name: Formula 1 Etihad Airways Abu Dhabi Grand Prix 2026.
+- Race weekend: 4 to 6 December 2026.
+- Practice sessions: 4 December 2026.
+- Qualifying: 5 December 2026.
+- Race day: 6 December 2026.
+
+**Claim constraints:** Session times and session-level details may change. Do not publish specific session times without rechecking the official F1 page. Do not describe race format details (e.g., sprint format) without official confirmation.
+
+**Recheck before publish:** Yes — schedule details may be updated closer to the event.
+
+---
+
+#### F1-Source-2 — Official Abu Dhabi GP website
+
+| Field | Value |
+|---|---|
+| Authority | Abu Dhabi Grand Prix (abudhabigp.com) |
+| Purpose | Official Abu Dhabi Grand Prix event website |
+| Source type | official_event_site |
+| Reliability | official |
+| URL | https://www.abudhabigp.com/en/ |
+| Access date | 2026-05-19 |
+| Verification status | captured_url_present |
+
+**Captured facts:**
+- Formula 1 Etihad Airways Abu Dhabi Grand Prix 2026 is an Abu Dhabi / Yas Marina Circuit event.
+- Official event window shown as 3 to 6 December 2026 on the Abu Dhabi GP site.
+- Tickets, experiences, and entertainment messaging exist on the official site.
+
+**Claim constraints:**
+- Do not claim specific ticket prices, package names, or availability unless the official page is rechecked immediately before publish.
+- Do not claim artist names or after-race entertainment unless the official Abu Dhabi GP source confirms.
+- The event window (3–6 December) may include pre-event days — the official F1 race weekend schedule (4–6 December) is the more specific source for race days.
+
+**Optional ticketing source:** https://tickets.formula1.com/en/f1-3312-abu-dhabi — use as external CTA source only if needed; do not capture prices or availability without rechecking before publish.
+
+**Recheck before publish:** Yes — ticket availability, entertainment programme, and event details are updated throughout the year.
+
+---
+
+#### F1-Source-3 — Yas Marina Circuit official site
+
+| Field | Value |
+|---|---|
+| Authority | Yas Marina Circuit (yasmarinacircuit.com) |
+| Purpose | Official Yas Marina Circuit venue source |
+| Source type | official_venue_site |
+| Reliability | official |
+| URL | https://www.yasmarinacircuit.com/en/ |
+| Access date | 2026-05-19 |
+| Verification status | captured_url_present |
+
+**Captured facts:**
+- Yas Marina Circuit points users to the official Abu Dhabi GP website for Formula 1 Etihad Airways Abu Dhabi Grand Prix 2026.
+- This source supports venue confidence but does not replace Formula 1 / Abu Dhabi GP pages for schedule details.
+
+**Recheck before publish:** Yes — confirm venue references have not changed.
+
+---
+
+#### F1 — Important date model
+
+| Date | Item | Source | Recheck |
+|---|---|---|---|
+| 3 December 2026 | Abu Dhabi GP event window opens | Abu Dhabi GP official site | Yes |
+| 4 December 2026 | Practice sessions | Formula 1 official race page | Yes |
+| 5 December 2026 | Qualifying | Formula 1 official race page | Yes |
+| 6 December 2026 | Race day | Formula 1 official race page | Yes |
+| 3–6 December 2026 | Full event window | Abu Dhabi GP official site | Yes |
+| 4–6 December 2026 | F1 race weekend | Formula 1 official race page | Yes |
+
+**Note on date overlap with GITEX:** GITEX Summit is 7 December, Expo is 8–11 December. Abu Dhabi GP race day is 6 December. These are consecutive events — useful for travel/planning content noting both events fall in early December.
+
+#### F1 — Location display rule
+
+This is not a Dubai event. All public calendar labels, event page headings, and any Guidex Calendar display must clearly show Abu Dhabi / Yas Marina Circuit.
+
+| Good labels | Bad labels |
+|---|---|
+| Formula 1, Abu Dhabi | F1 Dubai |
+| Abu Dhabi GP, Yas Marina | Dubai Grand Prix |
+| F1 race day, Abu Dhabi | Yas Marina, Dubai |
+| Formula 1 Abu Dhabi Grand Prix | F1 UAE (without location) |
+
+#### F1 — Claims allowed
+
+The following may be used in internal draft planning. Recheck and owner review required before publish.
+
+1. Formula 1 official source confirms the Abu Dhabi GP race weekend for 4 to 6 December 2026.
+2. Race day is 6 December 2026 per the Formula 1 official race page.
+3. The Abu Dhabi GP official site supports an event window of 3 to 6 December 2026.
+4. Yas Marina Circuit is the official venue.
+5. This can become a standalone event page and a high-priority calendar item.
+6. All calendar labels must clearly show Abu Dhabi / Yas Marina Circuit.
+7. The Abu Dhabi GP and GITEX are consecutive events in early December — useful planning context for visitors attending both.
+
+#### F1 — Claims blocked
+
+| Blocked claim | Why blocked |
+|---|---|
+| Calling this a Dubai event | It is in Abu Dhabi — location must be shown clearly |
+| "Dubai Grand Prix" | Incorrect name and incorrect location |
+| "Event is at Dubai Autodrome" | Incorrect venue — Yas Marina Circuit, Abu Dhabi |
+| Specific ticket prices | Not confirmed — recheck official source before any price claim |
+| Ticket availability status | Not confirmed — recheck before publish |
+| Artist names or after-race performers | Not yet confirmed from official Abu Dhabi GP source |
+| Exact transport routes or travel time from Dubai | Not yet sourced — do not invent |
+| Hotel prices or availability | Out of scope — do not claim |
+| Third-party ticket pages as primary source | Official sources exist and must be used |
+| Published before owner review | Blocked by default |
 
 ---
 
@@ -920,4 +1065,4 @@ In addition to the blocked claims in the main claims section and the lifecycle s
 ---
 
 *This is a source ledger — internal use only. Nothing in this file is published. No admin action. No DB write.*
-*Last updated: 2026-05-19 — Eleven official event sources captured. Short-lived offer lifecycle model added (Phase 6C-16b). UAE/Abu Dhabi/other Emirates expansion added (Phase 6C-16c): eight source-needed items including F1 Abu Dhabi GP, Yas Island, Dubai Tennis, Opera, Arena, Global Village, DSF, other Emirates events; event classification fields; inclusion/exclusion rules; location display rules; offers/deals relationship note; expansion-specific blocked claims. Everything remains under the Events / Calendar content model. All content opportunities blocked until source recheck and owner review.*
+*Last updated: 2026-05-19 — Eleven official Dubai event sources captured. Short-lived offer lifecycle model added (Phase 6C-16b). UAE/Abu Dhabi/other Emirates expansion added (Phase 6C-16c). Formula 1 Abu Dhabi GP 2026 updated from source_to_capture to official_source_captured (Phase 6C-18): three official sources captured (formula1.com, abudhabigp.com, yasmarinacircuit.com); race weekend 4–6 December 2026; race day 6 December 2026; event window 3–6 December 2026. F1 calendar rows added. Content opportunity for formula-1-abu-dhabi-grand-prix-2026.md added. Location display rule documented. All content opportunities blocked until source recheck and owner review.*

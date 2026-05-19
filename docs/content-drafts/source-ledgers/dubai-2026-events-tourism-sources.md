@@ -577,6 +577,334 @@ Guidex should explain:
 
 ---
 
+## Short-lived offers, ticket deals and expired event lifecycle
+
+Events covered in this ledger span a wide range of content types. They do not all have the same lifecycle. A major annual exhibition like GITEX should remain archived and discoverable after it ends. A short-term discount offer or ticket deal should be hidden, noindexed, and eventually removed. Conflating these two lifecycles is a content quality and SEO risk.
+
+**Content types covered:**
+- Major events (GITEX, Big 5, IPS, Design Week, DFC, DSS, ATM)
+- Ticketed shows (concerts, performances, sports)
+- Exhibitions (DWTC, Expo City)
+- Sports events
+- Family and lifestyle events
+- Seasonal festivals
+- Short-lived offers, discounts, and short-term deals
+
+Short-lived offers and deals must not behave like evergreen SEO guides. They are live only while valid, hidden after expiry, and removed or archived on a defined schedule.
+
+---
+
+### Lifecycle states
+
+**A. Draft**
+- Not public
+- Source captured
+- `valid_from` and `valid_until` required for any offer or deal
+- Can be reviewed and scheduled
+
+**B. Scheduled**
+- Approved but not yet visible
+- Will become live automatically at `valid_from`
+- Source must be confirmed before scheduling
+
+**C. Live**
+- Visible in Calendar, This Month, Events, and relevant cards
+- `valid_until` must be displayed clearly for any offer or deal
+- External CTA shown only if official source provides one
+
+**D. Expiring soon** *(optional)*
+- Optional state: 3–7 days before `valid_until`
+- Use only when `valid_until` is confirmed from an official source
+- No artificial urgency — do not invent countdown framing
+
+**E. Expired**
+- Triggered immediately after `valid_until` or `event_end`
+- Hidden from homepage, This Month, live calendar view, and live events list
+- If page is accessed directly, show an expired notice (see display rules below)
+- Do not remove source ledger record
+
+**F. Archived**
+- `noindex` by default for short-lived offers
+- Internal record kept with source URL preserved
+- May remain publicly accessible only if the content has useful historical context
+- Major annual events stay archived and publicly accessible with "past event" status
+
+**G. Delete or internal-only**
+- After 30–60 days for low-value expired offers
+- Only if no SEO value, no backlinks, no recurring reference use
+- Never delete the source ledger record
+- Never delete major annual event pages automatically
+
+---
+
+### Lifecycle by content type
+
+| Content type | Live until | After expiry | Indexing | Keep? | Notes |
+|---|---|---|---|---|---|
+| `short_lived_offer` | `valid_until` | Hide immediately | `noindex` after expiry | Archive 7 days; delete or internal-only after 30–60 days if no value | Offers must never be left indexed as current after expiry |
+| `ticketed_show` | `event_end` | Archive | `noindex` optional — review for search value | Keep if important venue/artist page | Review after 60 days |
+| `major_annual_event` | `event_end` | Archive — keep public with "past event" status | Keep indexed | Yes — link to next edition when available | Never delete automatically |
+| `business_exhibition` | `event_end` | Archive as past event | Keep indexed | Yes — annual SEO and planning value | Link to next edition when available |
+| `compliance_deadline` | Date passes — mark as past | Mark as past deadline | Keep indexed | Yes — never delete automatically | Link to current/future deadline; keep source record |
+| `relative_reminder` | Not fixed | Does not expire globally | Keep | Yes — tied to user/business/property context | Not a public-date item |
+
+---
+
+### Required fields for offers and deals
+
+Any offer, discount, or short-term deal published on Guidex must include all of the following fields:
+
+```
+content_lifecycle:       short_lived_offer
+valid_from:              YYYY-MM-DD
+valid_until:             YYYY-MM-DD
+expires_at:              YYYY-MM-DDT00:00:00
+source_url:              [official source URL]
+source_type:             official / official_event_site / official_venue / dwtc / visit_dubai
+offer_type:              discount / ticket_deal / cashback / free_activity / seasonal_promotion
+venue_or_organizer:      [name]
+emirate:                 Dubai
+recheck_frequency:       high
+show_in_calendar:        true / false
+show_in_homepage:        true / false
+archive_after_days:      7
+delete_after_days:       30 (or 60 if under review)
+indexing_after_expiry:   noindex
+replacement_url:         [current Dubai calendar or live events URL]
+source_snapshot_note:    [brief note on when source was checked and what it said]
+```
+
+**Enforcement rule:** Do not create a published offer item without `valid_until`. A blank `valid_until` is not acceptable for any offer or deal.
+
+---
+
+### Display rules
+
+**Before expiry — while content is live:**
+- Show `valid_until` clearly and prominently
+- Show source or organiser name
+- Show external CTA only if the official source provides one — do not invent a CTA
+- Do not use countdown timers or fake urgency
+
+**After expiry — immediately:**
+- Remove from homepage
+- Remove from This Month
+- Remove from live calendar view
+- Remove from live events list
+- If the page is accessed directly, display the expired notice below
+
+**Expired notice EN:**
+> This offer has expired. See current Dubai events and offers.
+
+**Expired notice RU:**
+> Эта акция уже завершена. Посмотрите актуальные события и предложения в Дубае.
+
+The expired notice must link to the current Dubai Calendar or a live events page — not to another expired item.
+
+---
+
+### SEO and RAG rules
+
+- Do not keep expired offers indexed as current pages. Use `noindex` immediately after expiry.
+- Keep major annual events archived and indexed — they have recurring search value.
+- Add clear "Past event" or "Expired offer" status to archived pages so search engines and AI do not treat them as current.
+- Never let AI or RAG summaries describe expired offers as active. The page must signal expiry status clearly.
+- For recurring annual events, link the old-year page to the new-year edition once it exists.
+- For expired offers, the replacement link should go to the current Dubai Calendar or live events, not to another expired item.
+- Do not publish evergreen guide pages for short-lived discounts. A guide titled "How to get 30% off at Dubai Mall" is not evergreen — treat it as a short-lived offer with an expiry lifecycle.
+- RAG context must reflect current status. If a page is expired, the on-page status must say so before any AI system can excerpt it.
+
+---
+
+### Archive and deletion policy
+
+| Content type | After expiry | Archive after | Delete or internal-only after | Source ledger |
+|---|---|---|---|---|
+| Short-lived offer | `noindex` immediately | 7 days | 30–60 days if no SEO or backlink value | Never delete |
+| Small ticketed offer | Archive at `event_end` | At `event_end` | Review after 60 days | Never delete |
+| Major annual event | Archive at `event_end`, keep public | At `event_end` | Never delete automatically | Never delete |
+| Business exhibition | Archive at `event_end`, keep public | At `event_end` | Never — annual SEO value | Never delete |
+| Compliance deadline | Mark as past after date | Immediately | Never delete automatically | Never delete |
+| Source ledger record | Never hidden | Never | Never | Permanent |
+
+**Default rule:** When in doubt, archive and `noindex` rather than delete. Deletion is irreversible. A noindexed archive can be reinstated.
+
+---
+
+### Blocked claims — lifecycle
+
+In addition to the blocked claims listed in the main claims section above, the following are specifically blocked for lifecycle compliance:
+
+| Blocked action | Why blocked |
+|---|---|
+| Calling an expired offer "active" or "current" | Misleads users and search engines |
+| Showing an expired discount in the live calendar view | Expired content must not appear in live feeds |
+| Keeping expired offers on the homepage or This Month section | Damages editorial credibility |
+| Indexing expired short-lived offers as current content | SEO harm and user trust harm |
+| Deleting major annual event pages automatically | Annual events have recurring search and backlink value |
+| Deleting source ledger records | Source records are permanent internal reference |
+| Claiming a discount amount without official source | No invented percentages or amounts |
+| Publishing an offer without `valid_until` set | `valid_until` is required for all offers and deals |
+| Using third-party deal aggregator pages as primary source | Use official organiser or venue source where available |
+| Allowing AI/RAG to excerpt expired offers as if current | On-page expiry status must be machine-readable and prominent |
+
+---
+
+## UAE, Abu Dhabi, other Emirates and entertainment expansion
+
+This ledger started as a Dubai 2026 event source ledger. However, the Guidex Events layer must also track major UAE-wide and nearby-emirate events when they matter to Dubai residents, tourists, investors, founders, families, or property owners.
+
+**Important product rule:** Do NOT create a separate "UAE-wide events" content type. Do NOT create a separate events system. Everything remains under the existing Events / Calendar content model. The calendar can filter by emirate, category, or type — but the source model is still Events.
+
+Events in this section are part of the same content model as Dubai events. The only difference is that calendar UI must show emirate or venue clearly so users are not misled about location.
+
+---
+
+### UAE and other Emirates source candidates
+
+| Item | Emirate | Source status | Official source needed | Calendar role | Publish status |
+|---|---|---|---|---|---|
+| A. Formula 1 Abu Dhabi Grand Prix 2026 | Abu Dhabi | source_to_capture | Formula 1 official race page; Yas Marina Circuit / Abu Dhabi GP official page | sports_event / tourism_event / major_annual_event | blocked_until_official_source_captured |
+| B. Yas Island major events | Abu Dhabi | source_to_capture | Yas Island official events page; Etihad Arena official event pages where relevant | concert / sports_event / family_event / tourism_event | blocked_until_official_source_captured |
+| C. Dubai Duty Free Tennis Championships | Dubai | source_to_capture | Official tournament website; confirmed next tournament dates | sports_event / tourism_event | blocked_until_official_next_dates_captured |
+| D. Dubai Opera | Dubai | source_to_capture | Dubai Opera official event pages | ticketed_show / cultural_event | calendar_item_after_official_event_page |
+| E. Coca-Cola Arena | Dubai | source_to_capture | Coca-Cola Arena official event pages | concert / ticketed_show / entertainment | calendar_item_after_official_event_page |
+| F. Global Village Season 31 | Dubai | hold | Global Village official season date page (globalvillage.ae) | family_event / tourism_event / major_annual_event | hold_until_official_dates |
+| G. Dubai Shopping Festival 2026/2027 | Dubai | hold | Visit Dubai official DSF dates | citywide_event / shopping_event / tourism_event | hold_until_official_dates |
+| H. Major Sharjah / RAK events | Sharjah / Ras Al Khaimah | source_to_capture | Official tourism authority or event organiser pages | other_emirates_event | include_only_if_relevant_to_Dubai_audience |
+
+**Sources still needed for all items in this table.** Do not create any calendar item or event draft for these until the official source is captured and recorded here.
+
+---
+
+### Event classification fields
+
+Events in this ledger can be classified using the following fields. These feed future calendar filter and event display logic.
+
+**emirate:**
+- `Dubai`
+- `Abu Dhabi`
+- `Sharjah`
+- `Ras Al Khaimah`
+- `Ajman` / `Fujairah` / `Umm Al Quwain` — only if important for the Guidex audience
+- `UAE-wide`
+
+**audience:**
+- `residents`
+- `tourists`
+- `families`
+- `investors`
+- `founders`
+- `business_owners`
+- `property_owners`
+- `design_construction_audience`
+
+**event_type:**
+- `business_event`
+- `sports_event`
+- `concert`
+- `ticketed_show`
+- `family_event`
+- `tourism_event`
+- `citywide_event`
+- `cultural_event`
+- `property_event`
+- `design_event`
+- `construction_event`
+- `offer`
+- `deal`
+
+**content_decision:**
+- `standalone_event_page`
+- `calendar_only`
+- `short_lived_offer`
+- `past_event_archive`
+- `hold_until_source`
+
+---
+
+### Inclusion rules for other Emirates events
+
+**Include when:**
+- The event is major enough to be relevant to Dubai residents or tourists
+- It affects travel planning from Dubai (flights, hotels, logistics)
+- It has strong investor, business, property, or tourism relevance for the Guidex audience
+- It is a UAE-wide attraction such as Formula 1, which draws a Dubai-based audience
+- An official source is available and captured in this ledger
+- The calendar label clearly shows the emirate and venue so users know it is not in Dubai
+
+**Do not include when:**
+- The event is small and local with no Dubai or Guidex audience relevance
+- Dates are based only on social media posts or unverified announcements
+- Ticket or deal details come only from third-party aggregators when an official source exists
+- The event or offer has already expired
+- Dates have not been officially confirmed
+
+---
+
+### Location display rules
+
+Calendar and event UI must show emirate or venue for all non-Dubai events, and for Dubai events where venue context matters. This prevents users assuming every event is physically in Dubai.
+
+**Required label format (examples):**
+
+| Event | Display label |
+|---|---|
+| Formula 1 Abu Dhabi Grand Prix | Abu Dhabi GP, Yas Marina Circuit |
+| Yas Island concert | Etihad Arena, Yas Island, Abu Dhabi |
+| Dubai Duty Free Tennis Championships | Dubai Duty Free Tennis Stadium, Dubai |
+| Dubai Opera performance | Dubai Opera, Downtown Dubai |
+| Coca-Cola Arena show | Coca-Cola Arena, City Walk, Dubai |
+| Global Village | Global Village, Dubai |
+| GITEX Global | Dubai Exhibition Centre, Expo City Dubai |
+| Big 5 Global | DWTC, Dubai |
+
+Labels must show venue and emirate for Abu Dhabi and other emirate events. Venue-only is acceptable for well-known Dubai venues where context is unambiguous.
+
+---
+
+### Offers and deals relationship note
+
+Offers, discounts, and deals can be associated with any event type in this ledger:
+
+- event (e.g., early-bird tickets)
+- venue (e.g., Yas Island attraction package)
+- attraction (e.g., theme park discount)
+- shopping festival (e.g., DSF mall promotion)
+- ticketed show (e.g., pre-sale discount)
+- tourism campaign (e.g., Visit Abu Dhabi seasonal offer)
+
+**All offers and deals must follow the `short_lived_offer` lifecycle defined in the section above:**
+- `valid_from` required
+- `valid_until` required — no blank expiry for any offer
+- `noindex` immediately after expiry
+- Hidden from all live surfaces after expiry
+- Expired notice shown if page is accessed directly
+- Never kept as an evergreen SEO guide
+
+The fact that an offer is attached to a major annual event (such as F1 Abu Dhabi) does not change the offer's own lifecycle. The event page may remain archived; the offer attached to it must still expire and be hidden.
+
+---
+
+### Blocked claims — UAE and other Emirates expansion
+
+In addition to the blocked claims in the main claims section and the lifecycle section above:
+
+| Blocked action | Why blocked |
+|---|---|
+| Creating a separate UAE-wide event content type | Everything remains under Events / Calendar — no new content type |
+| Implying Abu Dhabi events happen in Dubai | Location must be shown clearly in all labels and calendar items |
+| Publishing Formula 1 Abu Dhabi dates without official F1 or Yas source | Source not yet captured — date is blocked |
+| Publishing Dubai Tennis Championships dates without official tournament source | Source not yet captured — date is blocked |
+| Publishing Dubai Opera or Coca-Cola Arena events without official venue or organiser source | Individual show sources not yet captured |
+| Publishing Global Village or DSF dates before official source is confirmed | Both are on hold — see source candidates table above |
+| Showing expired offers as active for any event type | Applies to all events including Abu Dhabi, Yas, and UAE-wide |
+| Using third-party ticket sites as primary source when official source exists | Official organiser or venue is always preferred |
+| Publishing ticket prices or discount amounts without official source | Prices change — never invent or copy from unofficial sites |
+| Keeping short-lived deals indexed after expiry, even if attached to a major event | The offer lifecycle is separate from the event lifecycle |
+
+---
+
 ## Related files
 
 | File | Relationship |
@@ -592,4 +920,4 @@ Guidex should explain:
 ---
 
 *This is a source ledger — internal use only. Nothing in this file is published. No admin action. No DB write.*
-*Last updated: 2026-05-18 — Eleven official event sources captured (Visit Dubai, dubaifitnesschallenge.com, gitex.com, dubaidesignweek.ae, downtowndesign.com, and six DWTC pages). Future sources needed: Global Village S31 date, DSF dates, Sole DXB, UNTOLD, DP World Tour, Opera/Arena events. All content opportunities blocked until source recheck and owner review.*
+*Last updated: 2026-05-19 — Eleven official event sources captured. Short-lived offer lifecycle model added (Phase 6C-16b). UAE/Abu Dhabi/other Emirates expansion added (Phase 6C-16c): eight source-needed items including F1 Abu Dhabi GP, Yas Island, Dubai Tennis, Opera, Arena, Global Village, DSF, other Emirates events; event classification fields; inclusion/exclusion rules; location display rules; offers/deals relationship note; expansion-specific blocked claims. Everything remains under the Events / Calendar content model. All content opportunities blocked until source recheck and owner review.*

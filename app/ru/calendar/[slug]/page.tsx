@@ -7,6 +7,7 @@ import {
 } from "@/lib/db/news-events-calendar";
 import { calendarRobots } from "@/lib/db/indexing";
 import CalendarContextCta from "@/components/calendar/CalendarContextCta";
+import MarkdownBody from "@/components/MarkdownBody";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -70,7 +71,7 @@ export default async function RuCalendarDetailPage({ params }: Props) {
   const page = getCalendarPageBySlug(slug, "ru");
   if (!page) notFound();
 
-  const bodyParagraphs = page.body.split("\n\n").filter(Boolean);
+  // body is stored as Markdown in the DB — rendered by MarkdownBody below
   const monthLabel = page.month ? ` · Месяц ${page.month}` : "";
   const calendarMonth = page.month
     ? `${page.year}-${String(page.month).padStart(2, "0")}`
@@ -114,14 +115,8 @@ export default async function RuCalendarDetailPage({ params }: Props) {
         calendarMonth={calendarMonth}
       />
 
-      {bodyParagraphs.length > 0 && (
-        <div className="space-y-4 mb-5">
-          {bodyParagraphs.map((p, i) => (
-            <p key={i} className="text-[15px] text-gray-700 leading-relaxed">
-              {p}
-            </p>
-          ))}
-        </div>
+      {page.body && (
+        <MarkdownBody content={page.body} className="mb-5" />
       )}
 
       {page.dates.length > 0 && (

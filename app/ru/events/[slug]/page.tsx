@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { getEventBySlug } from "@/lib/db/news-events-calendar";
 import { eventRobots } from "@/lib/db/indexing";
 import CalendarContextCta from "@/components/calendar/CalendarContextCta";
+import MarkdownBody from "@/components/MarkdownBody";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -49,7 +50,7 @@ export default async function RuEventDetailPage({ params }: Props) {
   const event = getEventBySlug(slug, "ru");
   if (!event) notFound();
 
-  const bodyParagraphs = event.body.split("\n\n").filter(Boolean);
+  // body is stored as Markdown in the DB — rendered by MarkdownBody below
   const categoryLabel =
     event.category.charAt(0).toUpperCase() +
     event.category.slice(1).replace(/-/g, " ");
@@ -96,16 +97,12 @@ export default async function RuEventDetailPage({ params }: Props) {
         contentType="event"
         calendarBase="/ru/calendar"
         calendarMonth={calendarMonth}
+        highlightStart={event.eventDateStart}
+        highlightEnd={event.eventDateEnd ?? undefined}
       />
 
-      {bodyParagraphs.length > 0 && (
-        <div className="space-y-4 mb-5">
-          {bodyParagraphs.map((p, i) => (
-            <p key={i} className="text-[15px] text-gray-700 leading-relaxed">
-              {p}
-            </p>
-          ))}
-        </div>
+      {event.body && (
+        <MarkdownBody content={event.body} className="mb-5" />
       )}
 
       {event.sourceUrl && (

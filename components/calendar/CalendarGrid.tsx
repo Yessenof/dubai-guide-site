@@ -31,8 +31,8 @@ const MONTHS_GENITIVE_RU = [
 const MONTHS_SHORT_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const MONTHS_SHORT_RU = ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"];
 
-const DAY_HEADERS_EN = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-const DAY_HEADERS_RU = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+const DAY_HEADERS_EN = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+const DAY_HEADERS_RU = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
 const WEEKDAYS_EN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const WEEKDAYS_RU = ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"];
@@ -78,7 +78,9 @@ function getLegendItems(filter: string, locale: "en" | "ru") {
 // ─── Pure helpers ─────────────────────────────────────────────────────────────
 
 function buildGridCells(year: number, month: number): Array<number | null> {
-  const firstDay = new Date(year, month - 1, 1).getDay();
+  // Monday-first: shift Sunday(0) → 6, Monday(1) → 0, ..., Saturday(6) → 5
+  const rawFirstDay = new Date(year, month - 1, 1).getDay();
+  const firstDay = (rawFirstDay + 6) % 7;
   const daysInMonth = new Date(year, month, 0).getDate();
   const cells: Array<number | null> = [];
   for (let i = 0; i < firstDay; i++) cells.push(null);
@@ -123,6 +125,67 @@ function dayHeadingLabel(iso: string, locale: "en" | "ru"): string {
     : `${WEEKDAYS_EN[dow]}, ${MONTHS_EN[m - 1]} ${d}, ${y}`;
 }
 
+// ─── Grid-expanded item type ─────────────────────────────────────────────────
+// Extended item with an internal _cellDate for range-expanded entries.
+// _cellDate is the date this item occupies in the grid (different from item.date
+// for mid-range days); item.date always holds the original event start date.
+type GridItem = CalendarDateItemExtended & { _cellDate?: string };
+
+// Expand multi-day items so they appear on every date in their range within the
+// given month. Single-day items are passed through unchanged.
+function expandRanges(
+  items: CalendarDateItemExtended[],
+  year: number,
+  month: number
+): GridItem[] {
+  const monthStart = new Date(year, month - 1, 1);
+  const monthEnd = new Date(year, month, 0);
+  const result: GridItem[] = [];
+
+  for (const item of items) {
+    if (!item.period_end) {
+      const prefix = `${year}-${String(month).padStart(2, "0")}`;
+      if (item.date.startsWith(prefix)) result.push(item);
+      continue;
+    }
+    const start = new Date(item.date);
+    const end = new Date(item.period_end);
+    const from = start < monthStart ? monthStart : start;
+    const to = end > monthEnd ? monthEnd : end;
+    if (from > to) continue;
+    const cur = new Date(from);
+    while (cur <= to) {
+      const iso = isoDate(cur.getFullYear(), cur.getMonth() + 1, cur.getDate());
+      result.push({ ...item, _cellDate: iso });
+      cur.setDate(cur.getDate() + 1);
+    }
+  }
+  return result;
+}
+
+// Group agenda items by detail_url. Items without a detail_url are kept as
+// individual entries. Returns an array of either single items or item groups.
+function groupByDetailUrl(
+  items: CalendarDateItemExtended[]
+): (CalendarDateItemExtended | CalendarDateItemExtended[])[] {
+  const groups = new Map<string, CalendarDateItemExtended[]>();
+  const order: string[] = [];
+
+  for (const item of items) {
+    const key = item.detail_url ?? `__solo__${item.date}__${item.label_en}`;
+    if (!groups.has(key)) {
+      order.push(key);
+      groups.set(key, []);
+    }
+    groups.get(key)!.push(item);
+  }
+
+  return order.map((key) => {
+    const g = groups.get(key)!;
+    return g.length === 1 ? g[0] : g;
+  });
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 interface Props {
@@ -153,13 +216,13 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
 
   const legend = getLegendItems(activeFilter, locale);
 
-  // All items in current month
+  // Items whose start date falls in the current month — used for agenda lists
   const allMonthItems = useMemo(() => {
     const prefix = `${year}-${String(month).padStart(2, "0")}`;
     return items.filter((item) => item.date.startsWith(prefix));
   }, [items, year, month]);
 
-  // Items after active filter
+  // Agenda items after active filter — used for full-month agenda and highlights
   const filteredMonthItems = useMemo(() => {
     if (activeFilter === "all") return allMonthItems;
     return allMonthItems.filter((item) =>
@@ -167,19 +230,35 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
     );
   }, [allMonthItems, activeFilter]);
 
-  // Items grouped by ISO date, sorted by priority within each day
+  // Range-expanded items for the grid — multi-day items appear on every date
+  const gridExpandedItems = useMemo(
+    () => expandRanges(items, year, month),
+    [items, year, month]
+  );
+
+  // Filtered grid items (for grid display + selected-day agenda)
+  const filteredGridItems = useMemo(() => {
+    if (activeFilter === "all") return gridExpandedItems;
+    return gridExpandedItems.filter((item) =>
+      filterMatchesCat(activeFilter, itemCategoryType(item))
+    );
+  }, [gridExpandedItems, activeFilter]);
+
+  // Items grouped by cell date (respects _cellDate for range expansions),
+  // sorted by priority within each day
   const itemsByDate = useMemo(() => {
-    const map = new Map<string, CalendarDateItemExtended[]>();
-    for (const item of filteredMonthItems) {
-      const list = map.get(item.date) ?? [];
-      list.push(item);
-      map.set(item.date, list);
+    const map = new Map<string, GridItem[]>();
+    for (const item of filteredGridItems) {
+      const key = (item as GridItem)._cellDate ?? item.date;
+      const list = map.get(key) ?? [];
+      list.push(item as GridItem);
+      map.set(key, list);
     }
     for (const [date, list] of map) {
       map.set(date, list.slice().sort((a, b) => itemPriority(a) - itemPriority(b)));
     }
     return map;
-  }, [filteredMonthItems]);
+  }, [filteredGridItems]);
 
   // Selected day items
   const selectedItems = useMemo(
@@ -210,6 +289,16 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
         return itemPriority(a) - itemPriority(b);
       }),
     [filteredMonthItems]
+  );
+
+  // Grouped agenda — items sharing a detail_url collapse into one card
+  const groupedMonthItems = useMemo(
+    () => groupByDetailUrl(sortedMonthItems),
+    [sortedMonthItems]
+  );
+  const groupedHighlights = useMemo(
+    () => groupByDetailUrl(monthHighlights),
+    [monthHighlights]
   );
 
   const gridCells = useMemo(() => buildGridCells(year, month), [year, month]);
@@ -535,16 +624,20 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
           )}
 
           {/* Mobile: no selection — "This month" mini list */}
-          {!selectedDay && monthHighlights.length > 0 && (
+          {!selectedDay && groupedHighlights.length > 0 && (
             <div className="md:hidden mt-5">
               <div className="w-5 h-0.5 bg-brass rounded-full mb-2.5" />
               <p className="text-[12px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
                 {isRu ? "В этом месяце в Дубае" : "This month in Dubai"}
               </p>
               <div className="space-y-1.5">
-                {monthHighlights.map((item, i) => (
-                  <AgendaRow key={i} item={item} locale={locale} />
-                ))}
+                {groupedHighlights.map((entry, i) =>
+                  Array.isArray(entry) ? (
+                    <GroupedAgendaRow key={i} items={entry} locale={locale} />
+                  ) : (
+                    <AgendaRow key={i} item={entry} locale={locale} />
+                  )
+                )}
               </div>
             </div>
           )}
@@ -579,18 +672,22 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
               <p className="text-[12px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
                 {isRu ? "В этом месяце в Дубае" : "This month in Dubai"}
               </p>
-              {monthHighlights.length === 0 ? (
+              {groupedHighlights.length === 0 ? (
                 <p className="text-[14px] text-gray-400">
                   {isRu ? "Нет событий в этом месяце." : "No events this month."}
                 </p>
               ) : (
                 <div className="space-y-2.5">
-                  {monthHighlights.map((item, i) => (
-                    <AgendaCard key={i} item={item} locale={locale} compact />
-                  ))}
+                  {groupedHighlights.map((entry, i) =>
+                    Array.isArray(entry) ? (
+                      <GroupedAgendaCard key={i} items={entry} locale={locale} compact />
+                    ) : (
+                      <AgendaCard key={i} item={entry} locale={locale} compact />
+                    )
+                  )}
                 </div>
               )}
-              {monthHighlights.length > 0 && (
+              {groupedHighlights.length > 0 && (
                 <p className="text-[12px] text-gray-400 mt-3">
                   {isRu
                     ? "Нажмите на день, чтобы увидеть детали."
@@ -603,16 +700,20 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
       </div>
 
       {/* ── Full month agenda ─────────────────────────────────────────────── */}
-      {sortedMonthItems.length > 0 && (
+      {groupedMonthItems.length > 0 && (
         <div className="mt-8">
           <div className="w-5 h-0.5 bg-brass rounded-full mb-2.5" />
           <p className="text-[12px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
             {isRu ? "Все даты месяца" : "All dates this month"}
           </p>
           <div className="space-y-1.5">
-            {sortedMonthItems.map((item, i) => (
-              <AgendaRow key={i} item={item} locale={locale} />
-            ))}
+            {groupedMonthItems.map((entry, i) =>
+              Array.isArray(entry) ? (
+                <GroupedAgendaRow key={i} items={entry} locale={locale} />
+              ) : (
+                <AgendaRow key={i} item={entry} locale={locale} />
+              )
+            )}
           </div>
         </div>
       )}
@@ -724,6 +825,186 @@ function AgendaCard({
           </Link>
         )
       )}
+    </div>
+  );
+}
+
+// ─── GroupedAgendaCard ────────────────────────────────────────────────────────
+
+function GroupedAgendaCard({
+  items,
+  locale,
+  compact = false,
+}: {
+  items: CalendarDateItemExtended[];
+  locale: "en" | "ru";
+  compact?: boolean;
+}) {
+  const isRu = locale === "ru";
+  const sorted = items.slice().sort((a, b) => {
+    const pd = itemPriority(a) - itemPriority(b);
+    if (pd !== 0) return pd;
+    return a.date < b.date ? -1 : 1;
+  });
+  const primary = sorted[0];
+  const color = itemColor(primary);
+  const badge = itemBadgeLabel(primary, locale);
+  const cta = itemCtaLabel(primary, locale);
+  const isExternal = primary.is_external === true;
+  const href = primary.detail_url
+    ? isExternal
+      ? primary.detail_url
+      : isRu
+      ? `/ru${primary.detail_url}`
+      : primary.detail_url
+    : null;
+
+  // Date range: span from earliest start to latest end
+  const allStarts = items.map((i) => i.date);
+  const allEnds = items.map((i) => i.period_end ?? i.date);
+  const minDate = allStarts.reduce((a, b) => (a < b ? a : b));
+  const maxEnd = allEnds.reduce((a, b) => (a > b ? a : b));
+  const rangeLabel =
+    minDate === maxEnd
+      ? formatShortDate(minDate, locale)
+      : `${formatShortDate(minDate, locale)} – ${formatShortDate(maxEnd, locale)}`;
+
+  return (
+    <div className="border border-stone-100 rounded-xl px-4 py-3 bg-white">
+      <div className="flex flex-wrap items-center gap-1.5 mb-2">
+        <span
+          className="text-[11px] font-bold text-white px-2 py-0.5 rounded-full"
+          style={{ backgroundColor: color }}
+        >
+          {badge}
+        </span>
+      </div>
+      {!compact && (
+        <p className="text-[12px] text-gray-500 mb-1.5">{rangeLabel}</p>
+      )}
+      <div className="space-y-0.5 mb-2">
+        {sorted.map((item, i) => {
+          const start = formatShortDate(item.date, locale);
+          const end = item.period_end ? formatShortDate(item.period_end, locale) : null;
+          const dateStr = end && end !== start ? `${start} – ${end}` : start;
+          return (
+            <p key={i} className="text-[13px] text-gray-700 leading-snug">
+              <span className="text-gray-400 text-[12px]">{dateStr}:</span>{" "}
+              {itemLabel(item, locale)}
+            </p>
+          );
+        })}
+      </div>
+      {href && (
+        isExternal ? (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-brass hover:opacity-75 transition-opacity"
+          >
+            {cta}
+            <span className="text-[11px] text-gray-400" aria-hidden="true">↗</span>
+          </a>
+        ) : (
+          <Link
+            href={href}
+            className="text-[14px] font-semibold text-brass hover:opacity-75 transition-opacity"
+          >
+            {cta}
+          </Link>
+        )
+      )}
+    </div>
+  );
+}
+
+// ─── GroupedAgendaRow ─────────────────────────────────────────────────────────
+
+function GroupedAgendaRow({
+  items,
+  locale,
+}: {
+  items: CalendarDateItemExtended[];
+  locale: "en" | "ru";
+}) {
+  const isRu = locale === "ru";
+  const sorted = items.slice().sort((a, b) => {
+    const pd = itemPriority(a) - itemPriority(b);
+    if (pd !== 0) return pd;
+    return a.date < b.date ? -1 : 1;
+  });
+  const primary = sorted[0];
+  const color = itemColor(primary);
+  const badge = itemBadgeLabel(primary, locale);
+  const cta = itemCtaLabel(primary, locale);
+  const isExternal = primary.is_external === true;
+  const href = primary.detail_url
+    ? isExternal
+      ? primary.detail_url
+      : isRu
+      ? `/ru${primary.detail_url}`
+      : primary.detail_url
+    : null;
+
+  const allStarts = items.map((i) => i.date);
+  const allEnds = items.map((i) => i.period_end ?? i.date);
+  const minDate = allStarts.reduce((a, b) => (a < b ? a : b));
+  const maxEnd = allEnds.reduce((a, b) => (a > b ? a : b));
+  const rangeLabel =
+    minDate === maxEnd
+      ? formatShortDate(minDate, locale)
+      : `${formatShortDate(minDate, locale)} – ${formatShortDate(maxEnd, locale)}`;
+
+  return (
+    <div className="flex items-start gap-3 border border-stone-100 rounded-xl px-3.5 py-3 bg-stone-50/50 hover:bg-stone-50 transition-colors">
+      {/* Date range */}
+      <span className="text-[11px] text-gray-500 tabular-nums flex-shrink-0 w-[52px] pt-0.5 leading-snug">
+        {rangeLabel}
+      </span>
+      {/* Badge */}
+      <span
+        className="text-[10px] font-bold text-white px-2 py-[3px] rounded-full flex-shrink-0 uppercase tracking-wide mt-0.5"
+        style={{ backgroundColor: color }}
+      >
+        {badge}
+      </span>
+      {/* Sub-items + CTA */}
+      <div className="flex-1 min-w-0">
+        <div className="space-y-0.5 mb-1">
+          {sorted.map((item, i) => {
+            const start = formatShortDate(item.date, locale);
+            const end = item.period_end ? formatShortDate(item.period_end, locale) : null;
+            const dateStr = end && end !== start ? `${start} – ${end}` : start;
+            return (
+              <p key={i} className="text-[12px] text-gray-600 leading-snug">
+                <span className="text-gray-400">{dateStr}:</span>{" "}
+                {itemLabel(item, locale)}
+              </p>
+            );
+          })}
+        </div>
+        {href && (
+          isExternal ? (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity mt-1"
+            >
+              {cta}
+              <span className="text-[10px] text-gray-400" aria-hidden="true">↗</span>
+            </a>
+          ) : (
+            <Link
+              href={href}
+              className="text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity mt-1 block"
+            >
+              {cta}
+            </Link>
+          )
+        )}
+      </div>
     </div>
   );
 }

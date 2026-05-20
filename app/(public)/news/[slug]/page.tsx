@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { getNewsPostBySlug } from "@/lib/db/news-events-calendar";
 import { newsRobots } from "@/lib/db/indexing";
 import CalendarContextCta from "@/components/calendar/CalendarContextCta";
+import MarkdownBody from "@/components/MarkdownBody";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -47,7 +48,7 @@ export default async function NewsDetailPage({ params }: Props) {
   const post = getNewsPostBySlug(slug, "en");
   if (!post) notFound();
 
-  const bodyParagraphs = post.body.split("\n\n").filter(Boolean);
+  // body is stored as Markdown in the DB — rendered by MarkdownBody below
   const categoryLabel =
     post.category.charAt(0).toUpperCase() +
     post.category.slice(1).replace(/-/g, " ");
@@ -89,14 +90,8 @@ export default async function NewsDetailPage({ params }: Props) {
         calendarBase="/calendar"
       />
 
-      {bodyParagraphs.length > 0 && (
-        <div className="space-y-4 mb-5">
-          {bodyParagraphs.map((p, i) => (
-            <p key={i} className="text-[15px] text-gray-700 leading-relaxed">
-              {p}
-            </p>
-          ))}
-        </div>
+      {post.body && (
+        <MarkdownBody content={post.body} className="mb-5" />
       )}
 
       {post.dateUpdated && post.dateUpdated !== post.datePublished && (

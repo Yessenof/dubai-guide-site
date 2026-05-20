@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-15 (Phase 4B-2D — No-API AI-Assisted Draft Import Mode — implementation complete, not committed)
+Last updated: 2026-05-20 (Phase 6C-33 — Indexing policy fix complete; P0 blocker resolved)
 
 ---
 
@@ -228,15 +228,55 @@ Group pages live:
 
 ## Current Next Step
 
-**Phase 4B-2D — No-API AI-Assisted Draft Import Mode — complete (2026-05-15). Not committed yet.**
+**Phase 6C-32 — Full calendar, news radar and opportunity matrix — complete (2026-05-20).**
 
-Primary UX refactored: "Paste AI Draft Package" (no API required) is now the default flow. AI runtime flow (classify → generate → refine) retained and shown only when `runtimeStatus === "connected"`.
+Five planning documents built. Full opportunity matrix across 15 categories, 85 items. P0 technical launch blocker identified and documented.
 
-**New file:** `lib/ai/import-parser.ts` — `parseImportedDraft(raw): ImportParseResult` (client-safe JSON parser using `extractJson` + `validateGeneratedDraftJson` + `normalizeGeneratedDraftForSave`; accepts `content_type` snake_case alias; forces `ru_published=0`; returns helpful error messages); `buildImportPrompt(contentType): string` (copyable system prompt for Claude/ChatGPT, includes JSON schema template and content rules).
+## P0 Technical Launch Blocker (NEW — Phase 6C-32)
 
-**Rewritten AiInboxClient.tsx:** Local classifier removed. Primary section: "Paste AI Draft Package" — collapsible prompt builder (content type selector + read-only prompt textarea + copy-to-clipboard button), JSON import textarea, parse-on-click, error display. AI section: visible only when `isConnected`, same classify → generate flow. Shared draft view for both import and AI drafts (`draftSource: "import" | "ai"` determines label). Refine with AI: active if connected, grayed with note if not. Runtime notice: gray/neutral ("Import mode active. No API required.") instead of amber warning when disabled. All save forms use `useActionState` + `_draft_json` pattern (same path for import and AI drafts). Legacy local classifier actions removed from imports.
+**All three route files hardcode `robots: { index: false }`** — no news/event/calendar page is indexable. Eid content deployed but invisible to Google/AI. Resolve before next content deploy.
 
-**QA:** `scripts/qa-phase-4b2d-no-api-import.ts` — 79/79 checks: valid news/event/calendar parse, fenced JSON, content_type snake_case alias, empty/invalid/malformed/array inputs, missing/invalid contentType, ru_published forced to 0, slug normalization, em-dash stripping, optional fields default gracefully, admin-owned fields stripped, calendar dates_json preserved, schema_eligible rules, prompt builder content and field coverage, extractJson, normalizeGeneratedDraftForSave invariants. All 7 QA scripts: 560/560 clean tests. Build: 86 pages, TypeScript clean. DB: guides=17, steps=115, news_posts=1, events=1, calendar_pages=1 — unchanged.
+- Affected: `app/(public)/news/[slug]/page.tsx`, `events/[slug]/page.tsx`, `calendar/[slug]/page.tsx`
+- Fix: Dynamic index/noindex based on `status`, `ru_published`, `noindex`, `noindex_after`
+- Required phase: 6C-33 (code-only, no content)
+
+**Published records (local DB — QA COMPLETE, deploy pending + P0 noindex blocker):**
+| Type | Slug | ID |
+|---|---|---|
+| News | `uae-eid-al-adha-2026-federal-holiday-long-break` | `5b1eecec-e64a-4cc9-9f67-c6cb2b55e1e4` |
+| Event | `uae-eid-al-adha-2026` | `8532feee-1d6f-4ed3-b716-61712b473ca3` |
+| Calendar | `may-2026-uae-calendar` | `6ce82fda-d696-4040-b6c3-3d74c17347ea` |
+
+**Phase 6C-32 planning output:**
+- `docs/content-drafts/FULL_CALENDAR_AND_NEWS_RADAR_MATRIX.md` — 85 items, 15 categories
+- `docs/content-drafts/CALENDAR_SEED_ITEM_POLICY.md` — when items go public, CTA rules, offer controls
+- `docs/content-drafts/HOMEPAGE_AND_CAROUSEL_CONTENT_MODEL.md` — carousel logic, image rules, CTA logic
+- `docs/content-drafts/DUBAI_LIFE_SETUP_LAUNCH_MATRIX.md` — 12 modules with checklists and service paths
+- `docs/content-drafts/PHASE_6C32_SUMMARY.md` — clusters, candidates, source gaps, recommended next phases
+
+**Urgent items identified:**
+- TAX-01: Emiratisation June 30 quota — 10 days away — build + import news now
+- VIRAL-01: UAE Long Weekend Guide 2026 — highest SEO ROI — build now
+- TAX-02: Corporate Tax Sept 30 deadline — build guide by Aug 1
+
+**Files owner_review_ready (waiting for import decision):**
+- `docs/content-drafts/news/uae-e-invoicing-2026-asp-deadline-update.md` (since Phase 6C-25)
+- `docs/content-drafts/guides/uae-e-invoicing-2026-business-readiness.md` (since Phase 6C-25)
+- `docs/content-drafts/calendar/uae-e-invoicing-2026-asp-deadline.md` (since Phase 6C-25)
+- `docs/content-drafts/guides/uae-vat-registration-threshold.md` (Phase 6C-28) — evergreen
+
+**Content sprint series:**
+- 6C-22 through 6C-29: sources, events, e-invoicing, Eid polish, launch decisions
+- 6C-30: Eid Al Adha 2026 import and publish
+- 6C-31: Eid Al Adha 2026 local QA
+- 6C-32: Full calendar and news radar matrix
+
+**Recommended next phases (from Phase 6C-32):**
+1. **6C-33**: P0 noindex code fix (code-only)
+2. **6C-34**: Emiratisation + Corporate Tax compliance sprint (TAX-01, TAX-02, TAX-05)
+3. **6C-35**: UAE Long Weekend Guide (VIRAL-01)
+4. **6C-36**: Dubai Life Setup Hub Phase 1 (M01–M03)
+5. Deploy Eid content to production (pending noindex fix + owner approval)
 
 ---
 

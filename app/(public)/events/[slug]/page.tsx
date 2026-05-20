@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getEventBySlug } from "@/lib/db/news-events-calendar";
+import { eventRobots } from "@/lib/db/indexing";
 import CalendarContextCta from "@/components/calendar/CalendarContextCta";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${event.seoTitle || event.title} — Guidex Consulting`,
     description: event.metaDescription || event.summary,
-    robots: { index: false, follow: true },
+    robots: eventRobots(event),
     alternates: {
       canonical: `${BASE}/events/${slug}`,
       languages: {

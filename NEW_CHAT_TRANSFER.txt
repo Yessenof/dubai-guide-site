@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-14 (Phase 4A-6 — Calendar Visual Posts admin full workflow committed, not pushed)
+Last updated: 2026-05-20 (Phase 6C-33 — Indexing policy fix complete; P0 blocker resolved; commits pending push)
 
 WHAT TO ATTACH
 --------------
@@ -40,13 +40,106 @@ SQLite. No external services.
 Stack: Next.js 16.2.3 (App Router, Turbopack) + TypeScript + Tailwind CSS v4 +
 better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
 
-CURRENT STATE (as of 2026-05-14) — PHASE 4A-6 CALENDAR ADMIN COMMITTED
+CURRENT STATE (as of 2026-05-20) — PHASE 6C-33 INDEXING POLICY FIX COMPLETE
 -----------------------------------------------------------------
 Site is fully live on guidex-consulting.ae with HTTPS.
 17 guides published. Production DB: 17 guides / 115 steps.
+LOCAL DB HAS: 3 published Eid records (news + event + calendar) — QA COMPLETE — NOT yet on production.
+
+P0 TECHNICAL BLOCKER RESOLVED (Phase 6C-33):
+lib/db/indexing.ts created — newsRobots(), eventRobots(), calendarRobots() helpers.
+All 6 [slug] detail routes updated. Published pages now indexable by Google/AI crawlers.
+Build clean. TypeScript 0 errors. Eid records confirmed indexable on deploy.
+NEXT ACTION: Owner deploy approval → git push + server pull + npm run build + PM2 restart
+
+URGENT CONTENT (10 days):
+- TAX-01: Emiratisation June 30 quota — build + import news now
+- VIRAL-01: UAE Long Weekend Guide 2026 — highest SEO ROI — build now
+
+PHASE 6C-32 PLANNING OUTPUT (5 files in docs/content-drafts/):
+- FULL_CALENDAR_AND_NEWS_RADAR_MATRIX.md — 85 items, 15 categories
+- CALENDAR_SEED_ITEM_POLICY.md — calendar seed item policy
+- HOMEPAGE_AND_CAROUSEL_CONTENT_MODEL.md — carousel content model
+- DUBAI_LIFE_SETUP_LAUNCH_MATRIX.md — 12 Life Setup modules
+- PHASE_6C32_SUMMARY.md — clusters, candidates, recommended next phases
 /ru/find-my-visa is live. All RU CTAs point to /ru/find-my-visa.
 RouteFinderFlow has locale prop. ROUTE_FINDER_CONFIG_RU in lib/route-finder-config.ts.
 RU_GROUP_HREFS in lib/guide-groups.ts (spouse/child variant → RU group pages).
+
+EID CONTENT IMPORTED LOCALLY (publish to production pending owner deploy approval):
+  News:     slug=uae-eid-al-adha-2026-federal-holiday-long-break  id=5b1eecec-e64a-4cc9-9f67-c6cb2b55e1e4
+  Event:    slug=uae-eid-al-adha-2026  id=8532feee-1d6f-4ed3-b716-61712b473ca3
+  Calendar: slug=may-2026-uae-calendar  id=6ce82fda-d696-4040-b6c3-3d74c17347ea
+  Calendar items active: A (FAHR, 25–29 May), B (WAM, 27 May), C (planning, 23–31 May), D (MoHRE, 26–29 May)
+  Calendar items held:   E (DGHR — permalink not captured), F (KHDA — circular not captured)
+
+CALENDAR PROTOTYPE (Phase 5E, committed e11c321):
+  - /calendar and /ru/calendar: interactive CalendarGrid with month nav,
+    5 filter chips, multi-item day behavior (P1 pill, P2/P3 dots), selected-day
+    agenda, mock data (no live DB connection yet)
+  - components/calendar/CalendarGrid.tsx (794 lines, "use client")
+  - lib/calendar-helpers.ts, lib/calendar-mock-data.ts
+
+CALENDAR CONNECTIONS (Phase 5F, committed bb0ba0a):
+  - CalendarContextCta: server-compatible component on news/event/calendar detail pages
+  - SaveCalendarCta: "use client" iOS/Android save-to-home modal on calendar index pages
+  - CalendarGrid: deep-link via ?month=YYYY-MM and ?date=YYYY-MM-DD searchParams
+  - Guide detail pages deferred — need calendar_relevant/calendar_month schema fields
+
+CONTENT DRAFT BANK — LATEST: PHASE 6C-30 (2026-05-20):
+  10 total drafts; Cluster A IMPORTED TO LOCAL DB (published); 4 files still owner_review_ready.
+
+  AUDIT MATRIX: docs/content-drafts/CONTENT_AUDIT_MATRIX.md (updated Phase 6C-29)
+  UNIFIED REVIEW: docs/content-drafts/reviews/unified-draft-bank-readiness-review.md
+  NEXT CLUSTER: docs/content-drafts/NEXT_CLUSTER_DECISION_MATRIX.md
+  PHASE SUMMARIES: PHASE_6C27_SUMMARY.md / PHASE_6C28_SUMMARY.md / PHASE_6C29_SUMMARY.md
+
+  Cluster A — EID AL ADHA 2026 PACKAGE (PUBLISHED TO LOCAL DB — deploy pending):
+    IMPORT SCRIPT: scripts/eid-import.ts (ran successfully 2026-05-20)
+    - news/uae-eid-al-adha-2026-federal-holiday-long-break.md → id=5b1eecec-e64a-4cc9-9f67-c6cb2b55e1e4
+    - events/uae-eid-al-adha-2026.md → id=8532feee-1d6f-4ed3-b716-61712b473ca3
+    - calendar/may-2026-uae-calendar.md → id=6ce82fda-d696-4040-b6c3-3d74c17347ea
+    CALENDAR ITEMS ACTIVE: A (FAHR, 25–29 May), B (WAM, 27 May), C (planning, 23–31 May), D (MoHRE, 26–29 May)
+    CALENDAR ITEMS HELD: E (DGHR — permalink not captured), F (KHDA — circular not captured)
+    NEXT ACTION: Owner deploy approval → git push + server pull + PM2 restart
+
+  Cluster B — VAT REGISTRATION THRESHOLD GUIDE (OWNER REVIEW READY — Phase 6C-28):
+    - docs/content-drafts/guides/uae-vat-registration-threshold.md (4/5)
+    lifecycle: compliance_evergreen; metas fixed; all em dashes removed; calendar item complete
+    Review: docs/content-drafts/reviews/uae-vat-registration-threshold-owner-review.md
+
+  Cluster C — CORPORATE TAX 9-MONTH RULE (second next):
+    - docs/content-drafts/guides/uae-corporate-tax-deadline-9-month-rule.md (3/5)
+    REMAINING: natural persons caveat or T1-03 wait; lifecycle fields; em dash scan
+
+  Cluster D — E-INVOICING PACKAGE (owner review ready since Phase 6C-25):
+    - docs/content-drafts/news/uae-e-invoicing-2026-asp-deadline-update.md (4/5)
+    - docs/content-drafts/guides/uae-e-invoicing-2026-business-readiness.md (4/5)
+    - docs/content-drafts/calendar/uae-e-invoicing-2026-asp-deadline.md (4/5)
+    Review: docs/content-drafts/reviews/e-invoicing-2026-owner-review.md
+
+  Cluster E/F — GITEX (3/5, Aug 2026) / F1 Abu Dhabi (4/5, Sep 2026): HOLD
+  Clusters G/H — NSR-001 Sphere / Life Setup: DO NOT DRAFT YET
+
+  Cross-cutting gaps in remaining 4 non-reviewed files (VAT, CT, GITEX, F1):
+    lifecycle, noindex_after, archive_action unset; em dash scan (RU) pending
+    GITEX file has stale venue_recheck_required: true flag (resolved in 6C-22 — fix needed)
+    CT guide natural persons section: stale 2025 date anchor (fix with advisory caveat)
+
+CONTENT DRAFT BANK (Phase 6C, committed 9b7f850):
+  - docs/content-drafts/ workspace: README + 4 templates + Eid Al Adha 2026 drafts
+  - Source ledger: WAM + FAHR + UAE Legislation URLs captured; MoHRE/DGHR/KHDA still needed
+  - Three Eid Al Adha 2026 files: news draft, May 2026 calendar, detail/event page
+  - Phase 6A research matrix: 46 rows, 17 sections, 5 production batches
+    (docs/phase-6a-2026-calendar-content-research-matrix.md)
+
+MOBILE PORTAL HOMEPAGE (Phase 5B, committed fdf5c59):
+  - app/(public)/page.tsx: compact intro, dual photo cards, FeaturedSlider,
+    6-tile service grid, This Month card, latest feed
+  - components/FeaturedSlider.tsx: auto-rotating carousel, swipe, DIFC photo
+  - app/ru/page.tsx: matching portal layout with RU copy + localizeValue
+
+BRANCH STATUS: 6 commits ahead of origin/main — not pushed, not deployed.
 
 Pre-GSC SEO cleanup (2026-05-07):
   - /ru/find-my-visa added to sitemap RU_STATIC (priority 0.6)
@@ -181,18 +274,29 @@ Phase 4A admin is complete. Both commits not yet pushed. Not deployed.
 
 CURRENT NEXT STEPS
 ------------------
-1. Push Phase 4A-5 + Phase 4A-6 commits to origin/main (requires separate push approval).
-2. Deploy (requires separate deploy approval).
-3. Create first content rows via the admin UI (news posts, events, calendar pages).
-4. Public pages for news/events/calendar already exist and will render once rows are published.
+All require explicit owner instruction before proceeding.
 
-5. Submit sitemap to Google Search Console:
+1. Phase 6B — Source verification sprint:
+   - MoHRE URL (private sector Eid Al Adha 2026) — URGENT: Eid is 27 May
+   - DGHR URL (Dubai government Eid holiday)
+   - KHDA URL (school holiday confirmation)
+   - E-invoicing authority URLs (July 2026 deadline — highest urgency in 6A matrix)
+
+2. docs/content-drafts/calendar/uae-public-holidays-2026.md — full-year overview
+   (referenced as "future" in all existing Eid drafts)
+
+3. Connect CalendarGrid to live DB data (Phase 5E-b):
+   - Replace lib/calendar-mock-data.ts with reader.ts queries
+   - Requires: first calendar_pages + events rows published via admin
+
+4. Guide detail pages CalendarContextCta (deferred from Phase 5F):
+   - Requires: calendar_relevant + calendar_month schema fields added first
+
+5. Push 6 commits to origin/main (requires push approval).
+6. Deploy (requires separate deploy approval).
+
+7. Submit sitemap to Google Search Console:
    https://guidex-consulting.ae/sitemap.xml
-
-3. Configure GTM: set up triggers for each dataLayer event listed above,
-   wire GA4 tag (G-33C9N3B68T).
-
-4. Add Plausible analytics (optional, parallel to GTM/GA4).
 
 RULES THAT MUST NOT BE BROKEN
 ------------------------------

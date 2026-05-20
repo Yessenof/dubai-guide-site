@@ -5,6 +5,7 @@ import {
   getCalendarPageBySlug,
   type CalendarDateItem,
 } from "@/lib/db/news-events-calendar";
+import { calendarRobots } from "@/lib/db/indexing";
 import CalendarContextCta from "@/components/calendar/CalendarContextCta";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${page.seoTitle || page.title} — Guidex Consulting`,
     description: page.metaDescription || page.summary,
-    robots: { index: false, follow: true },
+    robots: calendarRobots(page),
     alternates: {
       canonical: `${BASE}/ru/calendar/${slug}`,
       languages: {

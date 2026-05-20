@@ -12,13 +12,16 @@ risk_level:            medium_high
 source_reliability:    official_for_eid_core_and_private_sector — mixed (Dubai government and school items pending)
 verification_required: true
 date_reviewed:         2026-05-18
-last_updated:          2026-05-18
+last_updated:          2026-05-20
 
 month:                 2026-05
 year:                  2026
 calendar_priority:     1
-date_confidence:       mixed — confirmed for WAM/FAHR items, derived for planning window, pending for private sector/school
+date_confidence:       mixed — confirmed for WAM/FAHR/MoHRE items, derived for planning window, media_confirmed for DGHR/KHDA (permalinks pending)
 has_islamic_dates:     true
+lifecycle:             time_sensitive_news
+noindex_after:         2026-06-01
+archive_action:        archive
 ```
 
 ---
@@ -38,8 +41,8 @@ Primary source ledger for this draft:
 **Sources still needed before Dubai government and school items can be added:**
 
 - [x] MoHRE — private sector Eid Al Adha 2026 holiday announcement — confirmed: 26–29 May 2026. Recheck before publish.
-- [ ] DGHR — Dubai government entities Eid Al Adha 2026 holiday (dghr.gov.ae)
-- [ ] KHDA — Dubai private school Eid Al Adha 2026 closure notice (khda.gov.ae)
+- [~] DGHR — Dubai government entities Eid Al Adha 2026 holiday — 25–29 May confirmed by multiple UAE media (Gulf News, Arabian Business, Emirates 24/7, Time Out Dubai) attributing directly to DGHR. Official dghr.gov.ae permalink not directly accessible. Status: media_confirmed_official_source. Recheck before publish.
+- [~] KHDA — Dubai private school Eid Al Adha 2026 holiday — 25–29 May, classes resume 1 June, confirmed by multiple UAE education media (Gulf News, Khaleej Times, The National) citing KHDA unified academic calendar. KHDA calendar hub URL captured. Status: media_confirmed_official_source. Recheck before publish.
 
 ---
 
@@ -48,60 +51,136 @@ Primary source ledger for this draft:
 ### A. Federal Eid Al Adha holiday period
 
 ```
-label_en:      Federal Eid Al Adha Holiday
-label_ru:      Государственный праздник: Ид аль-Адха
-date_start:    2026-05-25
-date_end:      2026-05-29
-type:          public-holiday
-priority:      1
-confidence:    confirmed — URL captured (FAHR)
-source:        FAHR
-source_url:    https://www.fahr.gov.ae/en/news/the-federal-authority-for-human-resources-announces-the-eid-al-adha-holiday-for-the-federal-government-from-may-25-29-2026/
-note:          Applies to federal government entities. Private sector scope pending MoHRE.
+label_en:              Federal Eid Al Adha Holiday
+label_ru:              Государственный праздник: Ид аль-Адха
+date_start:            2026-05-25
+date_end:              2026-05-29
+type:                  public_holiday
+priority:              1
+confidence:            confirmed — URL captured (FAHR)
+source:                FAHR
+source_url:            https://www.fahr.gov.ae/en/news/the-federal-authority-for-human-resources-announces-the-eid-al-adha-holiday-for-the-federal-government-from-may-25-29-2026/
+detail_url_en:         /events/uae-eid-al-adha-2026
+detail_url_ru:         /ru/events/uae-eid-al-adha-2026
+lifecycle:             major_annual_event
+noindex_after:         2026-12-31
+archive_action:        keep_public
+external_cta_status:   not_applicable
+location_display:      uae_wide
+emirate:               uae_wide
+note:                  Applies to federal government entities. Private sector confirmed separately by MoHRE: 26–29 May.
 ```
 
 ### B. Eid Al Adha begins
 
 ```
-label_en:      Eid Al Adha Begins
-label_ru:      Начало Ид аль-Адха
-date_start:    2026-05-27
-date_end:      (single day)
-type:          public-holiday
-priority:      1
-confidence:    confirmed — URL captured (WAM)
-source:        WAM
-source_url:    https://www.wam.ae/en/article/c09b3a1-uae-council-for-fatwa-confirms-sighting-dhul
-note:          Religious date confirmed. First day of Eid Al Adha in UAE is 27 May 2026.
+label_en:              Eid Al Adha Begins
+label_ru:              Начало Ид аль-Адха
+date_start:            2026-05-27
+date_end:              (single day)
+type:                  public_holiday
+priority:              1
+confidence:            confirmed — URL captured (WAM)
+source:                WAM
+source_url:            https://www.wam.ae/en/article/c09b3a1-uae-council-for-fatwa-confirms-sighting-dhul
+detail_url_en:         /events/uae-eid-al-adha-2026
+detail_url_ru:         /ru/events/uae-eid-al-adha-2026
+lifecycle:             major_annual_event
+noindex_after:         2026-12-31
+archive_action:        keep_public
+external_cta_status:   not_applicable
+location_display:      uae_wide
+emirate:               uae_wide
+note:                  Religious date confirmed. First day of Eid Al Adha in UAE is 27 May 2026.
 ```
 
 ### C. Federal long-break planning window
 
 ```
-label_en:      Federal Break Planning Window (incl. weekends)
-label_ru:      Период длинных выходных для федеральных служащих
-date_start:    2026-05-23
-date_end:      2026-05-31
-type:          planning_note
-priority:      2
-confidence:    derived — FAHR holiday (25–29 May) + standard UAE weekend (Sat 23–24 May, Sat 30–31 May)
-source:        FAHR + calendar
-warning:       This is a derived planning note. It is NOT an official holiday period for all UAE workers. Private sector employees, Dubai government staff, and school staff are subject to separate rules.
+label_en:              Federal Break Planning Window (incl. weekends)
+label_ru:              Период длинных выходных для федеральных служащих
+date_start:            2026-05-23
+date_end:              2026-05-31
+type:                  planning_note
+priority:              2
+confidence:            derived — FAHR holiday (25–29 May) + standard UAE weekend (Sat 23–24 May, Sat 30–31 May)
+source:                FAHR + calendar
+detail_url_en:         /events/uae-eid-al-adha-2026
+detail_url_ru:         /ru/events/uae-eid-al-adha-2026
+lifecycle:             major_annual_event
+noindex_after:         2026-07-01
+archive_action:        noindex_keep
+external_cta_status:   not_applicable
+location_display:      uae_wide
+emirate:               uae_wide
+warning:               This is a derived planning note. It is NOT an official holiday period for all UAE workers. Private sector employees, Dubai government staff, and school staff are subject to separate rules.
 ```
 
 ### D. Private sector Eid Al Adha holiday
 
 ```
-label_en:      Private Sector Eid Al Adha Holiday
-label_ru:      Праздничные дни для частного сектора: Ид аль-Адха
-date_start:    2026-05-26
-date_end:      2026-05-29
-type:          public-holiday
-priority:      1
-confidence:    confirmed — URL captured (Arabic source), recheck before publish
-source:        MoHRE
-source_url:    https://www.mohre.gov.ae/ar/media-center/news/18/5/2026/mohre-announces-private-sector-holiday-for-eid-al-adha-from-26-to-29-may
-note:          Private sector holiday starts 26 May — one day after federal holiday (25 May, FAHR). Do not conflate. This item covers private sector employees only.
+label_en:              Private Sector Eid Al Adha Holiday
+label_ru:              Праздничные дни для частного сектора: Ид аль-Адха
+date_start:            2026-05-26
+date_end:              2026-05-29
+type:                  public_holiday
+priority:              1
+confidence:            confirmed — URL captured (Arabic source), recheck before publish
+source:                MoHRE
+source_url:            https://www.mohre.gov.ae/ar/media-center/news/18/5/2026/mohre-announces-private-sector-holiday-for-eid-al-adha-from-26-to-29-may
+detail_url_en:         /events/uae-eid-al-adha-2026
+detail_url_ru:         /ru/events/uae-eid-al-adha-2026
+lifecycle:             major_annual_event
+noindex_after:         2026-12-31
+archive_action:        keep_public
+external_cta_status:   not_applicable
+location_display:      uae_wide
+emirate:               uae_wide
+note:                  Private sector holiday starts 26 May — one day after federal holiday (25 May, FAHR). Do not conflate. This item covers private sector employees only.
+```
+
+### E. Dubai government Eid Al Adha holiday (media_confirmed — import after DGHR permalink verified)
+
+```
+label_en:              Dubai Government Eid Holiday
+label_ru:              Государственные органы Дубая: выходные Ид аль-Адха
+date_start:            2026-05-25
+date_end:              2026-05-29
+type:                  public_holiday
+priority:              1
+confidence:            media_confirmed — official DGHR permalink not captured; recheck before import
+source:                DGHR (via UAE media: Gulf News, Arabian Business, Emirates 24/7, Time Out Dubai)
+detail_url_en:         /events/uae-eid-al-adha-2026
+detail_url_ru:         /ru/events/uae-eid-al-adha-2026
+lifecycle:             major_annual_event
+noindex_after:         2026-12-31
+archive_action:        keep_public
+external_cta_status:   not_applicable
+location_display:      dubai
+emirate:               dubai
+note:                  Do not import until official DGHR permalink is captured and verified. Same dates as FAHR federal holiday (25–29 May). Work resumes 1 June.
+```
+
+### F. Dubai private schools — Eid Al Adha holiday (media_confirmed — import after KHDA circular verified)
+
+```
+label_en:              Dubai Private Schools — Eid Holiday
+label_ru:              Частные школы Дубая: каникулы Ид аль-Адха
+date_start:            2026-05-25
+date_end:              2026-05-29
+type:                  school_holiday
+priority:              2
+confidence:            media_confirmed — KHDA circular URL not captured; recheck before import
+source:                KHDA (via UAE education media: Gulf News, Khaleej Times, The National)
+detail_url_en:         /events/uae-eid-al-adha-2026
+detail_url_ru:         /ru/events/uae-eid-al-adha-2026
+lifecycle:             major_annual_event
+noindex_after:         2026-12-31
+archive_action:        keep_public
+external_cta_status:   not_applicable
+location_display:      dubai
+emirate:               dubai
+note:                  Do not import until official KHDA circular permalink is captured and verified. Classes resume 1 June 2026.
 ```
 
 ### E. External events watchlist (source not yet ledgered)
@@ -132,7 +211,7 @@ May 2026 in UAE: Eid Al Adha Dates and What to Plan For
 
 ### Summary
 
-The UAE has confirmed Eid Al Adha 2026 begins on 27 May. Federal government employees are on holiday from 25 to 29 May, with work resuming on 1 June. Here are the confirmed dates and planning notes for residents, families, and businesses.
+The UAE has confirmed Eid Al Adha 2026 begins on 27 May, with a federal holiday from 25 to 29 May and work resuming on 1 June. Confirmed dates and planning notes for residents, families, and businesses.
 
 ### Body
 
@@ -140,9 +219,9 @@ The UAE has confirmed Eid Al Adha 2026 begins on 27 May. Federal government empl
 
 Eid Al Adha 2026 starts on Wednesday, 27 May, following the official crescent sighting confirmed by UAE authorities. The Federal Authority for Government Human Resources (FAHR) has announced a public holiday for federal government employees from Monday 25 May to Friday 29 May. Federal offices and entities reopen on Monday 1 June 2026.
 
-MoHRE has confirmed the private sector holiday from Tuesday 26 May to Friday 29 May — four days, starting one day after the federal break. Private sector employees are not subject to the FAHR announcement; MoHRE is the applicable authority.
+MoHRE has confirmed the private sector holiday from Tuesday 26 May to Friday 29 May, four days, starting one day after the federal break. Private sector employees are not subject to the FAHR announcement; MoHRE is the applicable authority.
 
-Combined with the preceding weekend (Saturday 23 and Sunday 24 May) and the following weekend (Saturday 30 and Sunday 31 May), federal employees have nine consecutive days away from the office; private sector employees have eight. This is a planning reference — not a declared universal holiday for all UAE workers.
+Combined with the preceding weekend (Saturday 23 and Sunday 24 May) and the following weekend (Saturday 30 and Sunday 31 May), federal employees have nine consecutive days away from the office; private sector employees have eight. This is a planning reference, not a declared universal holiday for all UAE workers.
 
 #### What is still being verified
 
@@ -176,7 +255,7 @@ Residents and businesses should check directly with their employer, relevant aut
 Check with your employer for your specific holiday entitlement. Do not assume the federal holiday applies to your workplace unless your employer or HR confirms it.
 
 **For business owners and company directors:**
-If your business or staff interact with federal government entities — for approvals, submissions, visa-related steps, trade license renewals, or FTA portal actions — plan for federal offices to be unavailable from 25 to 29 May. Build a buffer before 25 May for any time-sensitive submissions.
+If your business or staff interact with federal government entities for approvals, submissions, visa-related steps, trade license renewals, or FTA portal actions, plan for federal offices to be unavailable from 25 to 29 May. Build a buffer before 25 May for any time-sensitive submissions.
 
 **For visa and document tasks:**
 If you have an upcoming visa renewal, Emirates ID renewal, or document attestation that requires visiting a government service center, aim to complete it before 23 May or plan for after 1 June. Service center availability during the Eid period is not confirmed in this draft.
@@ -193,7 +272,7 @@ May 2026 UAE Calendar: Eid Al Adha Dates and Holiday Scope
 
 ### Meta description
 
-Eid Al Adha 2026 in the UAE: federal holiday confirmed 25–29 May, work resumes 1 June. Key dates, planning notes, and what is still being verified for private sector and schools.
+UAE Eid Al Adha 2026: federal holiday 25–29 May, work resumes 1 June. Key dates and planning notes for residents, families, and businesses.
 
 ### Key entities EN
 
@@ -217,17 +296,17 @@ Eid Al Adha 2026 in the UAE begins on 27 May. Federal government holiday runs fr
 
 ### Summary
 
-ОАЭ официально подтвердили: Ид аль-Адха 2026 начинается 27 мая. Федеральные государственные служащие уходят на праздничные выходные с 25 по 29 мая, работа возобновляется 1 июня. Ниже — подтверждённые даты и рекомендации по планированию для резидентов, семей и бизнеса.
+ОАЭ официально подтвердили: Ид аль-Адха 2026 начинается 27 мая, федеральный праздник длится с 25 по 29 мая и работа возобновляется 1 июня. Подтверждённые даты и рекомендации по планированию для резидентов, семей и бизнеса.
 
 ### Body
 
 #### Что подтверждено
 
-Ид аль-Адха 2026 начинается в среду, 27 мая, — после официального объявления о наблюдении луны властями ОАЭ. Федеральное управление по кадровым ресурсам правительства (FAHR) объявило о праздничных днях для сотрудников федеральных ведомств с понедельника, 25 мая, по пятницу, 29 мая. Федеральные учреждения возобновляют работу в понедельник, 1 июня 2026 года.
+Ид аль-Адха 2026 начинается в среду, 27 мая, после официального объявления о наблюдении луны властями ОАЭ. Федеральное управление по кадровым ресурсам правительства (FAHR) объявило о праздничных днях для сотрудников федеральных ведомств с понедельника, 25 мая, по пятницу, 29 мая. Федеральные учреждения возобновляют работу в понедельник, 1 июня 2026 года.
 
-MoHRE подтвердило праздничные дни для сотрудников частного сектора: с вторника, 26 мая, по пятницу, 29 мая — четыре дня, на один день позже, чем в федеральном секторе. Сотрудники частного сектора не подпадают под объявление FAHR; для них применяется циркуляр MoHRE.
+MoHRE подтвердило праздничные дни для сотрудников частного сектора: с вторника, 26 мая, по пятницу, 29 мая (четыре дня), то есть на один день позже, чем в федеральном секторе. Сотрудники частного сектора не подпадают под объявление FAHR; для них применяется циркуляр MoHRE.
 
-Если добавить предшествующие выходные (суббота 23 и воскресенье 24 мая) и последующие выходные (суббота 30 и воскресенье 31 мая), сотрудники федерального сектора получают девять дней подряд вне работы, частного сектора — восемь. Это расчётная заметка для планирования, а не всеобщий официальный выходной для всех работников ОАЭ.
+Если добавить предшествующие выходные (суббота 23 и воскресенье 24 мая) и последующие выходные (суббота 30 и воскресенье 31 мая), сотрудники федерального сектора получают девять дней подряд вне работы, частного сектора получают восемь. Это расчётная заметка для планирования, а не всеобщий официальный выходной для всех работников ОАЭ.
 
 #### Что ещё проверяется
 
@@ -261,7 +340,7 @@ MoHRE подтвердило праздничные дни для сотрудн
 Уточните у работодателя, распространяются ли праздничные дни на вашу должность. Не предполагайте, что федеральные выходные автоматически действуют в вашей организации.
 
 **Для владельцев бизнеса и директоров компаний:**
-Если ваш бизнес взаимодействует с федеральными органами — по вопросам согласований, документов, виз, продления лицензий или работы с порталом FTA — учитывайте, что федеральные ведомства будут недоступны с 25 по 29 мая. Завершите срочные обращения до 23 мая или планируйте их на период после 1 июня.
+Если ваш бизнес взаимодействует с федеральными органами (по вопросам согласований, документов, виз, продления лицензий или работы с порталом FTA), учитывайте, что федеральные ведомства будут недоступны с 25 по 29 мая. Завершите срочные обращения до 23 мая или планируйте их на период после 1 июня.
 
 **По визовым и документальным задачам:**
 Если предстоит продление визы, Emirates ID или нотариальное заверение документов, постарайтесь сделать это до 23 мая или запланируйте на после 1 июня. Режим работы сервисных центров в праздничный период в данном черновике не подтверждён.
@@ -275,7 +354,7 @@ MoHRE подтвердило праздничные дни для сотрудн
 
 ### Meta description RU
 
-Ид аль-Адха 2026 в ОАЭ: федеральные выходные подтверждены с 25 по 29 мая, работа с 1 июня. Даты, расчётный период отдыха и что ещё проверяется по private sector и школам.
+Ид аль-Адха 2026 ОАЭ: федеральные выходные 25–29 мая, работа с 1 июня. Подтверждённые даты и рекомендации для резидентов, семей и бизнеса.
 
 ### Key entities RU
 
@@ -288,8 +367,8 @@ MoHRE подтвердило праздничные дни для сотрудн
 The following statements must NOT appear in any version of this draft, in published content, or in any summary sourced from this file:
 
 - Do not claim private sector employees have a holiday from 25 May — MoHRE confirmed 26–29 May only; 25 May is the federal holiday start date, not private sector
-- Do not claim Dubai government offices are closed — DGHR circular not yet captured
-- Do not claim schools are closed — KHDA notice not yet captured
+- Do not import Dubai government calendar item (Item E) until official DGHR permalink is captured and verified — DGHR dates are media_confirmed only
+- Do not import school holiday calendar item (Item F) until official KHDA circular permalink is captured and verified — KHDA dates are media_confirmed only
 - Do not say all UAE workers receive a 9-day holiday
 - Do not say all UAE residents enjoy a 9-day break
 - Do not say all government services are closed during this period
@@ -320,7 +399,7 @@ These appear naturally from the content — not inserted for SEO purposes.
 
 ### RAG summary (for AI-assisted retrieval)
 
-Eid Al Adha 2026 in the UAE starts on 27 May (confirmed by UAE authorities via WAM). Federal government employees have an official holiday from 25 to 29 May 2026, announced by FAHR, with work resuming on 1 June. MoHRE has confirmed the private sector holiday from 26 to 29 May 2026 — one day shorter than the federal break. The nine-day period from 23 to 31 May is a derived planning window for federal employees when weekends are included — it is not a declared universal holiday. Dubai government and school holiday scope requires separate official circulars (DGHR, KHDA) that had not been captured at the time of this draft. Residents and businesses should check with employers and relevant authorities for the scope applicable to them.
+Eid Al Adha 2026 in the UAE starts on 27 May (confirmed by UAE authorities via WAM). Federal government employees have an official holiday from 25 to 29 May 2026, announced by FAHR, with work resuming on 1 June. MoHRE has confirmed the private sector holiday from 26 to 29 May 2026, one day shorter than the federal break. The nine-day period from 23 to 31 May is a derived planning window for federal employees when weekends are included; it is not a declared universal holiday. Dubai government and school holiday scope (DGHR, KHDA) is media_confirmed for 25–29 May; official permalinks pending verification before publish. Residents and businesses should check with employers and relevant authorities for the scope applicable to them.
 
 ---
 
@@ -356,8 +435,8 @@ This file can later become any of the following — one at a time, not all at on
 - [ ] WAM URL rechecked — article still live and not corrected/updated
 - [ ] FAHR URL rechecked — announcement still live and not updated
 - [x] MoHRE private sector holiday circular captured — 26–29 May 2026 confirmed. Recheck before publish.
-- [ ] DGHR Dubai government holiday circular captured (currently blocking Dubai government claims)
-- [ ] KHDA school holiday notice captured (currently blocking school claims)
+- [~] DGHR Dubai government holiday — media_confirmed by multiple UAE media; official dghr.gov.ae permalink not captured. Capture permalink before importing Item E.
+- [~] KHDA school holiday — media_confirmed by multiple UAE education media; KHDA academic calendar hub URL captured but specific circular URL not captured. Verify before importing Item F.
 - [ ] Owner has reviewed this draft
 - [ ] No English fallback on RU version
 - [ ] No em dashes in visible body text

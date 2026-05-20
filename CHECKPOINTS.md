@@ -5,6 +5,126 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE6C33-INDEXING — Phase 6C-33 Indexing policy fix complete (P0 resolved)
+
+**Date:** 2026-05-20
+**Commit:** uncommitted (lib/db/indexing.ts + 6 route edits + summary doc + memory files)
+**Status:** Code complete — not pushed, not deployed
+
+- `lib/db/indexing.ts` created: `newsRobots()`, `eventRobots()`, `calendarRobots()`
+- All 6 `[slug]/page.tsx` detail routes updated (EN + RU × news/events/calendar)
+- News: respects `noindex` DB field (0=index, 1=noindex)
+- Events/Calendar: always index — no noindex column; reader gates on status=published
+- Draft slugs: reader returns null → notFound() → 404 (safe)
+- RU: reader gates on ru_published=1 + non-empty ru_title/ru_body — null → 404, no EN fallback
+- DB QA: Eid news noindex=0, all 3 records published, ru_published=1 → all 6 pages indexable on deploy
+- TypeScript: 0 errors. Build: clean (86 pages, 2.6s). Hardcoded noindex grep: CLEAN in all [slug] routes
+- Listing pages (/news, /events, /calendar) retain noindex — out of scope
+
+---
+
+## CP-PHASE6C32-MATRIX — Phase 6C-32 Full calendar and news radar matrix complete
+
+**Date:** 2026-05-20
+**Commit:** uncommitted (5 new docs/content-drafts/ files + memory files)
+**Status:** Planning complete — no DB writes, no code changes, no imports
+
+- 85 items mapped across 15 categories in opportunity matrix
+- P0 technical blocker identified: hardcoded noindex in all 3 route files
+- Calendar seed item policy defined (12 parts)
+- Homepage carousel model defined
+- Dubai Life Setup 12-module matrix built
+- Recommended next phases: 6C-33 (noindex fix), 6C-34 (compliance sprint), 6C-35 (long weekend guide)
+- No article/guide/event/calendar drafts created
+- No admin, no DB, no code, no push
+
+---
+
+## CP-PHASE6C31-EID-QA — Phase 6C-31 Eid Al Adha 2026 local QA and production readiness complete
+
+**Date:** 2026-05-20
+**Commit:** uncommitted (scripts/eid-summary-fix.ts + draft files + memory files modified)
+**Status:** QA COMPLETE in local DB — not pushed, not deployed
+
+- All 3 records: status=published, ru_published=1
+- All 6 summaries (EN + RU × 3): compressed to 2 sentences each
+- All en_meta_description: under 160 chars (calendar was 178 → 139, ru 165 → 138)
+- Em dash scan: CLEAN across all string fields in all 3 records
+- Nine-days claim scan: CLEAN
+- DGHR/KHDA: 0 records in DB (held)
+- dates_json: exactly 4 items (A–D)
+- Draft files synced with DB: news, event, calendar
+- QA report: docs/content-drafts/PHASE_6C31_EID_LOCAL_QA_AND_PRODUCTION_READINESS.md
+- Route QA: EN/RU parity confirmed; event confidence=confirmed (no amber banner); noindex hardcoded in route files
+
+---
+
+## CP-PHASE6C30-EID-IMPORT — Phase 6C-30 Eid Al Adha 2026 import and publish complete
+
+**Date:** 2026-05-20
+**Commit:** uncommitted (scripts/eid-import.ts + memory files modified)
+**Status:** Published to local DB — not pushed, not deployed
+
+- News post published: slug=uae-eid-al-adha-2026-federal-holiday-long-break, id=5b1eecec-e64a-4cc9-9f67-c6cb2b55e1e4
+- Event page published: slug=uae-eid-al-adha-2026, id=8532feee-1d6f-4ed3-b716-61712b473ca3
+- Calendar page published: slug=may-2026-uae-calendar, id=6ce82fda-d696-4040-b6c3-3d74c17347ea
+- All three records: status=published, ru_published=1, all required fields present
+- Calendar items A–D active; items E (DGHR) and F (KHDA) not imported (hold)
+- Import script: scripts/eid-import.ts — 37 strings pre-validated for em dashes, all clean
+- Warnings only (non-blocking): en_summary 3 sentences in all three files
+- DB: guides=17, steps=115, news=1+, events=1+, calendar=1+ (exact totals depend on prior test data)
+
+---
+
+## CP-PHASE6C-CONTENT-DRAFT-BANK — Phase 6C File-based content draft bank committed
+
+**Date:** 2026-05-18
+**Commit:** `9b7f850` (branch 6 commits ahead of origin/main — not pushed)
+**Status:** Committed locally — not pushed, not deployed
+
+- `docs/content-drafts/` workspace: README + 4 templates + 3 Eid drafts + 1 source ledger
+- Source ledger: 3 confirmed official URLs (WAM, FAHR, UAE Legislation) + 10 blocked claims (MoHRE/DGHR/KHDA needed)
+- News draft: full EN+RU body + SEO + 7 calendar items + verification checklist
+- May 2026 calendar draft: monthly planning view EN+RU, 4 calendar items (3 confirmed, 1 watchlist)
+- Event/detail draft: audience-specific page (residents, families, business), RAG summaries, full DB field model
+- Phase 6A research matrix: `docs/phase-6a-2026-calendar-content-research-matrix.md` — 46 rows, 17 sections
+- Build: 86 pages, TypeScript clean (no code changes in this commit — docs only)
+- DB: guides=17, steps=115, news=1, events=1, calendar=1 — unchanged
+
+---
+
+## CP-PHASE5F-CALENDAR-CONNECTIONS — Phase 5F Connect calendar to detail pages
+
+**Date:** 2026-05-18
+**Commit:** `bb0ba0a`
+**Status:** Committed locally — not pushed, not deployed
+
+- `components/calendar/CalendarContextCta.tsx`: server-compatible, locale-aware EN/RU, brass dot + navy CTA + brass secondary link
+- `components/calendar/SaveCalendarCta.tsx`: "use client", compact strip + modal, iOS/Android tabs with steps
+- `CalendarGrid` updated: `initialYear?`, `initialMonth?`, `initialDate?` props for deep-link init
+- `/calendar` and `/ru/calendar` index pages: `await searchParams`, parse `?month=YYYY-MM` and `?date=YYYY-MM-DD`, pass to CalendarGrid
+- CalendarContextCta added to 6 detail routes: EN/RU news, EN/RU event, EN/RU calendar detail
+- Guide detail pages deferred (need `calendar_relevant`/`calendar_month` schema fields)
+- Build: 86 pages, TypeScript clean
+- QA: all 7 QA scripts pass (691/691 total checks)
+
+---
+
+## CP-PHASE5E-CALENDAR-PROTOTYPE — Phase 5E Calendar prototype
+
+**Date:** 2026-05-17
+**Commit:** `e11c321`
+**Status:** Committed locally — not pushed, not deployed
+
+- `components/calendar/CalendarGrid.tsx` (794 lines, "use client"): month grid, multi-item day, 5-month nav, picker, 5 filter chips, adaptive legend, 12 category types, confidence badges, external link support
+- `lib/calendar-helpers.ts` (146 lines): category/color/priority helpers
+- `lib/calendar-mock-data.ts` (291 lines): static mock data (real data connection deferred)
+- `docs/phase-5e-calendar-ux-product-design.md` (1237 lines): full UX product design spec
+- `.no-scrollbar` added to `globals.css`
+- Build: 86 pages, 0 errors. Static mock data only — no DB connection yet.
+
+---
+
 ## CP-PHASE4A6-CALENDAR-ADMIN — Phase 4A-6 Calendar Visual Posts admin full workflow committed
 
 **Date:** 2026-05-14

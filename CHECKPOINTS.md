@@ -5,6 +5,23 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE6C40-VIRAL01-DRAFT-PACKAGE — Phase 6C-40 UAE Long Weekends 2026-2027 draft package complete
+
+**Date:** 2026-05-20
+**Code commit:** `dd2ab89` (no code changes in Phase 6C-40)
+**Status:** File-based draft — not yet imported to production
+
+- Source ledger: `docs/content-drafts/source-ledgers/uae-long-weekends-2026-2027-sources.md` — 6 sources, 3 FAHR URLs 200 ✓
+- Guide draft: `docs/content-drafts/guides/uae-long-weekends-2026-2027.md` — full EN+RU, SEO/RAG complete
+- Owner review: `docs/content-drafts/reviews/uae-long-weekends-2026-2027-owner-review.md` — owner_review_ready
+- Validation: no code, no DB, no import, no commit of draft content; all content safety checks pass
+- Confirmed dates: New Year 2026, Eid Al Fitr 2026, Eid Al Adha 2026 (FAHR + MoHRE), Commemoration/National Day dates (fixed)
+- Monitoring dates: Islamic New Year, Mawlid, Dec 2026 scope, 2027 holidays — all clearly labelled
+- Owner decisions pending: (1) import path (news_posts recommended), (2) update cadence
+- Recommend import before June 10, 2026
+
+---
+
 ## CP-PHASE6C39-EMIRATISATION-PRODUCTION — Phase 6C-39 Emiratisation A-only production DB deploy complete
 
 **Date:** 2026-05-20

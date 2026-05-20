@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-20 (Phase 6C-39 — Emiratisation A-only production DB deploy complete; 4 Emiratisation routes live, 200, index,follow; Item B held; zero regressions)
+Last updated: 2026-05-20 (Phase 6C-40 — VIRAL-01 UAE Long Weekends 2026-2027 source-safe draft package complete; 3 files created; owner_review_ready with 2 decisions pending; no code/DB/import/commit of draft content)
 
 ---
 

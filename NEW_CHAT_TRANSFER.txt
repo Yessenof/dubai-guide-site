@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-20 (Phase 6C-39 — Emiratisation A-only production DB deploy complete; 4 Emiratisation routes live)
+Last updated: 2026-05-20 (Phase 6C-40 — VIRAL-01 UAE Long Weekends 2026-2027 draft package complete; owner_review_ready)
 
 WHAT TO ATTACH
 --------------
@@ -40,10 +40,21 @@ SQLite. No external services.
 Stack: Next.js 16.2.3 (App Router, Turbopack) + TypeScript + Tailwind CSS v4 +
 better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
 
-CURRENT STATE (as of 2026-05-20) — PHASE 6C-39 EMIRATISATION PRODUCTION DEPLOY COMPLETE
+CURRENT STATE (as of 2026-05-20) — PHASE 6C-40 VIRAL-01 DRAFT PACKAGE COMPLETE
 -----------------------------------------------------------------
 Site is fully live on guidex-consulting.ae with HTTPS.
 17 guides published. Production DB: 17 guides / 115 steps + Eid (news+event+calendar) + Emiratisation (news+calendar).
+
+PHASE 6C-40 VIRAL-01 — UAE LONG WEEKENDS 2026-2027 DRAFT PACKAGE — COMPLETE (file-based, not yet imported):
+  Source ledger: docs/content-drafts/source-ledgers/uae-long-weekends-2026-2027-sources.md
+  Guide draft:   docs/content-drafts/guides/uae-long-weekends-2026-2027.md
+  Owner review:  docs/content-drafts/reviews/uae-long-weekends-2026-2027-owner-review.md
+  Status:        owner_review_ready with 2 decisions pending
+  Decision 1:    Import path — news_posts recommended (guide table has no steps structure)
+  Decision 2:    Update cadence — per-FAHR-announcement recommended
+  Publish target: before June 10, 2026 (Islamic New Year traffic window)
+  Item B HOLD:   20-49 employee band June 30 Emiratisation deadline still held — source not confirmed
+  Report:        docs/content-drafts/PHASE_6C40_SUMMARY.md
 
 PHASE 6C-39 EMIRATISATION A-ONLY PRODUCTION DB DEPLOY — COMPLETE:
   News:     https://guidex-consulting.ae/news/uae-emiratisation-june-30-2026-deadline       (200, index, RU live)
@@ -64,8 +75,8 @@ PHASE 6C-38B PUBLIC SURFACE STABILIZATION — LIVE ON PRODUCTION (commit dd2ab89
   - lib/calendar-helpers.ts: compliance_deadline → government_deadline.
   Report: docs/content-drafts/PHASE_6C38B_PUBLIC_SURFACE_STABILIZATION_DEPLOY_REPORT.md
 
-NEXT — VIRAL-01: UAE Long Weekend Guide 2026-2027
-  Highest SEO ROI of remaining content queue. Evergreen. No time-pressure.
+NEXT — PHASE 6C-41: Import VIRAL-01 guide to production (after owner decisions on Decision 1 and Decision 2)
+  OR: Begin next content item from CONTENT_PRODUCTION_PRIORITY_QUEUE.md
 
 TAX-01 ARCHIVE ACTION (future — 2026-07-10):
   Set noindex=1 on uae-emiratisation-june-30-2026-deadline news post.

@@ -5,6 +5,41 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE6C39-EMIRATISATION-PRODUCTION — Phase 6C-39 Emiratisation A-only production DB deploy complete
+
+**Date:** 2026-05-20
+**Code commit:** `dd2ab89` (Phase 6C-38B — no new code in 6C-39)
+**Status:** LIVE on guidex-consulting.ae
+
+- Production DB backed up: `/var/backups/guidex/guides.db.pre-emiratisation-6c39-20260520-225341`
+- Script: `scripts/emiratisation-june30-import.ts` — ran successfully on production
+- Records imported: news `35d9ae35` + calendar `b479cd5b` (Item A only — 50+ employees)
+- Item B (20-49 band): NOT imported — source hold maintained
+- Build: 86 pages, 0 errors. PM2: online.
+- All 4 Emiratisation EN/RU pages: HTTP 200, `robots: index, follow`
+- RU pages: Russian content confirmed — no EN fallback
+- Content safety: no AED amount, no unscoped claim, no June 30 for 20-49 band, source note present
+- Zero regressions: all 10 pre-existing routes (Eid + homepage + calendar index + guide) 200
+- Production DB: 2 news posts + 1 event + 2 calendar pages + 17 guides
+- TAX-01 archive action pending: 2026-07-10 — set noindex=1 on Emiratisation news
+
+---
+
+## CP-PHASE6C38B-SURFACE-STABILIZATION — Phase 6C-38B Public surface stabilization deployed
+
+**Date:** 2026-05-20
+**Commit:** `dd2ab89` (pushed to origin/main)
+**Status:** LIVE on guidex-consulting.ae
+
+- /calendar + /ru/calendar: reads `getPublishedCalendarPages()` — mock data removed
+- Homepage: Dubai Life Setup card — non-clickable div, "Coming soon"
+- FeaturedSlider: px-5 on outer section — desktop alignment fixed
+- lib/calendar-helpers.ts: compliance_deadline → government_deadline handler
+- Build: 86 pages, 0 errors. PM2: online.
+- All routes 200, published detail pages: index, follow. No regressions.
+
+---
+
 ## CP-PHASE6C34-EID-PRODUCTION — Phase 6C-34 Eid Al Adha 2026 production launch complete
 
 **Date:** 2026-05-20

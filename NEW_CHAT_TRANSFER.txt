@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-20 (Phase 6C-38 — Emergency public surface stabilization complete; calendar DB-connected; mock data removed; Life Setup "Coming soon"; desktop alignment fixed)
+Last updated: 2026-05-20 (Phase 6C-39 — Emiratisation A-only production DB deploy complete; 4 Emiratisation routes live)
 
 WHAT TO ATTACH
 --------------
@@ -40,20 +40,36 @@ SQLite. No external services.
 Stack: Next.js 16.2.3 (App Router, Turbopack) + TypeScript + Tailwind CSS v4 +
 better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
 
-CURRENT STATE (as of 2026-05-20) — PHASE 6C-38 EMERGENCY PUBLIC SURFACE STABILIZATION COMPLETE
+CURRENT STATE (as of 2026-05-20) — PHASE 6C-39 EMIRATISATION PRODUCTION DEPLOY COMPLETE
 -----------------------------------------------------------------
 Site is fully live on guidex-consulting.ae with HTTPS.
-17 guides published. Production DB: 17 guides / 115 steps + 3 Eid records (news + event + calendar).
-LOCAL DB: +2 records (Emiratisation news + Calendar Item A) — not yet on production.
+17 guides published. Production DB: 17 guides / 115 steps + Eid (news+event+calendar) + Emiratisation (news+calendar).
 
-PHASE 6C-38 CODE FIXES (ready to deploy — validated locally, not yet pushed):
-  - /calendar + /ru/calendar: now reads DB via getPublishedCalendarPages(). Mock data removed.
-    Eid A-D visible in May 2026. Emiratisation deadline visible in June 2026.
-  - Homepage: Dubai Life Setup card is now non-clickable div with "Coming soon" (was Link to /guides).
-  - FeaturedSlider.tsx: px-5 moved to outer section — desktop alignment fixed.
-  - lib/calendar-helpers.ts: compliance_deadline mapped to government_deadline.
-  - TypeScript: 0 errors. Build: 86 pages clean.
-  Report: docs/content-drafts/PHASE_6C38_PUBLIC_SURFACE_STABILIZATION_REPORT.md
+PHASE 6C-39 EMIRATISATION A-ONLY PRODUCTION DB DEPLOY — COMPLETE:
+  News:     https://guidex-consulting.ae/news/uae-emiratisation-june-30-2026-deadline       (200, index, RU live)
+  RU News:  https://guidex-consulting.ae/ru/news/uae-emiratisation-june-30-2026-deadline     (200, index, Russian)
+  Calendar: https://guidex-consulting.ae/calendar/uae-emiratisation-june-30-2026-reminder    (200, index, RU live)
+  RU Cal:   https://guidex-consulting.ae/ru/calendar/uae-emiratisation-june-30-2026-reminder (200, index, Russian)
+  News ID (production):     35d9ae35-9c50-471b-99f5-726502cc0dfe
+  Calendar ID (production): b479cd5b-f49b-4c0f-b875-9d2c9d76e72c
+  Item B: NOT imported — 20-49 employee band June 30 claim not confirmed from 2026-specific source
+  Backup: /var/backups/guidex/guides.db.pre-emiratisation-6c39-20260520-225341
+  Report: docs/content-drafts/PHASE_6C39_EMIRATISATION_PRODUCTION_DEPLOY_REPORT.md
+
+PHASE 6C-38B PUBLIC SURFACE STABILIZATION — LIVE ON PRODUCTION (commit dd2ab89):
+  - /calendar + /ru/calendar: reads DB via getPublishedCalendarPages(). Mock data removed.
+    Eid A-D visible in May 2026 from production DB. No mock items.
+  - Homepage: Dubai Life Setup card is non-clickable div with "Coming soon".
+  - FeaturedSlider.tsx: px-5 on outer section — desktop alignment fixed.
+  - lib/calendar-helpers.ts: compliance_deadline → government_deadline.
+  Report: docs/content-drafts/PHASE_6C38B_PUBLIC_SURFACE_STABILIZATION_DEPLOY_REPORT.md
+
+NEXT — VIRAL-01: UAE Long Weekend Guide 2026-2027
+  Highest SEO ROI of remaining content queue. Evergreen. No time-pressure.
+
+TAX-01 ARCHIVE ACTION (future — 2026-07-10):
+  Set noindex=1 on uae-emiratisation-june-30-2026-deadline news post.
+  Add archive note referencing TAX-04 (post-deadline follow-up).
 
 EID AL ADHA 2026 — LIVE ON PRODUCTION (deployed Phase 6C-34):
   News:     https://guidex-consulting.ae/news/uae-eid-al-adha-2026-federal-holiday-long-break   (200, index)

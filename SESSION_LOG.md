@@ -5,6 +5,18 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-20 — Phase 6C-39 Emiratisation A-only production DB deploy complete
+
+`scripts/emiratisation-june30-import.ts` run on production server. Production backup taken before deploy (`guides.db.pre-emiratisation-6c39-20260520-225341`). Records created: news `35d9ae35` (slug=uae-emiratisation-june-30-2026-deadline, status=published, noindex=0, ru_published=1) and calendar `b479cd5b` (slug=uae-emiratisation-june-30-2026-reminder, status=published, calendar_type=important_dates, 1 date item — Item A only). Item B NOT imported. Post-import rebuild: 86 pages clean, PM2 restarted online. Route QA: all 14 routes (4 Emiratisation + 10 existing) return 200. Robots: index, follow on all 4 Emiratisation detail pages. Content safety: no AED amount, no "all companies", no June 30 for 20-49 band, source note present, RU served in Russian (no EN fallback). Item B hold maintained — absent from production DB. Production DB now: 2 news posts + 1 event + 2 calendar pages + 17 guides. Report: `docs/content-drafts/PHASE_6C39_EMIRATISATION_PRODUCTION_DEPLOY_REPORT.md`.
+
+---
+
+## 2026-05-20 — Phase 6C-38B Public surface stabilization deployed to production
+
+Commit `dd2ab89` pushed to origin/main. Production: pulled, built (86 pages clean), PM2 restarted (online). Live QA all pass. Production /calendar now reads `getPublishedCalendarPages()` — no mock data. Eid A–D visible in RSC payload. "Coming soon" confirmed on homepage Life Setup card. Published detail pages still `index, follow`. Emiratisation records (news + Calendar A) are 404 on production — expected, local-only, require separate Phase 6C-39 DB deploy. Report: `docs/content-drafts/PHASE_6C38B_PUBLIC_SURFACE_STABILIZATION_DEPLOY_REPORT.md`.
+
+---
+
 ## 2026-05-20 — Phase 6C-38 Emergency public surface stabilization complete
 
 Four public surface issues identified and fixed. (1) Calendar mock data: both `/calendar` and `/ru/calendar` were passing `MOCK_CALENDAR_ITEMS` (18 fake items) to CalendarGrid — DB never read. Fixed: both pages now call `getPublishedCalendarPages()` and flatten real dates from all published calendar pages. Mock items fully removed. Eid A–D (May 23–29) now visible from `may-2026-uae-calendar`. Emiratisation deadline (Jun 30) also visible from `uae-emiratisation-june-30-2026-reminder`. No dead `/mock-*` CTAs exposed. (2) Dubai Life Setup: `<Link href="/guides">` changed to non-clickable `<div>` with "Coming soon" label — no longer routes users to All Guides in place of a non-existent product. (3) Homepage desktop alignment: `FeaturedSlider.tsx` had `px-5` on inner wrapper divs; moved to outer `<section>`, matching all other homepage sections. Desktop: slider now aligns with surrounding cards (was 20px narrower and inset before). (4) `compliance_deadline` type: added runtime string check in `itemCategoryType()` — maps to `government_deadline` (amber, "Deadline" badge, Business filter). TypeScript: 0 errors. Build: 86 pages clean. All routes 200, detail pages `index,follow`. DGHR/KHDA absent. Report: `docs/content-drafts/PHASE_6C38_PUBLIC_SURFACE_STABILIZATION_REPORT.md`.

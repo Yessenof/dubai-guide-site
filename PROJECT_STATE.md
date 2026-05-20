@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-20 (Phase 6C-38 — Emergency public surface stabilization complete; calendar connected to DB; mock data removed; Life Setup card "Coming soon"; homepage desktop alignment fixed)
+Last updated: 2026-05-20 (Phase 6C-39 — Emiratisation A-only production DB deploy complete; 4 Emiratisation routes live, 200, index,follow; Item B held; zero regressions)
 
 ---
 
@@ -219,7 +219,9 @@ Group pages live:
 | HTTP → HTTPS redirect | ✅ 301 |
 | DNS A record | @ + www → 85.9.203.69 (updated at Tasjeel 2026-04-29) |
 | Smoke test | 9/9 HTTPS routes 200 ✅, HTTP→HTTPS 301 ✅ |
-| GitHub | 3927e4c — up to date |
+| GitHub | dd2ab89 — up to date (code); DB content added to production directly via script, not committed |
+| Production DB | 2 news posts + 1 event + 2 calendar pages + 17 guides |
+| Production DB backup | /var/backups/guidex/guides.db.pre-emiratisation-6c39-20260520-225341 |
 | Swap | 2 GB swapfile (persistent via /etc/fstab) |
 
 **Previous host:** Cloudways (165.245.187.15) — decommissioned after migration.
@@ -228,13 +230,13 @@ Group pages live:
 
 ## Current Next Step
 
-**Phase 6C-36 — TAX-01 Emiratisation final QA + Item B hold correction — complete (2026-05-20).**
+**Phase 6C-39 — Emiratisation A-only production DB deploy — complete (2026-05-20).**
 
-Owner decisions resolved. News draft and Calendar Item A are owner_review_ready. Calendar Item B is HOLD.
+Emiratisation news + Calendar Item A (50+ employees) live on production. All 4 routes 200, `robots: index, follow`. Content safety confirmed. Item B (20-49 band) held — not imported.
 
-**Next action: Owner approves → recheck both MoHRE URLs → import news draft + Calendar Item A only.** Target: import before June 25 2026. DO NOT import Calendar Item B until a 2026-specific official MoHRE source confirms June 30 for the 20-49 employee band.
+**Next action: VIRAL-01 — UAE Long Weekend Guide 2026–2027.** Highest SEO ROI of remaining content queue. Evergreen. No time-pressure.
 
-**After TAX-01 import:** VIRAL-01 — UAE Long Weekend Guide 2026–2027 (highest SEO ROI, evergreen).
+**TAX-01 archive action:** On 2026-07-10 — set `noindex=1` on Emiratisation news post, add archive note referencing TAX-04 (post-deadline follow-up). Calendar reminder can remain public (no expiry).
 
 **TAX-01 status (Phase 6C-36):**
 - `docs/content-drafts/news/uae-emiratisation-june-30-2026-deadline.md` — **owner_review_ready** (June 30 for 50+ only; 20-49 softened to verify-with-MoHRE)

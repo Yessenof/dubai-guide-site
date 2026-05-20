@@ -4,6 +4,9 @@ import type { CalendarDateItemExtended } from "./calendar-mock-data";
 
 export function itemCategoryType(item: CalendarDateItemExtended): string {
   if (item.category_type) return item.category_type;
+  // Handle runtime type values that may come from DB outside the TypeScript union
+  const t = item.type as string;
+  if (t === "compliance_deadline") return "government_deadline";
   switch (item.type) {
     case "public-holiday": return "holiday";
     case "deadline":       return "tax_deadline";

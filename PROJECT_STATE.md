@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-20 (Phase 6C-33 — Indexing policy fix complete; P0 blocker resolved)
+Last updated: 2026-05-20 (Phase 6C-38 — Emergency public surface stabilization complete; calendar connected to DB; mock data removed; Life Setup card "Coming soon"; homepage desktop alignment fixed)
 
 ---
 
@@ -228,35 +228,35 @@ Group pages live:
 
 ## Current Next Step
 
-**Phase 6C-32 — Full calendar, news radar and opportunity matrix — complete (2026-05-20).**
+**Phase 6C-36 — TAX-01 Emiratisation final QA + Item B hold correction — complete (2026-05-20).**
 
-Five planning documents built. Full opportunity matrix across 15 categories, 85 items. P0 technical launch blocker identified and documented.
+Owner decisions resolved. News draft and Calendar Item A are owner_review_ready. Calendar Item B is HOLD.
 
-## P0 Technical Launch Blocker (NEW — Phase 6C-32)
+**Next action: Owner approves → recheck both MoHRE URLs → import news draft + Calendar Item A only.** Target: import before June 25 2026. DO NOT import Calendar Item B until a 2026-specific official MoHRE source confirms June 30 for the 20-49 employee band.
 
-**All three route files hardcode `robots: { index: false }`** — no news/event/calendar page is indexable. Eid content deployed but invisible to Google/AI. Resolve before next content deploy.
+**After TAX-01 import:** VIRAL-01 — UAE Long Weekend Guide 2026–2027 (highest SEO ROI, evergreen).
 
-- Affected: `app/(public)/news/[slug]/page.tsx`, `events/[slug]/page.tsx`, `calendar/[slug]/page.tsx`
-- Fix: Dynamic index/noindex based on `status`, `ru_published`, `noindex`, `noindex_after`
-- Required phase: 6C-33 (code-only, no content)
+**TAX-01 status (Phase 6C-36):**
+- `docs/content-drafts/news/uae-emiratisation-june-30-2026-deadline.md` — **owner_review_ready** (June 30 for 50+ only; 20-49 softened to verify-with-MoHRE)
+- `docs/content-drafts/calendar/uae-emiratisation-june-30-2026-reminder.md` — Item A: **owner_review_ready**; Item B: **HOLD — source_pending — do_not_import**
+- `docs/content-drafts/reviews/uae-emiratisation-june-30-2026-owner-review.md` — Phase 6C-36 decisions section added; both resolved
+- `docs/content-drafts/PHASE_6C36_SUMMARY.md` — phase summary + validation results + import checklist
 
-**Published records (local DB — QA COMPLETE, deploy pending + P0 noindex blocker):**
-| Type | Slug | ID |
+**Blocked claim (enforced):** "30 June 2026 applicability to the 20–49 employee band is not confirmed by the captured official source"
+
+## P0 Technical Launch Blocker — RESOLVED (Phase 6C-33, deployed Phase 6C-34)
+
+`lib/db/indexing.ts` created. All 6 detail route files updated. All Eid pages indexable on production (verified live). Commit `fde9c36` pushed and deployed.
+
+**Production state (as of Phase 6C-34, 2026-05-20):**
+| Type | Slug | Production ID |
 |---|---|---|
-| News | `uae-eid-al-adha-2026-federal-holiday-long-break` | `5b1eecec-e64a-4cc9-9f67-c6cb2b55e1e4` |
-| Event | `uae-eid-al-adha-2026` | `8532feee-1d6f-4ed3-b716-61712b473ca3` |
-| Calendar | `may-2026-uae-calendar` | `6ce82fda-d696-4040-b6c3-3d74c17347ea` |
+| News | `uae-eid-al-adha-2026-federal-holiday-long-break` | `9485dbb9-1192-465b-a8d7-60d767fced6d` |
+| Event | `uae-eid-al-adha-2026` | `4a260f00-7540-49d1-a927-b8f42863fa68` |
+| Calendar | `may-2026-uae-calendar` | `fadcf8e4-324f-4e3e-9746-ccd0520029fb` |
 
-**Phase 6C-32 planning output:**
-- `docs/content-drafts/FULL_CALENDAR_AND_NEWS_RADAR_MATRIX.md` — 85 items, 15 categories
-- `docs/content-drafts/CALENDAR_SEED_ITEM_POLICY.md` — when items go public, CTA rules, offer controls
-- `docs/content-drafts/HOMEPAGE_AND_CAROUSEL_CONTENT_MODEL.md` — carousel logic, image rules, CTA logic
-- `docs/content-drafts/DUBAI_LIFE_SETUP_LAUNCH_MATRIX.md` — 12 modules with checklists and service paths
-- `docs/content-drafts/PHASE_6C32_SUMMARY.md` — clusters, candidates, source gaps, recommended next phases
-
-**Urgent items identified:**
-- TAX-01: Emiratisation June 30 quota — 10 days away — build + import news now
-- VIRAL-01: UAE Long Weekend Guide 2026 — highest SEO ROI — build now
+**Remaining urgent items:**
+- VIRAL-01: UAE Long Weekend Guide 2026 — highest SEO ROI — build next (after TAX-01 import)
 - TAX-02: Corporate Tax Sept 30 deadline — build guide by Aug 1
 
 **Files owner_review_ready (waiting for import decision):**

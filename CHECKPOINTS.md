@@ -5,6 +5,26 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE6C34-EID-PRODUCTION — Phase 6C-34 Eid Al Adha 2026 production launch complete
+
+**Date:** 2026-05-20
+**Commit:** `fde9c36` (pushed to origin/main)
+**Status:** LIVE on guidex-consulting.ae
+
+- Production DB backed up: `/var/backups/guidex/guides.db.pre-eid-6c34-20260520-141403`
+- Schema migration applied: `news_posts`, `events`, `calendar_pages` tables created
+- 3 records imported and published: news, event, calendar (all `status=published`, `ru_published=1`)
+- Calendar items: A–D only (E/F held)
+- 2-sentence summaries applied via SQL UPDATE (import script used originals)
+- Build: 86 pages, 0 errors. PM2: online.
+- All 6 EN/RU pages: HTTP 200, `robots: index, follow`
+- Unknown slug: 404
+- Content: no 9-days claim; FAHR/MoHRE/WAM source distinction confirmed live
+- 17 existing guides: intact
+- Production IDs differ from local (normal — UUID generated at import time)
+
+---
+
 ## CP-PHASE6C33-INDEXING — Phase 6C-33 Indexing policy fix complete (P0 resolved)
 
 **Date:** 2026-05-20

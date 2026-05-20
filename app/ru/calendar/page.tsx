@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import CalendarGrid from "@/components/calendar/CalendarGrid";
 import SaveCalendarCta from "@/components/calendar/SaveCalendarCta";
-import { MOCK_CALENDAR_ITEMS } from "@/lib/calendar-mock-data";
+import { getPublishedCalendarPages } from "@/lib/db/news-events-calendar";
+import type { CalendarDateItemExtended } from "@/lib/calendar-mock-data";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -37,6 +38,9 @@ export default async function RuCalendarPage({ searchParams }: PageProps) {
     initialMonth = parseInt(monthParam.slice(5, 7), 10);
   }
 
+  const calPages = getPublishedCalendarPages("ru");
+  const calItems = calPages.flatMap((p) => p.dates) as CalendarDateItemExtended[];
+
   return (
     <div className="max-w-3xl mx-auto px-5 pt-4 pb-12">
 
@@ -48,7 +52,7 @@ export default async function RuCalendarPage({ searchParams }: PageProps) {
       </div>
 
       <CalendarGrid
-        items={MOCK_CALENDAR_ITEMS}
+        items={calItems}
         locale="ru"
         initialYear={initialYear}
         initialMonth={initialMonth}
@@ -65,11 +69,6 @@ export default async function RuCalendarPage({ searchParams }: PageProps) {
         <div className="rounded-xl border border-amber-100 bg-amber-50/70 px-3.5 py-2">
           <p className="text-[12px] text-amber-700 leading-snug">
             Исламские даты (Ид аль-Адха, Рамадан) зависят от официального подтверждения в ОАЭ и могут меняться.
-          </p>
-        </div>
-        <div className="rounded-xl border border-blue-100 bg-blue-50/70 px-3.5 py-2">
-          <p className="text-[12px] text-blue-700 leading-snug">
-            <strong>Демопрототип:</strong> даты показаны только для тестирования интерфейса. Не являются официальными данными.
           </p>
         </div>
       </div>

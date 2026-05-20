@@ -68,10 +68,10 @@ export default function FeaturedSlider({ guides, locale = "en" }: Props) {
   const goPrev = () => setCurrent((c) => (c - 1 + count) % count);
 
   return (
-    <section aria-labelledby="featured-heading" className="pb-2">
+    <section aria-labelledby="featured-heading" className="px-5 pb-2">
 
       {/* Section header */}
-      <div className="flex items-center justify-between px-5 mb-2 max-w-2xl mx-auto">
+      <div className="flex items-center justify-between mb-2 max-w-2xl mx-auto">
         <h2
           id="featured-heading"
           className="text-[11px] font-semibold uppercase tracking-widest text-gray-500"
@@ -87,7 +87,7 @@ export default function FeaturedSlider({ guides, locale = "en" }: Props) {
       </div>
 
       {/* Slider */}
-      <div className="px-5 max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto">
         <div
           className="relative h-[215px] rounded-2xl overflow-hidden shadow-sm"
           onMouseEnter={() => { pausedRef.current = true; }}

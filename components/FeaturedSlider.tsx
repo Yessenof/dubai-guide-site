@@ -1,52 +1,47 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import type { GuideListItem } from "@/lib/db/reader";
-import { localizeValue } from "@/lib/localize-value";
 
-const IMG_DIFC = "/images/hubs/difc-business-bay-glass-towers.webp";
+// ─── Unified carousel slide type ─────────────────────────────────────────────
+// Built by the parent server component (page.tsx) from any content type.
+// Every slide always has a bgImage — no more empty dark gradients.
 
-// CSS gradients for slides 1+ (when no photo)
-const SLIDE_GRADIENTS = [
-  "linear-gradient(135deg, #1B2E4B 0%, #0A1628 100%)",
-  "linear-gradient(135deg, #1C1917 0%, #2C2825 100%)",
-];
-
-function catLabel(cat: string, locale: "en" | "ru" = "en"): string {
-  if (locale === "ru") {
-    const RU: Record<string, string> = {
-      visas:           "Визы",
-      "company-setup": "Компания",
-      government:      "Госуслуги",
-      living:          "Жизнь в Дубае",
-      hiring:          "Трудоустройство",
-    };
-    return RU[cat] ?? cat.replace(/-/g, " ");
-  }
-  const EN: Record<string, string> = {
-    visas:           "Visas",
-    "company-setup": "Company Setup",
-    government:      "Government",
-    living:          "Dubai Life",
-    hiring:          "Hiring",
-  };
-  return EN[cat] ?? cat.replace(/-/g, " ");
+export interface CarouselSlide {
+  href:    string;
+  title:   string;
+  badge:   string;   // e.g. "Event", "News", "Calendar", "Visas guide"
+  meta?:   string;   // date string, price range, etc.
+  bgImage: string;   // path to background photo (always set)
+  cta:     string;   // "View event →", "Read article →", "Read guide →"
 }
 
 interface Props {
-  guides: GuideListItem[];
+  slides: CarouselSlide[];
   locale?: "en" | "ru";
+  sectionLabel?: string;
+  allHref?:      string;
+  allText?:      string;
 }
 
-export default function FeaturedSlider({ guides, locale = "en" }: Props) {
+export default function FeaturedSlider({
+  slides,
+  locale = "en",
+  sectionLabel,
+  allHref,
+  allText,
+}: Props) {
   const [current, setCurrent] = useState(0);
-  const pausedRef   = useRef(false);
-  const touchXRef   = useRef<number | null>(null);
-  const count = guides.length;
+  const pausedRef  = useRef(false);
+  const touchXRef  = useRef<number | null>(null);
+  const count = slides.length;
 
-  // Auto-rotate every 4.5s, skip if paused
+  const isRu = locale === "ru";
+  const label   = sectionLabel ?? (isRu ? "Что важно знать" : "Key Dubai updates");
+  const linkHref = allHref ?? (isRu ? "/ru/guides" : "/guides");
+  const linkText = allText ?? (isRu ? "Все гайды →" : "All guides →");
+
   useEffect(() => {
     if (count <= 1) return;
     const id = setInterval(() => {
@@ -55,14 +50,7 @@ export default function FeaturedSlider({ guides, locale = "en" }: Props) {
     return () => clearInterval(id);
   }, [count]);
 
-  if (!guides.length) return null;
-
-  const isRu        = locale === "ru";
-  const allHref     = isRu ? "/ru/guides" : "/guides";
-  const allText     = isRu ? "Все гайды →" : "All guides →";
-  const sectionLabel = isRu ? "Что важно знать" : "Dubai updates to know";
-  const ctaText     = isRu ? "Читать →" : "Read guide →";
-  const guideWord   = isRu ? "гайд" : "guide";
+  if (!slides.length) return null;
 
   const goNext = () => setCurrent((c) => (c + 1) % count);
   const goPrev = () => setCurrent((c) => (c - 1 + count) % count);
@@ -76,13 +64,13 @@ export default function FeaturedSlider({ guides, locale = "en" }: Props) {
           id="featured-heading"
           className="text-[11px] font-semibold uppercase tracking-widest text-gray-500"
         >
-          {sectionLabel}
+          {label}
         </h2>
         <Link
-          href={allHref}
+          href={linkHref}
           className="text-[11px] text-gray-400 hover:text-gray-700 transition-colors"
         >
-          {allText}
+          {linkText}
         </Link>
       </div>
 
@@ -101,8 +89,7 @@ export default function FeaturedSlider({ guides, locale = "en" }: Props) {
             touchXRef.current = null;
           }}
         >
-
-          {/* ── Sliding track ──────────────────────────────────────────────── */}
+          {/* Sliding track */}
           <div
             className="flex h-full transition-transform duration-500 ease-in-out"
             style={{
@@ -110,59 +97,47 @@ export default function FeaturedSlider({ guides, locale = "en" }: Props) {
               transform: `translateX(-${(current / count) * 100}%)`,
             }}
           >
-            {guides.map((guide, i) => (
+            {slides.map((slide, i) => (
               <div
-                key={guide.slug}
+                key={`${slide.href}-${i}`}
                 className="relative h-full flex-shrink-0"
                 style={{ width: `${100 / count}%` }}
               >
                 <Link
-                  href={isRu ? `/ru/guides/${guide.slug}` : `/guides/${guide.slug}`}
+                  href={slide.href}
                   className="block h-full"
                   tabIndex={i === current ? 0 : -1}
                 >
-                  {/* Background: photo for slide 0, CSS gradient for others */}
-                  {i === 0 ? (
-                    <>
-                      <Image
-                        src={IMG_DIFC}
-                        alt={guide.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 672px) calc(100vw - 40px), 632px"
-                        priority
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-navy/95 via-navy/55 to-navy/10" />
-                    </>
-                  ) : (
-                    <div
-                      className="absolute inset-0"
-                      style={{ background: SLIDE_GRADIENTS[(i - 1) % SLIDE_GRADIENTS.length] }}
-                    />
-                  )}
+                  {/* Background photo — all slides have an image */}
+                  <Image
+                    src={slide.bgImage}
+                    alt={slide.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 672px) calc(100vw - 40px), 632px"
+                    priority={i === 0}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy/95 via-navy/55 to-navy/10" />
 
-                  {/* Content — pb-10 leaves room for the progress dots */}
+                  {/* Content */}
                   <div className="absolute inset-0 flex flex-col justify-end px-4 pb-10">
                     <p className="text-[11px] font-bold uppercase tracking-widest text-white/70 mb-1">
-                      {catLabel(guide.category, locale)} {guideWord}
+                      {slide.badge}
                     </p>
                     <p
                       className="text-[20px] font-bold text-white leading-tight line-clamp-2 mb-2"
                       style={{ textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}
                     >
-                      {guide.title}
+                      {slide.title}
                     </p>
                     <div className="flex items-end justify-between gap-2">
-                      <div className="min-w-0 flex-1">
-                        {guide.price && (
-                          <p className="text-[11px] text-white/65 truncate">{localizeValue(guide.price, locale)}</p>
-                        )}
-                        {guide.timeline && (
-                          <p className="text-[11px] text-white/65 truncate">{localizeValue(guide.timeline, locale)}</p>
-                        )}
-                      </div>
+                      {slide.meta && (
+                        <p className="text-[11px] text-white/65 truncate min-w-0 flex-1">
+                          {slide.meta}
+                        </p>
+                      )}
                       <span className="flex-shrink-0 text-[13px] font-semibold text-white">
-                        {ctaText}
+                        {slide.cta}
                       </span>
                     </div>
                   </div>
@@ -171,12 +146,12 @@ export default function FeaturedSlider({ guides, locale = "en" }: Props) {
             ))}
           </div>
 
-          {/* ── Prev arrow ─────────────────────────────────────────────────── */}
+          {/* Prev arrow */}
           {count > 1 && (
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); goPrev(); }}
-              aria-label="Previous guide"
+              aria-label="Previous"
               className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/25 border border-white/20 flex items-center justify-center text-white hover:bg-black/40 transition-colors z-10"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -185,12 +160,12 @@ export default function FeaturedSlider({ guides, locale = "en" }: Props) {
             </button>
           )}
 
-          {/* ── Next arrow ─────────────────────────────────────────────────── */}
+          {/* Next arrow */}
           {count > 1 && (
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); goNext(); }}
-              aria-label="Next guide"
+              aria-label="Next"
               className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/25 border border-white/20 flex items-center justify-center text-white hover:bg-black/40 transition-colors z-10"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -199,15 +174,15 @@ export default function FeaturedSlider({ guides, locale = "en" }: Props) {
             </button>
           )}
 
-          {/* ── Progress dots ───────────────────────────────────────────────── */}
+          {/* Progress dots */}
           {count > 1 && (
             <div className="absolute bottom-3.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
-              {guides.map((_, i) => (
+              {slides.map((_, i) => (
                 <button
                   key={i}
                   type="button"
                   onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
-                  aria-label={`Go to slide ${i + 1}`}
+                  aria-label={`Slide ${i + 1}`}
                   className={`rounded-full transition-all duration-300 ${
                     i === current
                       ? "w-4 h-1.5 bg-white"
@@ -217,7 +192,6 @@ export default function FeaturedSlider({ guides, locale = "en" }: Props) {
               ))}
             </div>
           )}
-
         </div>
       </div>
     </section>

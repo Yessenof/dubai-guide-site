@@ -869,6 +869,11 @@ function GroupedAgendaCard({
       ? formatShortDate(minDate, locale)
       : `${formatShortDate(minDate, locale)} – ${formatShortDate(maxEnd, locale)}`;
 
+  // In compact mode: show short labels, cap at 3 sub-items with overflow count
+  const COMPACT_LIMIT = 3;
+  const displayItems = compact ? sorted.slice(0, COMPACT_LIMIT) : sorted;
+  const overflowCount = compact ? Math.max(0, sorted.length - COMPACT_LIMIT) : 0;
+
   return (
     <div className="border border-stone-100 rounded-xl px-4 py-3 bg-white">
       <div className="flex flex-wrap items-center gap-1.5 mb-2">
@@ -883,17 +888,22 @@ function GroupedAgendaCard({
         <p className="text-[12px] text-gray-500 mb-1.5">{rangeLabel}</p>
       )}
       <div className="space-y-0.5 mb-2">
-        {sorted.map((item, i) => {
+        {displayItems.map((item, i) => {
           const start = formatShortDate(item.date, locale);
           const end = item.period_end ? formatShortDate(item.period_end, locale) : null;
           const dateStr = end && end !== start ? `${start} – ${end}` : start;
+          // Compact mode: use short label for density; full mode: use full label
+          const labelText = compact ? itemShortLabel(item, locale) : itemLabel(item, locale);
           return (
             <p key={i} className="text-[13px] text-gray-700 leading-snug">
               <span className="text-gray-400 text-[12px]">{dateStr}:</span>{" "}
-              {itemLabel(item, locale)}
+              {labelText}
             </p>
           );
         })}
+        {overflowCount > 0 && (
+          <p className="text-[11px] text-gray-400">+{overflowCount} more</p>
+        )}
       </div>
       {href && (
         isExternal ? (

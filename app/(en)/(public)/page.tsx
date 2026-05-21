@@ -3,9 +3,11 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { ServiceCardLink } from "@/components/ServiceCardLink";
 import FeaturedSlider from "@/components/FeaturedSlider";
+import type { CarouselSlide } from "@/components/FeaturedSlider";
 import FreeAdviceCta from "@/components/FreeAdviceCta";
 import RouteSnapshotBand from "@/components/RouteSnapshotBand";
 import { getPublishedGuidesForBand, getRecentPublishedGuides } from "@/lib/db/reader";
+import type { GuideListItem } from "@/lib/db/reader";
 import {
   getPublishedNewsPosts,
   getPublishedEvents,
@@ -17,6 +19,7 @@ import type {
   NewsPostSummary,
   EventSummary,
 } from "@/lib/db/news-events-calendar";
+import { localizeValue } from "@/lib/localize-value";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -38,10 +41,28 @@ const BAND_SLUGS = [
   "golden-visa-dubai-property",
 ];
 
+// ─── Images ───────────────────────────────────────────────────────────────────
+
 const IMG_SKYLINE = "/images/hubs/dubai-skyline-downtown.webp";
+const IMG_DIFC    = "/images/hubs/difc-business-bay-glass-towers.webp";
 const IMG_JLT     = "/images/hubs/jlt-dubai-towers-sunset-reflection.webp";
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+function guideImage(category: string): string {
+  if (["visas", "government", "living", "tourism"].includes(category)) return IMG_JLT;
+  return IMG_DIFC;
+}
+
+// ─── Carousel priority ────────────────────────────────────────────────────────
+
+const GUIDE_PRIORITY_SLUGS = [
+  "employment-visa",
+  "golden-visa-dubai-property",
+  "mainland-company-setup-dubai",
+  "free-zone-company-setup-dubai",
+  "spouse-dependent-visa-dubai-outside-country",
+  "document-attestation-dubai",
+  "holiday-home-permit-dubai",
+];
 
 function catLabel(cat: string): string {
   const MAP: Record<string, string> = {
@@ -50,6 +71,7 @@ function catLabel(cat: string): string {
     government:      "Government",
     living:          "Dubai Life",
     hiring:          "Hiring",
+    tourism:         "Tourism",
   };
   return MAP[cat] ?? cat.replace(/-/g, " ");
 }
@@ -67,6 +89,89 @@ function formatShortDate(iso: string): string {
   }
 }
 
+function buildCarouselSlides(
+  news: NewsPostSummary[],
+  events: EventSummary[],
+  calPages: CalendarPageSummary[],
+  guides: GuideListItem[],
+  limit = 7,
+): CarouselSlide[] {
+  const slides: CarouselSlide[] = [];
+
+  // 1. Events — highest editorial priority (dated, time-sensitive)
+  for (const ev of events) {
+    slides.push({
+      href:    `/events/${ev.slug}`,
+      title:   ev.title,
+      badge:   "Event",
+      meta:    formatShortDate(ev.eventDateStart),
+      bgImage: IMG_SKYLINE,
+      cta:     "View event →",
+    });
+  }
+
+  // 2. News posts — sorted by datePublished desc (reader default)
+  for (const n of news) {
+    slides.push({
+      href:    `/news/${n.slug}`,
+      title:   n.title,
+      badge:   "News",
+      meta:    formatShortDate(n.datePublished),
+      bgImage: IMG_DIFC,
+      cta:     "Read article →",
+    });
+  }
+
+  // 3. Calendar pages
+  for (const cp of calPages) {
+    slides.push({
+      href:    `/calendar/${cp.slug}`,
+      title:   cp.title,
+      badge:   "Calendar",
+      bgImage: IMG_SKYLINE,
+      cta:     "Open calendar →",
+    });
+  }
+
+  // 4. Priority guides as filler
+  const guidesMap = new Map(guides.map((g) => [g.slug, g]));
+  for (const slug of GUIDE_PRIORITY_SLUGS) {
+    if (slides.length >= limit) break;
+    const g = guidesMap.get(slug);
+    if (!g) continue;
+    slides.push({
+      href:    `/guides/${g.slug}`,
+      title:   g.title,
+      badge:   `${catLabel(g.category)} guide`,
+      meta:    g.price ? localizeValue(g.price, "en") : undefined,
+      bgImage: guideImage(g.category),
+      cta:     "Read guide →",
+    });
+  }
+
+  // 5. Any remaining published guides as fallback
+  for (const g of guides) {
+    if (slides.length >= limit) break;
+    if (GUIDE_PRIORITY_SLUGS.includes(g.slug)) continue;
+    slides.push({
+      href:    `/guides/${g.slug}`,
+      title:   g.title,
+      badge:   `${catLabel(g.category)} guide`,
+      meta:    g.price ? localizeValue(g.price, "en") : undefined,
+      bgImage: guideImage(g.category),
+      cta:     "Read guide →",
+    });
+  }
+
+  return slides.slice(0, limit);
+}
+
+// ─── This Month data ──────────────────────────────────────────────────────────
+
+type MonthItem = {
+  date: string; shortDate: string; label: string; dotColor: string; href?: string;
+};
+
 function calendarDotColor(type: CalendarDateItem["type"]): string {
   switch (type) {
     case "public-holiday": return "bg-emerald-500";
@@ -76,12 +181,6 @@ function calendarDotColor(type: CalendarDateItem["type"]): string {
   }
 }
 
-// ─── This Month data ──────────────────────────────────────────────────────────
-
-type MonthItem = {
-  date: string; shortDate: string; label: string; dotColor: string; href?: string;
-};
-
 function buildThisMonthItems(
   pages: CalendarPageSummary[],
   events: EventSummary[],
@@ -90,17 +189,44 @@ function buildThisMonthItems(
   const today     = new Date().toISOString().slice(0, 10);
   const lookahead = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   const items: MonthItem[] = [];
+  const seenKeys = new Set<string>();
 
   for (const page of pages) {
     for (const d of page.dates) {
-      if (d.date >= today && d.date <= lookahead)
-        items.push({ date: d.date, shortDate: formatShortDate(d.date), label: d.label_en, dotColor: calendarDotColor(d.type) });
+      if (d.date < today || d.date > lookahead) continue;
+      // Deduplicate: group items sharing the same detail_url under one entry
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ext = d as any;
+      const detailUrl = ext.detail_url as string | undefined;
+      const key = detailUrl ?? `${d.date}:${d.label_en}`;
+      if (seenKeys.has(key)) continue;
+      seenKeys.add(key);
+      const shortLabel = ext.short_label_en as string | undefined;
+      items.push({
+        date:      d.date,
+        shortDate: formatShortDate(d.date),
+        label:     shortLabel ?? d.label_en,
+        dotColor:  calendarDotColor(d.type),
+        href:      detailUrl ?? undefined,
+      });
     }
   }
+
   for (const ev of events) {
-    if (ev.eventDateStart >= today && ev.eventDateStart <= lookahead)
-      items.push({ date: ev.eventDateStart, shortDate: formatShortDate(ev.eventDateStart), label: ev.title, dotColor: "bg-blue-500", href: `/events/${ev.slug}` });
+    if (ev.eventDateStart >= today && ev.eventDateStart <= lookahead) {
+      const evHref = `/events/${ev.slug}`;
+      if (seenKeys.has(evHref)) continue;
+      seenKeys.add(evHref);
+      items.push({
+        date:      ev.eventDateStart,
+        shortDate: formatShortDate(ev.eventDateStart),
+        label:     ev.title,
+        dotColor:  "bg-blue-500",
+        href:      evHref,
+      });
+    }
   }
+
   return items.sort((a, b) => a.date.localeCompare(b.date)).slice(0, limit);
 }
 
@@ -141,15 +267,16 @@ const TILES = [
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
-  const bandGuides    = getPublishedGuidesForBand(BAND_SLUGS);
-  const recentGuides  = getRecentPublishedGuides(7);
-  const featuredGuides = recentGuides.slice(0, 3);
-  const latestGuides  = recentGuides.slice(3, 7);
+  const recentGuides  = getRecentPublishedGuides(20);
+  const latestGuides  = recentGuides.slice(0, 4);
   const news          = getPublishedNewsPosts("en");
   const events        = getPublishedEvents("en");
   const calPages      = getPublishedCalendarPages("en");
+  const bandGuides    = getPublishedGuidesForBand(BAND_SLUGS);
   const monthItems    = buildThisMonthItems(calPages, events);
   const feedItems     = buildFeed(news, events);
+
+  const carouselSlides = buildCarouselSlides(news, events, calPages, recentGuides, 7);
 
   const latestDisplayItems: FeedItem[] = feedItems.length > 0
     ? feedItems
@@ -254,8 +381,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 3. Featured slider — auto-rotating, swipeable, with arrows ──────── */}
-      <FeaturedSlider guides={featuredGuides} />
+      {/* ── 3. Featured slider — priority carousel ────────────────────────────── */}
+      <FeaturedSlider slides={carouselSlides} locale="en" />
 
       {/* ── 4. Start with your need — service navigation ─────────────────────── */}
       <section aria-labelledby="services-heading" className="px-5 pb-2.5">
@@ -345,7 +472,10 @@ export default function HomePage() {
                       {item.label}
                     </p>
                     {item.href && (
-                      <Link href={item.href} className="flex-shrink-0 text-xs text-white/40 hover:text-white/70">
+                      <Link
+                        href={item.href}
+                        className="flex-shrink-0 text-xs text-white/40 hover:text-white/70 transition-colors"
+                      >
                         →
                       </Link>
                     )}
@@ -362,7 +492,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 6. Latest guides ─────────────────────────────────────────────────── */}
+      {/* ── 6. Latest updates ────────────────────────────────────────────────── */}
       <section aria-labelledby="latest-heading" className="pb-5">
         <div className="flex items-center justify-between px-5 mb-2.5 max-w-2xl mx-auto">
           <h2

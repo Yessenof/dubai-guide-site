@@ -83,7 +83,7 @@ export default function MarkdownBody({ content, className }: Props) {
 
     // Soft horizontal rule
     if (/^[-*_]{3,}$/.test(b)) {
-      return <div key={idx} className="h-px bg-stone-100 my-1" />;
+      return <div key={idx} className="h-px bg-stone-100 my-3" />;
     }
 
     // h4 — section heading with subtle top border

@@ -6,7 +6,7 @@ import {
   updateStepAction,
   deleteStepAction,
   reorderStepAction,
-} from "@/app/admin/actions";
+} from "@/app/(en)/admin/actions";
 import type { Step } from "@/lib/db/schema";
 
 interface Props {

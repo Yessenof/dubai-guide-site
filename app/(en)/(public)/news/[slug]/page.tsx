@@ -13,23 +13,22 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-// Empty — DB tables have no RU content yet. Pages render on demand via SSR.
+// Empty — DB tables have no content yet. Pages render on demand via SSR.
 export async function generateStaticParams() {
   return [];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = getNewsPostBySlug(slug, "ru");
+  const post = getNewsPostBySlug(slug, "en");
   if (!post) return {};
   return {
     title: `${post.seoTitle || post.title} — Guidex Consulting`,
     description: post.metaDescription || post.summary,
     robots: newsRobots(post),
     alternates: {
-      canonical: `${BASE}/ru/news/${slug}`,
+      canonical: `${BASE}/news/${slug}`,
       languages: {
-        ru: `${BASE}/ru/news/${slug}`,
         en: `${BASE}/news/${slug}`,
         "x-default": `${BASE}/news/${slug}`,
       },
@@ -37,17 +36,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const SOURCE_LABELS_RU: Record<string, string> = {
-  official:   "Официальный источник",
-  government: "Государственный портал",
-  media:      "Публикация в СМИ",
-  other:      "Источник",
+const SOURCE_LABELS: Record<string, string> = {
+  official:   "Official source",
+  government: "Government portal",
+  media:      "Media report",
+  other:      "Source",
 };
 
-export default async function RuNewsDetailPage({ params }: Props) {
+export default async function NewsDetailPage({ params }: Props) {
   const { slug } = await params;
-  // Returns null if ru_title or ru_body is empty — no EN fallback.
-  const post = getNewsPostBySlug(slug, "ru");
+  const post = getNewsPostBySlug(slug, "en");
   if (!post) notFound();
 
   // body is stored as Markdown in the DB — rendered by MarkdownBody below
@@ -59,10 +57,10 @@ export default async function RuNewsDetailPage({ params }: Props) {
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
 
       <Link
-        href="/ru/news"
+        href="/news"
         className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors mb-3 py-1.5"
       >
-        ← Обновления ОАЭ
+        ← UAE Updates
       </Link>
 
       <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-1.5">
@@ -78,7 +76,7 @@ export default async function RuNewsDetailPage({ params }: Props) {
       {post.sourceUrl && (
         <div className="flex items-center gap-2 mb-6 pl-3 border-l-2 border-stone-200">
           <span className="text-[11px] font-medium text-gray-400">
-            {SOURCE_LABELS_RU[post.sourceLabel] ?? "Источник"}:
+            {SOURCE_LABELS[post.sourceLabel] ?? "Source"}:
           </span>
           <a
             href={post.sourceUrl}
@@ -86,7 +84,7 @@ export default async function RuNewsDetailPage({ params }: Props) {
             rel="noopener noreferrer"
             className="text-[11px] font-medium text-brass hover:opacity-75 transition-opacity"
           >
-            Перейти к источнику ↗
+            View source ↗
           </a>
         </div>
       )}
@@ -97,23 +95,23 @@ export default async function RuNewsDetailPage({ params }: Props) {
 
       {post.dateUpdated && post.dateUpdated !== post.datePublished && (
         <p className="text-[11px] text-gray-400 mb-5">
-          Обновлено: {post.dateUpdated}
+          Updated: {post.dateUpdated}
         </p>
       )}
 
       <CalendarContextCta
-        locale="ru"
+        locale="en"
         contentType="news"
-        calendarBase="/ru/calendar"
+        calendarBase="/calendar"
       />
 
       {post.relatedGuideSlug && (
         <div className="border border-stone-200 rounded-xl px-4 py-3 mb-5">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1.5">
-            Связанное руководство
+            Related guide
           </p>
           <Link
-            href={`/ru/guides/${post.relatedGuideSlug}`}
+            href={`/guides/${post.relatedGuideSlug}`}
             className="flex items-center justify-between group"
           >
             <span className="text-[13px] font-medium text-gray-800 group-hover:text-navy transition-colors">
@@ -126,10 +124,10 @@ export default async function RuNewsDetailPage({ params }: Props) {
 
       <div className="bg-navy rounded-2xl px-5 py-5">
         <p className="text-[14px] font-semibold text-white mb-1">
-          Затронуты этим изменением?
+          Affected by this change?
         </p>
         <p className="text-[12px] text-white/60 mb-3">
-          Консультируем по актуальному законодательству ОАЭ и объясняем, как изменения влияют на вашу визу или бизнес.
+          We advise on current UAE regulations and confirm how changes affect your visa or business.
         </p>
         <a
           href={WHATSAPP_HREF}
@@ -137,7 +135,7 @@ export default async function RuNewsDetailPage({ params }: Props) {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity py-2"
         >
-          Написать в WhatsApp →
+          Chat on WhatsApp →
         </a>
       </div>
 

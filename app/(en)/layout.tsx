@@ -2,10 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { GTMScript, GTMNoScript } from "@/components/GoogleTagManager";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import StickyRouteCta from "@/components/StickyRouteCta";
-import { OrgSchema } from "@/components/OrgSchema";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -14,20 +10,26 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  title: "Guidex Consulting — Step-by-step guides for living and working in Dubai",
+  description:
+    "Clear, practical guides for company setup, visas, hiring, and relocation in Dubai and the UAE.",
+  openGraph: {
+    siteName: "Guidex Consulting",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+  },
 };
 
-export default function RuLayout({
+export default function EnLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ru" className={`${inter.className} h-full`}>
+    <html lang="en" className={`${inter.className} h-full`}>
       <body className="min-h-full bg-white text-gray-900">
         <GTMNoScript />
-        <OrgSchema />
-        <Header />
-        <main className="flex-1 pb-20 sm:pb-0">{children}</main>
-        <Footer />
-        <StickyRouteCta />
+        {children}
         <GTMScript />
       </body>
     </html>

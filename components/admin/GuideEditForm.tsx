@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { updateGuideAction, setPublishedAction, deleteGuideAction } from "@/app/admin/actions";
+import { updateGuideAction, setPublishedAction, deleteGuideAction } from "@/app/(en)/admin/actions";
 import GuideFormFields from "@/components/admin/GuideFormFields";
 import SavedBanner from "@/components/admin/SavedBanner";
 import Link from "next/link";

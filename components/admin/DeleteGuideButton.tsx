@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteGuideAction } from "@/app/admin/actions";
+import { deleteGuideAction } from "@/app/(en)/admin/actions";
 
 interface Props {
   id:   string;

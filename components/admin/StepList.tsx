@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { createStepAction } from "@/app/admin/actions";
+import { createStepAction } from "@/app/(en)/admin/actions";
 import StepCard from "@/components/admin/StepCard";
 import type { Step } from "@/lib/db/schema";
 

@@ -16,23 +16,22 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-// Empty — DB tables have no RU content yet. Pages render on demand via SSR.
+// Empty — DB tables have no content yet. Pages render on demand via SSR.
 export async function generateStaticParams() {
   return [];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const page = getCalendarPageBySlug(slug, "ru");
+  const page = getCalendarPageBySlug(slug, "en");
   if (!page) return {};
   return {
     title: `${page.seoTitle || page.title} — Guidex Consulting`,
     description: page.metaDescription || page.summary,
     robots: calendarRobots(page),
     alternates: {
-      canonical: `${BASE}/ru/calendar/${slug}`,
+      canonical: `${BASE}/calendar/${slug}`,
       languages: {
-        ru: `${BASE}/ru/calendar/${slug}`,
         en: `${BASE}/calendar/${slug}`,
         "x-default": `${BASE}/calendar/${slug}`,
       },
@@ -40,39 +39,38 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const DATE_TYPE_STYLES_RU: Record<
+const DATE_TYPE_STYLES: Record<
   CalendarDateItem["type"],
   { pill: string; label: string }
 > = {
   "public-holiday": {
     pill: "bg-red-50 border-red-200 text-red-700",
-    label: "Государственный праздник",
+    label: "Public holiday",
   },
   "important-date": {
     pill: "bg-amber-50 border-amber-200 text-amber-700",
-    label: "Важная дата",
+    label: "Important date",
   },
   deadline: {
     pill: "bg-orange-50 border-orange-200 text-orange-700",
-    label: "Дедлайн",
+    label: "Deadline",
   },
   other: { pill: "bg-stone-50 border-stone-200 text-gray-500", label: "" },
 };
 
-const CONFIDENCE_BADGE_RU: Partial<Record<CalendarDateItem["confidence"], string>> =
+const CONFIDENCE_BADGE: Partial<Record<CalendarDateItem["confidence"], string>> =
   {
-    expected: "ориентировочно",
-    subject_to_official_confirmation: "ожидает подтверждения",
+    expected: "expected",
+    subject_to_official_confirmation: "subject to confirmation",
   };
 
-export default async function RuCalendarDetailPage({ params }: Props) {
+export default async function CalendarDetailPage({ params }: Props) {
   const { slug } = await params;
-  // Returns null if ru_title or ru_body is empty — no EN fallback.
-  const page = getCalendarPageBySlug(slug, "ru");
+  const page = getCalendarPageBySlug(slug, "en");
   if (!page) notFound();
 
   // body is stored as Markdown in the DB — rendered by MarkdownBody below
-  const monthLabel = page.month ? ` · Месяц ${page.month}` : "";
+  const monthLabel = page.month ? ` · Month ${page.month}` : "";
   const calendarMonth = page.month
     ? `${page.year}-${String(page.month).padStart(2, "0")}`
     : undefined;
@@ -81,14 +79,14 @@ export default async function RuCalendarDetailPage({ params }: Props) {
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
 
       <Link
-        href="/ru/calendar"
+        href="/calendar"
         className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors mb-3 py-1.5"
       >
-        ← Календарь ОАЭ
+        ← Calendar
       </Link>
 
       <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-1.5">
-        Календарь ОАЭ · {page.year}{monthLabel}
+        UAE Calendar · {page.year}{monthLabel}
       </p>
       <h1 className="text-[22px] font-bold text-gray-900 leading-snug mb-3">
         {page.title}
@@ -99,17 +97,17 @@ export default async function RuCalendarDetailPage({ params }: Props) {
 
       {page.officialSourceUrl && (
         <div className="flex items-center gap-2 mb-5 pl-3 border-l-2 border-stone-200">
-          <span className="text-[11px] font-medium text-gray-400">Источник:</span>
+          <span className="text-[11px] font-medium text-gray-400">Source:</span>
           <a
             href={page.officialSourceUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-[11px] font-medium text-brass hover:opacity-75 transition-opacity"
           >
-            Официальный источник ↗
+            Official source ↗
           </a>
           {page.lastVerifiedDate && (
-            <span className="text-[11px] text-gray-400">· проверено {page.lastVerifiedDate}</span>
+            <span className="text-[11px] text-gray-400">· verified {page.lastVerifiedDate}</span>
           )}
         </div>
       )}
@@ -117,18 +115,17 @@ export default async function RuCalendarDetailPage({ params }: Props) {
       {page.hasIslamicDates === 1 && (
         <div className="border border-amber-100 bg-amber-50 rounded-xl px-4 py-3 mb-4">
           <p className="text-[12px] text-amber-800 leading-snug">
-            Даты исламских праздников (Ид аль-Фитр, Ид аль-Адха, Рамадан) зависят от
-            официального решения властей ОАЭ по наблюдению луны и могут быть изменены.
-            Предварительные даты следует считать ориентировочными до официального
-            подтверждения.
+            Islamic holiday dates depend on official UAE moon-sighting announcements
+            and are subject to change. Dates shown are estimates until confirmed by
+            UAE authorities.
           </p>
         </div>
       )}
 
       <CalendarContextCta
-        locale="ru"
+        locale="en"
         contentType="calendar"
-        calendarBase="/ru/calendar"
+        calendarBase="/calendar"
         calendarMonth={calendarMonth}
       />
 
@@ -140,15 +137,12 @@ export default async function RuCalendarDetailPage({ params }: Props) {
         <div className="mb-5">
           <div className="w-5 h-0.5 bg-brass rounded-full mb-2" />
           <h2 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
-            Даты
+            Dates
           </h2>
           <ul className="space-y-1.5">
             {page.dates.map((item, i) => {
-              const style =
-                DATE_TYPE_STYLES_RU[item.type] ?? DATE_TYPE_STYLES_RU.other;
-              const badge = CONFIDENCE_BADGE_RU[item.confidence];
-              // label_ru preferred; label_en fallback for unlocalised date entries only
-              const label = item.label_ru || item.label_en;
+              const style = DATE_TYPE_STYLES[item.type] ?? DATE_TYPE_STYLES.other;
+              const badge = CONFIDENCE_BADGE[item.confidence];
               return (
                 <li
                   key={i}
@@ -159,7 +153,7 @@ export default async function RuCalendarDetailPage({ params }: Props) {
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className="text-[13px] font-medium text-gray-800 leading-snug">
-                      {label}
+                      {item.label_en}
                       {badge && (
                         <span className="ml-1.5 text-[10px] font-normal text-amber-600">
                           ({badge})
@@ -189,10 +183,11 @@ export default async function RuCalendarDetailPage({ params }: Props) {
 
       <div className="bg-navy rounded-2xl px-5 py-5">
         <p className="text-[14px] font-semibold text-white mb-1">
-          Планируете с учётом праздника или дедлайна?
+          Planning around a holiday or deadline?
         </p>
         <p className="text-[12px] text-white/60 mb-3">
-          Помогаем с расчётом сроков продления виз, подачей корпоративных заявок и разрешений.
+          We help with visa renewals, permit timing, and compliance deadlines around
+          UAE public holidays.
         </p>
         <a
           href={WHATSAPP_HREF}
@@ -200,7 +195,7 @@ export default async function RuCalendarDetailPage({ params }: Props) {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity py-2"
         >
-          Написать в WhatsApp →
+          Chat on WhatsApp →
         </a>
       </div>
 

@@ -10,9 +10,15 @@ const MONTHS_GENITIVE_RU = [
   "января","февраля","марта","апреля","мая","июня",
   "июля","августа","сентября","октября","ноября","декабря",
 ];
+// Nominative/accusative — used after "за" in CTA: "за май 2026"
+const MONTHS_NOMINATIVE_RU = [
+  "январь","февраль","март","апрель","май","июнь",
+  "июль","август","сентябрь","октябрь","ноябрь","декабрь",
+];
 const MONTHS_SHORT_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const MONTHS_SHORT_RU = ["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"];
 
+// Badge label: genitive ("мая 2026") or full EN ("May 2026")
 function monthDisplayName(isoMonth: string, locale: "en" | "ru"): string {
   const m = parseInt(isoMonth.slice(5, 7), 10) - 1;
   if (isNaN(m) || m < 0 || m > 11) return isoMonth;
@@ -20,6 +26,13 @@ function monthDisplayName(isoMonth: string, locale: "en" | "ru"): string {
   return locale === "ru"
     ? `${MONTHS_GENITIVE_RU[m]} ${year}`
     : `${MONTHS_FULL_EN[m]} ${year}`;
+}
+
+// CTA label: nominative after "за" ("за май 2026")
+function ctaMonthRu(isoMonth: string): string {
+  const m = parseInt(isoMonth.slice(5, 7), 10) - 1;
+  if (isNaN(m) || m < 0 || m > 11) return isoMonth;
+  return `${MONTHS_NOMINATIVE_RU[m]} ${isoMonth.slice(0, 4)}`;
 }
 
 function expandDateRange(start: string, end?: string): string[] {
@@ -68,11 +81,11 @@ export default function CalendarMiniPreview({
   if (range) {
     expandDateRange(range.start, range.end).forEach(iso => chips.push(formatChip(iso, locale)));
   } else if (dateItems) {
-    dateItems.slice(0, 5).forEach(item => chips.push(formatChip(item.date, locale)));
+    [...dateItems].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 5).forEach(item => chips.push(formatChip(item.date, locale)));
   }
 
   const ctaLabel = isRu
-    ? monthName ? `Открыть календарь за ${monthName}` : "Открыть календарь Дубая"
+    ? calendarMonth ? `Открыть календарь за ${ctaMonthRu(calendarMonth)}` : "Открыть календарь Дубая"
     : monthName ? `Open ${monthName} calendar` : "Open Dubai Calendar";
 
   return (

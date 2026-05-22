@@ -339,7 +339,7 @@ export default function RuHomePage() {
 
           {/* Dubai Life Setup */}
           <Link
-            href="/ru/guides"
+            href="/ru/life-setup"
             aria-labelledby="setup-card-heading-ru"
             className="relative block h-[162px] rounded-2xl overflow-hidden shadow-sm group"
           >
@@ -369,7 +369,7 @@ export default function RuHomePage() {
                 Первые 30 дней, дом и семья.
               </p>
               <span className="self-start text-[13px] font-semibold text-white bg-white/[.18] border border-white/[.25] px-2.5 py-0.5 rounded-lg">
-                Смотреть →
+                Открыть →
               </span>
             </div>
           </Link>

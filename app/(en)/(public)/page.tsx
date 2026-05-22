@@ -342,10 +342,11 @@ export default function HomePage() {
             </div>
           </Link>
 
-          {/* Dubai Life Setup — coming soon */}
-          <div
+          {/* Dubai Life Setup */}
+          <Link
+            href="/life-setup"
             aria-labelledby="setup-card-heading"
-            className="relative h-[162px] rounded-2xl overflow-hidden shadow-sm"
+            className="relative block h-[162px] rounded-2xl overflow-hidden shadow-sm group"
           >
             <Image
               src={IMG_JLT}
@@ -372,11 +373,11 @@ export default function HomePage() {
               <p className="text-[12px] text-white/80 leading-snug mb-3">
                 First 30 days, home and family.
               </p>
-              <span className="self-start text-[13px] font-semibold text-white/55 bg-white/[.12] border border-white/[.18] px-2.5 py-0.5 rounded-lg">
-                Coming soon
+              <span className="self-start text-[13px] font-semibold text-white bg-white/[.18] border border-white/[.25] px-2.5 py-0.5 rounded-lg">
+                Explore →
               </span>
             </div>
-          </div>
+          </Link>
 
         </div>
       </section>

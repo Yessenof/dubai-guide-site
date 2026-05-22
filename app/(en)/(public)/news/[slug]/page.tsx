@@ -3,17 +3,24 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getNewsPostBySlug } from "@/lib/db/news-events-calendar";
 import { newsRobots } from "@/lib/db/indexing";
-import CalendarContextCta from "@/components/calendar/CalendarContextCta";
+import CalendarMiniPreview from "@/components/calendar/CalendarMiniPreview";
 import MarkdownBody from "@/components/MarkdownBody";
+import DetailHero, { categoryImage } from "@/components/detail/DetailHero";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
+
+// Temporary: slug → calendar month for known date-based news until news_posts
+// has an explicit calendar_month field.
+const NEWS_CALENDAR_MONTH: Record<string, string> = {
+  "uae-eid-al-adha-2026-federal-holiday-long-break": "2026-05",
+  "uae-emiratisation-june-30-2026-deadline":          "2026-06",
+};
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-// Empty — DB tables have no content yet. Pages render on demand via SSR.
 export async function generateStaticParams() {
   return [];
 }
@@ -48,10 +55,16 @@ export default async function NewsDetailPage({ params }: Props) {
   const post = getNewsPostBySlug(slug, "en");
   if (!post) notFound();
 
-  // body is stored as Markdown in the DB — rendered by MarkdownBody below
   const categoryLabel =
     post.category.charAt(0).toUpperCase() +
     post.category.slice(1).replace(/-/g, " ");
+
+  const heroImage    = post.imagePath || categoryImage(post.category);
+  const heroAlt      = post.imageAlt  || post.title;
+  const eyebrow      = post.datePublished
+    ? `${categoryLabel} · ${post.datePublished}`
+    : categoryLabel;
+  const calendarMonth = NEWS_CALENDAR_MONTH[slug];
 
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
@@ -63,18 +76,14 @@ export default async function NewsDetailPage({ params }: Props) {
         ← UAE Updates
       </Link>
 
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-1.5">
-        {categoryLabel}{post.datePublished ? ` · ${post.datePublished}` : ""}
-      </p>
-      <h1 className="text-[22px] font-bold text-gray-900 leading-snug mb-3">
-        {post.title}
-      </h1>
+      <DetailHero eyebrow={eyebrow} title={post.title} image={heroImage} imageAlt={heroAlt} />
+
       <p className="text-[15px] text-gray-600 leading-[1.6] mb-4">
         {post.summary}
       </p>
 
       {post.sourceUrl && (
-        <div className="flex items-center gap-2 mb-6 pl-3 border-l-2 border-stone-200">
+        <div className="flex items-center gap-2 mb-5 pl-3 border-l-2 border-stone-200">
           <span className="text-[11px] font-medium text-gray-400">
             {SOURCE_LABELS[post.sourceLabel] ?? "Source"}:
           </span>
@@ -89,6 +98,8 @@ export default async function NewsDetailPage({ params }: Props) {
         </div>
       )}
 
+      <CalendarMiniPreview locale="en" calendarBase="/calendar" calendarMonth={calendarMonth} />
+
       {post.body && (
         <MarkdownBody content={post.body} className="mb-6" />
       )}
@@ -98,12 +109,6 @@ export default async function NewsDetailPage({ params }: Props) {
           Updated: {post.dateUpdated}
         </p>
       )}
-
-      <CalendarContextCta
-        locale="en"
-        contentType="news"
-        calendarBase="/calendar"
-      />
 
       {post.relatedGuideSlug && (
         <div className="border border-stone-200 rounded-xl px-4 py-3 mb-5">

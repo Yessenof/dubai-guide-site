@@ -6,17 +6,24 @@ import {
   type CalendarDateItem,
 } from "@/lib/db/news-events-calendar";
 import { calendarRobots } from "@/lib/db/indexing";
-import CalendarContextCta from "@/components/calendar/CalendarContextCta";
+import CalendarMiniPreview from "@/components/calendar/CalendarMiniPreview";
 import MarkdownBody from "@/components/MarkdownBody";
+import DetailHero from "@/components/detail/DetailHero";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
+
+const IMG_SKYLINE = "/images/hubs/dubai-skyline-downtown.webp";
+
+const MONTHS_EN = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December",
+];
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-// Empty — DB tables have no content yet. Pages render on demand via SSR.
 export async function generateStaticParams() {
   return [];
 }
@@ -64,16 +71,35 @@ const CONFIDENCE_BADGE: Partial<Record<CalendarDateItem["confidence"], string>> 
     subject_to_official_confirmation: "subject to confirmation",
   };
 
+// Resolve the best calendar month link:
+// - If page has a month field, use it.
+// - Else if all dates fall in one month, use that month.
+// - Else undefined (generic /calendar link).
+function resolveCalendarMonth(
+  year: number,
+  month: number | null,
+  dates: CalendarDateItem[],
+): string | undefined {
+  if (month) return `${year}-${String(month).padStart(2, "0")}`;
+  if (dates.length === 0) return undefined;
+  const months = [...new Set(dates.map(d => d.date.slice(0, 7)))];
+  return months.length === 1 ? months[0] : undefined;
+}
+
 export default async function CalendarDetailPage({ params }: Props) {
   const { slug } = await params;
   const page = getCalendarPageBySlug(slug, "en");
   if (!page) notFound();
 
-  // body is stored as Markdown in the DB — rendered by MarkdownBody below
-  const monthLabel = page.month ? ` · Month ${page.month}` : "";
-  const calendarMonth = page.month
-    ? `${page.year}-${String(page.month).padStart(2, "0")}`
-    : undefined;
+  const calendarMonth = resolveCalendarMonth(page.year, page.month, page.dates);
+
+  const monthLabel = page.month ? ` · ${MONTHS_EN[page.month - 1]}` : "";
+  const eyebrow    = `UAE Calendar · ${page.year}${monthLabel}`;
+  const heroImage  = page.imagePath || IMG_SKYLINE;
+  const heroAlt    = page.imageAlt  || page.title;
+
+  // yearBadge shown when there is no single-month target (yearly/multi-month pages)
+  const yearBadge  = calendarMonth ? undefined : String(page.year);
 
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
@@ -85,12 +111,8 @@ export default async function CalendarDetailPage({ params }: Props) {
         ← Calendar
       </Link>
 
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-1.5">
-        UAE Calendar · {page.year}{monthLabel}
-      </p>
-      <h1 className="text-[22px] font-bold text-gray-900 leading-snug mb-3">
-        {page.title}
-      </h1>
+      <DetailHero eyebrow={eyebrow} title={page.title} image={heroImage} imageAlt={heroAlt} />
+
       <p className="text-[15px] text-gray-600 leading-[1.6] mb-4">
         {page.summary}
       </p>
@@ -122,11 +144,12 @@ export default async function CalendarDetailPage({ params }: Props) {
         </div>
       )}
 
-      <CalendarContextCta
+      <CalendarMiniPreview
         locale="en"
-        contentType="calendar"
         calendarBase="/calendar"
         calendarMonth={calendarMonth}
+        dateItems={page.dates}
+        yearBadge={yearBadge}
       />
 
       {page.body && (

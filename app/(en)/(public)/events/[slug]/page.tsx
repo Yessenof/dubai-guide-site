@@ -3,8 +3,9 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getEventBySlug } from "@/lib/db/news-events-calendar";
 import { eventRobots } from "@/lib/db/indexing";
-import CalendarContextCta from "@/components/calendar/CalendarContextCta";
+import CalendarMiniPreview from "@/components/calendar/CalendarMiniPreview";
 import MarkdownBody from "@/components/MarkdownBody";
+import DetailHero, { categoryImage } from "@/components/detail/DetailHero";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -13,7 +14,6 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-// Empty — DB tables have no content yet. Pages render on demand via SSR.
 export async function generateStaticParams() {
   return [];
 }
@@ -48,7 +48,6 @@ export default async function EventDetailPage({ params }: Props) {
   const event = getEventBySlug(slug, "en");
   if (!event) notFound();
 
-  // body is stored as Markdown in the DB — rendered by MarkdownBody below
   const categoryLabel =
     event.category.charAt(0).toUpperCase() +
     event.category.slice(1).replace(/-/g, " ");
@@ -58,10 +57,13 @@ export default async function EventDetailPage({ params }: Props) {
     ? event.eventDateStart
     : `${event.eventDateStart} – ${event.eventDateEnd}`;
   const confidenceNotice = CONFIDENCE_NOTICES[event.dateConfidence];
-  // Extract YYYY-MM for calendar link if date is in ISO format
+
   const calendarMonth = /^\d{4}-\d{2}/.test(event.eventDateStart)
     ? event.eventDateStart.slice(0, 7)
     : undefined;
+
+  const heroImage = categoryImage(event.category);
+  const eyebrow   = `${categoryLabel} · ${dateDisplay}`;
 
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
@@ -73,12 +75,8 @@ export default async function EventDetailPage({ params }: Props) {
         ← Events
       </Link>
 
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-1.5">
-        {categoryLabel}{dateDisplay ? ` · ${dateDisplay}` : ""}
-      </p>
-      <h1 className="text-[22px] font-bold text-gray-900 leading-snug mb-3">
-        {event.title}
-      </h1>
+      <DetailHero eyebrow={eyebrow} title={event.title} image={heroImage} imageAlt={event.title} />
+
       <p className="text-[15px] text-gray-600 leading-[1.6] mb-4">
         {event.summary}
       </p>
@@ -105,13 +103,11 @@ export default async function EventDetailPage({ params }: Props) {
         </div>
       )}
 
-      <CalendarContextCta
+      <CalendarMiniPreview
         locale="en"
-        contentType="event"
         calendarBase="/calendar"
         calendarMonth={calendarMonth}
-        highlightStart={event.eventDateStart}
-        highlightEnd={event.eventDateEnd ?? undefined}
+        range={{ start: event.eventDateStart, end: event.eventDateEnd ?? undefined }}
       />
 
       {event.body && (

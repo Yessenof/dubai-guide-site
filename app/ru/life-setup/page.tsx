@@ -11,6 +11,15 @@ export const metadata: Metadata = {
   description:
     "Что подготовить до прилёта, что сделать в первую неделю, первый месяц и каждый год. Визы, компании, Ejari, семья и недвижимость — в правильном порядке.",
   robots: { index: true, follow: true },
+  openGraph: {
+    title:       "Переезд в Дубай — первые шаги и план действий | Guidex",
+    description: "Что подготовить до прилёта, что сделать в первую неделю, первый месяц и каждый год. Визы, компании, Ejari, семья и недвижимость — в правильном порядке.",
+    url:         `${BASE}/ru/life-setup`,
+    siteName:    "Guidex Consulting",
+    locale:      "ru_RU",
+    type:        "website",
+  },
+  twitter: { card: "summary" },
   alternates: {
     canonical: `${BASE}/ru/life-setup`,
     languages: {

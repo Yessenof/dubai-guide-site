@@ -308,7 +308,7 @@ export default function LifeSetupPage() {
                       <span className="flex-shrink-0 text-brass text-[13px] mt-0.5 leading-none">→</span>
                       <Link
                         href={task.href}
-                        className="text-[13px] text-navy hover:underline leading-snug"
+                        className="text-[13px] text-brass font-medium underline underline-offset-2 decoration-brass/30 hover:decoration-brass leading-snug transition-colors"
                       >
                         {task.label}
                       </Link>
@@ -379,7 +379,7 @@ export default function LifeSetupPage() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-[13px] text-navy hover:underline"
+                        className="text-[13px] text-brass font-medium underline underline-offset-2 decoration-brass/30 hover:decoration-brass transition-colors"
                       >
                         → {link.label}
                       </Link>

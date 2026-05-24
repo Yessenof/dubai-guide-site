@@ -5,6 +5,132 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-24 — Phase 6C-55B COMPLETE — Safe deploy rule documented
+
+Docs-only update following Phase 6C-55 P0 CSS incident. No code, no DB, no deploy. Updated docs/deployment-upcloud.md: "Pull code update and redeploy" section now shows mandatory pm2 stop → build → pm2 start sequence with full warning explaining the build race condition. Phase 4 annotated (no risk on first deploy when PM2 not yet running). Updated DECISIONS.md: new entry "Safe Production Deploy Sequence: Stop PM2 Before Build" with root cause, incident date, evidence (old CSS 500), acceptable downtime (~30s), future optional improvement (atomic directory swap), and alternatives rejected. Created PHASE_6C55B_SAFE_DEPLOY_RULE_SUMMARY.md. Commit recommended alongside memory files.
+
+---
+
+## 2026-05-24 — Phase 6C-55 COMPLETE — P0 CSS incident diagnosed and resolved
+
+Production site rendered without CSS on real devices for ~4 minutes during Phase 6C-54 nohup build. Root cause: Next.js Turbopack deleted old CSS hash (0i59pw~swdt7w.css) during compilation while PM2 still served HTML referencing it. Confirmed via Nginx access log (500 for old hash at 20:03:51). No Nginx proxy cache — Nginx is transparent reverse proxy. Current CSS (0gqktdxjmy9t5.css): 200, 67,846 bytes, text/css, Tailwind utilities confirmed. All 10 routes 200. PM2 PID 145929 online stable. Self-healed by pm2 restart already done in 6C-54 deploy — no additional rebuild needed. Report: PHASE_6C55_PRODUCTION_CSS_STATIC_ASSET_INCIDENT_REPORT.md.
+
+---
+
+## 2026-05-24 — Phase 6C-54 COMMITTED + DEPLOYED — Dubai Life Setup MVP live in production
+
+Commit e4ef907 pushed to origin/main. Production: git pull (fast-forward ac0e12f→e4ef907, 5 files), nohup build (88 pages 0 errors 28.2s), pm2 restart (PID 145929). First SSH build attempt failed (SSH timeout during TypeScript check) — resolved by nohup. Live QA: 13/13 routes 200, /life-setup lang=en robots=index,follow canonical correct, /ru/life-setup lang=ru robots=index,follow canonical correct no EN fallback, EN homepage → /life-setup "Explore →", RU homepage → /ru/life-setup "Открыть →". Deploy report: PHASE_6C54_DUBAI_LIFE_SETUP_MVP_DEPLOY_REPORT.md.
+
+---
+
+## 2026-05-22 — Phase 6C-54 COMPLETE — Dubai Life Setup MVP built — awaiting commit + deploy
+
+Created app/(en)/(public)/life-setup/page.tsx (EN hub, SSG) + app/ru/life-setup/page.tsx (RU hub, SSG). Fixed EN homepage card: div → Link, "Coming soon" → "Explore →". Fixed RU homepage card: href="/ru/guides" → href="/ru/life-setup", "Смотреть →" → "Открыть →". Content: 5 timeline stages (Before Arrival/Arrival Week/First 30 Days/First 90 Days/Annual) + 7 route cards (Family/Business Owner/Property Owner/Pet/Holiday Home/Investor/Renewal). All guide links verified against live published slugs. No DB records. No schema changes. No new components. TypeScript: 0 errors. Build: 88 pages 0 errors. Local QA: /life-setup 200 lang=en robots=index,follow; /ru/life-setup 200 lang=ru 0 EN fallback; EN homepage card → /life-setup; RU homepage card → /ru/life-setup. Source-risk: no unsupported claims; AED 2M backed by golden visa guide; authority pointers for uncovered topics. RU naturalness: natural editorial Russian, proper nouns preserved (Emirates ID, Ejari, Corporate Tax). All 10 existing key routes: 200, no regressions. Safe to commit. Report: PHASE_6C54_DUBAI_LIFE_SETUP_MVP_BUILD_REPORT.md.
+
+---
+
+## 2026-05-22 — Phase 6C-53 COMPLETE — Dubai Life Setup MVP product plan — Phase 6C-54 ready
+
+Planning-only phase. No code, no DB, no deploy. Produced: DUBAI_LIFE_SETUP_MVP_PRODUCT_PLAN.md (authoritative Phase 6C-54 build spec) + PHASE_6C53_SUMMARY.md. Key decisions: MVP = single hub page per locale (/life-setup + /ru/life-setup), all content hardcoded JSX (no DB records), no new components, homepage card fix included in scope (div → Link, "Coming soon" → "Explore →"), 4 code files total. Content: 5 timeline stages (Before Arrival/Days 0-7/30 Days/90 Days/Annual) + 7 route cards (Family/Business/Property/Pet/Holiday Home/Investor/Renewal), each with task lists linking to 17 existing published guides where applicable. Source risk table: P0 claims blocked for DHA/KHDA/RTA/MOCCAE/DED renewal fees until source ledgers exist. RU parity required at launch (not optional). Build: expect 88 pages. Full QA checklist in plan.
+
+---
+
+## 2026-05-22 — Phase 6C-52 COMPLETE — Eid news P1 copy hotfix — all process language removed
+
+Targeted DB hotfix on news_posts slug uae-eid-al-adha-2026-federal-holiday-long-break. Backup: guides.db.pre-eid-news-copy-hotfix-6c52-20260522-102055. Changes: EN body (2 replacements): removed "; verify before publish." from para 2 end + removed "All source URLs captured in the related source ledger. Recheck before publication." from source note. RU body (2 replacements): removed "; проверить перед публикацией." from para 2 end + removed "URL всех источников зафиксированы в источниковом реестре. Повторная проверка обязательна перед публикацией." from source note. EN length: 1918→1812. RU length: 2070→1933. 1 row updated. DB verification: 0 banned phrases, all required content present, 0 editorial --. Build: 86 pages 0 errors. PM2: online PID 133779. Live QA: 2/2 routes 200. All 6 banned phrases: 0 in live HTML. Factual scope unchanged: dates, sector distinction, DGHR/KHDA factual note preserved. ALL P0+P1 copy issues now resolved across all 12 audited routes. Report: PHASE_6C52_EID_NEWS_COPY_HOTFIX_REPORT.md. Next: Dubai Life Setup MVP.
+
+---
+
+## 2026-05-22 — Phase 6C-51 COMPLETE — Post-hotfix reading quality recheck — 10/12 PASS, 1 new P1
+
+Full reading quality review of all 12 live routes after Phase 6C-50 hotfix. No DB changes, no code changes, no deploy. Results: 10/12 routes PASS, 0 P0 issues. New P1 finding (not caught in Phase 6C-49): `/news/uae-eid-al-adha-2026-federal-holiday-long-break` EN+RU body contains "verify before publish", "source ledger", and "Recheck before publication" — editorial process instructions visible to public users. Proposed fix for Phase 6C-52: remove 2 clauses from EN body + 2 from RU body (news_posts table), no facts changed. Global checks: all 11 banned-phrase patterns = 0 across all 12 routes. Reading quality: all 6 page types well-structured, first paragraphs lead with key facts. P2 notes: Emiratisation news body verbose (scope caveat ×4, acceptable for compliance topic), Long Weekend sources section has bare URLs (acceptable, lower priority). Cleared for Dubai Life Setup MVP planning. Report: PHASE_6C51_POST_HOTFIX_COPY_RECHECK.md.
+
+---
+
+## 2026-05-22 — Phase 6C-50 COMPLETE — Production copy hotfix — all P0+P1 issues resolved
+
+Direct DB write to production. Backup: guides.db.pre-copy-hotfix-6c50-20260522-072104. Changes: Long Weekend en_notes+ru_notes (removed datesJson, may-2026-uae-calendar slug, --); Emiratisation calendar en_notes+ru_notes (removed "Calendar Item B"/"Пункт B", "2026-специфичным"); Long Weekend en_body (6 `--` patterns → 0 editorial --); Long Weekend ru_body (15 `--` patterns → 0 editorial --); Emiratisation news en_body (4 replacements: captured/Guidex jargon); Emiratisation news ru_body (5 replacements: захваченный/Guidex); Eid event en_body+ru_body (removed leading ---, fixed table note). All DB writes: 4 rows × 1 = 4 rows total (calendar_pages ×2, news_posts ×1, events ×1). Build: 86 pages 0 errors. PM2: online PID 131761. Live QA: 8/8 routes 200. Banned phrases: 0 in all live HTML. Factual scope unchanged (50+, no AED amounts, no June 30 for 20-49 band). Report: PHASE_6C50_PRODUCTION_COPY_HOTFIX_REPORT.md.
+
+---
+
+## 2026-05-22 — Phase 6C-49 COMPLETE — Live content copy audit — 4 P0 + 9 P1 issues documented
+
+Full audit of 8 live pages (2 news, 1 event, 3 calendar, 2 guide samples). URGENT P0 issues: Long Weekend `en_notes`/`ru_notes` contain `datesJson` (internal DB field name) and `may-2026-uae-calendar` (internal DB slug) — live now, readable by users. Emiratisation calendar `en_notes`/`ru_notes` contain "Calendar Item B" / "Пункт B" (internal editorial labels). Long Weekend `en_body` has 7× `--` double hyphens. P1: Emiratisation news body has "captured source" sourcing jargon + Guidex brand self-mentions in EN + RU. Eid event body starts with `---` (orphaned HR). Deliverables: `PUBLIC_COPY_POLISH_RULES.md` (10 permanent rules), `reviews/live-content-copy-audit.md`, `reviews/live-content-copy-polish-plan.md` (SQL-ready fix plan), 2 draft files corrected, `uae-long-weekends-2026-2027-copy-drift-note.md` (new). No DB writes, no code changes, no deploy. Phase 6C-50 DB hotfix pending approval. Report: `PHASE_6C49_LIVE_CONTENT_COPY_AUDIT_SUMMARY.md`.
+
+---
+
+## 2026-05-22 — Phase 6C-48 DEPLOYED — DetailHero + CalendarMiniPreview live on production
+
+Push: bc041a6 + ac0e12f → origin/main (2d2691e..ac0e12f). Production: git pull (9 files, Fast-forward) → npm run build (86 pages, 0 errors, 21.8s) → pm2 restart (online, PID 128615, 0 unstable restarts). Live QA: 19/19 routes 200. DetailHero gradient confirmed on all 5 tested EN detail pages. Preview targets: all 12 correct (Eid → ?month=2026-05, Emiratisation → ?month=2026-06, Long Weekend → /calendar generic + yearBadge "2026"). RU CTA: "Открыть календарь за май 2026" / "за июнь 2026" confirmed. RU badge: "мая 2026" / "июня 2026" (genitive, correct). May calendar chips: 23/25/26/27 (sorted). robots=index,follow on all 6 EN detail pages. lang=en/ru correct. Raw Markdown 0. Admin /admin/content → 307, /admin/login → 200. Homepage carousel link present (uae-eid-al-adha-2026). Deploy report: PHASE_6C48_DETAIL_HERO_AND_CALENDAR_PREVIEW_DEPLOY_REPORT.md.
+
+---
+
+## 2026-05-22 — Phase 6C-48B News calendar targeting corrected — all 12 detail pages month-specific
+
+News posts have no event date or calendar_month field — only datePublished. Added slug-based `NEWS_CALENDAR_MONTH` mapping in both news detail pages (EN + RU): `uae-eid-al-adha-2026-federal-holiday-long-break → 2026-05`, `uae-emiratisation-june-30-2026-deadline → 2026-06`. Mapping is temporary until news_posts gains explicit calendar_month column. CalendarMiniPreview now receives `calendarMonth` for these two slugs; unknown slugs remain generic. QA: TypeScript 0 errors, build 86 pages 0 errors, 18/18 routes 200 (added /calendar?month=2026-05, ?month=2026-06, RU variants). Exact targets verified: Eid news EN/RU → ?month=2026-05; Emiratisation news EN/RU → ?month=2026-06; events → from eventDateStart; calendar pages → month field or inferred. Long Weekend: generic /calendar, yearBadge "2026". No nested anchors confirmed. Robots index/follow preserved. RU lang=ru, no EN fallback. Raw Markdown 0. Report updated: PHASE_6C48_DETAIL_HERO_AND_CALENDAR_PREVIEW_REPORT.md. Pending: commit + deploy approval.
+
+---
+
+## 2026-05-22 — Phase 6C-48 Detail Hero and CalendarMiniPreview system complete — local, pending deploy
+
+Created 2 new components and modified 6 detail pages. `components/detail/DetailHero.tsx`: hero with bg image, gradient, eyebrow, h1 + `categoryImage()` helper (visa/living → JLT; company/tax/banking → DIFC; default → skyline). `components/calendar/CalendarMiniPreview.tsx`: whole-card `<Link>`, no nested `<a>`, supports `range` (events → individual day chips), `dateItems` (calendar pages → first 5 chips), `yearBadge` (yearly pages), locale-aware labels and date formatting. 6 pages modified: news EN+RU (generic preview, no calendarMonth — news lacks event date field), events EN+RU (calendarMonth from eventDateStart.slice(0,7), range chips), calendar EN+RU (smart month resolution: month field → direct; month=null + all dates in one month → infer; month=null + multi-month → undefined → yearBadge). CalendarContextCta removed from all 6 pages (kept in codebase). QA: TypeScript 0 errors, build 86 pages 0 errors, 16/16 routes 200. Eid event EN: skyline hero, /calendar?month=2026-05, May 25-29 chips. Eid RU: /ru/calendar?month=2026-05, Russian chips. Emiratisation: /calendar?month=2026-06 (smart resolution from single-date datesJson). Long Weekend: generic /calendar, yearBadge "2026", Jan 1/Mar 19/Dec 1/Dec 2 chips. No nested links. Source trust blocks present. Published pages remain robots=index,follow. Report: `docs/content-drafts/PHASE_6C48_DETAIL_HERO_AND_CALENDAR_PREVIEW_REPORT.md`. Pending: owner commit + deploy approval.
+
+---
+
+## 2026-05-22 — Phase 6C-47B Production build complete — homepage carousel updated
+
+`npm run build && pm2 restart guidex-production` on production (root@85.9.203.69, /var/www/guidex). No code changes, no DB changes, no pull needed (production already at `2d2691e`). Build: 86 pages, 0 errors, TypeScript 0 errors. PM2 online (PID 126356). Homepage now statically pre-rendered with current DB state: Long Weekend (`uae-long-weekends-2026-2027`) confirmed at carousel slot 5 in both EN and RU from production HTML. Carousel order: Eid event → Eid news → Emiratisation news → Emiratisation calendar → Long Weekend → May calendar → Employment guide (7 slides). All detail page checks pass: EN lang=en, RU lang=ru, both robots=index follow, raw Markdown 0, fahr.gov.ae source trust block present, RU no EN fallback. Calendar integration: no Eid Al Adha duplication in May calendar (0 matches for uae-long-weekends in May calendar HTML). Admin routes: login 200, /admin/content + /admin/guides redirect to login with callbackUrl. 14 routes 200 total. Report: `docs/content-drafts/PHASE_6C47B_LONG_WEEKEND_BUILD_REFRESH_REPORT.md`. Pending: GSC indexing (2 URLs).
+
+---
+
+## 2026-05-21 — Phase 6C-47 Long Weekend Calendar Reference imported to production — build pending
+
+Production import of `uae-long-weekends-2026-2027` as a `calendar_pages` yearly reference page. `scripts/long-weekend-calendar-import.ts` run on production server (root@85.9.203.69, /var/www/guidex). Pre-import backup: `/var/backups/guidex/guides.db.pre-longweekend-6c47-20260521-192515`. Record id=1f06eca2-676c-4ca6-a22a-a9d124fa44ba: calendarType=yearly, month=null, year=2026, ruPublished=1, hasIslamicDates=0, featuredHomepage=0. 4 datesJson items: New Year Jan 1, Eid Al Fitr Mar 19-22, Commemoration Day Dec 1, National Day Dec 2-3. Eid Al Adha (May 25-29) excluded — confirmed by pre-flight guard and post-import DB assertion (9/9 pass). 9 routes 200 (EN+RU detail, EN+RU list, 5 regression routes). Raw Markdown 0. Source trust visible. CalendarContextCta links to /calendar. No Eid Al Adha duplication in May calendar. Carousel NOT yet visible on production homepage — root cause: homepage is a synchronous (non-async) React Server Component with no `dynamic` or `revalidate` export; Next.js pre-renders it at build time; new DB records do not invalidate the pre-built HTML. Fix requires `npm run build && pm2 restart guidex-production` (no code changes). Report: `docs/content-drafts/PHASE_6C47_LONG_WEEKEND_PRODUCTION_IMPORT_REPORT.md`. No code modified, no schema changes. Pending: production build approval + GSC indexing (2 URLs).
+
+---
+
+## 2026-05-21 — Phase 6C-46 Long Weekend Calendar Reference imported locally — ready for production
+
+Local import of `uae-long-weekends-2026-2027` as a `calendar_pages` yearly reference page. `scripts/long-weekend-calendar-import.ts` created and run. Record id=a6d4d59b-d09a-4282-a908-1f87ba9fab51: calendarType=yearly, month=null, year=2026, ruPublished=1, hasIslamicDates=0, featuredHomepage=0. 4 datesJson items: New Year Jan 1, Eid Al Fitr Mar 19-22, Commemoration Day Dec 1, National Day Dec 2-3. Eid Al Adha (May 25-29) excluded — confirmed by pre-flight guard and post-import DB assertion. All 9 assertions pass. 6 routes 200 (EN+RU detail, calendar list, homepage). Raw Markdown 0 in both EN and RU. Source trust block visible. CalendarContextCta links to /calendar (month=null behavior). Carousel now 7 slides: Long Weekend at slot 5 (all calPages enter pool). No Eid Al Adha duplication in May calendar view confirmed. QA report: `docs/content-drafts/PHASE_6C46_LONG_WEEKEND_LOCAL_IMPORT_QA.md`. No code modified, no commit, no push, no deploy.
+
+---
+
+## 2026-05-21 — Phase 6C-45 Long Weekend Calendar Reference import path confirmed — planning only
+
+Code inspection of calendar_pages schema, detail page renderer, list page, admin form, and validation confirmed: calendar_pages model is fully suitable; no pre-import code or schema changes needed. calendarType must be `"yearly"` (not "annual" — invalid; corrected from Phase 6C-43 decision doc). month: null is safe across all rendering paths. Eid Al Adha excluded from datesJson (already in may-2026-uae-calendar — duplicate CalendarGrid risk). 4 safe datesJson candidates: New Year Jan 1, Eid Al Fitr Mar 19-22, Commemoration Day Dec 1, National Day Dec 2-3. D-6 resolved by inspection; D-1–D-5 require owner approval. Deliverables: `docs/content-drafts/reviews/uae-long-weekends-calendar-reference-import-map.md`, `docs/content-drafts/PHASE_6C45_SUMMARY.md`, CONTENT_PRODUCTION_PRIORITY_QUEUE.md + FULL_CALENDAR_AND_NEWS_RADAR_MATRIX.md updated. No code deployed, no content published, no DB changes.
+
+---
+
+## 2026-05-21 — Phase 6C-44 DEPLOYED — commit 171dac1 pushed and live on guidex-consulting.ae
+
+`git push origin main` (`78015d4..171dac1`). Production: `git pull` → `npm run build` (86 pages, 0 errors, TypeScript 0 errors) → `pm2 restart guidex-production` (online, PID 121704). Live QA: all 16 routes 200; EN carousel 7 slides confirmed (Eid event → Eid news → Emiratisation news → Emiratisation calendar → May calendar → 2 guides); RU carousel 7 slides with RU CTAs ("К событию →", "Читать →", "Открыть календарь →", "Читать гайд →"); This Month: 2 deduplicated items on both EN and RU; Monday-first (Mo–Su / Пн–Вс) confirmed; 0 mock refs; all detail pages lang+robots correct; no raw Markdown; RU pages fully in Russian; admin routes protected (307 when logged out). Deploy report: `docs/content-drafts/PHASE_6C44_HOMEPAGE_CAROUSEL_AND_CALENDAR_AGENDA_DEPLOY_REPORT.md`.
+
+---
+
+## 2026-05-21 — Phase 6C-44 Homepage carousel priority + calendar agenda UX polish complete
+
+Unified `CarouselSlide` export type added to `components/FeaturedSlider.tsx` — replaces `GuideListItem[]`; every slide carries its own `bgImage` field. Priority carousel builder added to both `app/(en)/(public)/page.tsx` and `app/ru/page.tsx`: events → news → calPages → GUIDE_PRIORITY_SLUGS → other guides. Image fallback map: events/calendar → dubai-skyline-downtown.webp; news → difc-business-bay-glass-towers.webp; visa/living guides → jlt-dubai-towers-sunset-reflection.webp; company/hiring guides → difc. `buildThisMonthItems()` now deduplicates by `detail_url` (seenKeys Set) — 4 Eid items collapse to 1 row "Federal Eid holiday"; events also checked against seenKeys to prevent double Eid row. Calendar date items now pass `detail_url` as `href`. `CalendarGrid.tsx` GroupedAgendaCard compact mode: uses `itemShortLabel` (prefers `short_label_en/ru` from DB), caps sub-items at 3 with "+N more" overflow. CTA labels in `lib/calendar-helpers.ts` updated: "Details →"→"See holiday →", "View event →"→"Event details →", "Open →"→"Open calendar →", "Read guide →"→"Deadline details →"/"Tax deadline →". TypeScript: 0 errors. Build: 86 pages, 0 errors. Route QA: 16 routes all 200. Content QA: Eid event slide 1, both news in slides 2–3, both calendar pages in slides 4–5, This Month 2 deduplicated items, Monday-first headers, no mock data, no raw Markdown, lang attrs correct, RU short labels confirmed. Report: `docs/content-drafts/PHASE_6C44_HOMEPAGE_CAROUSEL_AND_CALENDAR_AGENDA_REPORT.md`. Not committed, not deployed — pending owner approval.
+
+---
+
+## 2026-05-21 — Phase 6C-43B Owner visual review checklist complete
+
+`docs/content-drafts/OWNER_PUBLIC_SURFACE_REVIEW_CHECKLIST.md` created: 9 sections with exact production URLs (guidex-consulting.ae), visual QA checkboxes per section, 9-question Long Weekend import decision table (D-1 through D-6 blocking import, D-7 through D-9 optional), blocking decision summary. `docs/content-drafts/PHASE_6C43B_SUMMARY.md` created. No code changes, no DB changes, no commit.
+
+---
+
+## 2026-05-21 — Phase 6C-43 Content production queue and radar matrix update complete
+
+`docs/content-drafts/CONTENT_PRODUCTION_PRIORITY_QUEUE.md` updated: Long Weekend marked owner_review_ready, import_path_pending, DO NOT IMPORT gate added (P2-09 entry with 6 owner decisions). `docs/content-drafts/FULL_CALENDAR_AND_NEWS_RADAR_MATRIX.md` updated: VIRAL-01 summary and detail rows reflect import_path_pending status, Phase 6C-43. `docs/content-drafts/PHASE_6C43_SUMMARY.md` created.
+
+---
+
+## 2026-05-21 — Phase 6C-40A Emergency public rendering and calendar UX fix complete
+
+`components/MarkdownBody.tsx` created — minimal server-compatible Markdown renderer (h2/h3/h4, **bold**, pipe tables, bullet lists, HR skip), zero external deps. Applied to all 6 detail page routes (EN + RU: events, news, calendar). Raw `####`, `**bold**`, `|table|`, `---` no longer visible on live pages. `CalendarContextCta` extended with `highlightStart`/`highlightEnd` props — renders navy date-pill strip for event date ranges; event detail pages pass `eventDateStart`/`eventDateEnd`. `CalendarGrid.tsx`: (1) Monday-first headers (`["Mo","Tu","We","Th","Fr","Sa","Su"]`, shift formula `(rawFirstDay+6)%7`); (2) `expandRanges()` — multi-day items now appear on every date in range (Eid May 25–29 shows on all 5 days); (3) `groupByDetailUrl()` + `GroupedAgendaCard/Row` — 4 Eid cards collapsed into 1 grouped card. TypeScript: 0 errors. QA: 10 routes checked, all 200, all detail pages render proper HTML headings, no raw Markdown, `robots: index, follow` confirmed. Report: `docs/content-drafts/PHASE_6C40A_PUBLIC_RENDERING_AND_CALENDAR_UX_FIX_REPORT.md`.
+
+---
+
 ## 2026-05-20 — Phase 6C-40 VIRAL-01 UAE Long Weekends 2026-2027 source-safe draft package complete
 
 File-based content package created for UAE public holidays 2026-2027 — no code, no DB, no import, no publish, no push, no deploy, no commit of draft content. Files created: (1) `docs/content-drafts/source-ledgers/uae-long-weekends-2026-2027-sources.md` — 6 sources; 3 FAHR URLs verified 200 (New Year 2026, Eid Al Fitr 2026, Eid Al Adha 2026); MoHRE Arabic captured; Cabinet Res 27/2024 via FAHR text (direct URL 403); u.ae framework 200; full 2026+2027 holiday status tables; confirmed/fixed/monitoring categories. (2) `docs/content-drafts/guides/uae-long-weekends-2026-2027.md` — full EN+RU guide draft; 5 key facts tables; 6 body sections; SEO title EN 60 chars, RU 62 chars; meta EN 158 chars, RU 155 chars; 6 EN + 5 RU keywords; RAG/AEO summary EN+RU; 7 blocked claim categories absent from publishable copy; calendar connection planning (4 confirmed + 6 monitoring items, no import); lifecycle: evergreen_seasonal; 5 EN + 5 RU social hooks; WhatsApp CTA EN+RU; no em dashes in publishable copy; вы throughout RU. (3) `docs/content-drafts/reviews/uae-long-weekends-2026-2027-owner-review.md` — 13-dimension readiness score (all Pass except content type mapping flagged); 11 confirmed claims; 7 monitoring items with unlock conditions; 7 blocked claim categories; pre-import checklist; Decision 1 (import path — recommend news_posts); Decision 2 (update cadence — recommend per-FAHR-announcement); recheck schedule. (4) `docs/content-drafts/PHASE_6C40_SUMMARY.md` — full phase summary. Surgical updates: FULL_CALENDAR_AND_NEWS_RADAR_MATRIX (VIRAL-01 → owner_review_ready, SOC-01 → owner_review_ready), CONTENT_PRODUCTION_PRIORITY_QUEUE (timestamp), SOURCE_RESEARCH_QUEUE (Phase 6C-40 capture summary), CONTENT_AUDIT_MATRIX (scope 10→13, File 13 detailed audit added). Verdict: owner_review_ready with two decisions pending. Recommend import before June 10, 2026.

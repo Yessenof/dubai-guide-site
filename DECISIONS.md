@@ -156,6 +156,33 @@ Major decisions, why each was made, and what was rejected. Treat these as locked
 
 ---
 
+## Safe Production Deploy Sequence: Stop PM2 Before Build
+
+**Decision:** For all production code deploys that run `npm run build` on the live server, PM2 must be stopped before the build starts and started again only after the build completes.
+
+```bash
+pm2 stop guidex-production
+nohup npm run build > /tmp/guidex-build.log 2>&1
+pm2 start guidex-production
+```
+
+**Why chosen:**
+Next.js (Turbopack) deletes old static asset files (CSS, JS) and writes new ones during the compilation phase — before static page generation finishes. If PM2 is serving traffic while the build runs, it will serve old HTML that references the now-deleted old asset hashes. Users will receive 500/404 for CSS → unstyled page.
+
+**Root cause incident (Phase 6C-55, 2026-05-23):** nohup build ran while PM2 was live. Turbopack deleted `0i59pw~swdt7w.css` during compilation. PM2 continued serving HTML referencing that hash for ~4 minutes. Real user devices saw unstyled HTML. Confirmed in Nginx access log: `GET /_next/static/chunks/0i59pw~swdt7w.css → 500`.
+
+**Acceptable downtime:** ~30 seconds during compilation on this server. Acceptable for a low-traffic content site.
+
+**User impact of the old (broken) approach:** CSS 500 → unstyled page for users during the build window. Hard refresh fixes affected clients after PM2 is restarted with the correct build.
+
+**Future optional improvement (not required now):** Build to a staging `.next.new/` directory, then atomically swap `mv .next .next.old && mv .next.new .next && pm2 restart`. Zero downtime, no race condition. Not implemented — complexity not justified yet.
+
+**Alternatives rejected:**
+- **nohup build with PM2 running:** Creates the race condition described above. Rejected after Phase 6C-55 incident.
+- **pm2 restart after nohup build completes:** Also safe if PM2 is not touching .next/ during build, but the deletion of old static files happens early in compilation — overlap window exists. Stop is safer than restart-after.
+
+---
+
 ## proxy.ts Instead of middleware.ts (Next.js 16)
 
 **Decision:** Route protection file is named `proxy.ts`, not `middleware.ts`.

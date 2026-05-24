@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-20 (Phase 6C-40 — VIRAL-01 UAE Long Weekends 2026-2027 draft package complete; owner_review_ready)
+Last updated: 2026-05-24 (Phase 6C-55B COMPLETE — Safe deploy rule documented; Phase 6C-54 live on production; /life-setup + /ru/life-setup deployed at e4ef907; PM2 PID 145929 online; P0 CSS incident resolved)
 
 WHAT TO ATTACH
 --------------
@@ -40,20 +40,142 @@ SQLite. No external services.
 Stack: Next.js 16.2.3 (App Router, Turbopack) + TypeScript + Tailwind CSS v4 +
 better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
 
-CURRENT STATE (as of 2026-05-20) — PHASE 6C-40 VIRAL-01 DRAFT PACKAGE COMPLETE
+CURRENT STATE (as of 2026-05-24) — PHASE 6C-55B COMPLETE — SAFE DEPLOY RULE DOCUMENTED — LIFE SETUP LIVE
 -----------------------------------------------------------------
 Site is fully live on guidex-consulting.ae with HTTPS.
-17 guides published. Production DB: 17 guides / 115 steps + Eid (news+event+calendar) + Emiratisation (news+calendar).
+17 guides published. Production DB: 17 guides / 115 steps + Eid (news+event+calendar) + Emiratisation (news+calendar) + Long Weekend (calendar).
+
+PHASE 6C-54 — DUBAI LIFE SETUP MVP BUILD — COMPLETE LOCAL — 2026-05-22:
+  New: app/(en)/(public)/life-setup/page.tsx — EN hub (SSG, hardcoded JSX, no DB)
+  New: app/ru/life-setup/page.tsx — RU hub (SSG, full natural Russian, no EN fallback)
+  Modified: app/(en)/(public)/page.tsx — Life Setup card: div→Link, "Coming soon"→"Explore →"
+  Modified: app/ru/page.tsx — Life Setup card: href="/ru/guides"→"/ru/life-setup", badge "Открыть →"
+  Content: 5 timeline stages + 7 route cards per locale. Links to all 17 published guides where applicable.
+  TypeScript: 0 errors. Build: 88 pages 0 errors. Local QA: all routes 200, no regressions.
+  RU fix: RU homepage Life Setup card no longer points to /ru/guides (was a bug).
+  Source-risk: no unsupported claims. AED 2M backed by golden visa guide. Authority pointers for uncovered topics.
+  PENDING: owner commit + deploy (git pull on server → npm run build → pm2 restart).
+  Report: docs/content-drafts/PHASE_6C54_DUBAI_LIFE_SETUP_MVP_BUILD_REPORT.md
+
+PHASE 6C-53 — DUBAI LIFE SETUP MVP PRODUCT PLAN — COMPLETE — 2026-05-22:
+  MVP = /life-setup (EN) + /ru/life-setup (RU) — single hub pages per locale, SSG, hardcoded JSX.
+  Content: 5 timeline stages + 7 route cards. Links to 17 existing published guides.
+  Homepage card fix included: div → Link, "Coming soon" → "Explore →" (EN) / "Открыть →" (RU).
+  4 code files total: 2 new pages + 2 1-line homepage edits. No new DB records. No schema.
+  Source risk table: P0 blocks on DHA/KHDA/RTA/MOCCAE/DED-renewal fees — safe framing required.
+  Full QA checklist, RU copy rules, SEO meta, mobile layout spec all in plan.
+  Build target: 88 pages (86 existing + 2 new). No regressions expected.
+  Report: docs/content-drafts/DUBAI_LIFE_SETUP_MVP_PRODUCT_PLAN.md
+  Summary: docs/content-drafts/PHASE_6C53_SUMMARY.md
+  NEXT: Phase 6C-54 — build /life-setup hub page (code + copy + deploy).
+
+PHASE 6C-52 — EID NEWS P1 COPY HOTFIX — COMPLETE — 2026-05-22:
+  Removed 4 process phrases from news_posts EN+RU body (slug: uae-eid-al-adha-2026-federal-holiday-long-break).
+  EN: removed "; verify before publish." + "All source URLs captured in the related source ledger. Recheck before publication."
+  RU: removed "; проверить перед публикацией." + "URL всех источников зафиксированы в источниковом реестре. Повторная проверка обязательна перед публикацией."
+  Build: 86 pages 0 errors. PM2: online PID 133779. 2/2 routes 200. 0 banned phrases in live HTML.
+  No facts changed. No code changes. Report: docs/content-drafts/PHASE_6C52_EID_NEWS_COPY_HOTFIX_REPORT.md
+  ALL P0 + P1 copy issues now resolved across all 12 audited live routes.
+  NEXT: Dubai Life Setup MVP planning and build.
+
+PHASE 6C-51 — POST-HOTFIX READING QUALITY RECHECK — COMPLETE — 2026-05-22:
+  12 routes checked. 10/12 PASS. 0 P0 issues anywhere. Cleared for Dubai Life Setup MVP planning.
+  New P1 finding: Eid news body had process language — fixed in Phase 6C-52.
+  P2 notes (non-urgent): Emiratisation news body verbose; Long Weekend sources bare URLs.
+  Report: docs/content-drafts/PHASE_6C51_POST_HOTFIX_COPY_RECHECK.md
+
+PHASE 6C-50 — PRODUCTION COPY HOTFIX — COMPLETE — 2026-05-22:
+  All P0 + P1 copy issues fixed on production DB directly.
+  Backup: /var/backups/guidex/guides.db.pre-copy-hotfix-6c50-20260522-072104
+  Fixed: Long Weekend notes (datesJson/slug removed), Emiratisation calendar notes (Item B removed),
+    Long Weekend body (0 editorial -- EN, 0 editorial -- RU), Emiratisation news body (captured/Guidex gone),
+    Eid event body (leading --- removed, table note fixed)
+  Build: 86 pages 0 errors. PM2: online PID 131761. 8/8 routes 200. 0 banned phrases in live HTML.
+  No code changes. No schema changes. No new content.
+  Report: docs/content-drafts/PHASE_6C50_PRODUCTION_COPY_HOTFIX_REPORT.md
+
+PHASE 6C-49 — LIVE CONTENT COPY AUDIT — COMPLETE — 2026-05-22:
+  Permanent rules: docs/content-drafts/PUBLIC_COPY_POLISH_RULES.md
+  Per-route audit: docs/content-drafts/reviews/live-content-copy-audit.md
+
+PHASE 6C-48 — DEPLOYED — 2026-05-22 (bc041a6 + ac0e12f):
+  DetailHero + CalendarMiniPreview on all 6 detail pages (news EN+RU, events EN+RU, calendar EN+RU)
+  RU CTA fix: "за май 2026" / "за июнь 2026" (nominative). Badge: "мая/июня 2026" (genitive).
+  Chips sorted chronologically. 12/12 preview targets verified live.
+  19/19 routes 200. 86 pages, 0 errors. PM2 PID 128615. No regressions.
+  Deploy report: docs/content-drafts/PHASE_6C48_DETAIL_HERO_AND_CALENDAR_PREVIEW_DEPLOY_REPORT.md
+
+PHASE 6C-48B — NEWS CALENDAR TARGETING CORRECTION — LOCAL COMPLETE — 2026-05-22:
+  Added NEWS_CALENDAR_MONTH slug map to EN+RU news pages (temp until news_posts gets calendar_month field):
+    uae-eid-al-adha-2026-federal-holiday-long-break -> 2026-05
+    uae-emiratisation-june-30-2026-deadline -> 2026-06
+  All 12 detail pages now link to exact month. TypeScript: 0 errors. 18/18 routes 200.
+  Report updated: docs/content-drafts/PHASE_6C48_DETAIL_HERO_AND_CALENDAR_PREVIEW_REPORT.md
+  PENDING: commit + deploy approval (git status: 2 new untracked + 6 modified)
+
+PHASE 6C-48 — DETAIL HERO + CALENDARMINIPREVIEW — LOCAL COMPLETE — 2026-05-22:
+  New: components/detail/DetailHero.tsx (hero image + gradient + eyebrow + h1 + categoryImage() helper)
+  New: components/calendar/CalendarMiniPreview.tsx (whole-card Link, chips, month badge, locale-aware)
+  Modified: 6 detail pages — news EN+RU, events EN+RU, calendar EN+RU
+  Smart month resolution for calendar pages: month field / infer from datesJson / yearBadge fallback
+  Eid event -> /calendar?month=2026-05, May 25-29 chips | Emiratisation -> /calendar?month=2026-06
+  Long Weekend -> /calendar generic, yearBadge "2026", 4 date chips
+
+PHASE 6C-47B — PRODUCTION BUILD COMPLETE — carousel live — 2026-05-22:
+  npm run build && pm2 restart guidex-production (no code changes, no DB changes)
+  Build: 86 pages, 0 errors, TypeScript 0 errors. PM2 online (PID 126356).
+  Long Weekend confirmed at carousel slot 5 in EN + RU production homepage HTML.
+  Carousel: 7 slides -- Eid event -> Eid news -> Emiratisation news -> Emiratisation cal -> Long Weekend -> May cal -> Employment guide
+  14 routes 200. All detail page QA passes. No Eid duplication in May calendar.
+  Report: docs/content-drafts/PHASE_6C47B_LONG_WEEKEND_BUILD_REFRESH_REPORT.md
+  PENDING: GSC indexing (2 URLs: EN + RU) -- owner action
+
+PHASE 6C-47 — LONG WEEKEND PRODUCTION IMPORT — COMPLETE — 2026-05-21:
+  Record: id=1f06eca2-676c-4ca6-a22a-a9d124fa44ba | slug=uae-long-weekends-2026-2027
+  calendarType=yearly | month=null | year=2026 | status=published (production)
+  9/9 DB assertions pass. Production backup: /var/backups/guidex/guides.db.pre-longweekend-6c47-20260521-192515
+  Report: docs/content-drafts/PHASE_6C47_LONG_WEEKEND_PRODUCTION_IMPORT_REPORT.md
+
+PHASE 6C-46 — LONG WEEKEND LOCAL IMPORT AND QA — COMPLETE (committed as 2d2691e):
+  Record: id=a6d4d59b-d09a-4282-a908-1f87ba9fab51 | local only
+  Script: scripts/long-weekend-calendar-import.ts (committed 2d2691e)
+  QA report: docs/content-drafts/PHASE_6C46_LONG_WEEKEND_LOCAL_IMPORT_QA.md (committed 2d2691e)
+
+PHASE 6C-45 — LONG WEEKEND CALENDAR REFERENCE IMPORT PLAN — COMPLETE (no code, no deploy):
+  Verdict: GO — calendar_pages model is fully suitable; no pre-import changes needed
+  calendarType: "yearly" (CORRECTION from Phase 6C-43 — "annual" is not a valid value)
+  month: null is safe across all rendering paths (confirmed by code inspection)
+  datesJson: 4 items — Eid Al Adha excluded (already in may-2026-uae-calendar → duplicate risk)
+  Safe datesJson: New Year Jan 1, Eid Al Fitr Mar 19-22, Commemoration Day Dec 1, National Day Dec 2-3
+  D-6 resolved by inspection. D-1–D-5 require owner approval before import.
+  Import map: docs/content-drafts/reviews/uae-long-weekends-calendar-reference-import-map.md
+  Phase summary: docs/content-drafts/PHASE_6C45_SUMMARY.md
+  Queue updated: VIRAL-01 → import_path_decision_complete, preferred_path_calendar_reference
+  SEO window: Before June 15, 2026 (post-Eid wave); secondary Oct-Nov 2026
+
+PHASE 6C-44 — HOMEPAGE CAROUSEL PRIORITY + AGENDA UX — DEPLOYED (commit 171dac1):
+  Deployed files:
+    components/FeaturedSlider.tsx     ← CarouselSlide export type; every slide has bgImage
+    app/(en)/(public)/page.tsx        ← priority carousel builder; deduplicated This Month
+    app/ru/page.tsx                   ← same changes for RU locale; RU CTAs polished
+    lib/calendar-helpers.ts           ← CTA defaults: "See holiday →", "Event details →", "Open calendar →"
+    components/calendar/CalendarGrid.tsx  ← compact mode: itemShortLabel, 3-item cap, "+N more"
+  Build: 86 pages 0 errors. PM2: online. All 16 routes 200. Full live QA pass.
+  Carousel order: Eid event → Eid news → Emiratisation news → Emiratisation calendar → May 2026 calendar → 2 guides
+  This Month: 2 deduplicated items (EN: "Federal Eid holiday" + "Emiratisation deadline (50+)")
+  RU CTAs: "К событию →" / "Читать →" / "Открыть календарь →" / "Читать гайд →"
+  Deploy report: docs/content-drafts/PHASE_6C44_HOMEPAGE_CAROUSEL_AND_CALENDAR_AGENDA_DEPLOY_REPORT.md
+
+PHASE 6C-43B — OWNER VISUAL REVIEW CHECKLIST — COMPLETE (no code changes):
+  docs/content-drafts/OWNER_PUBLIC_SURFACE_REVIEW_CHECKLIST.md — 9 sections, exact production URLs, 9-question Long Weekend decision table (D-1 through D-9)
+  VIRAL-01 Long Weekend import: D-6 now resolved; D-1–D-5 still require owner decision
 
 PHASE 6C-40 VIRAL-01 — UAE LONG WEEKENDS 2026-2027 DRAFT PACKAGE — COMPLETE (file-based, not yet imported):
   Source ledger: docs/content-drafts/source-ledgers/uae-long-weekends-2026-2027-sources.md
   Guide draft:   docs/content-drafts/guides/uae-long-weekends-2026-2027.md
   Owner review:  docs/content-drafts/reviews/uae-long-weekends-2026-2027-owner-review.md
-  Status:        owner_review_ready with 2 decisions pending
-  Decision 1:    Import path — news_posts recommended (guide table has no steps structure)
-  Decision 2:    Update cadence — per-FAHR-announcement recommended
-  Publish target: before June 10, 2026 (Islamic New Year traffic window)
-  Item B HOLD:   20-49 employee band June 30 Emiratisation deadline still held — source not confirmed
+  Import map:    docs/content-drafts/reviews/uae-long-weekends-calendar-reference-import-map.md (Phase 6C-45)
+  Status:        import_path_decision_complete — 5 blocking decisions (D-1 through D-5) required from owner
   Report:        docs/content-drafts/PHASE_6C40_SUMMARY.md
 
 PHASE 6C-39 EMIRATISATION A-ONLY PRODUCTION DB DEPLOY — COMPLETE:
@@ -404,7 +526,9 @@ DEPLOYMENT FACTS (locked)
 - Secrets: out-of-band, never committed
 - DB backup script: ./scripts/db-backup-from-upcloud.sh
 - DB restore script: ./scripts/db-restore-to-upcloud.sh (requires typed YES)
-- Deploy: git pull on server + npm run build + pm2 restart guidex-production
+- Deploy: git pull on server → pm2 stop guidex-production → npm run build → pm2 start guidex-production
+  CRITICAL: STOP PM2 BEFORE BUILD. Building while PM2 serves traffic causes CSS hash mismatch (P0 incident 6C-55).
+  Use nohup for build in case SSH times out: nohup npm run build > /tmp/guidex-build.log 2>&1
 - PM2 config: ecosystem.config.js — name: guidex-production, PORT 3000
 - Server: root@85.9.203.69, app at /var/www/guidex, Node via NodeSource (not nvm)
 - Nginx reverse proxy to 127.0.0.1:3000, Certbot SSL, UFW: SSH+80+443

@@ -1,6 +1,6 @@
 # UpCloud VPS Deployment — Guidex Consulting
 
-Last updated: 2026-04-29
+Last updated: 2026-05-24
 
 Authoritative deployment runbook for the UpCloud production server.
 Reference this any time you need to deploy, restart, recover, or reprovision the app.
@@ -189,6 +189,7 @@ cd /var/www/guidex
 
 # Build production bundle
 # NEXT_PUBLIC_SITE_URL is baked at build time — .env.local must be correct first
+# First deploy: PM2 is not running yet, so no race condition — plain build is safe here
 npm run build
 
 # Start with PM2 using ecosystem config
@@ -347,13 +348,30 @@ pm2 restart guidex-production --update-env
 
 ### Pull code update and redeploy
 
+**MANDATORY safe deploy sequence — do NOT run `npm run build` while PM2 is serving traffic.**
+
+Reason: Next.js deletes old static asset hashes (CSS/JS) during the compilation phase of the new build. If PM2 serves old HTML referencing those deleted hashes, users receive 500 for CSS → unstyled page. This is the Phase 6C-55 P0 incident root cause.
+
 ```bash
 ssh root@85.9.203.69
 cd /var/www/guidex
 git pull origin main
-npm ci
-npm run build
-pm2 restart guidex-production --update-env
+npm ci  # if package-lock.json changed; otherwise skip
+pm2 stop guidex-production          # stop BEFORE build — prevents CSS hash mismatch
+nohup npm run build > /tmp/guidex-build.log 2>&1  # nohup in case SSH times out
+# wait for build to complete — check: tail /tmp/guidex-build.log
+pm2 start guidex-production         # start AFTER build completes
+pm2 status                          # confirm online
+```
+
+The site will be unavailable for ~30 seconds during the compilation phase. Acceptable for a low-traffic content site.
+
+**Do not use `nohup npm run build &` while PM2 is running** — the race condition window where PM2 serves stale HTML against already-deleted CSS is the exact failure mode of Phase 6C-55.
+
+After restart, verify:
+```bash
+curl -s -o /dev/null -w "%{http_code}" https://guidex-consulting.ae/
+# must return 200
 ```
 
 ### Check app logs

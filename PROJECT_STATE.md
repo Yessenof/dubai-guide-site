@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-20 (Phase 6C-40 — VIRAL-01 UAE Long Weekends 2026-2027 source-safe draft package complete; 3 files created; owner_review_ready with 2 decisions pending; no code/DB/import/commit of draft content)
+Last updated: 2026-05-24 (Phase 6C-55B COMPLETE — Safe deploy rule documented after P0 CSS incident; DECISIONS.md + deployment-upcloud.md updated; Phase 6C-54 committed e4ef907 + deployed to production; /life-setup + /ru/life-setup live; PM2 PID 145929 online; next: commit memory + docs files)
 
 ---
 
@@ -220,8 +220,8 @@ Group pages live:
 | DNS A record | @ + www → 85.9.203.69 (updated at Tasjeel 2026-04-29) |
 | Smoke test | 9/9 HTTPS routes 200 ✅, HTTP→HTTPS 301 ✅ |
 | GitHub | dd2ab89 — up to date (code); DB content added to production directly via script, not committed |
-| Production DB | 2 news posts + 1 event + 2 calendar pages + 17 guides |
-| Production DB backup | /var/backups/guidex/guides.db.pre-emiratisation-6c39-20260520-225341 |
+| Production DB | 2 news posts + 1 event + 3 calendar pages + 17 guides |
+| Production DB backup | /var/backups/guidex/guides.db.pre-longweekend-6c47-20260521-192515 |
 | Swap | 2 GB swapfile (persistent via /etc/fstab) |
 
 **Previous host:** Cloudways (165.245.187.15) — decommissioned after migration.
@@ -230,13 +230,58 @@ Group pages live:
 
 ## Current Next Step
 
-**Phase 6C-39 — Emiratisation A-only production DB deploy — complete (2026-05-20).**
+**Phase 6C-49 — COMPLETE — Live content copy audit — 2026-05-22.**
 
-Emiratisation news + Calendar Item A (50+ employees) live on production. All 4 routes 200, `robots: index, follow`. Content safety confirmed. Item B (20-49 band) held — not imported.
+Full audit of 8 live pages. 4 URGENT (P0) issues found and documented — all involve internal language exposed publicly in `calendar_pages.en_notes` / `ru_notes` fields, plus `--` double hyphens in Long Weekend body. 9 P1 issues in Emiratisation news (Guidex brand, "captured source" jargon) and Eid event (leading `---`).
 
-**Next action: VIRAL-01 — UAE Long Weekend Guide 2026–2027.** Highest SEO ROI of remaining content queue. Evergreen. No time-pressure.
+Deliverables written:
+- `docs/content-drafts/PUBLIC_COPY_POLISH_RULES.md` — 10 permanent rules
+- `docs/content-drafts/reviews/live-content-copy-audit.md` — per-route with exact correction SQL
+- `docs/content-drafts/reviews/live-content-copy-polish-plan.md` — prioritized DB write plan
+- `docs/content-drafts/news/uae-emiratisation-june-30-2026-deadline.md` — draft body corrected
+- `docs/content-drafts/calendar/uae-emiratisation-june-30-2026-reminder.md` — correction note added
+- `docs/content-drafts/calendar/uae-long-weekends-2026-2027-copy-drift-note.md` — new drift note with corrected SQL
 
-**TAX-01 archive action:** On 2026-07-10 — set `noindex=1` on Emiratisation news post, add archive note referencing TAX-04 (post-deadline follow-up). Calendar reminder can remain public (no expiry).
+**Phase 6C-50 — COMPLETE — production DB copy hotfix applied — 2026-05-22.**
+
+All P0 + P1 issues fixed directly on production DB. Build 86 pages 0 errors. PM2 PID 131761. 8/8 routes 200. Report: `PHASE_6C50_PRODUCTION_COPY_HOTFIX_REPORT.md`.
+
+**Phase 6C-48 — DEPLOYED — DetailHero + CalendarMiniPreview live on production — 2026-05-22.**
+
+Push: bc041a6 + ac0e12f → origin/main. Production: git pull (9 files) → npm run build (86 pages, 0 errors, 21.8s) → pm2 restart (online, PID 128615). Live QA: 19/19 routes 200. Deploy report: PHASE_6C48_DETAIL_HERO_AND_CALENDAR_PREVIEW_DEPLOY_REPORT.md.
+
+**Phase 6C-47 — PRODUCTION IMPORT COMPLETE — uae-long-weekends-2026-2027 — 2026-05-21.**
+
+Record id=1f06eca2-676c-4ca6-a22a-a9d124fa44ba, status=published on production, calendarType=yearly, month=null, year=2026.
+datesJson: 4 items (New Year Jan 1, Eid Al Fitr Mar 19-22, Commemoration Day Dec 1, National Day Dec 2-3).
+Eid Al Adha excluded from datesJson (already in may-2026-uae-calendar). 9/9 DB assertions pass.
+Production backup: /var/backups/guidex/guides.db.pre-longweekend-6c47-20260521-192515
+Report: docs/content-drafts/PHASE_6C47_LONG_WEEKEND_PRODUCTION_IMPORT_REPORT.md
+
+**Phase 6C-46 — LOCAL IMPORT COMPLETE — 2026-05-21.**
+
+Record id=a6d4d59b-d09a-4282-a908-1f87ba9fab51, status=published locally, calendarType=yearly, month=null, year=2026.
+Script: scripts/long-weekend-calendar-import.ts (committed as 2d2691e).
+QA report: docs/content-drafts/PHASE_6C46_LONG_WEEKEND_LOCAL_IMPORT_QA.md (committed as 2d2691e).
+
+**Phase 6C-45 — COMPLETE — planning only, no deploy, no content published — 2026-05-21.**
+
+VIRAL-01 Long Weekend Calendar Reference import path confirmed via code inspection:
+- calendar_pages model is fully suitable; no code or schema changes needed
+- calendarType must be `"yearly"` (not "annual" — invalid value; corrected from Phase 6C-43)
+- month: null is safe across all rendering paths (detail page, list page, CalendarContextCta)
+- datesJson: 4 items — Eid Al Adha EXCLUDED (already in may-2026-uae-calendar)
+- D-6 resolved by code inspection; D-1–D-5 require owner approval before import
+
+Import map: `docs/content-drafts/reviews/uae-long-weekends-calendar-reference-import-map.md`
+Phase summary: `docs/content-drafts/PHASE_6C45_SUMMARY.md`
+Queue updated: VIRAL-01 → import_path_decision_complete, preferred_path_calendar_reference
+
+**Phase 6C-44 — DEPLOYED — commit 171dac1 — pushed and live on guidex-consulting.ae — 2026-05-21.**
+
+Production build: 86 pages, 0 errors. PM2: online. All 16 routes 200. Full live QA pass.
+
+**TAX-01 archive action:** On 2026-07-10 — set `noindex=1` on Emiratisation news post, add archive note referencing TAX-04. Calendar reminder can remain public (no expiry).
 
 **TAX-01 status (Phase 6C-36):**
 - `docs/content-drafts/news/uae-emiratisation-june-30-2026-deadline.md` — **owner_review_ready** (June 30 for 50+ only; 20-49 softened to verify-with-MoHRE)

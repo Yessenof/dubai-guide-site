@@ -7,6 +7,7 @@ import {
 } from "@/lib/db/news-events-calendar";
 import { calendarRobots } from "@/lib/db/indexing";
 import CalendarMiniPreview from "@/components/calendar/CalendarMiniPreview";
+import CalendarBriefSection from "@/components/calendar/CalendarBriefSection";
 import MarkdownBody from "@/components/MarkdownBody";
 import DetailHero from "@/components/detail/DetailHero";
 
@@ -196,6 +197,8 @@ export default async function RuCalendarDetailPage({ params }: Props) {
           </ul>
         </div>
       )}
+
+      <CalendarBriefSection items={page.dates} locale="ru" />
 
       {page.notes && (
         <p className="text-[12px] text-gray-500 leading-snug mb-5 border-l-2 border-stone-200 pl-3">

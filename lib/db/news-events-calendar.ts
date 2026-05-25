@@ -29,6 +29,27 @@ export interface CalendarDateItem {
   type:       "public-holiday" | "important-date" | "deadline" | "other";
   confidence: "confirmed" | "expected" | "subject_to_official_confirmation";
   source?:    string;   // URL, optional
+  // Optional indexed brief fields — additive, backward compatible
+  brief_en?:        string;
+  brief_ru?:        string;
+  who_for_en?:      string;
+  who_for_ru?:      string;
+  what_to_do_en?:   string;
+  what_to_do_ru?:   string;
+  source_label_en?: string;
+  source_label_ru?: string;
+  source_url?:      string;
+  source_status?:   "confirmed" | "expected" | "monitoring";
+  cta_type?:        "view_details" | "read_guide" | "open_event" | "open_source" | "add_calendar" | "ask_guidex";
+  cta_url?:         string;
+  cta_label_en?:    string;
+  cta_label_ru?:    string;
+  location_en?:     string;
+  location_ru?:     string;
+  risk_level?:      "low" | "medium" | "high";
+  lifecycle?:       string;
+  noindex_after?:   string;
+  archive_action?:  string;
 }
 
 function parseDatesJson(raw: string): CalendarDateItem[] {

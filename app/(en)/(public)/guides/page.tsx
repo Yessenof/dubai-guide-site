@@ -1,3 +1,4 @@
+import Link from "next/link";
 import TopicCard from "@/components/TopicCard";
 import { getAllPublishedGuides, type GuideListItem } from "@/lib/db/reader";
 import { REDIRECT_SLUGS, GUIDE_GROUPS } from "@/lib/guide-groups";
@@ -60,9 +61,19 @@ export default function GuidesPage() {
   return (
     <div className="max-w-2xl mx-auto px-5 py-10">
 
-      <h1 className="text-[26px] font-bold text-gray-900 mb-8">
+      <h1 className="text-[26px] font-bold text-gray-900 mb-5">
         All guides
       </h1>
+
+      <div className="mb-8 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5">
+        <p className="text-[13px] font-semibold text-gray-800 mb-0.5">Not sure where to start?</p>
+        <p className="text-[13px] text-gray-600 mb-2">
+          Use Dubai Life Setup to see what to prepare before arrival, during the first week, and through your first year.
+        </p>
+        <Link href="/life-setup" className="text-[13px] font-semibold text-brass hover:underline">
+          Open Life Setup →
+        </Link>
+      </div>
 
       <div className="space-y-10">
         {Object.entries(grouped).map(([cat, items]) => (

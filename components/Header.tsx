@@ -8,6 +8,7 @@ import { pushEvent } from "@/lib/gtm";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
 
 const EN_NAV = [
+  { label: "Life Setup",     href: "/life-setup" },
   { label: "Find My Route",  href: "/find-my-visa" },
   { label: "Visas",          href: "/visas" },
   { label: "Company Setup",  href: "/company-setup" },
@@ -15,6 +16,7 @@ const EN_NAV = [
 ];
 
 const RU_NAV = [
+  { label: "Переезд",          href: "/ru/life-setup" },
   { label: "Найти маршрут",    href: "/ru/find-my-visa" },
   { label: "Визы",             href: "/ru/visas" },
   { label: "Компания",          href: "/ru/company-setup" },

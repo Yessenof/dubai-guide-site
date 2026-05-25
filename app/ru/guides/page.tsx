@@ -1,3 +1,4 @@
+import Link from "next/link";
 import TopicCard from "@/components/TopicCard";
 import { getAllPublishedGuides, getRuPublishedGuidesSlugs } from "@/lib/db/reader";
 import { REDIRECT_SLUGS } from "@/lib/guide-groups";
@@ -76,9 +77,19 @@ export default function RuGuidesPage() {
   return (
     <div className="max-w-2xl mx-auto px-5 py-10">
 
-      <h1 className="text-[26px] font-bold text-gray-900 mb-8">
+      <h1 className="text-[26px] font-bold text-gray-900 mb-5">
         Все гайды
       </h1>
+
+      <div className="mb-8 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5">
+        <p className="text-[13px] font-semibold text-gray-800 mb-0.5">Не знаете, с чего начать?</p>
+        <p className="text-[13px] text-gray-600 mb-2">
+          Откройте план первых шагов в Дубае: что подготовить до прилёта, что сделать в первую неделю и что не забыть позже.
+        </p>
+        <Link href="/ru/life-setup" className="text-[13px] font-semibold text-brass hover:underline">
+          Открыть план →
+        </Link>
+      </div>
 
       <div className="space-y-10">
         {Object.entries(grouped).map(([cat, items]) => (

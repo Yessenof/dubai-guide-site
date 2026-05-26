@@ -75,16 +75,20 @@ const CONFIDENCE_BADGE: Partial<Record<CalendarDateItem["confidence"], string>> 
 // Resolve the best calendar month link:
 // - If page has a month field, use it.
 // - Else if all dates fall in one month, use that month.
-// - Else undefined (generic /calendar link).
+// - Else if page is yearly overview, return undefined (generic link).
+// - Else use earliest date month (multi-month compliance/event pages).
 function resolveCalendarMonth(
   year: number,
   month: number | null,
   dates: CalendarDateItem[],
+  calendarType?: string,
 ): string | undefined {
   if (month) return `${year}-${String(month).padStart(2, "0")}`;
   if (dates.length === 0) return undefined;
-  const months = [...new Set(dates.map(d => d.date.slice(0, 7)))];
-  return months.length === 1 ? months[0] : undefined;
+  const months = [...new Set(dates.map(d => d.date.slice(0, 7)))].sort();
+  if (months.length === 1) return months[0];
+  if (calendarType === "yearly") return undefined;
+  return months[0];
 }
 
 export default async function CalendarDetailPage({ params }: Props) {
@@ -92,7 +96,7 @@ export default async function CalendarDetailPage({ params }: Props) {
   const page = getCalendarPageBySlug(slug, "en");
   if (!page) notFound();
 
-  const calendarMonth = resolveCalendarMonth(page.year, page.month, page.dates);
+  const calendarMonth = resolveCalendarMonth(page.year, page.month, page.dates, page.calendarType);
 
   const monthLabel = page.month ? ` · ${MONTHS_EN[page.month - 1]}` : "";
   const eyebrow    = `UAE Calendar · ${page.year}${monthLabel}`;
@@ -167,16 +171,17 @@ export default async function CalendarDetailPage({ params }: Props) {
             {page.dates.map((item, i) => {
               const style = DATE_TYPE_STYLES[item.type] ?? DATE_TYPE_STYLES.other;
               const badge = CONFIDENCE_BADGE[item.confidence];
+              const hasBrief = !!item.brief_en;
               return (
                 <li
                   key={i}
-                  className="flex items-start gap-3 border border-stone-100 rounded-xl px-3 py-2.5 bg-stone-50/50"
+                  className="flex items-start gap-3 border border-stone-100 rounded-xl px-3 py-3 bg-stone-50/50"
                 >
-                  <span className="flex-shrink-0 text-[12px] font-medium text-gray-500 tabular-nums w-[88px] pt-0.5">
+                  <span className="flex-shrink-0 text-[12px] font-semibold text-gray-500 tabular-nums w-[88px] pt-0.5">
                     {item.date}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-medium text-gray-800 leading-snug">
+                    <p className="text-[14px] font-semibold text-gray-900 leading-snug">
                       {item.label_en}
                       {badge && (
                         <span className="ml-1.5 text-[10px] font-normal text-amber-600">
@@ -184,13 +189,20 @@ export default async function CalendarDetailPage({ params }: Props) {
                         </span>
                       )}
                     </p>
-                    {style.label && (
-                      <span
-                        className={`inline-block mt-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded border ${style.pill}`}
-                      >
-                        {style.label}
-                      </span>
-                    )}
+                    <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                      {style.label && (
+                        <span
+                          className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${style.pill}`}
+                        >
+                          {style.label}
+                        </span>
+                      )}
+                      {hasBrief && (
+                        <span className="text-[10px] font-medium text-navy/60 border border-navy/20 px-1.5 py-0.5 rounded">
+                          notes ↓
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </li>
               );

@@ -128,9 +128,12 @@ const CTA_RU: Record<string, string> = {
 };
 
 export function itemCtaLabel(item: CalendarDateItemExtended, locale: "en" | "ru"): string {
-  // Custom CTA overrides type-based default
+  // Custom CTA overrides everything
   if (locale === "ru" && item.custom_cta_ru) return item.custom_cta_ru;
   if (locale === "en" && item.custom_cta_en) return item.custom_cta_en;
+  // Brief-aware: indexed brief content exists — use actionable label
+  if (locale === "ru" && item.brief_ru) return "Показать детали →";
+  if (locale === "en" && item.brief_en) return "Show details →";
   const cat = itemCategoryType(item);
   return (locale === "ru" ? CTA_RU[cat] : CTA_EN[cat]) ?? (locale === "ru" ? "Подробнее →" : "Details →");
 }

@@ -77,11 +77,14 @@ function resolveCalendarMonth(
   year: number,
   month: number | null,
   dates: CalendarDateItem[],
+  calendarType?: string,
 ): string | undefined {
   if (month) return `${year}-${String(month).padStart(2, "0")}`;
   if (dates.length === 0) return undefined;
-  const months = [...new Set(dates.map(d => d.date.slice(0, 7)))];
-  return months.length === 1 ? months[0] : undefined;
+  const months = [...new Set(dates.map(d => d.date.slice(0, 7)))].sort();
+  if (months.length === 1) return months[0];
+  if (calendarType === "yearly") return undefined;
+  return months[0];
 }
 
 export default async function RuCalendarDetailPage({ params }: Props) {
@@ -89,7 +92,7 @@ export default async function RuCalendarDetailPage({ params }: Props) {
   const page = getCalendarPageBySlug(slug, "ru");
   if (!page) notFound();
 
-  const calendarMonth = resolveCalendarMonth(page.year, page.month, page.dates);
+  const calendarMonth = resolveCalendarMonth(page.year, page.month, page.dates, page.calendarType);
 
   const monthLabel = page.month ? ` · ${MONTHS_RU_NOM[page.month - 1]}` : "";
   const eyebrow    = `Календарь ОАЭ · ${page.year}${monthLabel}`;
@@ -166,16 +169,17 @@ export default async function RuCalendarDetailPage({ params }: Props) {
                 DATE_TYPE_STYLES_RU[item.type] ?? DATE_TYPE_STYLES_RU.other;
               const badge = CONFIDENCE_BADGE_RU[item.confidence];
               const label = item.label_ru || item.label_en;
+              const hasBrief = !!item.brief_ru;
               return (
                 <li
                   key={i}
-                  className="flex items-start gap-3 border border-stone-100 rounded-xl px-3 py-2.5 bg-stone-50/50"
+                  className="flex items-start gap-3 border border-stone-100 rounded-xl px-3 py-3 bg-stone-50/50"
                 >
-                  <span className="flex-shrink-0 text-[12px] font-medium text-gray-500 tabular-nums w-[88px] pt-0.5">
+                  <span className="flex-shrink-0 text-[12px] font-semibold text-gray-500 tabular-nums w-[88px] pt-0.5">
                     {item.date}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-medium text-gray-800 leading-snug">
+                    <p className="text-[14px] font-semibold text-gray-900 leading-snug">
                       {label}
                       {badge && (
                         <span className="ml-1.5 text-[10px] font-normal text-amber-600">
@@ -183,13 +187,20 @@ export default async function RuCalendarDetailPage({ params }: Props) {
                         </span>
                       )}
                     </p>
-                    {style.label && (
-                      <span
-                        className={`inline-block mt-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded border ${style.pill}`}
-                      >
-                        {style.label}
-                      </span>
-                    )}
+                    <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                      {style.label && (
+                        <span
+                          className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${style.pill}`}
+                        >
+                          {style.label}
+                        </span>
+                      )}
+                      {hasBrief && (
+                        <span className="text-[10px] font-medium text-navy/60 border border-navy/20 px-1.5 py-0.5 rounded">
+                          детали ↓
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </li>
               );

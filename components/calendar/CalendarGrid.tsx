@@ -760,14 +760,15 @@ function AgendaCard({
     confidenceIsStrong = true;
   }
 
-  const isExternal = item.is_external === true;
+  const isExternalItem = item.is_external === true;
+  const ctaUrlStr = item.cta_url as string | undefined;
+  const externalCtaHref = !item.detail_url && ctaUrlStr?.startsWith("http") ? ctaUrlStr : null;
   const href = item.detail_url
-    ? isExternal
+    ? isExternalItem
       ? item.detail_url
-      : isRu
-      ? `/ru${item.detail_url}`
-      : item.detail_url
-    : null;
+      : isRu ? `/ru${item.detail_url}` : item.detail_url
+    : externalCtaHref;
+  const useExternal = isExternalItem || !!externalCtaHref;
 
   return (
     <div className="border border-stone-100 rounded-xl px-4 py-3 bg-white">
@@ -806,20 +807,19 @@ function AgendaCard({
 
       {/* CTA */}
       {href && (
-        isExternal ? (
+        useExternal ? (
           <a
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-brass hover:opacity-75 transition-opacity"
+            className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity"
           >
-            {cta}
-            <span className="text-[11px] text-gray-400" aria-hidden="true">↗</span>
+            {cta} ↗
           </a>
         ) : (
           <Link
             href={href}
-            className="text-[14px] font-semibold text-brass hover:opacity-75 transition-opacity"
+            className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity"
           >
             {cta}
           </Link>
@@ -850,14 +850,15 @@ function GroupedAgendaCard({
   const color = itemColor(primary);
   const badge = itemBadgeLabel(primary, locale);
   const cta = itemCtaLabel(primary, locale);
-  const isExternal = primary.is_external === true;
+  const isExternalItem = primary.is_external === true;
+  const primaryCtaUrl = primary.cta_url as string | undefined;
+  const externalCtaHref = !primary.detail_url && primaryCtaUrl?.startsWith("http") ? primaryCtaUrl : null;
   const href = primary.detail_url
-    ? isExternal
+    ? isExternalItem
       ? primary.detail_url
-      : isRu
-      ? `/ru${primary.detail_url}`
-      : primary.detail_url
-    : null;
+      : isRu ? `/ru${primary.detail_url}` : primary.detail_url
+    : externalCtaHref;
+  const useExternal = isExternalItem || !!externalCtaHref;
 
   // Date range: span from earliest start to latest end
   const allStarts = items.map((i) => i.date);
@@ -906,20 +907,19 @@ function GroupedAgendaCard({
         )}
       </div>
       {href && (
-        isExternal ? (
+        useExternal ? (
           <a
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-brass hover:opacity-75 transition-opacity"
+            className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity"
           >
-            {cta}
-            <span className="text-[11px] text-gray-400" aria-hidden="true">↗</span>
+            {cta} ↗
           </a>
         ) : (
           <Link
             href={href}
-            className="text-[14px] font-semibold text-brass hover:opacity-75 transition-opacity"
+            className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity"
           >
             {cta}
           </Link>
@@ -948,14 +948,15 @@ function GroupedAgendaRow({
   const color = itemColor(primary);
   const badge = itemBadgeLabel(primary, locale);
   const cta = itemCtaLabel(primary, locale);
-  const isExternal = primary.is_external === true;
+  const isExternalItem2 = primary.is_external === true;
+  const primaryCtaUrl2 = primary.cta_url as string | undefined;
+  const externalCtaHref2 = !primary.detail_url && primaryCtaUrl2?.startsWith("http") ? primaryCtaUrl2 : null;
   const href = primary.detail_url
-    ? isExternal
+    ? isExternalItem2
       ? primary.detail_url
-      : isRu
-      ? `/ru${primary.detail_url}`
-      : primary.detail_url
-    : null;
+      : isRu ? `/ru${primary.detail_url}` : primary.detail_url
+    : externalCtaHref2;
+  const useExternal2 = isExternalItem2 || !!externalCtaHref2;
 
   const allStarts = items.map((i) => i.date);
   const allEnds = items.map((i) => i.period_end ?? i.date);
@@ -969,7 +970,7 @@ function GroupedAgendaRow({
   return (
     <div className="flex items-start gap-3 border border-stone-100 rounded-xl px-3.5 py-3 bg-stone-50/50 hover:bg-stone-50 transition-colors">
       {/* Date range */}
-      <span className="text-[11px] text-gray-500 tabular-nums flex-shrink-0 w-[52px] pt-0.5 leading-snug">
+      <span className="text-[12px] font-semibold text-gray-500 tabular-nums flex-shrink-0 w-[52px] pt-0.5 leading-snug">
         {rangeLabel}
       </span>
       {/* Badge */}
@@ -981,34 +982,33 @@ function GroupedAgendaRow({
       </span>
       {/* Sub-items + CTA */}
       <div className="flex-1 min-w-0">
-        <div className="space-y-0.5 mb-1">
+        <div className="space-y-0.5 mb-1.5">
           {sorted.map((item, i) => {
             const start = formatShortDate(item.date, locale);
             const end = item.period_end ? formatShortDate(item.period_end, locale) : null;
             const dateStr = end && end !== start ? `${start} – ${end}` : start;
             return (
-              <p key={i} className="text-[12px] text-gray-600 leading-snug">
-                <span className="text-gray-400">{dateStr}:</span>{" "}
+              <p key={i} className="text-[13px] font-medium text-gray-800 leading-snug">
+                <span className="text-gray-400 text-[12px] font-normal">{dateStr}:</span>{" "}
                 {itemLabel(item, locale)}
               </p>
             );
           })}
         </div>
         {href && (
-          isExternal ? (
+          useExternal2 ? (
             <a
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity mt-1"
+              className="inline-flex items-center gap-1 text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity"
             >
-              {cta}
-              <span className="text-[10px] text-gray-400" aria-hidden="true">↗</span>
+              {cta} ↗
             </a>
           ) : (
             <Link
               href={href}
-              className="text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity mt-1 block"
+              className="inline-flex items-center gap-1 text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity"
             >
               {cta}
             </Link>
@@ -1033,22 +1033,22 @@ function AgendaRow({
   const badge = itemBadgeLabel(item, locale);
   const label = itemLabel(item, locale);
   const cta = itemCtaLabel(item, locale);
-  const isExternal = item.is_external === true;
-
+  const isExternalItem = item.is_external === true;
+  const ctaUrlStr = item.cta_url as string | undefined;
+  const externalCtaHref = !item.detail_url && ctaUrlStr?.startsWith("http") ? ctaUrlStr : null;
   const href = item.detail_url
-    ? isExternal
+    ? isExternalItem
       ? item.detail_url
-      : isRu
-      ? `/ru${item.detail_url}`
-      : item.detail_url
-    : null;
+      : isRu ? `/ru${item.detail_url}` : item.detail_url
+    : externalCtaHref;
+  const useExternal = isExternalItem || !!externalCtaHref;
 
   const dateLabel = formatShortDate(item.date, locale);
 
   return (
     <div className="flex items-start gap-3 border border-stone-100 rounded-xl px-3.5 py-3 bg-stone-50/50 hover:bg-stone-50 transition-colors">
       {/* Date */}
-      <span className="text-[12px] text-gray-500 tabular-nums flex-shrink-0 w-[52px] pt-0.5">
+      <span className="text-[12px] font-semibold text-gray-500 tabular-nums flex-shrink-0 w-[52px] pt-0.5">
         {dateLabel}
       </span>
       {/* Badge */}
@@ -1060,24 +1060,23 @@ function AgendaRow({
       </span>
       {/* Title + CTA */}
       <div className="flex-1 min-w-0">
-        <p className="text-[13px] font-medium text-gray-800 leading-snug">
+        <p className="text-[14px] font-semibold text-gray-900 leading-snug">
           {label}
         </p>
         {href && (
-          isExternal ? (
+          useExternal ? (
             <a
               href={href}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity mt-1"
             >
-              {cta}
-              <span className="text-[10px] text-gray-400" aria-hidden="true">↗</span>
+              {cta} ↗
             </a>
           ) : (
             <Link
               href={href}
-              className="text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity mt-1 block"
+              className="inline-flex items-center gap-1 text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity mt-1"
             >
               {cta}
             </Link>

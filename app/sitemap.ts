@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { getAllPublishedGuides, getRuPublishedGuidesSlugs } from "@/lib/db/reader";
+import { getPublishedCalendarPages } from "@/lib/db/news-events-calendar";
 
 // Variant slugs are redirected to group hub pages — exclude from sitemap.
 const REDIRECT_SLUGS = new Set([
@@ -53,6 +54,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const ruSlugs = getRuPublishedGuidesSlugs()
     .filter((s) => !REDIRECT_SLUGS.has(s));
 
+  const enCalendarSlugs = getPublishedCalendarPages("en").map((p) => p.slug);
+  const ruCalendarSlugs = getPublishedCalendarPages("ru").map((p) => p.slug);
+
   const enGuideEntries = enSlugs.map((slug) => ({
     url:             `${BASE_URL}/guides/${slug}`,
     lastModified:    new Date(),
@@ -65,6 +69,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified:    new Date(),
     changeFrequency: "monthly" as const,
     priority:        0.8,
+  }));
+
+  const enCalendarEntries = enCalendarSlugs.map((slug) => ({
+    url:             `${BASE_URL}/calendar/${slug}`,
+    lastModified:    new Date(),
+    changeFrequency: "weekly" as const,
+    priority:        0.7,
+  }));
+
+  const ruCalendarEntries = ruCalendarSlugs.map((slug) => ({
+    url:             `${BASE_URL}/ru/calendar/${slug}`,
+    lastModified:    new Date(),
+    changeFrequency: "weekly" as const,
+    priority:        0.7,
   }));
 
   const enStaticEntries = EN_STATIC.map(({ path, priority }) => ({
@@ -84,7 +102,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...enStaticEntries,
     ...enGuideEntries,
+    ...enCalendarEntries,
     ...ruStaticEntries,
     ...ruGuideEntries,
+    ...ruCalendarEntries,
   ];
 }

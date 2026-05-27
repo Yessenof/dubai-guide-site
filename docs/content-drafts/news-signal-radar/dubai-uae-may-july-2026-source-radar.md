@@ -37,13 +37,16 @@
 | JUN-08 | Emirates Eid Al Adha peak travel advisory | 2026-05-25 to 2026-05-29 | Dubai International Airport (DXB) | travel_advisory | emirates.com/media-centre | official (Emirates airline) | confirmed | low | L2 (May item — past by June) |
 | JUN-09 | DFRE 3-Day Super Sale (3DSS) Eid Al Adha | 2026-05-27 to 2026-05-31 | Dubai citywide malls | retail_offer | dubaidet.gov.ae/en/newsroom + Time Out Dubai | official (DFRE/DET) | confirmed | low | L2 (May item) |
 
-### 2B — July 2026
+### 2B — July 2026 (Phase 6C-80 update: 2026-05-27)
 
 | Item ID | Title EN | Date | Location | Category | Source URL | Source Type | Source Status | Risk | Content Level |
 |---------|----------|------|----------|----------|------------|-------------|---------------|------|----------------|
 | JUL-01 | Dubai Summer Surprises 2026 (DSS) — festival opens | 2026-07-03 to 2026-08-30 | Dubai citywide | retail_offer / tourism / family | visitdubai.com/en/festivals-and-events/dss | official (DFRE/Visit Dubai) | confirmed | low | L2 |
-| JUL-02 | Modesh World at DWTC — indoor family entertainment | 2026-07-03 to 2026-08-30 (within DSS) | DWTC, Sheikh Zayed Road | family / event | dwtc.com (confirmed as recurring annual; 2026 specific page not yet published) | venue (DWTC) / organizer (DFRE) | confirmed (dates from DSS; no standalone 2026 DWTC page yet) | low | L1 (within DSS brief) |
-| JUL-03 | Dubai school summer holidays — September-start schools | ~2026-07-03 onwards | Dubai (all KHDA private schools) | family / government_update | web.khda.gov.ae/en/resources/academic-calendar-dubai-private-schools | official (KHDA) | signal_only (KHDA page shows Sep-start end near Jul 3 but specific 2025-26 year-end date not clearly confirmed) | low-medium | L1 (note in DSS or school holiday brief) |
+| JUL-02 | Modesh World at DWTC — indoor family entertainment | 2026-07-03 to 2026-08-30 (within DSS) | DWTC, Sheikh Zayed Road | family / event | dwtc.com (confirmed as recurring annual; 2026 specific page not yet published) | venue (DWTC) / organizer (DFRE) | confirmed (dates from DSS umbrella; no standalone 2026 DWTC page yet) | low | L1 |
+| JUL-03 | Dubai school summer holidays — September-start schools | ~2026-07-03 (confirmed Jul 3 per Gulf News/KHDA; conflicting Jul 2 in another source) | Dubai (all KHDA private schools) | family / government_update | gulfnews.com Dubai school calendar 2025-2026 (cites KHDA) | official via media | conflicting_sources | low-medium | NOT ADDED — low value, conflicting data |
+| JUL-04 | Muntazah Al Khairan: Theatrical Comedy at Dubai Opera (within DSS) | 2026-07-03 to 2026-07-04 | Dubai Opera, Downtown Dubai | entertainment / venue_show | dubai.platinumlist.net/event-tickets/106449/muntazah-al-khairan-in-dubai-summer-surprises-2026 | official_ticketing_partner (Platinumlist = authorized Dubai Opera partner) | **confirmed** | low | L1 |
+| JUL-05 | Timur Bey 2 at Coca-Cola Arena | 2026-07-09 | Coca-Cola Arena | entertainment | Spotify concert listing | aggregator_only | **signal_only** | medium | NOT ADDED — no CCA official |
+| JUL-06 | Beat the Heat DXB Season 5 (2026) | UNKNOWN | DWTC Zabeel Hall (expected) | entertainment / concerts | beattheheatdxb.ae | official_event_site | **HOLD** — no Season 5 announcement | high | HOLD |
 
 ### 2C — Cross-period / December bonus (owner example verified)
 
@@ -60,10 +63,10 @@
 |-----|-------|--------|
 | DWTC June trade shows (INDEX, MOVE, TCCA, China Homelife, Apparel) | Dates appeared in search results but NOT from official dwtc.com event pages — all B2B shows with low general audience value | Verify at dwtc.com/en/events/ before any import; low priority for general audience calendar |
 | Islamic New Year / Al Hijra | Expected ~June 15-16, 2026 — official announcement only after moon sighting | HOLD until FAHR UAE issues official announcement |
-| Dubai Opera July 2026 schedule | No July performances found; Opera typically dark in summer | Low probability — skip unless confirmed |
-| Expo City Dubai June/July events | Al Wasl Season runs through May; June/July programming not yet announced | Check expocitydubai.com closer to July |
-| Dubai Mall / MoE official summer campaign dates (sub-events within DSS) | DSS umbrella confirmed; individual mall sub-campaign exact dates not published yet | Wait for DFRE July 3 launch materials |
-| Coca-Cola Arena July 2026 | One July event hinted ("COMING SOON") but no artist/show name confirmed | Monitor coca-cola-arena.com |
+| Dubai Opera July 2026 schedule | Phase 6C-80: Only confirmed event is Muntazah Al Khairan Jul 3-4 (within DSS) — NOT a full summer programme. No other July shows found. | No further action needed unless more shows appear. |
+| Expo City Dubai June/July events | Phase 6C-80 verified: No July events on expocitydubai.com official page. Only 1 event in system (May 28). | Skip for July. Recheck August. |
+| Dubai Mall / MoE official summer campaign dates (sub-events within DSS) | DSS umbrella confirmed; specific mall sub-campaign dates not published yet | Wait for DFRE July 3 launch materials (~Jul 10-17 for GDSS start) |
+| Coca-Cola Arena July 2026 | Phase 6C-80: Timur Bey 2 (Jul 9) — signal_only (Spotify/Bandsintown only). No official CCA listing found (site redirects to queue-it). | Monitor coca-cola-arena.com and Platinumlist CCA venue page. |
 | Eid Al Adha 2026 hotel free park Dubai-side | Yas Island (Abu Dhabi) confirmed; no Dubai theme park equivalent confirmed | Not enough for calendar entry |
 | Dubai school exact summer term end date | KHDA July 3 suggested for Sep-start schools but official 2025-26 calendar page gave incomplete data | Source-needed before publishing |
 | Parkin official announcement URL | Announcement confirmed in media citing Parkin official; direct parkin.ae URL not retrieved (403) | Use media citations; note source in ledger |
@@ -94,10 +97,12 @@
 | JUN-04 | L1 calendar cell only for Rumi musical; open_source CTA → dubaiopera.com |
 | JUN-05 | Write L2 brief for Arab Cinema Week; import to June calendar |
 | JUN-06 | L1 calendar cell for Beach Boys; open_source CTA → coca-cola-arena.com |
-| JUL-01 | Write L2 brief for DSS 2026; import to July calendar |
-| JUL-02 | L1 cell within DSS brief (Modesh World note); no separate page |
+| JUL-01 (DSS) | L2 brief written in July draft. Ready for local import QA — Phase 6C-81. |
+| JUL-02 (Modesh) | L1 cell ready. Recheck DWTC for 2026 page before import. |
+| JUL-04 (Muntazah Al Khairan) | NEW Phase 6C-80. L1 cell added to July draft. Ready for local import QA. |
+| JUL-05 (Timur Bey 2) | signal_only — do not import until CCA official source confirmed. Monitor. |
+| JUL-06 (Beat the Heat) | HOLD — no Season 5 announcement. Check beattheheatdxb.ae from mid-June. |
 | DEC-01 | Queue for Batch 2 December planning; L2 brief needed |
 | OE-7 (Yas) | Note Yas Island Kids Go Free in a broader Abu Dhabi family travel tip; not a Dubai calendar entry |
-| DWTC June | Verify individual event dates at dwtc.com/en/events/ — if confirmed and consumer-relevant, add as L1 cells |
 | Islamic New Year | Monitor FAHR UAE; add as hold item in calendar draft; do not publish until official |
-| Coca-Cola Arena July | Monitor for July concert announcement |
+| Coca-Cola Arena July | Timur Bey 2 (Jul 9) signal_only. Recheck CCA official. "COMING SOON" Jul 18 event not yet identified. |

@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-27 (Phase 6C-79 COMPLETE — June 2026 calendar enrichment deployed to production. 5 → 8 items live. Coverage: 83%. Hotfix applied for en_notes public content. 12/12 routes 200. RE:SET remains HOLD. July calendar not yet imported.)
+Last updated: 2026-05-27 (Phase 6C-80 COMPLETE — July 2026 DSS summer calendar enrichment sprint. Docs-only. Found 1 new confirmed item (JUL-03-KHAIR: Muntazah Al Khairan at Dubai Opera Jul 3-4). July draft has 3 items, 93.5% coverage. Ready for local import QA in Phase 6C-81. Beat the Heat DXB Season 5: no 2026 announcement. No DB, no code, no deploy.)
 
 ---
 

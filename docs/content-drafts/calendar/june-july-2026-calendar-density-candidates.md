@@ -254,29 +254,65 @@
 
 ---
 
+### JJ-10 — Muntazah Al Khairan at Dubai Opera (NEW — Phase 6C-80)
+
+| Field | Value |
+|-------|-------|
+| Item ID | JJ-10 |
+| Title EN | Muntazah Al Khairan: Theatrical Comedy at Dubai Opera (3–4 July, within DSS) |
+| Title RU draft | Muntazah Al Khairan: театральная комедия в Dubai Opera (3–4 июля, в рамках DSS) |
+| Date start | 2026-07-03 |
+| Date end | 2026-07-04 |
+| Emirate | Dubai |
+| Category | entertainment / venue_show |
+| Source URL | https://dubai.platinumlist.net/event-tickets/106449/muntazah-al-khairan-in-dubai-summer-surprises-2026 |
+| Source type | official_ticketing_partner (Platinumlist = authorized Dubai Opera partner) |
+| Source status | confirmed |
+| Risk level | low |
+| Content level | L1 |
+| CTA rule | open_source → dubaiopera.com |
+| EN brief needed? | no |
+| RU brief needed? | no |
+| Full page needed? | no |
+| Import readiness | ready |
+| Notes | Arabic-language theatrical comedy production, ~75 min, from $54.98. Part of DSS 2026. NOT a concert — theatrical production. Initially flagged as signal_only in 6C-77 (Platinumlist only). Now confirmed: Platinumlist is authorized Dubai Opera ticketing partner; event explicitly DSS-branded. Venue is Dubai Opera (not CCA — earlier confusion cleared). |
+
+---
+
 ## July 2026 Density Analysis
+
+**Phase 6C-80 update (2026-05-27)**
 
 | Metric | Value |
 |--------|-------|
 | Days in July | 31 |
-| Already-live coverage | July 1 (E-invoicing TAX-05A) = 1 day |
-| New source-safe items | JJ-07 (Jul 3–Aug 30 covers all of Jul 3–31 = 29 days), JJ-08 (L1 within DSS) |
+| Already-live coverage | July 1 (E-invoicing TAX-05A) = 1 day (separate page) |
+| Draft items after Phase 6C-80 | 3: JUL-03-DSS (L2), JUL-03-MODESH (L1), JUL-03-KHAIR (L1) |
 | Unique days with source-safe content | Jul 1 (already live), Jul 3–31 (DSS) = **30 days** |
-| Source-safe coverage | **97%** (30/31) — if DSS counts as coverage for all days it spans |
-| Individual item count | 2 confirmed items (DSS + Modesh World); E-invoicing Jul 1 already live |
-| 60-70% source-safe realistic? | **Yes — DSS alone covers the full second half of July.** Jul 2 is the only uncovered day. |
-| Caveat | DSS is one umbrella campaign, not individual events per day. For dense calendar cells, specific sub-event dates within DSS are needed — these will be published by DFRE closer to July 3. |
-| Fastest path to richer July | Monitor visitdubai.com and DFRE for specific DSS event schedule; check Coca-Cola Arena and Expo City for July concert/show announcements |
+| Source-safe coverage (calendar-only) | **93.5%** (29/31) |
+| Combined with e-invoicing Jul 1 | **97%** (30/31) |
+| 60-70% source-safe realistic? | **YES — exceeded. Jul 3–31 covered by DSS umbrella.** |
+| Only gap | Jul 2 (1 day) — no confirmed source-safe item |
+| Import readiness | **Ready for local import QA** |
+
+**Sub-event items on HOLD (no 2026 data):**
+- Beat the Heat DXB Season 5 — no announcement
+- Great Dubai Summer Sale 2026 start date — not announced
+- Timur Bey 2 at CCA Jul 9 — signal_only
+- Modesh World specific 2026 dates/hours — not announced
 
 ---
 
 ## Source Sprint Needed Before Next Import
 
-| Priority | Action |
-|----------|--------|
-| 1 | Verify DWTC June trade show dates at dwtc.com/en/events/ (Jun 2-4, 9-10, 16-18, 17-19, 23-25) — but assess consumer relevance first |
-| 2 | Monitor FAHR UAE for Islamic New Year announcement (expected ~June 10-12) |
-| 3 | Read KHDA 2025-26 academic calendar PDF to confirm Jul 3 school holiday end date |
-| 4 | Check Coca-Cola Arena and Expo City for July 2026 events after Jun 1 |
-| 5 | Monitor DFRE for DSS sub-event schedule (expected to publish ~late June) |
-| 6 | Check dubaicalendar.ae for any June events not yet indexed in search |
+**Phase 6C-80 status (2026-05-27):**
+
+| Priority | Action | Status |
+|----------|--------|--------|
+| 1 | July calendar local import QA (Phase 6C-81) | READY — 3 items approved |
+| 2 | Monitor beattheheatdxb.ae for Season 5 announcement (~mid-June) | HOLD |
+| 3 | Check DFRE for Great Dubai Summer Sale 2026 phase dates (~Jul 10-17) | HOLD |
+| 4 | Check DWTC for Modesh World 2026 standalone page (~mid-June) | HOLD |
+| 5 | Check CCA / Platinumlist for Timur Bey 2 official listing (Jul 9) | HOLD |
+| 6 | Check cinemaakil.com for July 2026 summer programme | HOLD |
+| 7 | FAHR UAE for Islamic New Year announcement | HOLD (June item) |

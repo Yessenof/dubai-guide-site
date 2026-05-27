@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-24 (Phase 6C-55B COMPLETE — Safe deploy rule documented after P0 CSS incident; DECISIONS.md + deployment-upcloud.md updated; Phase 6C-54 committed e4ef907 + deployed to production; /life-setup + /ru/life-setup live; PM2 PID 145929 online; next: commit memory + docs files)
+Last updated: 2026-05-27 (Phase 6C-79 COMPLETE — June 2026 calendar enrichment deployed to production. 5 → 8 items live. Coverage: 83%. Hotfix applied for en_notes public content. 12/12 routes 200. RE:SET remains HOLD. July calendar not yet imported.)
 
 ---
 

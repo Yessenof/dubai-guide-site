@@ -5,6 +5,48 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-27 — Phase 6C-79 COMPLETE — June 2026 calendar enrichment deployed to production
+
+Production update of june-2026-dubai-calendar: 5 items → 8 items. Git pull on production server (c3f2d5c → 5bac54d) to sync Phase 6C-78 script. Production DB backup created. Script `scripts/june-2026-calendar-enrich-local-import-6c78.ts` run on production server — resolved row by slug lookup (ID `adddc561-74dd-4541-9183-34802f2aedd6`), updateCalendarDraft + publishCalendar. Two full safe deploy cycles (pm2 stop → build → pm2 start): initial deploy + hotfix. Hotfix reason: en_notes field renders publicly in a `<p>` tag — the import script had included an internal editorial note ("RE:SET (Jun 6, Dubai Opera): genre unverified, kept on hold") in en_notes by mistake. Hotfix script `fix-notes-6c79.ts` replaced en_notes/ru_notes with clean public-facing source-disclosure text. Live QA: 12/12 routes 200, 4 `<details>` EN+RU, Mallathon brief full text confirmed in HTML EN+RU, RE:SET absent (0 occurrences), no EN fallback on RU page, no raw Markdown/JSON, source labels visible, CSS 200, sitemap 2 URLs. Coverage: 83% (25/30 days). Phase report: PHASE_6C79_JUNE_2026_CALENDAR_ENRICHMENT_PRODUCTION_UPDATE_REPORT.md.
+
+---
+
+## 2026-05-27 — Phase 6C-78 COMPLETE — June 2026 calendar enrichment local import QA
+
+Local import QA for 3 enrichment items. Script created: `scripts/june-2026-calendar-enrich-local-import-6c78.ts`. Local DB backup: `backups/local/guides.db.pre-june-enrichment-6c78-20260527-121704`. Local row updated: ca207e36 (june-2026-dubai-calendar), 5 → 8 items. 12/12 routes 200, 4 `<details>` EN+RU, all briefs in initial HTML, TypeScript 0 errors, CSS 200 91KB. RE:SET excluded (genre unverified). Coverage: 83%. Report: PHASE_6C78_JUNE_2026_CALENDAR_ENRICHMENT_LOCAL_IMPORT_QA.md. Docs + script committed.
+
+---
+
+## 2026-05-27 — Phase 6C-77 COMPLETE — June/July 2026 calendar source enrichment sprint
+
+Docs-only source scan. Found 4 June enrichment candidates: JUN-15-MALLATHON (L2, Batch A — dubaimallathon.ae + mediaoffice.ae), JUN-20-BASSI (L1, Batch A — dubaiopera.com), JUN-24-ORCH (L1, Batch A — dubaiopera.com), JUN-06-RESET (L1, Batch B — genre unverified, HOLD). July: DSS Jul 3–Aug 30 confirmed (Zawya/DFRE); Modesh World dates not announced; Beat the Heat DXB 2026 on HOLD (Jul 4-13 were 2025 dates); CCA July concerts signal-only. Files updated: june-2026-dubai-calendar.md (enrichment candidates added), july-2026-dubai-calendar.md (calendar_type fixed to monthly, status updated). Files created: june-july-2026-calendar-event-sources.md, PHASE_6C77 report. No DB, no code, no deploy.
+
+---
+
+## 2026-05-26 — Phase 6C-69 COMPLETE — Calendar fill sprint plan and first 30 candidates
+
+Documentation-only phase. Read all relevant source files (seed matrix, content model, full radar matrix, production priority queue, source research queue, e-invoicing brief data, events/tourism source ledger, long weekends source ledger). Created three output documents: (1) `docs/content-drafts/calendar/2026-2027-calendar-fill-sprint-plan.md` — complete sprint plan covering 8 new monthly calendar pages (Jun–Jan), 5 new standalone topic pages, 7 priority batches, strict Islamic date hold rules, event date monitoring schedule, and P0 noindex blocker flag. (2) `docs/content-drafts/calendar/2026-2027-first-30-calendar-candidates.md` — 30 individually documented source-safe calendar date item candidates from Jan 2026 through Feb 2027; each with source status, page assignment, content level (L1/L2/L3), readiness tier (T0–T3), allowed claims, blocked claims, and next action. (3) `docs/content-drafts/PHASE_6C69_CALENDAR_FILL_SPRINT_PLAN_SUMMARY.md` — phase summary. Key finding: P0 noindex blocker (hardcoded `robots: index:false` in all 3 route files) means NO calendar content is currently indexed — must be fixed before next content wave has SEO value. 26 of 30 candidates are source-safe today; 4 are monitoring/hold (Islamic dates, DSF, Ramadan 2027). No code, no DB, no commits.
+
+---
+
+## 2026-05-26 — Phase 6C-68C COMPLETE — Calendar brief visual/interaction polish
+
+Owner screenshot review found 5 issues after 6C-68 local QA. Fixed: (1) `resolveCalendarMonth` now uses earliest date month for non-yearly pages — e-invoicing preview links to July 2026, not May; Long Weekends still generic with yearBadge "2026". (2) `itemCtaLabel` now checks `brief_en`/`brief_ru` first — items with indexed briefs show "Show details →" / "Показать детали →"; external `cta_url` fallback added to AgendaCard/Row/GroupedAgendaRow/GroupedAgendaCard for Scenario A items. (3) CalendarBriefSection: heading → "Key date notes" / "Пояснения к датам"; summary row redesigned (date badge, 14px/semibold title, type pill, expand hint in navy); CTA rendered as pill button. (4) Dates list: 14px/semibold titles, "notes ↓" indicators. (5) AgendaRow: 14px/semibold labels. TypeScript clean, 88 pages 0 errors, 14/14 routes 200. Report: PHASE_6C68C_CALENDAR_INDEXED_BRIEF_VISUAL_INTERACTION_POLISH_REPORT.md. Not pushed. Commit pending owner approval.
+
+---
+
+## 2026-05-26 — Phase 6C-68 COMPLETE — E-invoicing indexed brief local import QA
+
+Local import of UAE e-invoicing content to support CalendarBriefSection QA. Two records created and published: news post `uae-e-invoicing-2026-asp-deadline-update` (id `0d12b049`) and calendar page `uae-e-invoicing-2026-asp-deadline` (id `011f928a`) with 3 date items (TAX-05A, TAX-05C, TAX-05D) each carrying full brief_en + brief_ru. Script `scripts/e-invoicing-indexed-brief-local-import-6c68.ts` required two fixes before passing: title shortened from 90 to 61 chars, source_label changed from "Ministry of Finance UAE" to enum value "official". Local DB backup at `backups/local/guides.db.pre-6c68-20260526-004835`. Route QA: 14/14 routes 200. SSR check: 3 `<details>` in raw HTML on EN and RU pages; RU brief text present, no EN fallback. CTA links (`<a href="/news/...">`) present in HTML; Scenario B target returns 200. Existing pages: 0 `<details>`, date list counts intact. Report: PHASE_6C68_E_INVOICING_INDEXED_BRIEF_LOCAL_IMPORT_QA.md. LOCAL ONLY. No push, no deploy, no production import.
+
+---
+
+## 2026-05-26 — Phase 6C-67 COMMITTED — Calendar brief UI code foundation
+
+Six files committed as `feat: add server-rendered calendar brief UI foundation` (c774709). Changes: 18 optional brief fields added to `CalendarDateItem` and `CalendarDateItemExtended` interfaces (additive); `CalendarBriefSection.tsx` server component created (no "use client", `<details>/<summary>` SSR pattern); component added to EN and RU calendar detail pages. TypeScript clean, build 88 pages 0 errors, 10 route checks all 200. Existing pages: 0 `<details>` on pages without brief data. CalendarGrid not touched. Phase report: PHASE_6C67_CALENDAR_BRIEF_UI_CODE_MVP_REPORT.md. NOT pushed — push approval needed separately.
+
+---
+
 ## 2026-05-24 — Phase 6C-55B COMPLETE — Safe deploy rule documented
 
 Docs-only update following Phase 6C-55 P0 CSS incident. No code, no DB, no deploy. Updated docs/deployment-upcloud.md: "Pull code update and redeploy" section now shows mandatory pm2 stop → build → pm2 start sequence with full warning explaining the build race condition. Phase 4 annotated (no risk on first deploy when PM2 not yet running). Updated DECISIONS.md: new entry "Safe Production Deploy Sequence: Stop PM2 Before Build" with root cause, incident date, evidence (old CSS 500), acceptable downtime (~30s), future optional improvement (atomic directory swap), and alternatives rejected. Created PHASE_6C55B_SAFE_DEPLOY_RULE_SUMMARY.md. Commit recommended alongside memory files.

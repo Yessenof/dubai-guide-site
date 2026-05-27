@@ -5,6 +5,197 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE6C79-JUNE-ENRICHMENT-LIVE — June 2026 Calendar Enrichment — LIVE ON PRODUCTION
+
+**Date:** 2026-05-27
+**Status:** DEPLOYED AND VERIFIED — live on guidex-consulting.ae
+
+- June 2026 calendar enriched: 5 items → 8 items (JUN-15-MALLATHON L2, JUN-20-BASSI L1, JUN-24-ORCH L1)
+- Coverage: 33% → 83% (25/30 days) — 60-70% target exceeded
+- 12/12 routes 200; 4 `<details>` EN+RU; Mallathon brief EN+RU confirmed in live HTML; RE:SET absent; notes public content fixed
+- Hotfix applied: en_notes/ru_notes cleaned of internal editorial text (lesson: these fields render publicly)
+- Sitemap: EN+RU URLs present; CSS 200; no unstyled page issue
+- Production DB row ID: `adddc561-74dd-4541-9183-34802f2aedd6`; row count unchanged (5 calendar_pages, 3 news_posts, 1 event, 17 guides)
+- Script: `scripts/june-2026-calendar-enrich-local-import-6c78.ts` (same script used for local QA and production)
+- Phase reports: PHASE_6C77, 6C78, 6C79 all complete
+- Commits: 5bac54d (Phase 6C-78 script + docs), 6C-79 report pending commit
+- RE:SET (JUN-06-RESET): remains HOLD — owner to verify genre at dubaiopera.com before Batch B import
+- July calendar: NOT imported — awaiting DFRE DSS sub-event schedule (~late June)
+
+---
+
+## CP-PHASE6C69-CALENDAR-SPRINT-PLAN — 2026-2027 Calendar Fill Sprint Plan — DOCS COMPLETE
+
+**Date:** 2026-05-26
+**Status:** DOCUMENTATION COMPLETE — no code, no DB, no imports, no commits
+
+- Sprint plan: `docs/content-drafts/calendar/2026-2027-calendar-fill-sprint-plan.md`
+- First 30 candidates: `docs/content-drafts/calendar/2026-2027-first-30-calendar-candidates.md`
+- Phase summary: `docs/content-drafts/PHASE_6C69_CALENDAR_FILL_SPRINT_PLAN_SUMMARY.md`
+- 30 source-safe candidates identified (26 ready, 4 monitoring/hold)
+- 8 new monthly calendar pages planned (Jun 2026 – Jan 2027)
+- 5 new standalone topic pages planned
+- P0 noindex blocker documented (hardcoded `robots: index:false` in 3 route files — blocks all calendar SEO)
+- Strict Islamic date hold rule confirmed — no Islamic dates without FAHR/WAM official announcement
+- All source ledger references verified and cross-linked
+
+---
+
+## CP-PHASE6C68-LOCAL-IMPORT-QA — Phase 6C-67 + 6C-68 Calendar Brief UI + Local Import QA — LOCAL VERIFIED
+
+**Date:** 2026-05-26
+**Status:** LOCAL COMPLETE — Phase 6C-67 committed (c774709), Phase 6C-68 local import QA passed. NOT pushed. Production import pending owner approval.
+
+- `CalendarBriefSection.tsx` — new server component, `<details>/<summary>` SSR pattern, strict locale gate
+- 18 optional brief fields added to `CalendarDateItem` + `CalendarDateItemExtended` (additive, no migration)
+- EN + RU calendar detail pages: `<CalendarBriefSection>` added after dates list
+- Local DB: news post `uae-e-invoicing-2026-asp-deadline-update` + calendar `uae-e-invoicing-2026-asp-deadline` published
+- 3 brief items (TAX-05A/C/D): all `brief_en` + `brief_ru` present; Scenario A + B CTAs verified
+- 14/14 route checks 200; 3 `<details>` in initial HTML; 0 `<details>` on existing pages
+- Import script: `scripts/e-invoicing-indexed-brief-local-import-6c68.ts`
+- Phase reports: PHASE_6C67_CALENDAR_BRIEF_UI_CODE_MVP_REPORT.md + PHASE_6C68_E_INVOICING_INDEXED_BRIEF_LOCAL_IMPORT_QA.md
+
+---
+
+## CP-PHASE6C48-DEPLOYED — Phase 6C-48 + 6C-48B Detail Hero + CalendarMiniPreview — LIVE
+
+**Date:** 2026-05-22
+**Status:** DEPLOYED — live on guidex-consulting.ae
+**Commits:** bc041a6 (feat) + ac0e12f (fix RU label)
+
+- 2 new components: DetailHero.tsx + CalendarMiniPreview.tsx
+- 6 detail pages updated: news EN+RU, events EN+RU, calendar EN+RU
+- All 12 detail pages link to exact calendar month; Long Weekend → generic + yearBadge
+- RU CTA: "Открыть календарь за май/июнь 2026" (nominative, correct)
+- Badge: "мая/июня 2026" (genitive, correct for standalone label)
+- Chips sorted chronologically from datesJson
+- Build: 86 pages, 0 errors. PM2: online, PID 128615.
+- 19/19 routes 200. robots=index,follow. lang correct. Raw Markdown 0. Admin protected.
+- Deploy report: PHASE_6C48_DETAIL_HERO_AND_CALENDAR_PREVIEW_DEPLOY_REPORT.md
+
+---
+
+## CP-PHASE6C48B-DETAIL-HERO-CALENDAR-PREVIEW — Phase 6C-48 + 6C-48B Detail Hero + CalendarMiniPreview — local complete
+
+**Date:** 2026-05-22
+**Status:** LOCAL COMPLETE (including 6C-48B news targeting correction) — pending owner commit/deploy approval
+
+- 2 new components: `components/detail/DetailHero.tsx` + `components/calendar/CalendarMiniPreview.tsx`
+- 8 files changed: 2 new + 6 detail pages (news EN+RU, events EN+RU, calendar EN+RU)
+- DetailHero: bg image + gradient + eyebrow + h1; `categoryImage()` helper (visa/living → JLT; company/tax/banking → DIFC; default → skyline)
+- CalendarMiniPreview: whole-card `<Link>`, no nested `<a>`, chips (navy pills), month/year badge, locale-aware
+- News targeting (6C-48B): slug-based `NEWS_CALENDAR_MONTH` map — temporary until news_posts gets explicit calendar_month column
+- Exact targets: Eid news → ?month=2026-05 | Emiratisation news → ?month=2026-06 | events → eventDateStart | calendar → month field or inferred | Long Weekend → /calendar + yearBadge "2026"
+- TypeScript: 0 errors. Build: 86 pages, 0 errors. 18/18 routes 200 (including calendar?month= variants).
+- Report: `docs/content-drafts/PHASE_6C48_DETAIL_HERO_AND_CALENDAR_PREVIEW_REPORT.md`
+- Not committed, not deployed — pending approval
+
+---
+
+## CP-PHASE6C47B-LONG-WEEKEND-BUILD-REFRESH — Phase 6C-47B Production build complete — carousel live
+
+**Date:** 2026-05-22
+**Status:** COMPLETE — homepage carousel updated; GSC indexing pending
+**Build commit:** `2d2691e` (no code changes; build only)
+
+- `npm run build && pm2 restart guidex-production` — 86 pages, 0 errors, TypeScript 0 errors
+- PM2: online, PID 126356, unstable restarts 0
+- Long Weekend confirmed at carousel slot 5 in EN + RU production homepage HTML
+- Carousel: 7 slides — Eid event → Eid news → Emiratisation news → Emiratisation calendar → Long Weekend → May calendar → Employment guide
+- All 14 QA routes 200 (EN+RU detail, EN+RU list, 5 regressions, admin login, admin redirect)
+- Long Weekend EN: lang=en, robots=index follow, title correct, raw Markdown 0, fahr trust present
+- Long Weekend RU: lang=ru, robots=index follow, RU title correct, no EN fallback, raw Markdown 0
+- May calendar: 0 matches for uae-long-weekends — no Eid Al Adha duplication confirmed
+- Admin protection: /admin/content and /admin/guides redirect to /admin/login when logged out
+- Report: `docs/content-drafts/PHASE_6C47B_LONG_WEEKEND_BUILD_REFRESH_REPORT.md`
+- Outstanding: GSC indexing — 2 URLs pending owner submission
+
+---
+
+## CP-PHASE6C47-LONG-WEEKEND-PRODUCTION-IMPORT — Phase 6C-47 Long Weekend Calendar Reference production import complete
+
+**Date:** 2026-05-21
+**Status:** PRODUCTION IMPORT COMPLETE — pending production build + GSC indexing
+**Record id:** `1f06eca2-676c-4ca6-a22a-a9d124fa44ba`
+
+- calendarType: "yearly", month: null, year: 2026, status: published (production)
+- datesJson: 4 items — New Year Jan 1, Eid Al Fitr Mar 19-22, Commemoration Day Dec 1, National Day Dec 2-3
+- Eid Al Adha excluded from datesJson — confirmed by pre-flight guard + post-import assertion (9/9 pass)
+- 9 routes 200 (EN+RU detail, EN+RU list, 5 regression routes). Raw Markdown 0. Source trust visible.
+- Production backup: `/var/backups/guidex/guides.db.pre-longweekend-6c47-20260521-192515`
+- Carousel: NOT visible in homepage yet — homepage is statically pre-rendered at build time; requires `npm run build`
+- No code modified. No schema changes. Commits: 2d2691e (import script + Phase 6C-46 report)
+- Report: `docs/content-drafts/PHASE_6C47_LONG_WEEKEND_PRODUCTION_IMPORT_REPORT.md`
+- GSC indexing pending: `/calendar/uae-long-weekends-2026-2027` + `/ru/calendar/uae-long-weekends-2026-2027`
+
+---
+
+## CP-PHASE6C46-LONG-WEEKEND-LOCAL-IMPORT — Phase 6C-46 Long Weekend Calendar Reference local import and QA complete
+
+**Date:** 2026-05-21  
+**Status:** LOCAL IMPORT COMPLETE — not deployed, not committed, not pushed  
+**Record id:** `a6d4d59b-d09a-4282-a908-1f87ba9fab51`
+
+- calendarType: "yearly", month: null, year: 2026, status: published (locally)
+- datesJson: 4 items — New Year Jan 1, Eid Al Fitr Mar 19-22, Commemoration Day Dec 1, National Day Dec 2-3
+- Eid Al Adha excluded from datesJson — confirmed by pre-flight guard + post-import assertion
+- 9/9 DB assertions pass. 6 routes 200 (EN+RU). Raw Markdown 0. Source trust block present.
+- Carousel: 7 slides (Long Weekend at slot 5, all calPages enter pool regardless of featuredHomepage)
+- No Eid Al Adha duplication in May calendar view
+- Import script: `scripts/long-weekend-calendar-import.ts`
+- QA report: `docs/content-drafts/PHASE_6C46_LONG_WEEKEND_LOCAL_IMPORT_QA.md`
+- Production import pending owner approval
+
+---
+
+## CP-PHASE6C45-LONG-WEEKEND-IMPORT-MAP — Phase 6C-45 Long Weekend Calendar Reference import plan complete
+
+**Date:** 2026-05-21  
+**Status:** COMPLETE — planning only; no code deployed, no content published  
+
+- calendar_pages model confirmed suitable for Long Weekend guide; no pre-import changes needed
+- calendarType correction: `"yearly"` (not "annual" — invalid); "yearly" already a valid admin form option
+- month: null confirmed safe across all rendering paths (detail page, list page, CalendarContextCta)
+- Eid Al Adha excluded from datesJson — already in may-2026-uae-calendar; would create CalendarGrid duplicate
+- 4 safe datesJson items: New Year Jan 1, Eid Al Fitr Mar 19–22, Commemoration Day Dec 1, National Day Dec 2–3
+- D-6 resolved by code inspection; D-1–D-5 require owner approval
+- Import map: `docs/content-drafts/reviews/uae-long-weekends-calendar-reference-import-map.md`
+- Phase summary: `docs/content-drafts/PHASE_6C45_SUMMARY.md`
+- Queue files updated: VIRAL-01 → import_path_decision_complete, preferred_path_calendar_reference
+
+---
+
+## CP-PHASE6C44-CAROUSEL-AGENDA-UX — Phase 6C-44 Homepage carousel priority + agenda UX polish complete
+
+**Date:** 2026-05-21  
+**Code commit:** `171dac1` — pushed to origin/main 2026-05-21  
+**Status:** DEPLOYED — live on guidex-consulting.ae — all 16 routes 200, PM2 online
+
+- `components/FeaturedSlider.tsx` — exported `CarouselSlide` type; every slide carries `bgImage`; no CSS-gradient-only slides
+- `app/(en)/(public)/page.tsx` — `buildCarouselSlides()`: events→news→calPages→priority guides→other guides; `buildThisMonthItems()` dedup by `detail_url`; This Month links calendar items via `detail_url`
+- `app/ru/page.tsx` — same carousel + This Month dedup for RU locale
+- `lib/calendar-helpers.ts` — CTA defaults: "See holiday →", "Deadline details →", "Event details →", "Open calendar →" (EN); "К праздничным датам →", "К дедлайну →", "К событию →", "Открыть календарь →" (RU)
+- `components/calendar/CalendarGrid.tsx` — GroupedAgendaCard compact mode: `itemShortLabel`, cap 3, "+N more"
+- Hard restrictions observed: no DB schema changes, no new content imported, no push/deploy without approval
+
+---
+
+## CP-PHASE6C40A-PUBLIC-RENDERING-FIX — Phase 6C-40A Emergency public rendering and calendar UX fix complete
+
+**Date:** 2026-05-21  
+**Code commit:** pending (changes built, QA passed, not yet committed)  
+**Status:** Local verified — ready to commit and deploy
+
+- `components/MarkdownBody.tsx` — NEW: server-compatible Markdown renderer, zero external deps
+- All 6 detail routes (EN + RU: events/news/calendar) updated to use MarkdownBody
+- `CalendarContextCta.tsx` — date-pill strip added (`highlightStart`/`highlightEnd` props)
+- `CalendarGrid.tsx` — Monday-first headers + shift formula; `expandRanges()` for multi-day items; `groupByDetailUrl()` + `GroupedAgendaCard/Row` for duplicate collapsing
+- TypeScript: 0 errors. QA: 10 routes 200, all detail pages render HTML headings, no raw Markdown
+- Robots: `index, follow` on all published detail pages confirmed
+- Hard restrictions: no new drafts, no DB changes, no external packages added
+
+---
+
 ## CP-PHASE6C40-VIRAL01-DRAFT-PACKAGE — Phase 6C-40 UAE Long Weekends 2026-2027 draft package complete
 
 **Date:** 2026-05-20

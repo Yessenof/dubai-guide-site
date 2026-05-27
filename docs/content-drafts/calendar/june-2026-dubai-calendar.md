@@ -147,17 +147,147 @@ Em dashes removed from all content strings. Source labels use ":" separator.
 
 ---
 
-## Hold items — not included in this import
+## Hold items — not included in Phase 6C-75 production import
 
 | Item | Reason |
 |------|--------|
-| Islamic New Year / Al Hijra (~Jun 15-16) | Moon-sighting — awaiting FAHR UAE official announcement |
+| Islamic New Year / Al Hijra (~Jun 15-16) | Moon-sighting — awaiting FAHR UAE official announcement. Still HOLD as of 2026-05-27. |
 | Emirati min wage June 30 deadline | Related to Emiratisation June 30 already-live page; risk of duplication — owner to decide |
-| DWTC June trade shows | B2B shows (INDEX, MOVE, TCCA, Apparel) — verify consumer relevance and dates at dwtc.com before adding |
+| DWTC June trade shows | B2B shows (INDEX, MOVE, TCCA, Apparel, China Home Life, World Police Summit) — all confirmed B2B/trade only, not consumer-facing |
+| RE:SET at Dubai Opera (Jun 6) | Source confirmed (dubaiopera.com) but show type unverified — owner to confirm what RE:SET is before import |
+| Beat the Heat DXB 2026 (July) | July 4-13 dates were for 2025 edition — no 2026 official dates announced yet. HOLD until DFRE publishes lineup. |
 
 ---
 
-## Pre-import checklist
+## Phase 6C-77 enrichment candidates (not yet imported)
+
+The following items were sourced in Phase 6C-77. They are not yet in the production DB. A separate import phase is required.
+
+---
+
+### Item 6 — JUN-06-RESET (L1: RE:SET at Dubai Opera)
+
+```json
+{
+  "id": "JUN-06-RESET",
+  "date": "2026-06-06",
+  "label_en": "RE:SET at Dubai Opera (6 June)",
+  "label_ru": "RE:SET в Dubai Opera (6 июня)",
+  "type": "venue_show",
+  "priority": 3,
+  "brief_en": "",
+  "brief_ru": "",
+  "cta_type": "open_source",
+  "cta_url": "https://www.dubaiopera.com/en-US/products-list",
+  "source_label": "Dubai Opera: official",
+  "lifecycle": "event_fixed",
+  "noindex_after": "2026-06-07",
+  "archive_action": "remove"
+}
+```
+
+**Source:** dubaiopera.com official schedule — listed as "Selling Fast".
+**Owner note:** Show type (genre/format) not confirmed — verify what RE:SET is before import.
+
+---
+
+### Item 7 — JUN-15-MALLATHON (L2: Dubai Mallathon 2026)
+
+**HIGH PRIORITY — fills June 15-30 gap (16 days).**
+
+```json
+{
+  "id": "JUN-15-MALLATHON",
+  "date": "2026-06-15",
+  "label_en": "Dubai Mallathon 2026 at 9 major malls (15 June - 15 September)",
+  "label_ru": "Dubai Mallathon 2026 v 9 torgovykh tsentrakh (15 iyunya - 15 sentyabrya)",
+  "type": "event",
+  "priority": 2,
+  "brief_en": "Dubai Mallathon 2026 runs from 15 June to 15 September at nine major malls across Dubai: Dubai Mall, City Centre Deira, City Centre Mirdif, Dubai Festival City, Dubai Festival Plaza, Dubai Hills Mall, Dubai Marina Mall, Mall of the Emirates and Springs Souk. The event offers 2.5 km, 5 km and 10 km walking and running routes inside air-conditioned malls, providing a summer-friendly alternative to outdoor exercise. Participation is free. The initiative was launched under a directive from Sheikh Hamdan bin Mohammed bin Rashid Al Maktoum, Crown Prince of Dubai. Route maps and details are available at dubaimallathon.ae.",
+  "brief_ru": "Dubai Mallathon 2026 prokhodit s 15 iyunya po 15 sentyabrya v devyati torgovykh tsentrakh Dubaya: Dubai Mall, City Centre Deira, City Centre Mirdif, Dubai Festival City, Dubai Festival Plaza, Dubai Hills Mall, Dubai Marina Mall, Mall of the Emirates i Springs Souk. Marshruty dlinoy 2,5 km, 5 km i 10 km prokhodyat vnutri torgovykh tsentrov s konditsionirovaniyem. Uchastiye besplatnoye. Initsiativa zapushchena po direktivye sheykkha Khamdana bin Mukhammeda bin Rashida Al Maktuma, Naslednogo Printsa Dubaya. Marshruty i podrobnosti: dubaimallathon.ae.",
+  "cta_type": "open_source",
+  "cta_url": "https://www.dubaimallathon.ae/",
+  "source_label": "Government of Dubai (mediaoffice.ae): official announcement",
+  "lifecycle": "event_seasonal",
+  "noindex_after": "2026-09-16",
+  "archive_action": "keep"
+}
+```
+
+**Source:** mediaoffice.ae official announcement + dubaimallathon.ae official event site.
+**Note:** brief_ru above is transliterated placeholder — rewrite in proper Russian before import. brief_en is import-ready.
+
+---
+
+### Item 8 — JUN-20-BASSI (L1: Bassi Live at Dubai Opera)
+
+```json
+{
+  "id": "JUN-20-BASSI",
+  "date": "2026-06-20",
+  "label_en": "Bassi Live: Kisi ko Batana Mat at Dubai Opera (20 June)",
+  "label_ru": "Bassi Live: Kisi ko Batana Mat v Dubai Opera (20 iyunya)",
+  "type": "venue_show",
+  "priority": 3,
+  "brief_en": "",
+  "brief_ru": "",
+  "cta_type": "open_source",
+  "cta_url": "https://www.dubaiopera.com/en-US/products-list",
+  "source_label": "Dubai Opera: official",
+  "lifecycle": "event_fixed",
+  "noindex_after": "2026-06-21",
+  "archive_action": "remove"
+}
+```
+
+**Source:** dubaiopera.com (official), cross-confirmed by platinumlist.net and whatson.ae.
+**Note:** Bassi is an Indian stand-up comedian. label_ru needs proper Russian translation before import.
+
+---
+
+### Item 9 — JUN-24-ORCH (L1: UAE National Orchestra Season Finale)
+
+```json
+{
+  "id": "JUN-24-ORCH",
+  "date": "2026-06-24",
+  "label_en": "UAE National Orchestra: Rhythms Without Borders, Dubai Opera (24 June)",
+  "label_ru": "Natsionalnyy orkestr OAE: Rhythms Without Borders, Dubai Opera (24 iyunya)",
+  "type": "venue_show",
+  "priority": 3,
+  "brief_en": "",
+  "brief_ru": "",
+  "cta_type": "open_source",
+  "cta_url": "https://www.dubaiopera.com/en-US/products-list",
+  "source_label": "Dubai Opera: official",
+  "lifecycle": "event_fixed",
+  "noindex_after": "2026-06-25",
+  "archive_action": "remove"
+}
+```
+
+**Source:** dubaiopera.com (official), cross-confirmed by platinumlist.net and whatson.ae.
+**Note:** Season Finale for the 2025/2026 Dubai Opera season. label_ru needs proper Russian translation before import.
+
+---
+
+## Coverage update (Phase 6C-77)
+
+| Metric | Value |
+|--------|-------|
+| Production items (Phase 6C-75) | 5 items — Jun 1, 4-7, 5-11, 11 |
+| Production coverage | ~33% |
+| Phase 6C-77 enrichment candidates | 4 items: JUN-06-RESET, JUN-15-MALLATHON, JUN-20-BASSI, JUN-24-ORCH |
+| Projected coverage after enrichment import | Jun 1, 4-11, 15-30 = approx 25 days = ~83% |
+| Already-live cross-page | Jun 30 (uae-emiratisation-june-30-2026-reminder) |
+| Remaining gap | Jun 12-14 (3 days) |
+| Still HOLD | Islamic New Year (FAHR has not announced) |
+
+Dubai Mallathon (JUN-15-MALLATHON) is the single highest-priority item — fills Jun 15-30 in one import.
+
+---
+
+## Pre-import checklist (Phase 6C-75 items — complete)
 
 - [x] Verify `calendar_type` value — confirmed `monthly` (not `events`)
 - [x] Verify `year` and `month` fields — confirmed 2026 / 6
@@ -170,4 +300,13 @@ Em dashes removed from all content strings. Source labels use ":" separator.
 - [x] Confirm no stale claim about specific provider counts or percentages
 - [x] Write import script — `scripts/june-2026-calendar-local-import-6c74.ts`
 - [x] Backup production DB before import — `backups/local/guides.db.pre-june-2026-calendar-6c74-20260526-232638`
-- [ ] Production import — pending owner approval
+- [x] Production import — complete (Phase 6C-75, 2026-05-26)
+
+## Pre-import checklist (Phase 6C-77 enrichment — pending)
+
+- [ ] Verify RE:SET show type/genre at dubaiopera.com (owner task — confirm before JUN-06-RESET import)
+- [ ] Write proper Russian labels for JUN-20-BASSI and JUN-24-ORCH
+- [ ] Write proper Russian brief for JUN-15-MALLATHON
+- [ ] Run em dash scan on all new brief and label strings before DB write
+- [ ] Write import script for enrichment batch
+- [ ] Get owner approval for enrichment import phase

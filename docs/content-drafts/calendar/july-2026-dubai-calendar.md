@@ -1,10 +1,18 @@
 # July 2026 Dubai Calendar — Draft
 
-**Phase:** 6C-73
+**Phase:** 6C-73 (drafted) / 6C-77 (enrichment scan)
 **Date drafted:** 2026-05-26
+**Last updated:** 2026-05-27 (Phase 6C-77 source scan)
 **Status:** Draft only — not imported. Requires local import QA before production.
 **Slug:** `july-2026-dubai-calendar`
-**Note:** July content is dominated by Dubai Summer Surprises (Jul 3–Aug 30). Individual DSS sub-event dates not yet published by DFRE — this page will need enrichment once DFRE releases the full DSS schedule (~late June). Do NOT import until brief quality is verified and DSS sub-events are confirmed.
+**Note:** July content is dominated by Dubai Summer Surprises (Jul 3–Aug 30, confirmed via Zawya/DFRE official press release). Individual DSS sub-event dates not yet published by DFRE — this page will need enrichment once DFRE releases the full DSS schedule (~late June). Do NOT import until brief quality is verified and DSS sub-events are confirmed.
+
+**Phase 6C-77 findings:**
+- DSS July 3 - August 30, 2026: CONFIRMED (Zawya DFRE official press release)
+- Modesh World specific start date: NOT YET ANNOUNCED — DWTC has no 2026 Modesh World page yet; using Jul 3 as DSS anchor is safe
+- Beat the Heat DXB 2026: HOLD — July 4-13 were 2025 (Season 4) dates; no 2026 dates or lineup announced as of 2026-05-27
+- Muntazah Al Khairan at CCA (Jul 3-4): signal_only — Platinumlist only, no official CCA confirmation
+- Timur Bey 2 at CCA (Jul 9): signal_only — Spotify only, no official CCA confirmation
 
 ---
 
@@ -14,7 +22,7 @@
 slug:           july-2026-dubai-calendar
 title_en:       July 2026 in Dubai: Dubai Summer Surprises and key dates
 title_ru:       Дубай, июль 2026: Dubai Summer Surprises и важные даты
-calendar_type:  events
+calendar_type:  monthly
 year:           2026
 month:          7
 featured_homepage: 0
@@ -78,14 +86,14 @@ ru_published:   1
 
 The following items should be added once sources are confirmed:
 
-| Item | When to add | Source to check |
-|------|------------|----------------|
-| Beat the Heat DXB concert dates | Once DFRE publishes lineup (~late June) | visitdubai.com/en/festivals-and-events/dss |
-| Great Dubai Summer Sale exact start | Once DFRE publishes DSS schedule (~late June) | dubaidet.gov.ae |
-| Dubai school summer holidays start | Once KHDA 2025-26 calendar confirmed | web.khda.gov.ae |
-| Modesh World 2026 ticket prices | Once DWTC/DFRE publish | dwtc.com |
-| Coca-Cola Arena July concert | Once artist announced | coca-cola-arena.com |
-| Expo City Dubai summer programming | Once announced | expocitydubai.com |
+| Item | Status (2026-05-27) | Source to check |
+|------|---------------------|----------------|
+| Beat the Heat DXB 2026 concert dates | HOLD — no 2026 dates announced; 2025 was Jul 4-13 at Zabeel Hall 6. Wait for DFRE lineup announcement. | beattheheatdxb.ae, visitdubai.com/en/festivals-and-events/dss |
+| Modesh World 2026 specific start date | HOLD — DWTC has no 2026 Modesh page yet; expect around DSS opening (Jul 3); recheck dwtc.com ~late June | dwtc.com/en/events/ |
+| Great Dubai Summer Sale exact start | Pending — wait for DFRE DSS schedule (~late June) | dubaidet.gov.ae |
+| Dubai school summer holidays start | Pending — KHDA 2025-26 calendar | web.khda.gov.ae |
+| Coca-Cola Arena July concert | signal_only — Timur Bey 2 (Jul 9, Spotify only); Muntazah Al Khairan (Jul 3-4, Platinumlist only). Neither confirmed by official CCA source. | coca-cola-arena.com |
+| Expo City Dubai summer programming | Pending — check once announced | expocitydubai.com |
 
 ---
 

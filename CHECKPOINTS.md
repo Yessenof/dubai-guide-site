@@ -5,6 +5,22 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE6C81-JULY-LOCAL-QA-PASS — July 2026 Calendar Local Import QA — PASS
+
+**Date:** 2026-05-28
+**Status:** LOCAL QA COMPLETE — awaiting owner approval for production import (Phase 6C-82)
+
+- New row created locally: `july-2026-dubai-calendar` (id: `9a3b6c4c-8098-4b14-8f3d-93f0a337ea04`)
+- 3 items: JUL-03-DSS (L2 EN+RU brief), JUL-03-MODESH (L1), JUL-03-KHAIR (L1)
+- 12/12 routes 200; 1 `<details>` EN+RU (DSS only); all labels present; no internal notes in en_notes/ru_notes
+- Coverage: 93.5% (29/31 days, calendar-only); 97% combined with e-invoicing Jul 1 (separate page)
+- Import type: CREATE (slug did not exist); script: `scripts/july-2026-calendar-import-6c81.ts`
+- Lesson: `createCalendarDraft` publish requires `image_path`, `official_source_url`, `image_alt`, `ru_image_alt`
+- Beat the Heat / Modesh specific dates / Great Dubai Summer Sale: all HOLD (no 2026 DFRE announcement)
+- No production DB, no code change, no deploy
+
+---
+
 ## CP-PHASE6C79-JUNE-ENRICHMENT-LIVE — June 2026 Calendar Enrichment — LIVE ON PRODUCTION
 
 **Date:** 2026-05-27

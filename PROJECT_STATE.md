@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-27 (Phase 6C-80 COMPLETE — July 2026 DSS summer calendar enrichment sprint. Docs-only. Found 1 new confirmed item (JUL-03-KHAIR: Muntazah Al Khairan at Dubai Opera Jul 3-4). July draft has 3 items, 93.5% coverage. Ready for local import QA in Phase 6C-81. Beat the Heat DXB Season 5: no 2026 announcement. No DB, no code, no deploy.)
+Last updated: 2026-05-28 (Phase 6C-81 COMPLETE — July 2026 calendar local import QA. New row created and published locally: july-2026-dubai-calendar, 3 items (JUL-03-DSS L2, JUL-03-MODESH L1, JUL-03-KHAIR L1), 93.5% coverage. 12/12 routes 200, all content invariants pass. Script: scripts/july-2026-calendar-import-6c81.ts. Lesson: createCalendarDraft requires image_path + official_source_url + image_alt + ru_image_alt before publish. No production DB, no code, no deploy.)
 
 ---
 

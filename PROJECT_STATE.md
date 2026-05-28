@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-28 (Phase 6C-81 COMPLETE — July 2026 calendar local import QA. New row created and published locally: july-2026-dubai-calendar, 3 items (JUL-03-DSS L2, JUL-03-MODESH L1, JUL-03-KHAIR L1), 93.5% coverage. 12/12 routes 200, all content invariants pass. Script: scripts/july-2026-calendar-import-6c81.ts. Lesson: createCalendarDraft requires image_path + official_source_url + image_alt + ru_image_alt before publish. No production DB, no code, no deploy.)
+Last updated: 2026-05-28 (Phase 6C-82 COMPLETE — July 2026 calendar deployed to production. july-2026-dubai-calendar live at guidex-consulting.ae. Row ID: 48233336-4d9c-442a-b990-23287a97c34d. 3 items: JUL-03-DSS (L2), JUL-03-MODESH (L1), JUL-03-KHAIR (L1). 13/13 routes 200, 22/22 invariants pass, index/follow EN+RU, sitemap present. Coverage: 93.5% calendar-only, 97% with e-invoicing Jul 1. GSC URL inspection: pending.)
 
 ---
 

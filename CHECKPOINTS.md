@@ -5,6 +5,26 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE6C82-JULY-CALENDAR-LIVE — July 2026 Calendar — LIVE ON PRODUCTION
+
+**Date:** 2026-05-28
+**Status:** DEPLOYED AND VERIFIED — live on guidex-consulting.ae
+
+- July 2026 calendar created and published: `july-2026-dubai-calendar`
+- Production row ID: `48233336-4d9c-442a-b990-23287a97c34d`
+- 3 items: JUL-03-DSS (L2 EN+RU brief), JUL-03-MODESH (L1), JUL-03-KHAIR (L1)
+- 13/13 routes 200; 22/22 content invariants; 1 `<details>` EN+RU; EN+RU index/follow; sitemap present
+- Coverage: 93.5% (29/31 days, calendar-only); 97% combined with e-invoicing Jul 1 (separate page)
+- Beat the Heat / Timur Bey / RE:SET excluded; e-invoicing Jul 1 not duplicated
+- DB delta: calendar_pages 5→6; news/events/guides unchanged
+- Backup: `/var/backups/guidex/guides.db.pre-july-calendar-6c82-20260528-193114`
+- June page unaffected (4 `<details>`, Mallathon brief confirmed); e-invoicing page unaffected
+- Script: `scripts/july-2026-calendar-import-6c81.ts`
+- Phase reports: PHASE_6C80, 6C81, 6C82 all complete
+- GSC URL inspection pending for EN+RU July URLs
+
+---
+
 ## CP-PHASE6C81-JULY-LOCAL-QA-PASS — July 2026 Calendar Local Import QA — PASS
 
 **Date:** 2026-05-28

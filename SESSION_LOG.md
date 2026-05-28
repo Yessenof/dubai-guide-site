@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-28 — Phase 6C-82 COMPLETE — July 2026 calendar deployed to production
+
+Production import of july-2026-dubai-calendar. Server was behind (at 5bac54d) — git pull synced to 81d21a9. Backup: /var/backups/guidex/guides.db.pre-july-calendar-6c82-20260528-193114 (616K). Script ran cleanly: createCalendarDraft + publishCalendar. Row ID: 48233336-4d9c-442a-b990-23287a97c34d. DB delta: calendar_pages 5→6, all others unchanged. Safe deploy: pm2 stop → npm run build → pm2 start. Live QA: 13/13 routes 200, 22/22 content invariants pass. EN+RU index/follow. Sitemap: both EN+RU July URLs present. CSS 200 text/css. June page unaffected (4 details, Mallathon brief confirmed). E-invoicing page unaffected. Coverage: 93.5% (29/31 days calendar-only), 97% with e-invoicing Jul 1. Beat the Heat / Timur Bey / RE:SET absent. Phase report: PHASE_6C82_JULY_2026_CALENDAR_PRODUCTION_IMPORT_REPORT.md. GSC URL inspection: pending.
+
+---
+
 ## 2026-05-28 — Phase 6C-81 COMPLETE — July 2026 calendar local import QA
 
 Created and published `july-2026-dubai-calendar` (new row — CREATE, not UPDATE). Script: `scripts/july-2026-calendar-import-6c81.ts`. Local DB backup before import: `backups/local/guides-before-6c81-july-import-20260527-181640.db`. Three import attempts needed to discover all required publish fields (`image_path` + `official_source_url` + `image_alt` + `ru_image_alt`) — drafts from failed attempts deleted via sqlite3. Final row ID: `9a3b6c4c-8098-4b14-8f3d-93f0a337ea04`. Dates_json: 3 items (JUL-03-DSS L2, JUL-03-MODESH L1, JUL-03-KHAIR L1). 12/12 routes 200. Content invariants: 1 `<details>` EN+RU (DSS only), DSS brief EN+RU confirmed, Modesh + KHAIR labels present, Beat the Heat named only as DSS component (correct), no Timur Bey, no RE:SET, e-invoicing Jul 1 not duplicated. SEO: correct EN+RU titles and meta. Sitemap: both EN+RU URLs present. en_notes/ru_notes: user-facing public content only. em dash violations: 0. Coverage: 93.5% (29/31 days, calendar-only); 97% combined with e-invoicing Jul 1 (separate page). No production DB, no code change, no deploy. Phase report: PHASE_6C81_JULY_2026_CALENDAR_LOCAL_IMPORT_QA.md.

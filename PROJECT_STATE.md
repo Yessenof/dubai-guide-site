@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-28 (Phase 6C-83 COMPLETE — August and September 2026 calendar draft pack. Docs-only. August draft: 3 items (AUG-01-DSS L2, AUG-02-DEFLEP L1, AUG-03-DIHAD L1), 96.8% coverage. September draft: 8 items (MEE, IPS, AIM, ATM L2, PLME, Seamless, Forex, CorpTax L2), 46.7% coverage — sub-target, documented. ATM date correction: Sep 14–17 (NOT Aug 17–20 as in batch2 B2-05). Source ledger, density report, phase report all created. Next: Phase 6C-84 — August local import QA.)
+Last updated: 2026-05-29 (Phase 6C-84 COMPLETE — August 2026 calendar local import QA. Row ID: 6375670b-2842-43c4-a9d3-7235aae0ef75. 3 items: AUG-01-DSS (L2), AUG-02-DEFLEP (L1), AUG-03-DIHAD (L1). 14/14 routes 200. 30/30 invariants pass. RU index/follow. Sitemap EN+RU present. Coverage: 96.8% (30/31 days). ATM absent. June/July/e-invoicing unaffected. Ready for Phase 6C-85 production import.)
 
 ---
 

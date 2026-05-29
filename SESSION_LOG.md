@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-28 — Phase 6C-83 COMPLETE — August and September 2026 calendar draft pack
+
+Docs-only source radar and draft pack. August 2026: 3 items confirmed (AUG-01-DSS L2 Back-to-School focus covers Aug 1–30, AUG-02-DEFLEP L1 Def Leppard Aug 2 CCA, AUG-03-DIHAD L1 DIHAD Aug 24–26 DWTC). Coverage: 96.8% (30/31 days — Aug 31 is gap). September 2026: 8 items confirmed (SEP-01-MEE L1 Sep 1–3, SEP-02-IPS L1 Sep 7–9, SEP-03-AIM L1 Sep 7–9, SEP-04-ATM L2 Sep 14–17, SEP-05-PLME L1 Sep 15–17, SEP-06-SEAMLESS L1 Sep 22–24, SEP-07-FOREX L1 Sep 22–23, SEP-08-TAX L2 Sep 30 with heavy compliance caveats). Coverage: 46.7% (14/30 days) — sub-target, documented. Key correction: ATM rescheduled from Aug 17–20 to Sep 14–17 (DWTC official + May 22 2026 trade press). Batch2 B2-05 must be updated before Phase 6C-86. Beat the Heat DXB, Timur Bey 2, Mawlid Al-Nabi, Cityscape: all excluded — no confirmed 2026 source. Files: august-2026-dubai-calendar.md, september-2026-dubai-calendar.md, august-september-2026-calendar-sources.md, august-september-2026-calendar-density-report.md, PHASE_6C83 report. No DB, no code, no deploy.
+
+---
+
 ## 2026-05-28 — Phase 6C-82 COMPLETE — July 2026 calendar deployed to production
 
 Production import of july-2026-dubai-calendar. Server was behind (at 5bac54d) — git pull synced to 81d21a9. Backup: /var/backups/guidex/guides.db.pre-july-calendar-6c82-20260528-193114 (616K). Script ran cleanly: createCalendarDraft + publishCalendar. Row ID: 48233336-4d9c-442a-b990-23287a97c34d. DB delta: calendar_pages 5→6, all others unchanged. Safe deploy: pm2 stop → npm run build → pm2 start. Live QA: 13/13 routes 200, 22/22 content invariants pass. EN+RU index/follow. Sitemap: both EN+RU July URLs present. CSS 200 text/css. June page unaffected (4 details, Mallathon brief confirmed). E-invoicing page unaffected. Coverage: 93.5% (29/31 days calendar-only), 97% with e-invoicing Jul 1. Beat the Heat / Timur Bey / RE:SET absent. Phase report: PHASE_6C82_JULY_2026_CALENDAR_PRODUCTION_IMPORT_REPORT.md. GSC URL inspection: pending.

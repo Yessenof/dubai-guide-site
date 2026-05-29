@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-28 (Phase 6C-82 COMPLETE — July 2026 calendar deployed to production. july-2026-dubai-calendar live at guidex-consulting.ae. Row ID: 48233336-4d9c-442a-b990-23287a97c34d. 3 items: JUL-03-DSS (L2), JUL-03-MODESH (L1), JUL-03-KHAIR (L1). 13/13 routes 200, 22/22 invariants pass, index/follow EN+RU, sitemap present. Coverage: 93.5% calendar-only, 97% with e-invoicing Jul 1. GSC URL inspection: pending.)
+Last updated: 2026-05-28 (Phase 6C-83 COMPLETE — August and September 2026 calendar draft pack. Docs-only. August draft: 3 items (AUG-01-DSS L2, AUG-02-DEFLEP L1, AUG-03-DIHAD L1), 96.8% coverage. September draft: 8 items (MEE, IPS, AIM, ATM L2, PLME, Seamless, Forex, CorpTax L2), 46.7% coverage — sub-target, documented. ATM date correction: Sep 14–17 (NOT Aug 17–20 as in batch2 B2-05). Source ledger, density report, phase report all created. Next: Phase 6C-84 — August local import QA.)
 
 ---
 

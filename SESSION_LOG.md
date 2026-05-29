@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-29 — Phase 6C-85 COMPLETE — August 2026 calendar deployed to production
+
+Production import of august-2026-dubai-calendar. Server was at 81d21a9 — git pull synced to b1a62a2 (3 commits: 6C-82 report, 6C-83 draft pack, 6C-84 local QA). Backup: /var/backups/guidex/guides.db.pre-august-calendar-6c85-20260529-104130 (616K). Script ran cleanly: createCalendarDraft + publishCalendar, first attempt, no errors. Row ID: 8210213f-8a1b-45d7-9fa5-32e8bc94db5e. DB delta: calendar_pages 6→7, all others unchanged. Safe deploy: pm2 stop → npm run build → pm2 start. Live QA: 15/15 routes 200, 22/22 content invariants pass. EN+RU index/follow. Sitemap: both EN+RU August URLs present. DSS Back to School L2 brief confirmed in live HTML EN+RU. ATM absent (0 occurrences EN+RU). No EN fallback on RU. June (4 details), July (1 detail), e-invoicing unaffected. Coverage: 96.8% (30/31 days -- Aug 31 only gap). GSC URL inspection: pending. Phase report: PHASE_6C85_AUGUST_2026_CALENDAR_PRODUCTION_IMPORT_REPORT.md.
+
+---
+
 ## 2026-05-29 — Phase 6C-84 COMPLETE — August 2026 calendar local import QA
 
 Created and published `august-2026-dubai-calendar` (new row — CREATE, not UPDATE). Script: `scripts/august-2026-calendar-import-6c84.ts`. Local DB backup before import: `backups/local/guides-before-6c84-august-import-20260529-093916.db` (580K). Import: 1 attempt, clean first run (no publish validation failures). Row ID: `6375670b-2842-43c4-a9d3-7235aae0ef75`. calendar_pages 7→8. Dates_json: 3 items (AUG-01-DSS L2, AUG-02-DEFLEP L1, AUG-03-DIHAD L1). 14/14 routes 200. 30/30 invariants pass. EN+RU index/follow. Sitemap EN+RU August URLs present. L2 brief (DSS Back to School) confirmed in initial HTML EN+RU. ATM: 0 occurrences (correctly absent). No EN fallback on RU page. June (4 details), July (3 items), e-invoicing unaffected. Coverage: 96.8% (30/31 days -- Aug 31 only gap). No production DB, no code change, no deploy. Phase report: PHASE_6C84_AUGUST_2026_CALENDAR_LOCAL_IMPORT_QA.md.

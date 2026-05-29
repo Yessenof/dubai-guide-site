@@ -5,6 +5,23 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE6C85-AUGUST-CALENDAR-LIVE — August 2026 Calendar — LIVE ON PRODUCTION
+
+**Date:** 2026-05-29
+**Status:** DEPLOYED AND VERIFIED — live on guidex-consulting.ae
+
+- August 2026 calendar created and published: `august-2026-dubai-calendar`
+- Production row ID: `8210213f-8a1b-45d7-9fa5-32e8bc94db5e`
+- 3 items: AUG-01-DSS (L2 EN+RU brief), AUG-02-DEFLEP (L1), AUG-03-DIHAD (L1)
+- 15/15 routes 200; 22/22 content invariants pass; 1 `<details>` EN+RU; EN+RU index/follow; sitemap present
+- Coverage: 96.8% (30/31 days); Aug 31 is the only gap (DSS ends Aug 30)
+- ATM correctly absent (0 occurrences EN+RU); Beat the Heat / Modesh standalone excluded
+- DB delta: calendar_pages 6→7; news/events/guides unchanged
+- Backup: `/var/backups/guidex/guides.db.pre-august-calendar-6c85-20260529-104130`
+- GSC URL inspection: pending
+
+---
+
 ## CP-PHASE6C82-JULY-CALENDAR-LIVE — July 2026 Calendar — LIVE ON PRODUCTION
 
 **Date:** 2026-05-28

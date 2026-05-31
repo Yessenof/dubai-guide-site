@@ -129,27 +129,28 @@
 
 ### B2-05 — Arabian Travel Market 2026
 
+**DATE CORRECTION (Phase 6C-83, 2026-05-28):** ATM was rescheduled from May, then from August. Correct dates are Sep 14-17, 2026 per DWTC official page and trade press (May 22, 2026). The Aug 17-20 dates below are STALE — do not use. ATM is now imported as SEP-04-ATM in the September 2026 calendar draft.
+
 | Field | Value |
 |-------|-------|
 | Item ID | B2-05 |
 | EN title | Arabian Travel Market 2026, Dubai |
 | RU title draft | Arabian Travel Market 2026, Дубай |
-| Date | 2026-08-17 to 2026-08-20 |
+| Date | ~~2026-08-17 to 2026-08-20~~ **CORRECTED: 2026-09-14 to 2026-09-17** |
 | Location / emirate | DWTC, Dubai |
 | Category | tourism_event / trade_event |
 | Source URL | https://www.dwtc.com/en/events/arabian-travel-market-exhibition-2026/ |
-| Source status | source_ready — verified 2026-05-18; recheck_before_import |
-| Risk level | LOW — trade-only; do not present as public consumer event |
-| Content level | L1 — item in Aug 2026 monthly calendar page |
-| CTA rule | External CTA to DWTC page or official ATM site if available |
-| Source gap | ATM official site (arabiantravelmarket.com) not yet checked for additional detail |
-| EN brief status | Not needed for L1; short label + type pill only |
-| RU brief status | Not needed for L1 |
-| Detail page needed | No standalone page at this stage; consider later if holiday homes / hospitality content cluster grows |
-| Next action | Create Aug 2026 monthly calendar page (`aug-2026-uae-calendar`); add ATM as L1 item; recheck DWTC page for date confirmation before import |
-| Import readiness | source_ready — no draft needed for L1 |
-| Publish by | **July 15 2026** — first new monthly page, unlocks August density |
-| Notes | This is the first new monthly calendar page to create. Trade-only but useful for hospitality/holiday homes angle. |
+| Source status | source_ready — DWTC Sep 14-17 confirmed 2026-05-22 (trade press); recheck_before_import |
+| Risk level | LOW-MEDIUM — rescheduled twice; verify current dates before import |
+| Content level | L2 — item in Sep 2026 monthly calendar page (SEP-04-ATM, not August) |
+| CTA rule | External CTA to arabiantravelmarket.wtm.com or DWTC page |
+| EN brief status | L2 brief written in September draft |
+| RU brief status | L2 brief written in September draft |
+| Detail page needed | No standalone page at this stage |
+| Next action | Import as SEP-04-ATM in September 2026 calendar. NOT in August. |
+| Import readiness | draft_ready — included in September 2026 calendar draft (Phase 6C-83) |
+| Publish by | **August 1 2026** — Sep calendar needed before Sep 14 opening |
+| Notes | CRITICAL: ATM is in SEPTEMBER (Sep 14-17), not August. The Aug 17-20 dates are stale and incorrect. Do not add ATM to the August calendar. ATM was rescheduled from May to September. Recheck official site before import — rescheduled twice. |
 
 ---
 
@@ -318,8 +319,8 @@
 
 | Page slug | Target create | Key items |
 |-----------|--------------|-----------|
-| `aug-2026-uae-calendar` | July 15 2026 | ATM Aug 17-20 |
-| `sep-2026-uae-calendar` | July 15 2026 | IPS Sep 7-9; Private Label Sep 15-17; Corp Tax Sep 30 cross-ref |
+| `aug-2026-uae-calendar` | DONE — `august-2026-dubai-calendar` live | DSS final month, Def Leppard Aug 2, DIHAD Aug 24-26 |
+| `sep-2026-uae-calendar` | DONE — `september-2026-dubai-calendar` in QA | MEE Sep 1-3; IPS Sep 7-9; ATM **Sep 14-17** (NOT Aug); Seamless Sep 22-24; Corp Tax Sep 30 |
 | `oct-2026-uae-calendar` | August 15 2026 | Beautyworld Oct 6-8; WETEX Oct 20-22; E-invoicing ASP cross-ref; DFC Oct 31 |
 | `nov-2026-uae-calendar` | September 1 2026 | DFC sub-events; Dubai Design Week; Downtown Design; Big 5; Dubai Run |
 | `dec-2026-uae-calendar` | October 1 2026 | F1 Abu Dhabi GP; GITEX Summit; GITEX Expo; Commemoration Day; National Day; Emiratisation Dec 31 |

@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-31 (Phase 6C-86 COMPLETE — Calendar visual density, homepage freshness deployed. Range visualization: DSS now fills July (28 bars) and August (30 bars) with correct blue color. Type-to-category mapping fixed for retail_offer/venue_show/trade_show/conference/compliance/family. Homepage carousel freshness filtering and gradient variety. No DB changes. Next: Phase 6C-87 — September 2026 calendar local import QA. Fix B2-05 ATM dates first.)
+Last updated: 2026-05-31 (Phase 6C-87 COMPLETE — September 2026 calendar local import QA. Row ID: e47b4587-fed3-4e77-866d-0ff302c09a1e. 8 items: MEE (L1), IPS (L1), AIM (L1), ATM L2 Sep 14-17, PLME (L1), Seamless (L1), Forex (L1), Corp Tax L2. 16/16 routes 200. 2 L2 briefs EN+RU. 6 range bars in Sep grid. Coverage: 46.7% (14/30 days, sub-target, documented). ATM Sep 14-17 confirmed everywhere. Mawlid/Cityscape held. B2-05 corrected. Next: Phase 6C-88 — September production import.)
 
 ---
 

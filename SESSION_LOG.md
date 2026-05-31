@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-31 — Phase 6C-87 COMPLETE — September 2026 calendar local import QA
+
+Corrected B2-05 in batch2 candidates doc: ATM dates updated from stale Aug 17-20 to Sep 14-17; content level changed from L1/Aug to L2/Sep; monthly pages table updated. Created and published `september-2026-dubai-calendar` (new row -- CREATE). Script: `scripts/september-2026-calendar-import-6c87.ts`. Local DB backup: `backups/local/guides-before-6c87-september-import-20260531-131440.db` (632K). Import: 1 attempt, clean, no errors. Row ID: `e47b4587-fed3-4e77-866d-0ff302c09a1e`. calendar_pages 8→9. 8 items: MEE (L1 Sep1), IPS (L1 Sep7), AIM (L1 Sep7), ATM (L2 Sep14-17), PLME (L1 Sep15), Seamless (L1 Sep22), Forex (L1 Sep22), Corp Tax (L2 Sep30). 16/16 routes 200. 2 L2 details EN+RU (ATM + Corp Tax). No EN fallback. ATM = 0 in August. Mawlid = 0. Cityscape = 0. 6 range bars in Sep grid (MEE Sep2-3, ATM Sep15-17, Seamless Sep24). Coverage: 46.7% (14/30 days) -- sub-target, documented. Phase 6C-86 range system confirmed working with Sep items. No production DB, no code change, no deploy. Phase report: PHASE_6C87_SEPTEMBER_2026_CALENDAR_LOCAL_IMPORT_QA.md.
+
+---
+
 ## 2026-05-31 — Phase 6C-86 COMPLETE — Calendar visual density, homepage freshness deployed
 
 UI-only phase. Key changes: (1) CalendarGrid: added inferPeriodEnd() helper using noindex_after field (≤90 day threshold) so event_seasonal items expand across their full month. Start dates show full colored pill; mid-range days show 4px colored bar. AgendaCard shows Ongoing/Идёт badge for range-expansion views. (2) calendar-helpers: mapped all runtime DB type values (retail_offer, venue_show, trade_show, conference, compliance, family, entertainment) to correct category/color — this fixed a long-standing bug where DSS and concerts showed in gray. (3) FeaturedSlider: optional gradientFrom field for per-slide color variety. (4) Homepage (EN+RU): carousel now prioritizes current/upcoming monthly calendar pages, filters stale events (>7d past end) and old news (>90d), uses teal/amber/navy gradient variation. Live: July 28 range bars (blue), August 30 range bars (blue), June 3 bars, homepage teal gradient confirmed. TypeScript clean. Build clean. 16/16 routes 200. No DB changes. Deployed via safe sequence. Phase report: PHASE_6C86_CALENDAR_VISUAL_DENSITY_EVENT_MEDIA_HOMEPAGE_FRESHNESS_REPORT.md.

@@ -5,6 +5,24 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE6C88-SEPTEMBER-CALENDAR-LIVE — September 2026 Calendar — LIVE ON PRODUCTION
+
+**Date:** 2026-05-31
+**Status:** DEPLOYED AND VERIFIED — live on guidex-consulting.ae
+
+- September 2026 calendar created and published: `september-2026-dubai-calendar`
+- Production row ID: `915e1808-3130-4d97-9674-a5fef1d15e38`
+- 8 items: SEP-01-MEE (L1), SEP-02-IPS (L1), SEP-03-AIM (L1), SEP-04-ATM (L2, Sep 14-17), SEP-05-PLME (L1), SEP-06-SEAMLESS (L1), SEP-07-FOREX (L1), SEP-08-TAX (L2)
+- 17/17 routes 200; 2 L2 EN+RU; index/follow; sitemap present
+- ATM confirmed Sep 14-17 from live DWTC source ("14 - 17 Sep 2026" on page)
+- Coverage: 46.7% (14/30 days, sub-target, documented)
+- Mawlid Al-Nabi and Cityscape correctly excluded (unconfirmed)
+- Phase 6C-86 range visualization: July 28 bars, September 6 bars — working in production
+- DB delta: calendar_pages 7→8; news/events/guides unchanged
+- Backup: `/var/backups/guidex/guides.db.pre-september-calendar-6c88-20260531-092503`
+
+---
+
 ## CP-PHASE6C85-AUGUST-CALENDAR-LIVE — August 2026 Calendar — LIVE ON PRODUCTION
 
 **Date:** 2026-05-29

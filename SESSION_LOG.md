@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-31 — Phase 6C-88 COMPLETE — September 2026 calendar deployed to production
+
+Production import of september-2026-dubai-calendar. ATM source recheck: DWTC page returns 200, "14 - 17 Sep 2026" confirmed on page. Server at 1d4650d (synced in this phase). Backup: /var/backups/guidex/guides.db.pre-september-calendar-6c88-20260531-092503 (624K). Script ran cleanly: createCalendarDraft + publishCalendar, first attempt, no errors. Row ID: 915e1808-3130-4d97-9674-a5fef1d15e38. DB delta: calendar_pages 7→8, all others unchanged. Safe deploy: pm2 stop → npm run build → pm2 start. Live QA: 17/17 routes 200. 2 L2 details EN+RU (ATM + Corp Tax). Sep 14-17 text confirmed in live HTML. ATM in Aug = 0. Mawlid = 0. Cityscape = 0. EN title fallback on RU = 0. 6 range bars in Sep live grid. July 28 range bars confirmed still working. Aug (1 L2, 0 ATM), E-invoicing (3 L2): unaffected. Sitemap: 2 Sep URLs present. Coverage: 46.7% (14/30 days, sub-target). Phase 6C-86 range system confirmed in production. GSC: pending. Phase report: PHASE_6C88_SEPTEMBER_2026_CALENDAR_PRODUCTION_IMPORT_REPORT.md.
+
+---
+
 ## 2026-05-31 — Phase 6C-87 COMPLETE — September 2026 calendar local import QA
 
 Corrected B2-05 in batch2 candidates doc: ATM dates updated from stale Aug 17-20 to Sep 14-17; content level changed from L1/Aug to L2/Sep; monthly pages table updated. Created and published `september-2026-dubai-calendar` (new row -- CREATE). Script: `scripts/september-2026-calendar-import-6c87.ts`. Local DB backup: `backups/local/guides-before-6c87-september-import-20260531-131440.db` (632K). Import: 1 attempt, clean, no errors. Row ID: `e47b4587-fed3-4e77-866d-0ff302c09a1e`. calendar_pages 8→9. 8 items: MEE (L1 Sep1), IPS (L1 Sep7), AIM (L1 Sep7), ATM (L2 Sep14-17), PLME (L1 Sep15), Seamless (L1 Sep22), Forex (L1 Sep22), Corp Tax (L2 Sep30). 16/16 routes 200. 2 L2 details EN+RU (ATM + Corp Tax). No EN fallback. ATM = 0 in August. Mawlid = 0. Cityscape = 0. 6 range bars in Sep grid (MEE Sep2-3, ATM Sep15-17, Seamless Sep24). Coverage: 46.7% (14/30 days) -- sub-target, documented. Phase 6C-86 range system confirmed working with Sep items. No production DB, no code change, no deploy. Phase report: PHASE_6C87_SEPTEMBER_2026_CALENDAR_LOCAL_IMPORT_QA.md.

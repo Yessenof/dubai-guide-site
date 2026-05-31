@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-31 (Phase 6C-87 COMPLETE — September 2026 calendar local import QA. Row ID: e47b4587-fed3-4e77-866d-0ff302c09a1e. 8 items: MEE (L1), IPS (L1), AIM (L1), ATM L2 Sep 14-17, PLME (L1), Seamless (L1), Forex (L1), Corp Tax L2. 16/16 routes 200. 2 L2 briefs EN+RU. 6 range bars in Sep grid. Coverage: 46.7% (14/30 days, sub-target, documented). ATM Sep 14-17 confirmed everywhere. Mawlid/Cityscape held. B2-05 corrected. Next: Phase 6C-88 — September production import.)
+Last updated: 2026-05-31 (Phase 6C-88 COMPLETE — September 2026 calendar deployed to production. september-2026-dubai-calendar live at guidex-consulting.ae. Row ID: 915e1808-3130-4d97-9674-a5fef1d15e38. 8 items: MEE, IPS, AIM, ATM L2 Sep 14-17, PLME, Seamless, Forex, Corp Tax L2. 17/17 routes 200. 2 L2 EN+RU. 6 range bars live. Coverage: 46.7% (14/30 days). ATM confirmed Sep 14-17 from live DWTC source. Phase 6C-86 range bars: July 28, September 6. GSC: pending. Live: Jun/Jul/Aug/Sep all live.)
 
 ---
 

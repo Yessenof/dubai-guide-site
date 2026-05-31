@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-31 — Phase 6C-89 COMPLETE — October 2026 calendar source radar and draft pack
+
+Docs-only source radar and draft pack. Confirmed October 2026 items: Beautyworld Dubai Oct 6-8 (Messe Frankfurt/DWTC, L1), WETEX Oct 20-22 (DEWA/DWTC, L2 brief written EN+RU), UAE VAT Q3 deadline Oct 28 (FTA, L1), E-invoicing ASP cross-ref Oct 30 (internal link to existing live page, L1), DFC launch Oct 31 (source_ready but site now 403 -- recheck required, L1). Coverage: 29.0% (9/31 days) -- significantly below target. GITEX 2026 confirmed December (NOT October; corrected any October assumption). Dubai Airshow: no 2026 edition (biennial, odd years). Global Village Season 31: HOLD (estimated mid-Oct but no official date). Cityscape: HOLD/SOURCE_NEEDED. No imports, no code changes, no deploy. Files: october-2026-dubai-calendar.md, october-2026-calendar-sources.md, october-2026-calendar-density-report.md, PHASE_6C89 report.
+
+---
+
 ## 2026-05-31 — Phase 6C-88 COMPLETE — September 2026 calendar deployed to production
 
 Production import of september-2026-dubai-calendar. ATM source recheck: DWTC page returns 200, "14 - 17 Sep 2026" confirmed on page. Server at 1d4650d (synced in this phase). Backup: /var/backups/guidex/guides.db.pre-september-calendar-6c88-20260531-092503 (624K). Script ran cleanly: createCalendarDraft + publishCalendar, first attempt, no errors. Row ID: 915e1808-3130-4d97-9674-a5fef1d15e38. DB delta: calendar_pages 7→8, all others unchanged. Safe deploy: pm2 stop → npm run build → pm2 start. Live QA: 17/17 routes 200. 2 L2 details EN+RU (ATM + Corp Tax). Sep 14-17 text confirmed in live HTML. ATM in Aug = 0. Mawlid = 0. Cityscape = 0. EN title fallback on RU = 0. 6 range bars in Sep live grid. July 28 range bars confirmed still working. Aug (1 L2, 0 ATM), E-invoicing (3 L2): unaffected. Sitemap: 2 Sep URLs present. Coverage: 46.7% (14/30 days, sub-target). Phase 6C-86 range system confirmed in production. GSC: pending. Phase report: PHASE_6C88_SEPTEMBER_2026_CALENDAR_PRODUCTION_IMPORT_REPORT.md.

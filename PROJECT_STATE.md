@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-31 (Phase 6C-88 COMPLETE — September 2026 calendar deployed to production. september-2026-dubai-calendar live at guidex-consulting.ae. Row ID: 915e1808-3130-4d97-9674-a5fef1d15e38. 8 items: MEE, IPS, AIM, ATM L2 Sep 14-17, PLME, Seamless, Forex, Corp Tax L2. 17/17 routes 200. 2 L2 EN+RU. 6 range bars live. Coverage: 46.7% (14/30 days). ATM confirmed Sep 14-17 from live DWTC source. Phase 6C-86 range bars: July 28, September 6. GSC: pending. Live: Jun/Jul/Aug/Sep all live.)
+Last updated: 2026-05-31 (Phase 6C-89 COMPLETE — October 2026 calendar source radar and draft pack. Docs-only. 5 items: Beautyworld Oct 6-8 (L1), WETEX Oct 20-22 (L2), VAT Q3 Oct 28 (L1), E-invoicing cross-ref Oct 30 (L1, internal link), DFC launch Oct 31 (L1, needs recheck). Coverage: 29.0% (9/31 days). GITEX confirmed December (NOT October). Global Village Season 31 HOLD. DFC site 403 -- recheck before import. Next: Phase 6C-90 -- October local import QA.)
 
 ---
 

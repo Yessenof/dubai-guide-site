@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-31 (Phase 6C-92 COMPLETE -- Claude Routines setup for Guidex Daily Calendar Intelligence. 5 routines created and enabled (IDs: R01 trig_01N7xgjFVsXJUngruD3WunYi, R02 trig_014nMNqBaHHABn91FAFEDzqn, R03 trig_019JU3K2PBiehmRvAzsTQTXR, R04 trig_01THaHu2wafKh5ZcVzC8zqp9, R05 trig_01Bsdr3WcdsZm3dAXEZ2JT3B). First run: 2026-06-01. GitHub App connection required. 7 docs created in docs/content-drafts/routines/. No code/DB/deploy changes. NEXT: GitHub App setup, then Phase 6C-93 November 2026 calendar.)
+Last updated: 2026-05-31 (Phase 6C-93B COMPLETE -- Calendar UX local QA verified. h-[4px]=0 in ALL months (Jul/Aug/Sep/Oct/Jun). h-[2px] subtle bars=4 Oct (Beautyworld+WETEX exact). #2D5FA3 live. #1B2E4B absent. 12/12 routes 200. Recommendation: APPROVE_WITH_MINOR_NOTES. Minor: DSS chip truncation (DB fix), #0D9488 not exercised (no live real_estate items). No push, no deploy. NEXT: owner approves deploy → 6C-94 Nov calendar import.)
 
 ---
 

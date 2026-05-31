@@ -59,10 +59,10 @@ function getLegendItems(filter: string, locale: "en" | "ru") {
   const isRu = locale === "ru";
   const H = { label: isRu ? "Праздник"      : "Holiday",  color: "#22C55E" };
   const E = { label: isRu ? "Событие"       : "Event",    color: "#3B82F6" };
-  const B = { label: isRu ? "Бизнес"        : "Business", color: "#1B2E4B" };
+  const B = { label: isRu ? "Бизнес"        : "Business", color: "#2D5FA3" };
   const T = { label: isRu ? "Налог"         : "Tax",      color: "#EF4444" };
   const D = { label: isRu ? "Дедлайн"       : "Deadline", color: "#F59E0B" };
-  const P = { label: isRu ? "Недвижимость"  : "Property", color: "#1B2E4B" };
+  const P = { label: isRu ? "Недвижимость"  : "Property", color: "#0D9488" };
   const U = { label: isRu ? "Обновление"    : "Update",   color: "#6B7280" };
   const O = { label: isRu ? "Другое"        : "Other",    color: "#6B7280" };
 
@@ -92,6 +92,10 @@ function buildGridCells(year: number, month: number): Array<number | null> {
 function isoDate(year: number, month: number, day: number): string {
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
+
+// Long-range threshold: events spanning ≥ this many days are month-level highlights,
+// not day-by-day grid bars. They appear only on their start date in the grid.
+const LONG_RANGE_DAYS = 7;
 
 // Infer a visual period_end from noindex_after when period_end is not set.
 // Only applies when the item starts in the current month and the inferred range
@@ -175,7 +179,15 @@ function expandRanges(
         result.push(item);
         continue;
       }
-      // Expand from item.date to inferredEnd, clipped to month
+      // Long-range check: events spanning ≥ LONG_RANGE_DAYS are month highlights only.
+      // Show only on start date — do not expand to day-by-day bars.
+      const inferredDiffDays =
+        (new Date(inferredEnd).getTime() - new Date(item.date).getTime()) / 86400000;
+      if (inferredDiffDays >= LONG_RANGE_DAYS) {
+        result.push(item); // start date only, no _cellDate expansion
+        continue;
+      }
+      // Short-range (< LONG_RANGE_DAYS): expand from item.date to inferredEnd, clipped to month
       const start = new Date(item.date);
       const end = new Date(inferredEnd);
       const to = end > monthEnd ? monthEnd : end;
@@ -187,9 +199,25 @@ function expandRanges(
       }
       continue;
     }
-    // Items with explicit period_end: original cross-month behavior preserved
+    // Items with explicit period_end
     const start = new Date(item.date);
     const end = new Date(item.period_end);
+    const rangeLen = (end.getTime() - start.getTime()) / 86400000;
+    if (rangeLen >= LONG_RANGE_DAYS) {
+      // Long-range with explicit period_end: show only on first visible day of this month
+      const from = start < monthStart ? monthStart : start;
+      const to = end > monthEnd ? monthEnd : end;
+      if (from > to) continue;
+      const iso = isoDate(from.getFullYear(), from.getMonth() + 1, from.getDate());
+      // Mark as _cellDate only if it differs from start (cross-month carry-over)
+      if (from > start) {
+        result.push({ ...item, _cellDate: iso });
+      } else {
+        result.push(item);
+      }
+      continue;
+    }
+    // Short-range with explicit period_end: expand all days (original behavior)
     const from = start < monthStart ? monthStart : start;
     const to = end > monthEnd ? monthEnd : end;
     if (from > to) continue;
@@ -613,9 +641,9 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
                       const gi = pillItem as GridItem;
                       const isRangeActive = gi._cellDate !== undefined && gi._cellDate !== gi.date;
                       return isRangeActive ? (
-                        // Mid-range: thin colored bar (shows coverage without text clutter)
+                        // Mid-range: subtle 2px continuation hint (not a dominant bar)
                         <div
-                          className="w-full h-[4px] rounded-full"
+                          className="w-full h-[2px] rounded-full opacity-40"
                           style={{ backgroundColor: itemColor(pillItem) }}
                         />
                       ) : (
@@ -636,10 +664,10 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
                           return (
                             <span
                               key={idx}
-                              className="w-[7px] h-[7px] rounded-full flex-shrink-0"
+                              className="w-[6px] h-[6px] rounded-full flex-shrink-0"
                               style={{
                                 backgroundColor: itemColor(dot),
-                                opacity: dotIsRange ? 0.55 : 1,
+                                opacity: dotIsRange ? 0.35 : 1,
                               }}
                             />
                           );

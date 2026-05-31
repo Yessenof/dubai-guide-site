@@ -5,6 +5,18 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-31 — Phase 6C-93B COMPLETE — Calendar UX local QA and deploy readiness check
+
+Dev server at localhost:3000. 12/12 routes 200. Grid QA: h-[4px]=0 in ALL months checked (Jul/Aug/Sep/Oct/Jun). h-[2px] bars=4 Oct (exact: Oct 7-8 Beautyworld + Oct 21-22 WETEX), 6 Sep, 4 Jun. #2D5FA3 (new business navy) live in Aug/Sep/Oct. #1B2E4B (old near-black) absent from all calendar items across all months. E-invoicing cross-ref link: 12 occurrences in Oct grid. Homepage carousel showing Jul/Aug correctly. RU routes 200. No raw JSON. Recommendation: APPROVE_WITH_MINOR_NOTES. Minor notes: DSS "Dubai Summer Surprises 2026" chip truncates to ~"Dubai Sum..." (DB fix needed, not code bug); #0D9488 property color not exercised (no live real_estate_event items). Report: CALENDAR_UX_DEPLOY_READINESS_6C93B.md. No push, no deploy, no DB write.
+
+---
+
+## 2026-05-31 — Phase 6C-93A COMPLETE — Calendar UX patch + PDF extraction + coverage audit
+
+Root cause of July/August bar spam identified: DSS noindex_after=2026-09-01 → inferPeriodEnd returned 2026-08-31 (60d range ≤ 90 threshold) → expanded to 29 bars in July, 31 bars in August. Fix: LONG_RANGE_DAYS=7 constant in CalendarGrid.tsx. Items with inferred or explicit range ≥ 7d now show only on start date. Mid-range bars: 4px→2px/opacity-40. Colors: real_estate_event #1B2E4B→#0D9488 (teal), business_event #1B2E4B→#2D5FA3 (soft navy). Legend updated. Build: 88 pages 0 errors. TypeScript: 0 errors. 7 docs created: UX audit, redesign spec, QA notes, PDF extraction matrix (26 candidates/19 calendar/9 recurring/7 blocked), coverage audit (Aug-Dec+Jan), import candidate pack (8 READY + 3 pending), SEO/RAG audit. Phase report: PHASE_6C93A. No DB write, no deploy, no push.
+
+---
+
 ## 2026-05-31 — Phase 6C-92 COMPLETE — Claude Routines setup for Guidex Daily Calendar Intelligence
 
 5 Claude Code remote routines created and enabled. All use claude-sonnet-4-6, env_017eduszWN2ArhrAo3oEvEPH, standard context, no 1M context. R01 (Event Radar, 06:00 UTC): scans DWTC/Visit Dubai/dubaidesignweek/big5/gitex/globalvillage/fahr/DFC for Nov/Dec/Jan signals. R02 (Source Verification, 06:30): rechecks 6 HOLD items daily (DFC 403, Global Village, Mawlid, Cityscape, DSF, Sole DXB). R03 (Density Watch, 07:00): tracks Nov/Dec/Jan coverage vs 90% target. R04 (Live QA, 07:30): 19 production route checks + freshness. R05 (Import Candidate Pack, 08:00): synthesises R01-R04 → daily owner summary. Trigger IDs: trig_01N7xgjFVsXJUngruD3WunYi / trig_014nMNqBaHHABn91FAFEDzqn / trig_019JU3K2PBiehmRvAzsTQTXR / trig_01THaHu2wafKh5ZcVzC8zqp9 / trig_01Bsdr3WcdsZm3dAXEZ2JT3B. First run: 2026-06-01. GitHub App connection required (see phase report Section 11). 7 docs created: strategy + 5 routine templates + setup guide. No code/DB/deploy changes. docs/content-drafts/daily-radar/ created for outputs.

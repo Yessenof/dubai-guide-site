@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-31 (Phase 6C-92 COMPLETE -- 5 daily Claude Code routines created for Guidex calendar intelligence. First run: 2026-06-01. GitHub App required: https://claude.ai/code/onboarding?magic=github-app-setup. View routines: https://claude.ai/code/routines. NEXT: Phase 6C-93 November 2026 Calendar (after GitHub connected and first routine run reviewed).)
+Last updated: 2026-05-31 (Phase 6C-93A COMPLETE -- Calendar UX patch local (long-range bars fixed, colors improved, 88 pages 0 err), 7 audit docs created, 8 READY import candidates (Nov: DDW+Big5+Downtown Design; Dec: CommDay+NatDay+GITEX; Jan27: E-inv go-live+VAT Q4). NEXT: 6C-93B push code; 6C-94 Nov calendar import; 6C-95 Dec import; 6C-96 Jan 2027 import.)
 
 WHAT TO ATTACH
 --------------

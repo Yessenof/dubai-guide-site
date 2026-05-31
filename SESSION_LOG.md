@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-31 — Phase 6C-91 COMPLETE — October 2026 calendar production import
+
+Pre-recheck: Beautyworld 301/accessible, WETEX 200, DFC still 403 (HELD), e-invoicing cross-ref 200, October 404 (expected). Import script ran on production: `scripts/october-2026-calendar-import-6c90.ts`. Created and published `october-2026-dubai-calendar` (id=8ad2a183-75dd-427d-a70e-5b10237c3e9c). calendar_pages 8→9. TypeScript build failed first: `label_en` not in type assertion -- fixed with `Array<{ id: string; date: string; label_en?: string }>`, committed 0e1dd87. Second build: 88 pages 0 errors EXIT_CODE=0. PM2 pid 207214. 15/15 routes 200. EN: 1 L2 detail, WETEX 26 hits, Beautyworld 20, GITEX 0, DFC 0. RU: 1 L2 detail, WETEX 18, no EN fallback. Sitemap: 2 October entries. Sep unaffected (2 L2), e-invoicing unaffected (3 L2). Coverage: 25.8% (8/31). Production backup: /var/backups/guidex/guides.db.pre-october-calendar-6c91-. Report: PHASE_6C91.
+
+---
+
 ## 2026-05-31 — Phase 6C-90 COMPLETE — October 2026 calendar local import QA
 
 Source rechecks: Beautyworld 200 confirmed, WETEX 200 confirmed, DFC 403 (HELD), GITEX December confirmed. Created and published `october-2026-dubai-calendar` (new row -- CREATE). Script: `scripts/october-2026-calendar-import-6c90.ts`. Backup: `backups/local/guides-before-6c90-october-import-20260531-141612.db` (652K). Two attempts: first failed on em dash in OCT-04-EINV label_ru/en ("—" → replaced with comma). calendar_pages 9→10. 4 items: Beautyworld (L1 Oct6), WETEX (L2 Oct20), VAT Q3 (L1 Oct28), E-invoicing cross-ref (L1 Oct30, internal link). DFC Oct31 held -- site 403. 18/18 routes 200. 1 L2 detail (WETEX EN+RU). GITEX=0, Global Village=0, DFC=0 in pages. E-invoicing cross-ref renders as href in CalendarGrid hydration payload. 4 range bars (Oct7-8 Beautyworld, Oct21-22 WETEX). Sep unaffected (2 L2), e-invoicing unaffected (3 L2). Coverage: 25.8% (8/31 days -- DFC held). No production DB, no code, no deploy. Phase report: PHASE_6C90.

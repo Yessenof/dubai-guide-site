@@ -5,6 +5,14 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE6C91-OCTOBER-CALENDAR-LIVE — October 2026 Calendar — LIVE ON PRODUCTION
+
+**Date:** 2026-05-31
+
+October 2026 Dubai calendar page is live at guidex-consulting.ae. Row ID `8ad2a183-75dd-427d-a70e-5b10237c3e9c`. 4 items: OCT-01-BEAUTY (L1, Oct 6-8), OCT-02-WETEX (L2 brief, Oct 20-22), OCT-03-VAT (L1, Oct 28), OCT-04-EINV (L1 cross-ref, Oct 30). DFC held (403). 15/15 routes 200. 1 L2 EN+RU. Coverage 25.8% (8/31 days, sub-target). 88 pages 0 errors. TypeScript fix applied (label_en type assertion in import script).
+
+---
+
 ## CP-PHASE6C88-SEPTEMBER-CALENDAR-LIVE — September 2026 Calendar — LIVE ON PRODUCTION
 
 **Date:** 2026-05-31

@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-24 (Phase 6C-55B COMPLETE — Safe deploy rule documented; Phase 6C-54 live on production; /life-setup + /ru/life-setup deployed at e4ef907; PM2 PID 145929 online; P0 CSS incident resolved)
+Last updated: 2026-05-31 (Phase 6C-91 COMPLETE -- October 2026 calendar LIVE on production. Row ID: 8ad2a183-75dd-427d-a70e-5b10237c3e9c. 4 items: Beautyworld (L1), WETEX (L2), VAT Q3 (L1), E-invoicing cross-ref (L1). DFC held (403). TS fix applied. 15/15 routes 200. 88 pages. Coverage 25.8% (8/31 days).)
 
 WHAT TO ATTACH
 --------------
@@ -40,7 +40,7 @@ SQLite. No external services.
 Stack: Next.js 16.2.3 (App Router, Turbopack) + TypeScript + Tailwind CSS v4 +
 better-sqlite3 + Drizzle ORM + NextAuth.js v4 + bcryptjs.
 
-CURRENT STATE (as of 2026-05-24) — PHASE 6C-55B COMPLETE — SAFE DEPLOY RULE DOCUMENTED — LIFE SETUP LIVE
+CURRENT STATE (as of 2026-05-26) — PHASE 6C-69 COMPLETE — CALENDAR SPRINT PLAN DOCUMENTED
 -----------------------------------------------------------------
 Site is fully live on guidex-consulting.ae with HTTPS.
 17 guides published. Production DB: 17 guides / 115 steps + Eid (news+event+calendar) + Emiratisation (news+calendar) + Long Weekend (calendar).

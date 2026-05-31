@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-31 (Phase 6C-90 COMPLETE -- October 2026 calendar local import QA. Row ID: 4f120d0d-0a61-4227-82a8-a8aac719f747. 4 items imported: Beautyworld (L1), WETEX (L2), VAT Q3 (L1), E-invoicing cross-ref (L1). DFC held (site 403). GITEX absent. Em dash fix in OCT-04-EINV labels. 18/18 routes 200. 1 L2 brief. 4 range bars. Coverage: 25.8% (8/31 days). Ready for Phase 6C-91 production import.)
+Last updated: 2026-05-31 (Phase 6C-91 COMPLETE -- October 2026 calendar production import. Row ID: 8ad2a183-75dd-427d-a70e-5b10237c3e9c. 4 items live: Beautyworld (L1), WETEX (L2), VAT Q3 (L1), E-invoicing cross-ref (L1). DFC held (403). TS fix applied (label_en type assertion). 15/15 routes 200. 88 pages 0 errors. PM2 pid 207214. Coverage: 25.8% (8/31 days). Production backup: /var/backups/guidex/guides.db.pre-october-calendar-6c91-)
 
 ---
 

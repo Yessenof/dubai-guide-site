@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-31 (Phase 6C-89 COMPLETE — October 2026 calendar source radar and draft pack. Docs-only. 5 items: Beautyworld Oct 6-8 (L1), WETEX Oct 20-22 (L2), VAT Q3 Oct 28 (L1), E-invoicing cross-ref Oct 30 (L1, internal link), DFC launch Oct 31 (L1, needs recheck). Coverage: 29.0% (9/31 days). GITEX confirmed December (NOT October). Global Village Season 31 HOLD. DFC site 403 -- recheck before import. Next: Phase 6C-90 -- October local import QA.)
+Last updated: 2026-05-31 (Phase 6C-90 COMPLETE -- October 2026 calendar local import QA. Row ID: 4f120d0d-0a61-4227-82a8-a8aac719f747. 4 items imported: Beautyworld (L1), WETEX (L2), VAT Q3 (L1), E-invoicing cross-ref (L1). DFC held (site 403). GITEX absent. Em dash fix in OCT-04-EINV labels. 18/18 routes 200. 1 L2 brief. 4 range bars. Coverage: 25.8% (8/31 days). Ready for Phase 6C-91 production import.)
 
 ---
 

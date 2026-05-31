@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-31 — Phase 6C-90 COMPLETE — October 2026 calendar local import QA
+
+Source rechecks: Beautyworld 200 confirmed, WETEX 200 confirmed, DFC 403 (HELD), GITEX December confirmed. Created and published `october-2026-dubai-calendar` (new row -- CREATE). Script: `scripts/october-2026-calendar-import-6c90.ts`. Backup: `backups/local/guides-before-6c90-october-import-20260531-141612.db` (652K). Two attempts: first failed on em dash in OCT-04-EINV label_ru/en ("—" → replaced with comma). calendar_pages 9→10. 4 items: Beautyworld (L1 Oct6), WETEX (L2 Oct20), VAT Q3 (L1 Oct28), E-invoicing cross-ref (L1 Oct30, internal link). DFC Oct31 held -- site 403. 18/18 routes 200. 1 L2 detail (WETEX EN+RU). GITEX=0, Global Village=0, DFC=0 in pages. E-invoicing cross-ref renders as href in CalendarGrid hydration payload. 4 range bars (Oct7-8 Beautyworld, Oct21-22 WETEX). Sep unaffected (2 L2), e-invoicing unaffected (3 L2). Coverage: 25.8% (8/31 days -- DFC held). No production DB, no code, no deploy. Phase report: PHASE_6C90.
+
+---
+
 ## 2026-05-31 — Phase 6C-89 COMPLETE — October 2026 calendar source radar and draft pack
 
 Docs-only source radar and draft pack. Confirmed October 2026 items: Beautyworld Dubai Oct 6-8 (Messe Frankfurt/DWTC, L1), WETEX Oct 20-22 (DEWA/DWTC, L2 brief written EN+RU), UAE VAT Q3 deadline Oct 28 (FTA, L1), E-invoicing ASP cross-ref Oct 30 (internal link to existing live page, L1), DFC launch Oct 31 (source_ready but site now 403 -- recheck required, L1). Coverage: 29.0% (9/31 days) -- significantly below target. GITEX 2026 confirmed December (NOT October; corrected any October assumption). Dubai Airshow: no 2026 edition (biennial, odd years). Global Village Season 31: HOLD (estimated mid-Oct but no official date). Cityscape: HOLD/SOURCE_NEEDED. No imports, no code changes, no deploy. Files: october-2026-dubai-calendar.md, october-2026-calendar-sources.md, october-2026-calendar-density-report.md, PHASE_6C89 report.

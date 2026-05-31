@@ -272,7 +272,7 @@ log(`  Current calendar_pages count: ${allPages.length}`);
 section("Pre-flight: validate dates_json item IDs");
 
 const expectedIds = new Set(["OCT-01-BEAUTY", "OCT-02-WETEX", "OCT-03-VAT", "OCT-04-EINV"]);
-const parsedDates = JSON.parse(DATES_JSON) as Array<{ id: string; date: string }>;
+const parsedDates = JSON.parse(DATES_JSON) as Array<{ id: string; date: string; label_en?: string }>;
 const seenIds = new Set<string>();
 
 for (const item of parsedDates) {

@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-31 (Phase 6C-91 COMPLETE -- October 2026 calendar LIVE on production. Row ID: 8ad2a183-75dd-427d-a70e-5b10237c3e9c. 4 items: Beautyworld (L1), WETEX (L2), VAT Q3 (L1), E-invoicing cross-ref (L1). DFC held (403). TS fix applied. 15/15 routes 200. 88 pages. Coverage 25.8% (8/31 days).)
+Last updated: 2026-05-31 (Phase 6C-92 COMPLETE -- 5 daily Claude Code routines created for Guidex calendar intelligence. First run: 2026-06-01. GitHub App required: https://claude.ai/code/onboarding?magic=github-app-setup. View routines: https://claude.ai/code/routines. NEXT: Phase 6C-93 November 2026 Calendar (after GitHub connected and first routine run reviewed).)
 
 WHAT TO ATTACH
 --------------

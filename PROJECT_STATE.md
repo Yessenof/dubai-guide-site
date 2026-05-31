@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-31 (Phase 6C-91 COMPLETE -- October 2026 calendar production import. Row ID: 8ad2a183-75dd-427d-a70e-5b10237c3e9c. 4 items live: Beautyworld (L1), WETEX (L2), VAT Q3 (L1), E-invoicing cross-ref (L1). DFC held (403). TS fix applied (label_en type assertion). 15/15 routes 200. 88 pages 0 errors. PM2 pid 207214. Coverage: 25.8% (8/31 days). Production backup: /var/backups/guidex/guides.db.pre-october-calendar-6c91-)
+Last updated: 2026-05-31 (Phase 6C-92 COMPLETE -- Claude Routines setup for Guidex Daily Calendar Intelligence. 5 routines created and enabled (IDs: R01 trig_01N7xgjFVsXJUngruD3WunYi, R02 trig_014nMNqBaHHABn91FAFEDzqn, R03 trig_019JU3K2PBiehmRvAzsTQTXR, R04 trig_01THaHu2wafKh5ZcVzC8zqp9, R05 trig_01Bsdr3WcdsZm3dAXEZ2JT3B). First run: 2026-06-01. GitHub App connection required. 7 docs created in docs/content-drafts/routines/. No code/DB/deploy changes. NEXT: GitHub App setup, then Phase 6C-93 November 2026 calendar.)
 
 ---
 

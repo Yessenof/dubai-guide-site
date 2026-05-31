@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-31 — Phase 6C-92 COMPLETE — Claude Routines setup for Guidex Daily Calendar Intelligence
+
+5 Claude Code remote routines created and enabled. All use claude-sonnet-4-6, env_017eduszWN2ArhrAo3oEvEPH, standard context, no 1M context. R01 (Event Radar, 06:00 UTC): scans DWTC/Visit Dubai/dubaidesignweek/big5/gitex/globalvillage/fahr/DFC for Nov/Dec/Jan signals. R02 (Source Verification, 06:30): rechecks 6 HOLD items daily (DFC 403, Global Village, Mawlid, Cityscape, DSF, Sole DXB). R03 (Density Watch, 07:00): tracks Nov/Dec/Jan coverage vs 90% target. R04 (Live QA, 07:30): 19 production route checks + freshness. R05 (Import Candidate Pack, 08:00): synthesises R01-R04 → daily owner summary. Trigger IDs: trig_01N7xgjFVsXJUngruD3WunYi / trig_014nMNqBaHHABn91FAFEDzqn / trig_019JU3K2PBiehmRvAzsTQTXR / trig_01THaHu2wafKh5ZcVzC8zqp9 / trig_01Bsdr3WcdsZm3dAXEZ2JT3B. First run: 2026-06-01. GitHub App connection required (see phase report Section 11). 7 docs created: strategy + 5 routine templates + setup guide. No code/DB/deploy changes. docs/content-drafts/daily-radar/ created for outputs.
+
+---
+
 ## 2026-05-31 — Phase 6C-91 COMPLETE — October 2026 calendar production import
 
 Pre-recheck: Beautyworld 301/accessible, WETEX 200, DFC still 403 (HELD), e-invoicing cross-ref 200, October 404 (expected). Import script ran on production: `scripts/october-2026-calendar-import-6c90.ts`. Created and published `october-2026-dubai-calendar` (id=8ad2a183-75dd-427d-a70e-5b10237c3e9c). calendar_pages 8→9. TypeScript build failed first: `label_en` not in type assertion -- fixed with `Array<{ id: string; date: string; label_en?: string }>`, committed 0e1dd87. Second build: 88 pages 0 errors EXIT_CODE=0. PM2 pid 207214. 15/15 routes 200. EN: 1 L2 detail, WETEX 26 hits, Beautyworld 20, GITEX 0, DFC 0. RU: 1 L2 detail, WETEX 18, no EN fallback. Sitemap: 2 October entries. Sep unaffected (2 L2), e-invoicing unaffected (3 L2). Coverage: 25.8% (8/31). Production backup: /var/backups/guidex/guides.db.pre-october-calendar-6c91-. Report: PHASE_6C91.

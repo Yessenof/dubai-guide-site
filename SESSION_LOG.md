@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-31 — Phase 6C-93C COMPLETE — Calendar UX patch deployed to production
+
+Commit 8bebafb pushed to origin/main. Server git pull fast-forward 0e1dd87→8bebafb. PM2 stop → npm run build (88 pages 0 errors EXIT=0, 24.5s compile) → PM2 start pid 209175 online. Live QA: 14/14 routes 200. Production checks: Jul/Aug h-[4px]=0 (old bars gone on production). Sep h-[2px]=6 (short-range bars live). Aug #2D5FA3=7 (new business color live). Jul/Aug DSS=17 (side panel present). No raw JSON. Build: 88 pages 0 errors. No DB write, no migrations, no new content imported. Deploy report: CALENDAR_UX_DEPLOY_REPORT_6C93C.md.
+
+---
+
 ## 2026-05-31 — Phase 6C-93B COMPLETE — Calendar UX local QA and deploy readiness check
 
 Dev server at localhost:3000. 12/12 routes 200. Grid QA: h-[4px]=0 in ALL months checked (Jul/Aug/Sep/Oct/Jun). h-[2px] bars=4 Oct (exact: Oct 7-8 Beautyworld + Oct 21-22 WETEX), 6 Sep, 4 Jun. #2D5FA3 (new business navy) live in Aug/Sep/Oct. #1B2E4B (old near-black) absent from all calendar items across all months. E-invoicing cross-ref link: 12 occurrences in Oct grid. Homepage carousel showing Jul/Aug correctly. RU routes 200. No raw JSON. Recommendation: APPROVE_WITH_MINOR_NOTES. Minor notes: DSS "Dubai Summer Surprises 2026" chip truncates to ~"Dubai Sum..." (DB fix needed, not code bug); #0D9488 property color not exercised (no live real_estate_event items). Report: CALENDAR_UX_DEPLOY_READINESS_6C93B.md. No push, no deploy, no DB write.

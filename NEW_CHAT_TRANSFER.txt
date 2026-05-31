@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-31 (Phase 6C-93A COMPLETE -- Calendar UX patch local (long-range bars fixed, colors improved, 88 pages 0 err), 7 audit docs created, 8 READY import candidates (Nov: DDW+Big5+Downtown Design; Dec: CommDay+NatDay+GITEX; Jan27: E-inv go-live+VAT Q4). NEXT: 6C-93B push code; 6C-94 Nov calendar import; 6C-95 Dec import; 6C-96 Jan 2027 import.)
+Last updated: 2026-05-31 (Phase 6C-93C COMPLETE -- Calendar UX patch LIVE on production. Commit 8bebafb. Jul/Aug DSS bars gone. Sep subtle bars live. #2D5FA3 navy live. 14/14 routes 200. PM2 pid 209175. NEXT: 6C-94 November 2026 calendar import (DDW Nov3-8 + Downtown Design + Big 5 Nov23-26). See 6C93A-calendar-import-candidate-pack.md.)
 
 WHAT TO ATTACH
 --------------

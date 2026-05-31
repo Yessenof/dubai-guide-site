@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-31 (Phase 6C-93B COMPLETE -- Calendar UX local QA verified. h-[4px]=0 in ALL months (Jul/Aug/Sep/Oct/Jun). h-[2px] subtle bars=4 Oct (Beautyworld+WETEX exact). #2D5FA3 live. #1B2E4B absent. 12/12 routes 200. Recommendation: APPROVE_WITH_MINOR_NOTES. Minor: DSS chip truncation (DB fix), #0D9488 not exercised (no live real_estate items). No push, no deploy. NEXT: owner approves deploy → 6C-94 Nov calendar import.)
+Last updated: 2026-05-31 (Phase 6C-93C COMPLETE -- Calendar UX patch DEPLOYED to production. Commit 8bebafb. Build: 88 pages 0 errors. PM2 pid 209175 online. Live QA: 14/14 routes 200. Jul/Aug h-[4px]=0. Sep h-[2px]=6. #2D5FA3 live. No DB write, no migrations, no new content. NEXT: 6C-94 November 2026 calendar import (DDW + Downtown Design + Big 5).)
 
 ---
 

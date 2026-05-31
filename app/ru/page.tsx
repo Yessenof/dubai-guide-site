@@ -79,6 +79,14 @@ function catLabelRu(cat: string): string {
   return MAP[cat] ?? cat.replace(/-/g, " ");
 }
 
+// Gradient bottom colors for visual variety per content type
+const GRAD_CALENDAR    = "rgba(4,47,46,0.97)";
+const GRAD_COMPLIANCE  = "rgba(55,28,0,0.97)";
+const GRAD_EVENT       = "rgba(10,22,40,0.97)";
+const GRAD_NEWS        = "rgba(18,18,40,0.97)";
+const GRAD_GUIDE_VISA  = "rgba(10,22,40,0.97)";
+const GRAD_GUIDE_BIZ   = "rgba(20,15,5,0.97)";
+
 function buildCarouselSlides(
   news: NewsPostSummary[],
   events: EventSummary[],
@@ -86,65 +94,113 @@ function buildCarouselSlides(
   guides: GuideListItem[],
   limit = 7,
 ): CarouselSlide[] {
+  const todayDate   = new Date();
+  const curYear     = todayDate.getFullYear();
+  const curMonth    = todayDate.getMonth() + 1;
+  const eventCutoff = new Date(Date.now() - 7  * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const newsCutoff  = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
   const slides: CarouselSlide[] = [];
 
+  // 1. Current and upcoming monthly calendar pages
+  const monthlyPages = calPages
+    .filter((cp) => {
+      if (!cp.year || !cp.month) return false;
+      if (cp.year > curYear) return true;
+      if (cp.year === curYear && cp.month >= curMonth - 1 && cp.month <= curMonth + 3) return true;
+      return false;
+    })
+    .sort((a, b) => {
+      const aDiff = Math.abs((a.year! - curYear) * 12 + ((a.month ?? 0) - curMonth));
+      const bDiff = Math.abs((b.year! - curYear) * 12 + ((b.month ?? 0) - curMonth));
+      return aDiff - bDiff;
+    });
+
+  const topicPages = calPages.filter((cp) => !cp.month || !cp.year);
+
+  for (const cp of monthlyPages) {
+    slides.push({
+      href:         `/ru/calendar/${cp.slug}`,
+      title:        cp.title,
+      badge:        "Календарь Дубая",
+      bgImage:      IMG_SKYLINE,
+      cta:          "Открыть календарь →",
+      gradientFrom: GRAD_CALENDAR,
+    });
+  }
+
+  // 2. Current/upcoming events (not ended more than 7 days ago)
   for (const ev of events) {
+    if (ev.eventDateEnd && ev.eventDateEnd < eventCutoff) continue;
+    if (!ev.eventDateEnd && ev.eventDateStart < eventCutoff) continue;
     slides.push({
-      href:    `/ru/events/${ev.slug}`,
-      title:   ev.title,
-      badge:   "Событие",
-      meta:    formatShortDate(ev.eventDateStart),
-      bgImage: IMG_SKYLINE,
-      cta:     "К событию →",
+      href:         `/ru/events/${ev.slug}`,
+      title:        ev.title,
+      badge:        "Событие",
+      meta:         formatShortDate(ev.eventDateStart),
+      bgImage:      IMG_JLT,
+      cta:          "К событию →",
+      gradientFrom: GRAD_EVENT,
     });
   }
 
+  // 3. Recent news (within 90 days)
   for (const n of news) {
+    if (n.datePublished < newsCutoff) continue;
     slides.push({
-      href:    `/ru/news/${n.slug}`,
-      title:   n.title,
-      badge:   "Новость",
-      meta:    formatShortDate(n.datePublished),
-      bgImage: IMG_DIFC,
-      cta:     "Читать →",
+      href:         `/ru/news/${n.slug}`,
+      title:        n.title,
+      badge:        "Новость",
+      meta:         formatShortDate(n.datePublished),
+      bgImage:      IMG_DIFC,
+      cta:          "Читать →",
+      gradientFrom: GRAD_NEWS,
     });
   }
 
-  for (const cp of calPages) {
+  // 4. Topic calendar pages (compliance — always relevant)
+  for (const cp of topicPages) {
     slides.push({
-      href:    `/ru/calendar/${cp.slug}`,
-      title:   cp.title,
-      badge:   "Календарь",
-      bgImage: IMG_SKYLINE,
-      cta:     "Открыть календарь →",
+      href:         `/ru/calendar/${cp.slug}`,
+      title:        cp.title,
+      badge:        "Дедлайн ОАЭ",
+      bgImage:      IMG_DIFC,
+      cta:          "Подробнее →",
+      gradientFrom: GRAD_COMPLIANCE,
     });
   }
 
+  // 5. Priority guides as filler
   const guidesMap = new Map(guides.map((g) => [g.slug, g]));
   for (const slug of GUIDE_PRIORITY_SLUGS) {
     if (slides.length >= limit) break;
     const g = guidesMap.get(slug);
     if (!g) continue;
+    const isVisa = ["visas", "government", "living"].includes(g.category);
     slides.push({
-      href:    `/ru/guides/${g.slug}`,
-      title:   g.title,
-      badge:   `${catLabelRu(g.category)} — гайд`,
-      meta:    g.price ? localizeValue(g.price, "ru") : undefined,
-      bgImage: guideImage(g.category),
-      cta:     "Читать гайд →",
+      href:         `/ru/guides/${g.slug}`,
+      title:        g.title,
+      badge:        `${catLabelRu(g.category)} — гайд`,
+      meta:         g.price ? localizeValue(g.price, "ru") : undefined,
+      bgImage:      guideImage(g.category),
+      cta:          "Читать гайд →",
+      gradientFrom: isVisa ? GRAD_GUIDE_VISA : GRAD_GUIDE_BIZ,
     });
   }
 
+  // 6. Remaining guides as final fallback
   for (const g of guides) {
     if (slides.length >= limit) break;
     if (GUIDE_PRIORITY_SLUGS.includes(g.slug)) continue;
+    const isVisa = ["visas", "government", "living"].includes(g.category);
     slides.push({
-      href:    `/ru/guides/${g.slug}`,
-      title:   g.title,
-      badge:   `${catLabelRu(g.category)} — гайд`,
-      meta:    g.price ? localizeValue(g.price, "ru") : undefined,
-      bgImage: guideImage(g.category),
-      cta:     "Читать гайд →",
+      href:         `/ru/guides/${g.slug}`,
+      title:        g.title,
+      badge:        `${catLabelRu(g.category)} — гайд`,
+      meta:         g.price ? localizeValue(g.price, "ru") : undefined,
+      bgImage:      guideImage(g.category),
+      cta:          "Читать гайд →",
+      gradientFrom: isVisa ? GRAD_GUIDE_VISA : GRAD_GUIDE_BIZ,
     });
   }
 

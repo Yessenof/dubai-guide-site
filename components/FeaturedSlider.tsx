@@ -9,12 +9,13 @@ import { useState, useEffect, useRef } from "react";
 // Every slide always has a bgImage — no more empty dark gradients.
 
 export interface CarouselSlide {
-  href:    string;
-  title:   string;
-  badge:   string;   // e.g. "Event", "News", "Calendar", "Visas guide"
-  meta?:   string;   // date string, price range, etc.
-  bgImage: string;   // path to background photo (always set)
-  cta:     string;   // "View event →", "Read article →", "Read guide →"
+  href:          string;
+  title:         string;
+  badge:         string;   // e.g. "Event", "News", "Calendar", "Visas guide"
+  meta?:         string;   // date string, price range, etc.
+  bgImage:       string;   // path to background photo (always set)
+  cta:           string;   // "View event →", "Read article →", "Read guide →"
+  gradientFrom?: string;   // optional hex/rgba for bottom gradient color (default: navy)
 }
 
 interface Props {
@@ -117,7 +118,16 @@ export default function FeaturedSlider({
                     sizes="(max-width: 672px) calc(100vw - 40px), 632px"
                     priority={i === 0}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy/95 via-navy/55 to-navy/10" />
+                  {slide.gradientFrom ? (
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background: `linear-gradient(to top, ${slide.gradientFrom} 0%, rgba(10,22,40,0.65) 55%, rgba(10,22,40,0.08) 100%)`,
+                      }}
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-t from-navy/95 via-navy/55 to-navy/10" />
+                  )}
 
                   {/* Content */}
                   <div className="absolute inset-0 flex flex-col justify-end px-4 pb-10">

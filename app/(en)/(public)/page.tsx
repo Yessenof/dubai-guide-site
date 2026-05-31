@@ -89,6 +89,14 @@ function formatShortDate(iso: string): string {
   }
 }
 
+// Gradient bottom colors for visual variety per content type
+const GRAD_CALENDAR    = "rgba(4,47,46,0.97)";   // deep teal-green
+const GRAD_COMPLIANCE  = "rgba(55,28,0,0.97)";   // deep amber
+const GRAD_EVENT       = "rgba(10,22,40,0.97)";   // navy (default)
+const GRAD_NEWS        = "rgba(18,18,40,0.97)";   // indigo-navy
+const GRAD_GUIDE_VISA  = "rgba(10,22,40,0.97)";   // navy
+const GRAD_GUIDE_BIZ   = "rgba(20,15,5,0.97)";    // dark brown
+
 function buildCarouselSlides(
   news: NewsPostSummary[],
   events: EventSummary[],
@@ -96,72 +104,123 @@ function buildCarouselSlides(
   guides: GuideListItem[],
   limit = 7,
 ): CarouselSlide[] {
+  const today = new Date().toISOString().slice(0, 10);
+  const todayDate = new Date();
+  const curYear  = todayDate.getFullYear();
+  const curMonth = todayDate.getMonth() + 1;
+  // Events that ended more than 7 days ago are stale
+  const eventCutoff = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  // News older than 90 days is stale
+  const newsCutoff  = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
   const slides: CarouselSlide[] = [];
 
-  // 1. Events — highest editorial priority (dated, time-sensitive)
+  // 1. Current and upcoming monthly calendar pages — most time-sensitive product
+  const monthlyPages = calPages
+    .filter((cp) => {
+      if (!cp.year || !cp.month) return false;
+      // Include current month, next 3 months, and 1 previous month (for transition)
+      if (cp.year > curYear) return true;
+      if (cp.year === curYear && cp.month >= curMonth - 1 && cp.month <= curMonth + 3) return true;
+      return false;
+    })
+    .sort((a, b) => {
+      const aDiff = Math.abs((a.year! - curYear) * 12 + ((a.month ?? 0) - curMonth));
+      const bDiff = Math.abs((b.year! - curYear) * 12 + ((b.month ?? 0) - curMonth));
+      return aDiff - bDiff; // closest month first
+    });
+
+  // 2. Topic calendar pages (compliance, deadlines — no month)
+  const topicPages = calPages.filter((cp) => !cp.month || !cp.year);
+
+  for (const cp of monthlyPages) {
+    slides.push({
+      href:         `/calendar/${cp.slug}`,
+      title:        cp.title,
+      badge:        "Dubai Calendar",
+      bgImage:      IMG_SKYLINE,
+      cta:          "Open calendar →",
+      gradientFrom: GRAD_CALENDAR,
+    });
+  }
+
+  // 3. Current/upcoming events (not ended more than 7 days ago)
   for (const ev of events) {
+    if (ev.eventDateEnd && ev.eventDateEnd < eventCutoff) continue;
+    if (!ev.eventDateEnd && ev.eventDateStart < eventCutoff) continue;
     slides.push({
-      href:    `/events/${ev.slug}`,
-      title:   ev.title,
-      badge:   "Event",
-      meta:    formatShortDate(ev.eventDateStart),
-      bgImage: IMG_SKYLINE,
-      cta:     "View event →",
+      href:         `/events/${ev.slug}`,
+      title:        ev.title,
+      badge:        "Event",
+      meta:         formatShortDate(ev.eventDateStart),
+      bgImage:      IMG_JLT,
+      cta:          "View event →",
+      gradientFrom: GRAD_EVENT,
     });
   }
 
-  // 2. News posts — sorted by datePublished desc (reader default)
+  // 4. Recent news (within 90 days)
   for (const n of news) {
+    if (n.datePublished < newsCutoff) continue;
     slides.push({
-      href:    `/news/${n.slug}`,
-      title:   n.title,
-      badge:   "News",
-      meta:    formatShortDate(n.datePublished),
-      bgImage: IMG_DIFC,
-      cta:     "Read article →",
+      href:         `/news/${n.slug}`,
+      title:        n.title,
+      badge:        "News",
+      meta:         formatShortDate(n.datePublished),
+      bgImage:      IMG_DIFC,
+      cta:          "Read article →",
+      gradientFrom: GRAD_NEWS,
     });
   }
 
-  // 3. Calendar pages
-  for (const cp of calPages) {
+  // 5. Topic calendar pages (compliance/deadline pages — always relevant)
+  for (const cp of topicPages) {
     slides.push({
-      href:    `/calendar/${cp.slug}`,
-      title:   cp.title,
-      badge:   "Calendar",
-      bgImage: IMG_SKYLINE,
-      cta:     "Open calendar →",
+      href:         `/calendar/${cp.slug}`,
+      title:        cp.title,
+      badge:        "UAE Deadline",
+      bgImage:      IMG_DIFC,
+      cta:          "See deadline →",
+      gradientFrom: GRAD_COMPLIANCE,
     });
   }
 
-  // 4. Priority guides as filler
+  // 6. Priority guides as filler
   const guidesMap = new Map(guides.map((g) => [g.slug, g]));
   for (const slug of GUIDE_PRIORITY_SLUGS) {
     if (slides.length >= limit) break;
     const g = guidesMap.get(slug);
     if (!g) continue;
+    const isVisa = ["visas", "government", "living"].includes(g.category);
     slides.push({
-      href:    `/guides/${g.slug}`,
-      title:   g.title,
-      badge:   `${catLabel(g.category)} guide`,
-      meta:    g.price ? localizeValue(g.price, "en") : undefined,
-      bgImage: guideImage(g.category),
-      cta:     "Read guide →",
+      href:         `/guides/${g.slug}`,
+      title:        g.title,
+      badge:        `${catLabel(g.category)} guide`,
+      meta:         g.price ? localizeValue(g.price, "en") : undefined,
+      bgImage:      guideImage(g.category),
+      cta:          "Read guide →",
+      gradientFrom: isVisa ? GRAD_GUIDE_VISA : GRAD_GUIDE_BIZ,
     });
   }
 
-  // 5. Any remaining published guides as fallback
+  // 7. Remaining guides as final fallback
   for (const g of guides) {
     if (slides.length >= limit) break;
     if (GUIDE_PRIORITY_SLUGS.includes(g.slug)) continue;
+    const isVisa = ["visas", "government", "living"].includes(g.category);
     slides.push({
-      href:    `/guides/${g.slug}`,
-      title:   g.title,
-      badge:   `${catLabel(g.category)} guide`,
-      meta:    g.price ? localizeValue(g.price, "en") : undefined,
-      bgImage: guideImage(g.category),
-      cta:     "Read guide →",
+      href:         `/guides/${g.slug}`,
+      title:        g.title,
+      badge:        `${catLabel(g.category)} guide`,
+      meta:         g.price ? localizeValue(g.price, "en") : undefined,
+      bgImage:      guideImage(g.category),
+      cta:          "Read guide →",
+      gradientFrom: isVisa ? GRAD_GUIDE_VISA : GRAD_GUIDE_BIZ,
     });
   }
+
+  // Suppress unused variable warning: today is used in scope for futureproofing
+  void today;
 
   return slides.slice(0, limit);
 }

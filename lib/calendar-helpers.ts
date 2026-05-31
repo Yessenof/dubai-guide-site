@@ -4,14 +4,28 @@ import type { CalendarDateItemExtended } from "./calendar-mock-data";
 
 export function itemCategoryType(item: CalendarDateItemExtended): string {
   if (item.category_type) return item.category_type;
-  // Handle runtime type values that may come from DB outside the TypeScript union
+  // Handle all type values stored in DB dates_json (extends the TS union at runtime)
   const t = item.type as string;
-  if (t === "compliance_deadline") return "government_deadline";
-  switch (item.type) {
-    case "public-holiday": return "holiday";
-    case "deadline":       return "tax_deadline";
-    case "important-date": return "event";
-    default:               return "news_update";
+  switch (t) {
+    // Legacy UI type names
+    case "public-holiday":     return "holiday";
+    case "deadline":           return "tax_deadline";
+    case "important-date":     return "event";
+    // Compliance types
+    case "compliance_deadline":
+    case "compliance":         return "government_deadline";
+    // Event / entertainment
+    case "retail_offer":
+    case "venue_show":
+    case "entertainment":      return "event";
+    // Family / lifestyle
+    case "family":             return "family_school";
+    // Business / professional
+    case "trade_show":
+    case "conference":         return "business_event";
+    // Real estate
+    case "real_estate":        return "real_estate_event";
+    default:                   return "news_update";
   }
 }
 

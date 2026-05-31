@@ -93,6 +93,24 @@ function isoDate(year: number, month: number, day: number): string {
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
+// Infer a visual period_end from noindex_after when period_end is not set.
+// Only applies when the item starts in the current month and the inferred range
+// is ≤ 90 days (prevents page-level noindex_after values from being misread as
+// event end dates).
+function inferPeriodEnd(item: CalendarDateItemExtended): string | null {
+  if (item.period_end) return null;
+  const noi = (item as unknown as Record<string, unknown>).noindex_after as string | undefined;
+  if (!noi || noi.trim() === "") return null;
+  const noiDate = new Date(noi);
+  if (isNaN(noiDate.getTime())) return null;
+  noiDate.setDate(noiDate.getDate() - 1);
+  const inferredEnd = noiDate.toISOString().slice(0, 10);
+  if (inferredEnd <= item.date) return null;
+  const diffDays = (new Date(noi).getTime() - new Date(item.date).getTime()) / 86400000;
+  if (diffDays > 90) return null;
+  return inferredEnd;
+}
+
 function todayISO(): string {
   const t = new Date();
   return isoDate(t.getFullYear(), t.getMonth() + 1, t.getDate());
@@ -133,21 +151,43 @@ type GridItem = CalendarDateItemExtended & { _cellDate?: string };
 
 // Expand multi-day items so they appear on every date in their range within the
 // given month. Single-day items are passed through unchanged.
+//
+// Items with explicit period_end can span across months (e.g. long weekends).
+// Items without period_end but with an inferable range (via inferPeriodEnd) are
+// expanded only within the month they start in — this prevents cross-month
+// duplicates when two calendar pages both have a DSS item for July and August.
 function expandRanges(
   items: CalendarDateItemExtended[],
   year: number,
   month: number
 ): GridItem[] {
+  const prefix = `${year}-${String(month).padStart(2, "0")}`;
   const monthStart = new Date(year, month - 1, 1);
   const monthEnd = new Date(year, month, 0);
   const result: GridItem[] = [];
 
   for (const item of items) {
     if (!item.period_end) {
-      const prefix = `${year}-${String(month).padStart(2, "0")}`;
-      if (item.date.startsWith(prefix)) result.push(item);
+      // Only process items that START in the current month
+      if (!item.date.startsWith(prefix)) continue;
+      const inferredEnd = inferPeriodEnd(item);
+      if (!inferredEnd) {
+        result.push(item);
+        continue;
+      }
+      // Expand from item.date to inferredEnd, clipped to month
+      const start = new Date(item.date);
+      const end = new Date(inferredEnd);
+      const to = end > monthEnd ? monthEnd : end;
+      const cur = new Date(start);
+      while (cur <= to) {
+        const iso = isoDate(cur.getFullYear(), cur.getMonth() + 1, cur.getDate());
+        result.push({ ...item, _cellDate: iso });
+        cur.setDate(cur.getDate() + 1);
+      }
       continue;
     }
+    // Items with explicit period_end: original cross-month behavior preserved
     const start = new Date(item.date);
     const end = new Date(item.period_end);
     const from = start < monthStart ? monthStart : start;
@@ -569,23 +609,41 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
 
                   {/* Indicators */}
                   <div className="flex flex-col items-center gap-0.5 w-full px-1">
-                    {pillItem && (
-                      <div
-                        className="w-full text-center text-[9px] font-bold text-white rounded-sm px-0.5 py-[2px] leading-tight truncate"
-                        style={{ backgroundColor: itemColor(pillItem) }}
-                      >
-                        {itemShortLabel(pillItem, locale)}
-                      </div>
-                    )}
+                    {pillItem && (() => {
+                      const gi = pillItem as GridItem;
+                      const isRangeActive = gi._cellDate !== undefined && gi._cellDate !== gi.date;
+                      return isRangeActive ? (
+                        // Mid-range: thin colored bar (shows coverage without text clutter)
+                        <div
+                          className="w-full h-[4px] rounded-full"
+                          style={{ backgroundColor: itemColor(pillItem) }}
+                        />
+                      ) : (
+                        // Start date: full labeled pill
+                        <div
+                          className="w-full text-center text-[9px] font-bold text-white rounded-sm px-0.5 py-[2px] leading-tight truncate"
+                          style={{ backgroundColor: itemColor(pillItem) }}
+                        >
+                          {itemShortLabel(pillItem, locale)}
+                        </div>
+                      );
+                    })()}
                     {dotItems.length > 0 && (
                       <div className="flex items-center gap-[3px] justify-center">
-                        {dotItems.map((item, idx) => (
-                          <span
-                            key={idx}
-                            className="w-[7px] h-[7px] rounded-full flex-shrink-0"
-                            style={{ backgroundColor: itemColor(item) }}
-                          />
-                        ))}
+                        {dotItems.map((dot, idx) => {
+                          const dgi = dot as GridItem;
+                          const dotIsRange = dgi._cellDate !== undefined && dgi._cellDate !== dgi.date;
+                          return (
+                            <span
+                              key={idx}
+                              className="w-[7px] h-[7px] rounded-full flex-shrink-0"
+                              style={{
+                                backgroundColor: itemColor(dot),
+                                opacity: dotIsRange ? 0.55 : 1,
+                              }}
+                            />
+                          );
+                        })}
                         {overflowCount > 0 && (
                           <span className="text-[9px] text-gray-400 leading-none">
                             +{overflowCount}
@@ -749,6 +807,10 @@ function AgendaCard({
   const label = itemLabel(item, locale);
   const cta = itemCtaLabel(item, locale);
 
+  // Detect if this item is being displayed as a mid-range expansion (not its start date)
+  const gi = item as GridItem;
+  const isOngoing = gi._cellDate !== undefined && gi._cellDate !== gi.date;
+
   const confidence = item.confidence;
   const showConfidence = confidence !== "confirmed";
   let confidenceText = "";
@@ -780,6 +842,11 @@ function AgendaCard({
         >
           {badge}
         </span>
+        {isOngoing && (
+          <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+            {isRu ? "Идёт" : "Ongoing"}
+          </span>
+        )}
         {showConfidence && (
           <span
             className={`text-[11px] font-medium px-2 py-0.5 rounded-full border ${

@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-29 (Phase 6C-85 COMPLETE — August 2026 calendar deployed to production. august-2026-dubai-calendar live at guidex-consulting.ae. Row ID: 8210213f-8a1b-45d7-9fa5-32e8bc94db5e. 3 items: AUG-01-DSS (L2), AUG-02-DEFLEP (L1), AUG-03-DIHAD (L1). 15/15 routes 200, 22/22 invariants pass, index/follow EN+RU, sitemap present. Coverage: 96.8% (30/31 days). ATM absent. GSC URL inspection: pending. Next: Phase 6C-86 — September 2026 calendar local import QA.)
+Last updated: 2026-05-31 (Phase 6C-86 COMPLETE — Calendar visual density, homepage freshness deployed. Range visualization: DSS now fills July (28 bars) and August (30 bars) with correct blue color. Type-to-category mapping fixed for retail_offer/venue_show/trade_show/conference/compliance/family. Homepage carousel freshness filtering and gradient variety. No DB changes. Next: Phase 6C-87 — September 2026 calendar local import QA. Fix B2-05 ATM dates first.)
 
 ---
 

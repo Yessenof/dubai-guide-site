@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-05-31 — Phase 6C-86 COMPLETE — Calendar visual density, homepage freshness deployed
+
+UI-only phase. Key changes: (1) CalendarGrid: added inferPeriodEnd() helper using noindex_after field (≤90 day threshold) so event_seasonal items expand across their full month. Start dates show full colored pill; mid-range days show 4px colored bar. AgendaCard shows Ongoing/Идёт badge for range-expansion views. (2) calendar-helpers: mapped all runtime DB type values (retail_offer, venue_show, trade_show, conference, compliance, family, entertainment) to correct category/color — this fixed a long-standing bug where DSS and concerts showed in gray. (3) FeaturedSlider: optional gradientFrom field for per-slide color variety. (4) Homepage (EN+RU): carousel now prioritizes current/upcoming monthly calendar pages, filters stale events (>7d past end) and old news (>90d), uses teal/amber/navy gradient variation. Live: July 28 range bars (blue), August 30 range bars (blue), June 3 bars, homepage teal gradient confirmed. TypeScript clean. Build clean. 16/16 routes 200. No DB changes. Deployed via safe sequence. Phase report: PHASE_6C86_CALENDAR_VISUAL_DENSITY_EVENT_MEDIA_HOMEPAGE_FRESHNESS_REPORT.md.
+
+---
+
 ## 2026-05-29 — Phase 6C-85 COMPLETE — August 2026 calendar deployed to production
 
 Production import of august-2026-dubai-calendar. Server was at 81d21a9 — git pull synced to b1a62a2 (3 commits: 6C-82 report, 6C-83 draft pack, 6C-84 local QA). Backup: /var/backups/guidex/guides.db.pre-august-calendar-6c85-20260529-104130 (616K). Script ran cleanly: createCalendarDraft + publishCalendar, first attempt, no errors. Row ID: 8210213f-8a1b-45d7-9fa5-32e8bc94db5e. DB delta: calendar_pages 6→7, all others unchanged. Safe deploy: pm2 stop → npm run build → pm2 start. Live QA: 15/15 routes 200, 22/22 content invariants pass. EN+RU index/follow. Sitemap: both EN+RU August URLs present. DSS Back to School L2 brief confirmed in live HTML EN+RU. ATM absent (0 occurrences EN+RU). No EN fallback on RU. June (4 details), July (1 detail), e-invoicing unaffected. Coverage: 96.8% (30/31 days -- Aug 31 only gap). GSC URL inspection: pending. Phase report: PHASE_6C85_AUGUST_2026_CALENDAR_PRODUCTION_IMPORT_REPORT.md.

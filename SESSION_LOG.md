@@ -5,6 +5,24 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-01 — Phase 6C-94C COMPLETE -- November 2026 local import QA
+
+Script `scripts/november-2026-local-import-6c94c.ts` audited and fixed: `category` and `color_type` were set to `"event"` (not in allowed enums). Fixed to `festival`/`major-event` (DDW) and `dubai-event`/`major-event` (Big5). Pre-flight found orphaned draft from failed first run; cleaned up with `DELETE FROM events WHERE slug='dubai-design-week-2026'`. Re-run succeeded: 2 events + 1 calendar page imported to local DB and published. All 8 required routes return 200 against local dev server. No server errors. HOLD items: DFC (403), Downtown Design (source unreachable), Global Village (no date). 3 docs created: SCHEMA_AUDIT, QA, PRODUCTION_APPROVAL. Recommendation: APPROVE_WITH_NOTES. No production DB write, no push, no deploy.
+
+---
+
+## 2026-06-01 — Phase 6C-94B COMPLETE -- November 2026 event detail page drafts
+
+Events route (/events/[slug]) reads from DB via getEventBySlug() -- requires status=published rows in events table. DB write forbidden in this phase. Created file-based drafts with all DB fields mapped. Files: docs/content-drafts/events/dubai-design-week-2026.md (EN, all DB fields), ru-dubai-design-week-2026.md (RU), big-5-global-dubai-2026.md (EN), ru-big-5-global-dubai-2026.md (RU). Source recheck: DDW "3 - 8 NOVEMBER 2026" (200), Big5 Nov23-26 (200 DWTC), DFC still 403. QA: all EN/RU parity checks pass. No em dashes. No unsupported claims. No copied source text. Internal detail_url plan: DDW item→/events/dubai-design-week-2026 (shared with Downtown Design); Big5→/events/big-5-global-dubai-2026. detail_url update plan doc created. ADIPEC: external CTA only (Abu Dhabi, no detail page). Import sequence: events first (2 rows), then calendar_pages. No DB write, no deploy, no push, docs only.
+
+---
+
+## 2026-06-01 — Phase 6C-94A COMPLETE — November 2026 calendar source pack and import plan
+
+Sources verified: (1) DDW Nov 3-8 OFFICIAL_CONFIRMED from dubaidesignweek.ae ("3 - 8 NOVEMBER 2026" exact text); (2) Big 5 Nov 23-26 OFFICIAL_CONFIRMED from dwtc.com/en/events/the-big-5-2026/ (metadata 2026-11-23 to 2026-11-26, organizer DMG Events); (3) ADIPEC Nov 2-5 OFFICIAL_CONFIRMED from adipec.com (Abu Dhabi, ADNEC -- must label Abu Dhabi); (4) Downtown Design Nov 4-8 OFFICIAL_PARTIAL (DDW programme lists it as component, downtowndesign.ae unreachable 000). DFC: still 403. Global Village S31: announced, no date. Cityscape: 403. CCA: queue system. Dubai Opera: dynamic content. 5 docs created: source ledger, candidate matrix, short briefs, detail page plan, draft import payload. 4 YES_READY candidates. Projected coverage: 36.7% (11/30 unique days). With DFC: ~93%. Detail pages planned: DDW (/events/dubai-design-week-2026) + Big5 (/events/big-5-global-dubai-2026). No DB write, no deploy, no push, docs only.
+
+---
+
 ## 2026-06-01 — Phase 6C-93D COMPLETE — Zero-downtime deploy fix & 502 prevention
 
 Root cause confirmed: pm2 stop before build drops port 3000 for ~30s → nginx connection refused (111) → 502 for all users. Evidence: nginx error log showed 15+ 502 errors at 16:47 UTC during Phase 6C-93C deploy from real user (IP 5.38.42.61). Fix: scripts/deploy-zero-downtime.sh — build while app runs (no 502), then pm2 reload (~2-3s gap vs 30s). scripts/rollback.sh added. nginx error_page 502/503 → /maintenance.html applied on server (nginx -t passed, nginx -s reload done, site still 200). Commit 35d799b pushed. Scripts pulled to server. No DB write, no migrations, no app code, no content import. Recommendation: USE_NEW_DEPLOY_FLOW.

@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-01 (Phase 6C-93D COMPLETE -- Zero-downtime deploy fix. Root cause: pm2 stop dropped port 3000 for ~30s per deploy (confirmed 15+ 502 errors in nginx log during 6C-93C deploy). Fix: scripts/deploy-zero-downtime.sh (build-first + pm2 reload = ~2-3s gap). nginx 502 maintenance page applied. Commit 35d799b. No DB/content/migration changes. NEXT: 6C-94 November 2026 calendar import (DDW + Big 5).)
+Last updated: 2026-06-01 (Phase 6C-94C COMPLETE -- November 2026 local import QA done. Script fixed (category/color_type enums: "event"→"festival"/"dubai-event"/"major-event"). Local DB import successful: 2 events (DDW, Big5) + 1 calendar page (november-2026-dubai-calendar) published. All 8 routes pass 200: /events/dubai-design-week-2026, /ru/events/..., /events/big-5-global-dubai-2026, /ru/events/..., /calendar/november-2026-dubai-calendar, /ru/calendar/..., /calendar?month=2026-11, /ru/calendar?month=2026-11. HOLD: DFC (403), Downtown Design (source unreachable), Global Village (no date). 3 docs created: SCHEMA_AUDIT, QA, PRODUCTION_APPROVAL. Recommendation: APPROVE_WITH_NOTES. NEXT: 6C-94D owner approval then production import.)
 
 ---
 

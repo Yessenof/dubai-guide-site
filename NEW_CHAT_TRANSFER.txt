@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-06-01 (Phase 6C-93D COMPLETE -- Zero-downtime deploy fix applied. NEW deploy command: ssh root@85.9.203.69 "cd /var/www/guidex && bash scripts/deploy-zero-downtime.sh". nginx 502 maintenance page live. Commit 35d799b. NEXT: 6C-94 November 2026 calendar import (DDW Nov3-8 + Downtown Design + Big5 Nov23-26). Candidates: docs/content-drafts/daily-radar/6C93A-calendar-import-candidate-pack.md.)
+Last updated: 2026-06-01 (Phase 6C-94C COMPLETE -- November 2026 local import QA done. Script fixed (enum fix: "event" → "festival"/"dubai-event"/"major-event"). Local DB: 2 events + 1 calendar page published. All 8 routes 200 OK locally. HOLD: DFC (403), Downtown Design (source unreachable), Global Village (no date). Docs: SCHEMA_AUDIT, QA, PRODUCTION_APPROVAL all created. Recommendation: APPROVE_WITH_NOTES. NEXT: 6C-94D owner approval then production import.)
 
 WHAT TO ATTACH
 --------------

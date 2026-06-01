@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-05-31 (Phase 6C-93C COMPLETE -- Calendar UX patch DEPLOYED to production. Commit 8bebafb. Build: 88 pages 0 errors. PM2 pid 209175 online. Live QA: 14/14 routes 200. Jul/Aug h-[4px]=0. Sep h-[2px]=6. #2D5FA3 live. No DB write, no migrations, no new content. NEXT: 6C-94 November 2026 calendar import (DDW + Downtown Design + Big 5).)
+Last updated: 2026-06-01 (Phase 6C-93D COMPLETE -- Zero-downtime deploy fix. Root cause: pm2 stop dropped port 3000 for ~30s per deploy (confirmed 15+ 502 errors in nginx log during 6C-93C deploy). Fix: scripts/deploy-zero-downtime.sh (build-first + pm2 reload = ~2-3s gap). nginx 502 maintenance page applied. Commit 35d799b. No DB/content/migration changes. NEXT: 6C-94 November 2026 calendar import (DDW + Big 5).)
 
 ---
 

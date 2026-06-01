@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-01 — Phase 6C-93D COMPLETE — Zero-downtime deploy fix & 502 prevention
+
+Root cause confirmed: pm2 stop before build drops port 3000 for ~30s → nginx connection refused (111) → 502 for all users. Evidence: nginx error log showed 15+ 502 errors at 16:47 UTC during Phase 6C-93C deploy from real user (IP 5.38.42.61). Fix: scripts/deploy-zero-downtime.sh — build while app runs (no 502), then pm2 reload (~2-3s gap vs 30s). scripts/rollback.sh added. nginx error_page 502/503 → /maintenance.html applied on server (nginx -t passed, nginx -s reload done, site still 200). Commit 35d799b pushed. Scripts pulled to server. No DB write, no migrations, no app code, no content import. Recommendation: USE_NEW_DEPLOY_FLOW.
+
+---
+
 ## 2026-05-31 — Phase 6C-93C COMPLETE — Calendar UX patch deployed to production
 
 Commit 8bebafb pushed to origin/main. Server git pull fast-forward 0e1dd87→8bebafb. PM2 stop → npm run build (88 pages 0 errors EXIT=0, 24.5s compile) → PM2 start pid 209175 online. Live QA: 14/14 routes 200. Production checks: Jul/Aug h-[4px]=0 (old bars gone on production). Sep h-[2px]=6 (short-range bars live). Aug #2D5FA3=7 (new business color live). Jul/Aug DSS=17 (side panel present). No raw JSON. Build: 88 pages 0 errors. No DB write, no migrations, no new content imported. Deploy report: CALENDAR_UX_DEPLOY_REPORT_6C93C.md.

@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-05-31 (Phase 6C-93C COMPLETE -- Calendar UX patch LIVE on production. Commit 8bebafb. Jul/Aug DSS bars gone. Sep subtle bars live. #2D5FA3 navy live. 14/14 routes 200. PM2 pid 209175. NEXT: 6C-94 November 2026 calendar import (DDW Nov3-8 + Downtown Design + Big 5 Nov23-26). See 6C93A-calendar-import-candidate-pack.md.)
+Last updated: 2026-06-01 (Phase 6C-93D COMPLETE -- Zero-downtime deploy fix applied. NEW deploy command: ssh root@85.9.203.69 "cd /var/www/guidex && bash scripts/deploy-zero-downtime.sh". nginx 502 maintenance page live. Commit 35d799b. NEXT: 6C-94 November 2026 calendar import (DDW Nov3-8 + Downtown Design + Big5 Nov23-26). Candidates: docs/content-drafts/daily-radar/6C93A-calendar-import-candidate-pack.md.)
 
 WHAT TO ATTACH
 --------------

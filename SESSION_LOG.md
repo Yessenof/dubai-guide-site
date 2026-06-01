@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-01 — Phase 6C-94D COMPLETE -- November 2026 production import and deploy
+
+Build: passed locally (no errors). Committed 20 files as c157861 and pushed to GitHub. Production DB backup created at /var/www/guidex/data/guides.db.backup-pre-nov2026-6c94d-20260601-120456 before deploy. Deployed via zero-downtime script: 54s build, ~1s PM2 reload, health check 200. Production import run with CONFIRM_PRODUCTION_IMPORT_6C94D=yes: 3 rows created (DDW event id=8d67fd22, Big5 event id=a4aa3f84, november-2026-dubai-calendar id=3347c9a7), all status=published. Post-import verification PASS. Live QA: all 12 routes 200 (homepage, RU homepage, 2x DDW EN/RU, 2x Big5 EN/RU, 2x November calendar EN/RU, 2x calendar index EN/RU, 2x September regression). Content spot-checks pass. No DFC, no Global Village, no Downtown Design standalone. ADIPEC correctly labelled Abu Dhabi. No migrations, no admin, no unapproved items. Report: NOVEMBER_2026_PRODUCTION_IMPORT_REPORT_6C94D.md.
+
+---
+
 ## 2026-06-01 — Phase 6C-94C COMPLETE -- November 2026 local import QA
 
 Script `scripts/november-2026-local-import-6c94c.ts` audited and fixed: `category` and `color_type` were set to `"event"` (not in allowed enums). Fixed to `festival`/`major-event` (DDW) and `dubai-event`/`major-event` (Big5). Pre-flight found orphaned draft from failed first run; cleaned up with `DELETE FROM events WHERE slug='dubai-design-week-2026'`. Re-run succeeded: 2 events + 1 calendar page imported to local DB and published. All 8 required routes return 200 against local dev server. No server errors. HOLD items: DFC (403), Downtown Design (source unreachable), Global Village (no date). 3 docs created: SCHEMA_AUDIT, QA, PRODUCTION_APPROVAL. Recommendation: APPROVE_WITH_NOTES. No production DB write, no push, no deploy.

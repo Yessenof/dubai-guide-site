@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-01 (Phase 6C-94C COMPLETE -- November 2026 local import QA done. Script fixed (category/color_type enums: "event"→"festival"/"dubai-event"/"major-event"). Local DB import successful: 2 events (DDW, Big5) + 1 calendar page (november-2026-dubai-calendar) published. All 8 routes pass 200: /events/dubai-design-week-2026, /ru/events/..., /events/big-5-global-dubai-2026, /ru/events/..., /calendar/november-2026-dubai-calendar, /ru/calendar/..., /calendar?month=2026-11, /ru/calendar?month=2026-11. HOLD: DFC (403), Downtown Design (source unreachable), Global Village (no date). 3 docs created: SCHEMA_AUDIT, QA, PRODUCTION_APPROVAL. Recommendation: APPROVE_WITH_NOTES. NEXT: 6C-94D owner approval then production import.)
+Last updated: 2026-06-01 (Phase 6C-94D COMPLETE -- November 2026 production import deployed. Commit c157861 pushed. Deploy: zero-downtime script, 54s build, PM2 online. Production import: 3 rows (DDW event + Big5 event + november-2026-dubai-calendar). All 12 live routes 200 OK. DB backup: /var/www/guidex/data/guides.db.backup-pre-nov2026-6c94d-20260601-120456. HOLD: DFC (403), Downtown Design (source unreachable), Global Village (no date). NEXT: December 2026 calendar planning or DFC/Downtown Design source retry.)
 
 ---
 

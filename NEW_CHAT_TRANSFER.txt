@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-06-01 (Phase 6C-94C COMPLETE -- November 2026 local import QA done. Script fixed (enum fix: "event" → "festival"/"dubai-event"/"major-event"). Local DB: 2 events + 1 calendar page published. All 8 routes 200 OK locally. HOLD: DFC (403), Downtown Design (source unreachable), Global Village (no date). Docs: SCHEMA_AUDIT, QA, PRODUCTION_APPROVAL all created. Recommendation: APPROVE_WITH_NOTES. NEXT: 6C-94D owner approval then production import.)
+Last updated: 2026-06-01 (Phase 6C-94D COMPLETE -- November 2026 live. Commit c157861. Deploy: zero-downtime, PM2 online. Production rows: DDW event + Big5 event + november-2026-dubai-calendar (3 total). All 12 live routes 200 OK. DB backup: .backup-pre-nov2026-6c94d-20260601-120456. HOLD: DFC (403), Downtown Design (source unreachable), Global Village (no date). NEXT: December 2026 or DFC/Downtown Design source retry.)
 
 WHAT TO ATTACH
 --------------

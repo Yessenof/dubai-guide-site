@@ -85,8 +85,8 @@ export default function CalendarMiniPreview({
   }
 
   const ctaLabel = isRu
-    ? calendarMonth ? `Открыть календарь за ${ctaMonthRu(calendarMonth)}` : "Открыть календарь Дубая"
-    : monthName ? `Open ${monthName} calendar` : "Open Dubai Calendar";
+    ? calendarMonth ? `Открыть календарь за ${ctaMonthRu(calendarMonth)}` : "Открыть Календарь ОАЭ"
+    : monthName ? `Open ${monthName} calendar` : "Open UAE Calendar";
 
   return (
     <Link
@@ -97,7 +97,7 @@ export default function CalendarMiniPreview({
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-brass flex-shrink-0" aria-hidden="true" />
           <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
-            {isRu ? "Календарь Дубая" : "Dubai Calendar"}
+            {isRu ? "Календарь Дубая" : "UAE Calendar"}
           </span>
         </div>
         {(monthName ?? yearBadge) && (

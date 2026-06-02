@@ -130,8 +130,8 @@ const STAGES: Stage[] = [
       { label: "Продление разрешения DET на посуточную аренду — ежегодно с даты выдачи", href: "/ru/guides/holiday-home-permit-dubai" },
       { label: "Проверка соответствия Emiratisation — июнь и декабрь", href: "/ru/calendar/uae-emiratisation-june-30-2026-reminder" },
     ],
-    calendarNote: "Следите за дедлайнами и праздниками в Календаре Дубая.",
-    ctaLabel: "Открыть Календарь Дубая →",
+    calendarNote: "Следите за дедлайнами и праздниками в Календаре ОАЭ.",
+    ctaLabel: "Открыть Календарь ОАЭ →",
     ctaHref:  "/ru/calendar",
   },
 ];

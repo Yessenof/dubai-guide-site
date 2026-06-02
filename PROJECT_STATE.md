@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-01 (Phase 6C-94D COMPLETE -- November 2026 production import deployed. Commit c157861 pushed. Deploy: zero-downtime script, 54s build, PM2 online. Production import: 3 rows (DDW event + Big5 event + november-2026-dubai-calendar). All 12 live routes 200 OK. DB backup: /var/www/guidex/data/guides.db.backup-pre-nov2026-6c94d-20260601-120456. HOLD: DFC (403), Downtown Design (source unreachable), Global Village (no date). NEXT: December 2026 calendar planning or DFC/Downtown Design source retry.)
+Last updated: 2026-06-02 (Phase 6C-95B COMPLETE -- UAE Calendar Batch 1 local import QA done. 12 new calendar items added: Aug +2 (Back to School, This Is Michael), Sep +2 (Christina Aguilera, Paul Oakenfold), Oct +2 (mid-term break, Richard Marx), Nov +1 (Sharjah Book Fair), Dec +5 (new page december-2026-uae-calendar: Commemoration Day, National Day, F1 Abu Dhabi, GITEX, school winter break). 18/18 routes 200 OK. Build PASS 88/88. No production write, no push, no deploy. NEXT: 6C-95C -- owner approval then push 6C-95A code changes + production import. F1/GITEX detail pages also planned.)
 
 ---
 

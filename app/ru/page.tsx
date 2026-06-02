@@ -122,7 +122,7 @@ function buildCarouselSlides(
     slides.push({
       href:         `/ru/calendar/${cp.slug}`,
       title:        cp.title,
-      badge:        "Календарь Дубая",
+      badge:        "Календарь ОАЭ",
       bgImage:      IMG_SKYLINE,
       cta:          "Открыть календарь →",
       gradientFrom: GRAD_CALENDAR,
@@ -382,10 +382,10 @@ export default function RuHomePage() {
                 className="text-[19px] font-bold text-white leading-tight mb-1.5"
                 style={{ textShadow: "0 1px 4px rgba(0,0,0,0.4)" }}
               >
-                Календарь Дубая
+                Календарь ОАЭ
               </h2>
               <p className="text-[12px] text-white/80 leading-snug mb-3">
-                Праздники, события и важные даты.
+                Праздники, события и важные даты в Дубае и ОАЭ.
               </p>
               <span className="self-start text-[13px] font-semibold text-white bg-white/[.18] border border-white/[.25] px-2.5 py-0.5 rounded-lg">
                 Открыть →

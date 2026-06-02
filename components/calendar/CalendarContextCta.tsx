@@ -67,10 +67,10 @@ export default function CalendarContextCta({
   const title = isRu
     ? "В календаре Дубая"
     : contentType === "event"
-    ? "This event is on Dubai Calendar"
+    ? "This event is on UAE Calendar"
     : contentType === "calendar"
-    ? "Related Dubai Calendar dates"
-    : "Linked to Dubai Calendar";
+    ? "Related UAE Calendar dates"
+    : "Linked to UAE Calendar";
 
   const description = isRu
     ? contentType === "event"
@@ -81,12 +81,12 @@ export default function CalendarContextCta({
     : contentType === "event"
     ? "See this event alongside other Dubai dates, holidays and deadlines."
     : contentType === "calendar"
-    ? "Browse related dates and events in the Dubai Calendar."
+    ? "Browse related dates and events in the UAE Calendar."
     : "This update is linked to key Dubai dates and reminders.";
 
   const primaryLabel = isRu
     ? mName ? `Все даты ${mName}` : "Открыть календарь"
-    : mName ? `See all ${mName} dates` : "Open Dubai Calendar";
+    : mName ? `See all ${mName} dates` : "Open UAE Calendar";
 
   return (
     <div className="border border-stone-200 rounded-2xl px-4 py-4 mb-5 bg-stone-50/30">
@@ -94,7 +94,7 @@ export default function CalendarContextCta({
       <div className="flex items-center gap-2 mb-2.5">
         <span className="w-1.5 h-1.5 rounded-full bg-brass flex-shrink-0" aria-hidden="true" />
         <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
-          {isRu ? "Календарь Дубая" : "Dubai Calendar"}
+          {isRu ? "Календарь ОАЭ" : "UAE Calendar"}
         </span>
       </div>
 

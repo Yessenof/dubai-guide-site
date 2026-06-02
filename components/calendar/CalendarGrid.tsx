@@ -640,14 +640,17 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
                     {pillItem && (() => {
                       const gi = pillItem as GridItem;
                       const isRangeActive = gi._cellDate !== undefined && gi._cellDate !== gi.date;
-                      return isRangeActive ? (
-                        // Mid-range: subtle 2px continuation hint (not a dominant bar)
-                        <div
-                          className="w-full h-[2px] rounded-full opacity-40"
-                          style={{ backgroundColor: itemColor(pillItem) }}
-                        />
-                      ) : (
-                        // Start date: full labeled pill
+                      if (isRangeActive) {
+                        // Mid-range: small dim dot — no horizontal bars
+                        return (
+                          <span
+                            className="w-[5px] h-[5px] rounded-full mx-auto flex-shrink-0"
+                            style={{ backgroundColor: itemColor(pillItem), opacity: 0.4 }}
+                          />
+                        );
+                      }
+                      // Start date: full labeled pill
+                      return (
                         <div
                           className="w-full text-center text-[9px] font-bold text-white rounded-sm px-0.5 py-[2px] leading-tight truncate"
                           style={{ backgroundColor: itemColor(pillItem) }}
@@ -714,7 +717,7 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
             <div className="md:hidden mt-5">
               <div className="w-5 h-0.5 bg-brass rounded-full mb-2.5" />
               <p className="text-[12px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
-                {isRu ? "В этом месяце в Дубае" : "This month in Dubai"}
+                {isRu ? "В этом месяце в ОАЭ" : "This month in the UAE"}
               </p>
               <div className="space-y-1.5">
                 {groupedHighlights.map((entry, i) =>
@@ -756,7 +759,7 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
             <>
               <div className="w-5 h-0.5 bg-brass rounded-full mb-2.5" />
               <p className="text-[12px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
-                {isRu ? "В этом месяце в Дубае" : "This month in Dubai"}
+                {isRu ? "В этом месяце в ОАЭ" : "This month in the UAE"}
               </p>
               {groupedHighlights.length === 0 ? (
                 <p className="text-[14px] text-gray-400">

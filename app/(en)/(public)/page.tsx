@@ -137,7 +137,7 @@ function buildCarouselSlides(
     slides.push({
       href:         `/calendar/${cp.slug}`,
       title:        cp.title,
-      badge:        "Dubai Calendar",
+      badge:        "UAE Calendar",
       bgImage:      IMG_SKYLINE,
       cta:          "Open calendar →",
       gradientFrom: GRAD_CALENDAR,
@@ -319,7 +319,7 @@ const TILES = [
   { label: "Company Setup",     href: "/company-setup", chip: "Mainland · Free zone", serviceKey: "company-setup", dot: "#374151" },
   { label: "Government",        href: "/government",    chip: "Documents · PRO",      serviceKey: "government",    dot: "#57534E" },
   { label: "Banking & Tax",     href: "/banking-tax",   chip: "TRC · Banking",        serviceKey: "banking-tax",   dot: "#B5935A" },
-  { label: "Dubai Calendar",    href: "/calendar",      chip: "Dates · Holidays",     serviceKey: "calendar",      dot: "#059669" },
+  { label: "UAE Calendar",      href: "/calendar",      chip: "Dates · Events",       serviceKey: "calendar",      dot: "#059669" },
   { label: "Tourism & Rentals", href: "/tourism",       chip: "DTCM · Short-term",    serviceKey: "tourism",       dot: "#DC2626" },
 ] as const;
 
@@ -514,7 +514,7 @@ export default function HomePage() {
                   href="/calendar"
                   className="text-[15px] font-semibold text-brass hover:opacity-80 transition-opacity"
                 >
-                  Open Dubai Calendar →
+                  Open UAE Calendar →
                 </Link>
               </>
             ) : (
@@ -543,7 +543,7 @@ export default function HomePage() {
                 ))}
                 <div className="pt-2.5">
                   <Link href="/calendar" className="text-[14px] font-semibold text-brass hover:opacity-80">
-                    Full Dubai calendar →
+                    Full UAE Calendar →
                   </Link>
                 </div>
               </>

@@ -5,6 +5,18 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-02 — Phase 6C-95B COMPLETE -- UAE Calendar Batch 1 local import QA
+
+Local DB backup: data/guides.db.backup-pre-6c95b-20260602-113427. Import script: scripts/import-uae-calendar-batch-1-local-6c95b.ts. 12 new calendar items added: AUG-04-BACKSCH (Back to School Aug 31), AUG-05-MICHAEL (This Is Michael Abu Dhabi Aug 22), SEP-09-AGUILERA (Christina Aguilera Abu Dhabi Sep 25), SEP-10-OAKENFOLD (Paul Oakenfold Dubai Sep 18), OCT-05-MIDTERM (UAE school mid-term Oct 12-18), OCT-06-MARX (Richard Marx Coca-Cola Arena Oct 5), NOV-05-SIBF (Sharjah Book Fair Nov 4-15), DEC-01-COMMEM, DEC-02-NATDAY, DEC-03-F1, DEC-04-GITEX, DEC-05-WINBRK. New December page slug: december-2026-uae-calendar. 18/18 routes 200 OK (Jul-Dec EN/RU, December detail page EN/RU, DDW/Big5 regression). Build PASS 88/88 0 errors. No production write, no push, no deploy. HOLD: July (no new confirmed sources), The Corrs Sep (date TBC), VAT Q3 Nov (FTA date unverified), DFC (403), Global Village (no date), DSF (dates TBC), RISE Oct (1 source).
+
+---
+
+## 2026-06-01 — Phase 6C-95A COMPLETE -- UAE Calendar product recovery sprint
+
+Part A: Renamed Dubai Calendar → UAE Calendar across 9 files (calendar index EN/RU, homepage EN/RU, life-setup EN/RU, CalendarContextCta, CalendarMiniPreview, CalendarGrid "This month" label). Part B/C: Removed 2px horizontal continuation bars from CalendarGrid — mid-range days now show 5px dim dot only. Build: PASS (88/88 pages). Part D: Research ledger for Jun-Dec 2026 events — 18 YES_READY candidates found (DSS, Back to School, school breaks, WETEX, National Day, Commemoration Day, F1 Abu Dhabi Dec 4-6, GITEX Dec 7-11, concerts). Part E: Density targets created — July/August/October/December most critical. Part F: Import candidate pack created with full EN/RU strings for 12 Batch-1 items. Part G: Detail page strategy — GITEX and F1 priority Class 1 pages. Part H: QA — all 12 routes 200, naming changes verified. No production write, no push, no deploy. NEXT: 6C-95B local import (December page + multi-month additions).
+
+---
+
 ## 2026-06-01 — Phase 6C-94D COMPLETE -- November 2026 production import and deploy
 
 Build: passed locally (no errors). Committed 20 files as c157861 and pushed to GitHub. Production DB backup created at /var/www/guidex/data/guides.db.backup-pre-nov2026-6c94d-20260601-120456 before deploy. Deployed via zero-downtime script: 54s build, ~1s PM2 reload, health check 200. Production import run with CONFIRM_PRODUCTION_IMPORT_6C94D=yes: 3 rows created (DDW event id=8d67fd22, Big5 event id=a4aa3f84, november-2026-dubai-calendar id=3347c9a7), all status=published. Post-import verification PASS. Live QA: all 12 routes 200 (homepage, RU homepage, 2x DDW EN/RU, 2x Big5 EN/RU, 2x November calendar EN/RU, 2x calendar index EN/RU, 2x September regression). Content spot-checks pass. No DFC, no Global Village, no Downtown Design standalone. ADIPEC correctly labelled Abu Dhabi. No migrations, no admin, no unapproved items. Report: NOVEMBER_2026_PRODUCTION_IMPORT_REPORT_6C94D.md.

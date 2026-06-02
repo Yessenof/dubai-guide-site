@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-06-01 (Phase 6C-94D COMPLETE -- November 2026 live. Commit c157861. Deploy: zero-downtime, PM2 online. Production rows: DDW event + Big5 event + november-2026-dubai-calendar (3 total). All 12 live routes 200 OK. DB backup: .backup-pre-nov2026-6c94d-20260601-120456. HOLD: DFC (403), Downtown Design (source unreachable), Global Village (no date). NEXT: December 2026 or DFC/Downtown Design source retry.)
+Last updated: 2026-06-02 (Phase 6C-95B COMPLETE -- Batch 1 local import QA done. 12 new items: Aug(+2), Sep(+2), Oct(+2), Nov(+1), Dec new page (+5). December slug: december-2026-uae-calendar. Build PASS 88/88. 18/18 routes OK. PENDING: push 6C-95A code changes + production import for Batch 1. F1/GITEX detail pages (Phase 6C-95C). HOLD: July (no sources), The Corrs, VAT Q3, DFC, Global Village, DSF.)
 
 WHAT TO ATTACH
 --------------

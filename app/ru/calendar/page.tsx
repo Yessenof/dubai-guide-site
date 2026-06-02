@@ -8,9 +8,9 @@ const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
 
 export const metadata: Metadata = {
-  title: "Календарь Дубая: праздники, важные даты и события | Guidex",
+  title: "Календарь ОАЭ: праздники, события и дедлайны в Дубае и Абу-Даби | Guidex",
   description:
-    "Праздники ОАЭ, налоговые сроки, бизнес-события и важные даты для резидентов и компаний в Дубае. Планируйте жизнь в ОАЭ помесячно.",
+    "Праздники ОАЭ, налоговые сроки, бизнес-события, концерты и важные даты для резидентов и компаний в Дубае и Абу-Даби. Помесячный календарь ОАЭ.",
   robots: { index: false, follow: true },
   alternates: {
     canonical: `${BASE}/ru/calendar`,
@@ -47,8 +47,11 @@ export default async function RuCalendarPage({ searchParams }: PageProps) {
       {/* Compact product label */}
       <div className="mb-3">
         <h1 className="text-[19px] font-bold text-gray-900 leading-tight">
-          Календарь Дубая
+          Календарь ОАЭ
         </h1>
+        <p className="text-[13px] text-gray-500 mt-0.5 leading-snug">
+          важные даты, события и дедлайны в Дубае, Абу-Даби и ОАЭ
+        </p>
       </div>
 
       <CalendarGrid
@@ -76,11 +79,11 @@ export default async function RuCalendarPage({ searchParams }: PageProps) {
       {/* SEO/RAG section */}
       <div className="mt-8 mb-8">
         <h2 className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">
-          О календаре Дубая
+          О Календаре ОАЭ
         </h2>
         <p className="text-[13px] text-gray-500 leading-relaxed">
-          Календарь охватывает праздники ОАЭ, сроки корпоративных налогов, бизнес-события и недвижимость,
-          а также важные даты для резидентов и компаний в Дубае. Даты исламских праздников зависят от
+          Календарь охватывает праздники ОАЭ, сроки корпоративных налогов и compliance-дедлайны, бизнес-события, концерты и выставки,
+          а также важные даты для резидентов и компаний в Дубае и Абу-Даби. Даты исламских праздников зависят от
           официального подтверждения по лунному календарю и могут сдвигаться на один-два дня. Перед
           принятием решений проверяйте дедлайны в официальных источниках ОАЭ.
         </p>

@@ -121,8 +121,8 @@ const STAGES: Stage[] = [
       { label: "DET holiday home permit renewal — annual from permit issue date", href: "/guides/holiday-home-permit-dubai" },
       { label: "Emiratisation mid-year and year-end compliance check", href: "/calendar/uae-emiratisation-june-30-2026-reminder" },
     ],
-    calendarNote: "Check the Dubai Life Calendar for upcoming UAE deadlines and public holidays.",
-    ctaLabel: "Open Dubai Life Calendar →",
+    calendarNote: "Check the UAE Calendar for upcoming deadlines, public holidays and events.",
+    ctaLabel: "Open UAE Calendar →",
     ctaHref:  "/calendar",
   },
 ];

@@ -8,9 +8,9 @@ const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
 
 export const metadata: Metadata = {
-  title: "Dubai Life Calendar: Important Dates, Deadlines and Events | Guidex",
+  title: "UAE Calendar: Holidays, Events and Deadlines in Dubai and Abu Dhabi | Guidex",
   description:
-    "UAE public holidays, corporate tax deadlines, business events, and key dates for Dubai residents and companies. Planning Dubai life, month by month.",
+    "UAE public holidays, corporate tax deadlines, business events, concerts and key dates for Dubai and Abu Dhabi residents and companies. Month-by-month UAE calendar.",
   robots: { index: false, follow: true },
   alternates: {
     canonical: `${BASE}/calendar`,
@@ -48,8 +48,11 @@ export default async function CalendarPage({ searchParams }: PageProps) {
       {/* Compact product label */}
       <div className="mb-3">
         <h1 className="text-[19px] font-bold text-gray-900 leading-tight">
-          Dubai Calendar
+          UAE Calendar
         </h1>
+        <p className="text-[13px] text-gray-500 mt-0.5 leading-snug">
+          Dubai, Abu Dhabi and key UAE dates, events and deadlines
+        </p>
       </div>
 
       <CalendarGrid
@@ -77,11 +80,11 @@ export default async function CalendarPage({ searchParams }: PageProps) {
       {/* SEO/RAG section */}
       <div className="mt-8 mb-8">
         <h2 className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">
-          About Dubai Calendar
+          About UAE Calendar
         </h2>
         <p className="text-[13px] text-gray-500 leading-relaxed">
-          This calendar covers UAE public holidays, corporate tax deadlines, business and real estate events,
-          and key dates for residents and companies in Dubai. Islamic holiday dates are subject to official
+          This calendar covers UAE public holidays, corporate tax and compliance deadlines, business and real estate events,
+          concerts, exhibitions, and key dates for residents and companies in Dubai and Abu Dhabi. Islamic holiday dates are subject to official
           UAE moon-sighting confirmation and may shift by one or two days. Verify all deadlines with official
           UAE government sources before acting.
         </p>

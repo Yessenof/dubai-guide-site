@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-02 (Phase 6C-95B COMPLETE -- UAE Calendar Batch 1 local import QA done. 12 new calendar items added: Aug +2 (Back to School, This Is Michael), Sep +2 (Christina Aguilera, Paul Oakenfold), Oct +2 (mid-term break, Richard Marx), Nov +1 (Sharjah Book Fair), Dec +5 (new page december-2026-uae-calendar: Commemoration Day, National Day, F1 Abu Dhabi, GITEX, school winter break). 18/18 routes 200 OK. Build PASS 88/88. No production write, no push, no deploy. NEXT: 6C-95C -- owner approval then push 6C-95A code changes + production import. F1/GITEX detail pages also planned.)
+Last updated: 2026-06-02 (Phase 6C-95C COMPLETE -- UAE Calendar UX deployed + Batch 1 production import done. Commit d60c513. Deploy: zero-downtime 53s, PM2 online. Production: 12 new items (Aug+2, Sep+2, Oct+2, Nov+1, Dec+5 new page). All 22 live routes 200. DB backup: .backup-pre-6c95c-20260602-120350. HOLD: July (no sources), DFC (403), Global Village (no date), DSF (TBC), The Corrs (date TBC). NEXT: 6C-95D -- F1 + GITEX detail pages, July density research.)
 
 ---
 

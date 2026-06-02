@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-02 — Phase 6C-95C COMPLETE -- UAE Calendar UX deployed + Batch 1 production import
+
+Commit d60c513 pushed. Deploy: zero-downtime script, 53s build, ~1s reload, PM2 online. DB backup: guides.db.backup-pre-6c95c-20260602-120350 (680K). Production import script: import-uae-calendar-batch-1-production-6c95c.ts, env gate CONFIRM_PRODUCTION_IMPORT_6C95C=yes. 12 items imported: Aug +2 (Back to School, This Is Michael), Sep +2 (Christina Aguilera, Paul Oakenfold), Oct +2 (mid-term break, Richard Marx), Nov +1 (Sharjah Book Fair), Dec +5 (new december-2026-uae-calendar page: Commemoration Day, National Day, F1 Abu Dhabi, GITEX, winter break). Live QA: 22/22 routes 200. UAE Calendar label live. No horizontal bars. F1/GITEX/Sharjah Book Fair all correctly labelled. No HOLD items. No migrations, no admin. Report: UAE_CALENDAR_BATCH_1_PRODUCTION_IMPORT_REPORT_6C95C.md.
+
+---
+
 ## 2026-06-02 — Phase 6C-95B COMPLETE -- UAE Calendar Batch 1 local import QA
 
 Local DB backup: data/guides.db.backup-pre-6c95b-20260602-113427. Import script: scripts/import-uae-calendar-batch-1-local-6c95b.ts. 12 new calendar items added: AUG-04-BACKSCH (Back to School Aug 31), AUG-05-MICHAEL (This Is Michael Abu Dhabi Aug 22), SEP-09-AGUILERA (Christina Aguilera Abu Dhabi Sep 25), SEP-10-OAKENFOLD (Paul Oakenfold Dubai Sep 18), OCT-05-MIDTERM (UAE school mid-term Oct 12-18), OCT-06-MARX (Richard Marx Coca-Cola Arena Oct 5), NOV-05-SIBF (Sharjah Book Fair Nov 4-15), DEC-01-COMMEM, DEC-02-NATDAY, DEC-03-F1, DEC-04-GITEX, DEC-05-WINBRK. New December page slug: december-2026-uae-calendar. 18/18 routes 200 OK (Jul-Dec EN/RU, December detail page EN/RU, DDW/Big5 regression). Build PASS 88/88 0 errors. No production write, no push, no deploy. HOLD: July (no new confirmed sources), The Corrs Sep (date TBC), VAT Q3 Nov (FTA date unverified), DFC (403), Global Village (no date), DSF (dates TBC), RISE Oct (1 source).

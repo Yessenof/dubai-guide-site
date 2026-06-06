@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-02 (Phase 6C-95C COMPLETE -- UAE Calendar UX deployed + Batch 1 production import done. Commit d60c513. Deploy: zero-downtime 53s, PM2 online. Production: 12 new items (Aug+2, Sep+2, Oct+2, Nov+1, Dec+5 new page). All 22 live routes 200. DB backup: .backup-pre-6c95c-20260602-120350. HOLD: July (no sources), DFC (403), Global Village (no date), DSF (TBC), The Corrs (date TBC). NEXT: 6C-95D -- F1 + GITEX detail pages, July density research.)
+Last updated: 2026-06-06 (Phase 6C-97C IN PROGRESS -- Production import script created: scripts/import-uae-calendar-batch-2b-production-6c97c.ts. Boris Grebenshikov CONDITIONAL VERIFIED (YES_READY in all 3 required docs). Build: 88/88, 0 TypeScript errors. Env gate: CONFIRM_PRODUCTION_IMPORT_6C97C=yes. Committed and pushed. Next: SSH to server, git pull, DB backup, run script, live QA, final report. After: 6C-97D GITEX + F1 detail page drafts.)
 
 ---
 

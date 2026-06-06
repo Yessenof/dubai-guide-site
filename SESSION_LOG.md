@@ -5,6 +5,36 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-06 — Phase 6C-97C IN PROGRESS -- Batch 2B production import script created
+
+Production script: scripts/import-uae-calendar-batch-2b-production-6c97c.ts. Boris Grebenshikov (OCT-R2) CONDITIONAL VERIFIED — YES_READY in candidate pack, Decision=IMPORT in pre-import review, QA PASS in local QA report. Build: 88/88 pages, 0 TypeScript errors. Env gate: CONFIRM_PRODUCTION_IMPORT_6C97C=yes. Path guard: refuses /Users/, /home/, Desktop paths (production-only). Script committed and pushed. Production DB backup + import pending (Parts E-F).
+
+---
+
+## 2026-06-06 — Phase 6C-97B COMPLETE -- Batch 2B local import QA
+
+Script: scripts/import-uae-calendar-batch-2b-local-6c97b.ts. Local backup: data/guides.db.backup-pre-6c97b-2026-06-06T07-46-59 (736K). 12 new items inserted + 1 update (DEC-NEW-01 Lewis Capaldi → added Zara Larsson). Months: Sep+1 (The Corrs Sep 27 Abu Dhabi), Oct+2 (Elrow Oct 24, Boris Grebenshikov Oct 24), Nov+8 (Dubai Ride Nov 1, ANOTR Nov 13, When Chai Met Toast Nov 14, Anuv Jain Nov 20, KEINEMUSIK Nov 21, Dubai Run Nov 22, Atif Aslam Dubai Nov 27, Hiba Tawaji & Maalouf Nov 27), Dec+1 (Imagine Dragons Dec 5). Item counts: Sep=12, Oct=13, Nov=14, Dec=7. All 14 routes 200. Build: 88/88 pages, 0 TypeScript errors. Hard exclusions confirmed absent. Pre-import review doc created. QA report + production approval draft created. Recommendation: APPROVE_BATCH_2B_PRODUCTION_IMPORT. No production write, no push, no deploy.
+
+---
+
+## 2026-06-05 — Phase 6C-97A COMPLETE -- calendar density research (docs only)
+
+Deep research phase. No production writes. 40+ sources checked across Jul-Dec 2026. July confirmed structurally thin (peak summer — major venues go quiet). 13 YES_READY items found for Batch 2B: SEP-R1 (The Corrs Abu Dhabi Sep 27), OCT-R1 (Elrow Oct 24), OCT-R2 (Boris Grebenshikov Oct 24), NOV-R1 through R8 (Dubai Ride Nov 1, ANOTR Nov 13, When Chai Met Toast Nov 14, Anuv Jain Nov 20, KEINEMUSIK Nov 21, Dubai Run Nov 22, Atif Aslam Dubai Nov 27, Hiba Tawaji+Maalouf Nov 27), DEC-R1 (Imagine Dragons Dec 5), DEC-UPDATE-1 (add Zara Larsson to existing F1 Concert Dec 3). Pending resolved: The Corrs (YES_READY), Elrow (YES_READY), Kadim Al Sahir (REJECT-past), Swedish House Mafia (REJECT-cancelled), DFC sub-events (YES_READY). Still HOLD: Global Village, DSF, Coca-Cola Arena Dec 16-20. Detail page plan created for GITEX, F1, OFFLIMITS, DSS. 6 docs created. NEXT: 6C-97B local import QA.
+
+---
+
+## 2026-06-02 — Phase 6C-96C COMPLETE -- Batch 2A production DB import (DB-only, no deploy)
+
+Commit c4b6aaa pushed. DB backup: guides.db.backup-pre-6c96c-20260602-230123. Import script: scripts/import-uae-calendar-batch-2a-production-6c96c.ts, env gate CONFIRM_PRODUCTION_IMPORT_6C96C=yes. 15 items imported: Jul+3 (Atif Aslam, UFC, Restaurant Week), Aug+3 (SB Girls AD, Mawlid expected, Miami Show), Sep+1 (ATB), Oct+5 (God Save Queen, Sonny Fodera, Blue, Russell Peters, Riverdance), Nov+2 (OFFLIMITS/Shakira, Tarkan), Dec+1 (F1 Concert/Lewis Capaldi). Live QA: 22/22 routes 200. No code changes — DB-only, no PM2 reload. Report: UAE_CALENDAR_BATCH_2A_PRODUCTION_IMPORT_REPORT_6C96C.md. Totals: Jul=6, Aug=8, Sep=11, Oct=11, Nov=6, Dec=6.
+
+---
+
+## 2026-06-02 — Phase 6C-96B COMPLETE -- Batch 2A local import QA
+
+Local DB backup: data/guides.db.backup-pre-6c96b-20260602-175147. 15 items imported locally. All 18 required routes 200 OK. All content spot-checks pass. No duplicates, no HOLD items imported, Mawlid imported as confidence=expected with moon-sighting disclaimer. Production readiness: APPROVED. Docs: UAE_CALENDAR_BATCH_2A_LOCAL_IMPORT_QA_6C96B.md, PREIMPORT_REVIEW, PRODUCTION_APPROVAL. No production write, no push.
+
+---
+
 ## 2026-06-02 — Phase 6C-95C COMPLETE -- UAE Calendar UX deployed + Batch 1 production import
 
 Commit d60c513 pushed. Deploy: zero-downtime script, 53s build, ~1s reload, PM2 online. DB backup: guides.db.backup-pre-6c95c-20260602-120350 (680K). Production import script: import-uae-calendar-batch-1-production-6c95c.ts, env gate CONFIRM_PRODUCTION_IMPORT_6C95C=yes. 12 items imported: Aug +2 (Back to School, This Is Michael), Sep +2 (Christina Aguilera, Paul Oakenfold), Oct +2 (mid-term break, Richard Marx), Nov +1 (Sharjah Book Fair), Dec +5 (new december-2026-uae-calendar page: Commemoration Day, National Day, F1 Abu Dhabi, GITEX, winter break). Live QA: 22/22 routes 200. UAE Calendar label live. No horizontal bars. F1/GITEX/Sharjah Book Fair all correctly labelled. No HOLD items. No migrations, no admin. Report: UAE_CALENDAR_BATCH_1_PRODUCTION_IMPORT_REPORT_6C95C.md.

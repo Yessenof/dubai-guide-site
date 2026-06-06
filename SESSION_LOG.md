@@ -5,9 +5,9 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
-## 2026-06-06 — Phase 6C-97C IN PROGRESS -- Batch 2B production import script created
+## 2026-06-06 — Phase 6C-97C COMPLETE -- Batch 2B production import
 
-Production script: scripts/import-uae-calendar-batch-2b-production-6c97c.ts. Boris Grebenshikov (OCT-R2) CONDITIONAL VERIFIED — YES_READY in candidate pack, Decision=IMPORT in pre-import review, QA PASS in local QA report. Build: 88/88 pages, 0 TypeScript errors. Env gate: CONFIRM_PRODUCTION_IMPORT_6C97C=yes. Path guard: refuses /Users/, /home/, Desktop paths (production-only). Script committed and pushed. Production DB backup + import pending (Parts E-F).
+Script: scripts/import-uae-calendar-batch-2b-production-6c97c.ts. Commit: 6665da8. DB backup: guides.db.backup-pre-6c97c-20260606-091142 (745472 bytes). Production import: 12 inserted, 1 updated (DEC-NEW-01), 0 skipped. Boris Grebenshikov (OCT-R2) CONDITIONAL VERIFIED across all 3 required docs — imported. Dec 3 F1 concert updated with Zara Larsson + Etihad Park venue correction (short_label=F1 Concert Night 1). Zero-downtime deploy run (rebuild required for SSG detail pages). Final totals: Sep=12, Oct=13, Nov=14, Dec=7. All 14 live QA routes 200. All content spot-checks PASS. PM2 healthy. No hard-excluded items. No migrations, no admin, no unapproved items. Final report: UAE_CALENDAR_BATCH_2B_PRODUCTION_IMPORT_REPORT_6C97C.md.
 
 ---
 

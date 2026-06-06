@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-06 (Phase 6C-97C IN PROGRESS -- Production import script created: scripts/import-uae-calendar-batch-2b-production-6c97c.ts. Boris Grebenshikov CONDITIONAL VERIFIED (YES_READY in all 3 required docs). Build: 88/88, 0 TypeScript errors. Env gate: CONFIRM_PRODUCTION_IMPORT_6C97C=yes. Committed and pushed. Next: SSH to server, git pull, DB backup, run script, live QA, final report. After: 6C-97D GITEX + F1 detail page drafts.)
+Last updated: 2026-06-06 (Phase 6C-97C COMPLETE -- Batch 2B production import done. 12 inserted + 1 updated (DEC-NEW-01 Zara Larsson). Boris Grebenshikov CONDITIONAL VERIFIED and imported. Zero-downtime deploy run (rebuild SSG pages). All 14 live QA routes 200. DB backup: guides.db.backup-pre-6c97c-20260606-091142. Commit: 6665da8. Final totals: Sep=12, Oct=13, Nov=14, Dec=7. NEXT: 6C-97D GITEX + F1 Yasalam detail page drafts.)
 
 ---
 

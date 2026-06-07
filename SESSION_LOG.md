@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-07 — Phase 6C-97F COMPLETE -- GITEX + F1 event pages production import and deploy
+
+Script: scripts/import-high-value-event-pages-production-6c97f.ts. Production backup: guides.db.backup-pre-6c97f-2026-06-07-21-45-02 (752K). Inserted: gitex-global-2026 (id=f754720c, dubai-event, Dec 7-11), formula-1-abu-dhabi-grand-prix-2026 (id=4d54de70, festival, Dec 3-6). Both EN+RU published. 4 calendar detail_url links updated: DEC-04-GITEX, DEC-03-F1, DEC-NEW-01, DEC-R1. Guard fix: GITEX content guard was blocking historical DWTC mention -- fixed to positive checks (Expo City Dubai present, Dec 7-11 present). Deploy: zero-downtime 48s, PM2 online. All 10 live routes 200, 29 content checks PASS. Commits: b8da31c, 403249b. No migrations, no admin, no unrelated items.
+
+---
+
 ## 2026-06-07 — Phase 6C-97E COMPLETE -- GITEX + F1 event detail pages local import QA
 
 Script: scripts/import-high-value-event-pages-local-6c97e.ts. Local backup: guides.db.backup-pre-6c97e-2026-06-07-11-41-33. Events inserted: gitex-global-2026 (id=c6d5ca4f, dubai-event, Dec 7-11), formula-1-abu-dhabi-grand-prix-2026 (id=2eaeaf43, festival, Dec 3-6). Both EN+RU published. Fix: F1 category must be "festival" not "event" (enforced in local script, noted for production). December calendar detail_url updated for 4 items: DEC-04-GITEX, DEC-03-F1, DEC-NEW-01, DEC-R1. Build: 88/88, 0 TypeScript errors. All 8 routes 200. Content checks: 36/36 PASS. Production approval draft created. No production write, no push, no deploy.

@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-07 (Phase 6C-97E COMPLETE -- GITEX Global 2026 + F1 Abu Dhabi GP 2026 event detail pages locally imported and QA-verified. 2 events published (gitex-global-2026, formula-1-abu-dhabi-grand-prix-2026). 4 December calendar detail_url links updated (DEC-04-GITEX, DEC-03-F1, DEC-NEW-01, DEC-R1). Local backup: guides.db.backup-pre-6c97e-2026-06-07-11-41-33. Build: 88/88, 0 TypeScript errors. All 8 routes 200. Production approval draft created. NEXT: 6C-97F -- owner approves production import of GITEX + F1 event pages.)
+Last updated: 2026-06-07 (Phase 6C-97F COMPLETE -- GITEX Global 2026 + F1 Abu Dhabi Grand Prix 2026 event pages live on production. 2 events inserted (gitex-global-2026 id=f754720c, formula-1-abu-dhabi-grand-prix-2026 id=4d54de70). 4 December calendar detail_url links updated. DB backup: guides.db.backup-pre-6c97f-2026-06-07-21-45-02. Deploy: zero-downtime 48s build. All 10 live QA routes 200. Commits: b8da31c + 403249b.)
 
 ---
 

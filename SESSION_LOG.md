@@ -5,6 +5,18 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-07 — Phase 6C-97E COMPLETE -- GITEX + F1 event detail pages local import QA
+
+Script: scripts/import-high-value-event-pages-local-6c97e.ts. Local backup: guides.db.backup-pre-6c97e-2026-06-07-11-41-33. Events inserted: gitex-global-2026 (id=c6d5ca4f, dubai-event, Dec 7-11), formula-1-abu-dhabi-grand-prix-2026 (id=2eaeaf43, festival, Dec 3-6). Both EN+RU published. Fix: F1 category must be "festival" not "event" (enforced in local script, noted for production). December calendar detail_url updated for 4 items: DEC-04-GITEX, DEC-03-F1, DEC-NEW-01, DEC-R1. Build: 88/88, 0 TypeScript errors. All 8 routes 200. Content checks: 36/36 PASS. Production approval draft created. No production write, no push, no deploy.
+
+---
+
+## 2026-06-06 — Phase 6C-97D COMPLETE -- GITEX + F1 event draft files created
+
+File-based EN/RU event detail drafts for GITEX Global 2026 and F1 Abu Dhabi Grand Prix 2026. Source recheck, schema audit, calendar linkage plan, and quality audit all created. No DB write, no deploy, no push.
+
+---
+
 ## 2026-06-06 — Phase 6C-97C COMPLETE -- Batch 2B production import
 
 Script: scripts/import-uae-calendar-batch-2b-production-6c97c.ts. Commit: 6665da8. DB backup: guides.db.backup-pre-6c97c-20260606-091142 (745472 bytes). Production import: 12 inserted, 1 updated (DEC-NEW-01), 0 skipped. Boris Grebenshikov (OCT-R2) CONDITIONAL VERIFIED across all 3 required docs — imported. Dec 3 F1 concert updated with Zara Larsson + Etihad Park venue correction (short_label=F1 Concert Night 1). Zero-downtime deploy run (rebuild required for SSG detail pages). Final totals: Sep=12, Oct=13, Nov=14, Dec=7. All 14 live QA routes 200. All content spot-checks PASS. PM2 healthy. No hard-excluded items. No migrations, no admin, no unapproved items. Final report: UAE_CALENDAR_BATCH_2B_PRODUCTION_IMPORT_REPORT_6C97C.md.

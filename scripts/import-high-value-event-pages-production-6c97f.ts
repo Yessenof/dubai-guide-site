@@ -634,10 +634,16 @@ if (F1_EN_SEO_TITLE.length > 0) {
 
 section("Pre-flight: content guards");
 
-if (GITEX_EN_BODY.toLowerCase().includes("october") || GITEX_EN_BODY.toLowerCase().includes("world trade centre")) {
-  abort("GITEX body contains 'october' or 'world trade centre' as venue -- check content.");
+if (GITEX_EN_BODY.toLowerCase().includes("october")) {
+  abort("GITEX body contains 'october' -- date error.");
 }
-log("  GITEX: no October date, no DWTC-as-venue claim.  PASS");
+if (!GITEX_EN_BODY.includes("Expo City Dubai")) {
+  abort("GITEX body does not contain 'Expo City Dubai' -- venue missing.");
+}
+if (!GITEX_EN_BODY.includes("7 December") && !GITEX_EN_BODY.includes("7-11 December")) {
+  abort("GITEX body does not contain Dec 7 dates -- check content.");
+}
+log("  GITEX: no October, Expo City Dubai present, Dec 7-11 dates present.  PASS");
 
 if (F1_EN_BODY.toLowerCase().includes("dubai grand prix") || F1_EN_BODY.toLowerCase().includes("dubai gp")) {
   abort("F1 body contains 'Dubai Grand Prix' or 'Dubai GP' -- labelling error.");

@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-08 — Phase 6C-98B DEPLOYED -- Calendar detail page internal link rendering fix live on production
+
+Commit: bde7dba. Deploy: zero-downtime 48s build, PM2 reload ~1s. 14/14 live routes 200. December SSG now shows "View event guide →" links for GITEX and F1 (4 items). RU page shows "Открыть гид →" with /ru/events/... hrefs. November shows Design Week + Big 5 links correctly. September renders cleanly. Dynamic listing unaffected. No DB write, no migrations, no admin, no content import. Final report: CALENDAR_DETAIL_LINK_RENDERING_DEPLOY_REPORT_6C98B.md.
+
+---
+
 ## 2026-06-08 — Phase 6C-98A COMPLETE (local only) -- Calendar detail page internal link rendering fix
 
 3 files changed. (1) lib/db/news-events-calendar.ts: added `detail_url?: string` to CalendarDateItem interface. (2) app/(en)/(public)/calendar/[slug]/page.tsx: render `<Link href={item.detail_url}>View event guide →</Link>` in dates list pills row when detail_url present. (3) app/ru/calendar/[slug]/page.tsx: render `<Link href={/ru${item.detail_url}}>Открыть гид →</Link>`. Root cause: detail_url was stored in DB dates_json (added in 6C-97E/F) but CalendarDateItem type didn't declare it and SSG template never read it. Dynamic CalendarGrid.tsx was already correct. Build: 88 pages, 0 TS errors. 8/8 QA routes 200. December SSG now shows clickable event guide links. November shows links for Design Week + Big 5 (pre-existing). September clean. No DB write, no deploy, no production changes. Recommendation: APPROVE_LINK_RENDERING_DEPLOY.

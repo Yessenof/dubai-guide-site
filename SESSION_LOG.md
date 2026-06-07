@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-08 — Phase 6C-98A COMPLETE (local only) -- Calendar detail page internal link rendering fix
+
+3 files changed. (1) lib/db/news-events-calendar.ts: added `detail_url?: string` to CalendarDateItem interface. (2) app/(en)/(public)/calendar/[slug]/page.tsx: render `<Link href={item.detail_url}>View event guide →</Link>` in dates list pills row when detail_url present. (3) app/ru/calendar/[slug]/page.tsx: render `<Link href={/ru${item.detail_url}}>Открыть гид →</Link>`. Root cause: detail_url was stored in DB dates_json (added in 6C-97E/F) but CalendarDateItem type didn't declare it and SSG template never read it. Dynamic CalendarGrid.tsx was already correct. Build: 88 pages, 0 TS errors. 8/8 QA routes 200. December SSG now shows clickable event guide links. November shows links for Design Week + Big 5 (pre-existing). September clean. No DB write, no deploy, no production changes. Recommendation: APPROVE_LINK_RENDERING_DEPLOY.
+
+---
+
 ## 2026-06-07 — Phase 6C-97F COMPLETE -- GITEX + F1 event pages production import and deploy
 
 Script: scripts/import-high-value-event-pages-production-6c97f.ts. Production backup: guides.db.backup-pre-6c97f-2026-06-07-21-45-02 (752K). Inserted: gitex-global-2026 (id=f754720c, dubai-event, Dec 7-11), formula-1-abu-dhabi-grand-prix-2026 (id=4d54de70, festival, Dec 3-6). Both EN+RU published. 4 calendar detail_url links updated: DEC-04-GITEX, DEC-03-F1, DEC-NEW-01, DEC-R1. Guard fix: GITEX content guard was blocking historical DWTC mention -- fixed to positive checks (Expo City Dubai present, Dec 7-11 present). Deploy: zero-downtime 48s, PM2 online. All 10 live routes 200, 29 content checks PASS. Commits: b8da31c, 403249b. No migrations, no admin, no unrelated items.

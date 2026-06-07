@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-07 (Phase 6C-97F COMPLETE -- GITEX Global 2026 + F1 Abu Dhabi Grand Prix 2026 event pages live on production. 2 events inserted (gitex-global-2026 id=f754720c, formula-1-abu-dhabi-grand-prix-2026 id=4d54de70). 4 December calendar detail_url links updated. DB backup: guides.db.backup-pre-6c97f-2026-06-07-21-45-02. Deploy: zero-downtime 48s build. All 10 live QA routes 200. Commits: b8da31c + 403249b.)
+Last updated: 2026-06-08 (Phase 6C-98A COMPLETE (local only) -- Calendar detail page internal link rendering fix. SSG monthly calendar pages now render detail_url from dates_json items as clickable internal links. 3 files changed: CalendarDateItem interface (detail_url?: string added), EN and RU /calendar/[slug] page templates. Build: 88 pages, 0 TS errors. 8/8 routes 200. December SSG now shows "View event guide" links for GITEX and F1. November shows links for Design Week and Big 5. September clean (no detail_url items). No DB write, no deploy, no production changes. QA doc: CALENDAR_DETAIL_LINK_RENDERING_QA_6C98A.md. Recommendation: APPROVE_LINK_RENDERING_DEPLOY.)
 
 ---
 

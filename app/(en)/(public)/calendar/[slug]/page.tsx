@@ -202,6 +202,14 @@ export default async function CalendarDetailPage({ params }: Props) {
                           notes ↓
                         </span>
                       )}
+                      {item.detail_url && (
+                        <Link
+                          href={item.detail_url}
+                          className="text-[10px] font-semibold text-brass border border-brass/30 px-1.5 py-0.5 rounded hover:bg-brass/5 transition-colors"
+                        >
+                          View event guide →
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </li>

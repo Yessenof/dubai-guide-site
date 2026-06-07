@@ -50,6 +50,7 @@ export interface CalendarDateItem {
   lifecycle?:       string;
   noindex_after?:   string;
   archive_action?:  string;
+  detail_url?:      string;
 }
 
 function parseDatesJson(raw: string): CalendarDateItem[] {

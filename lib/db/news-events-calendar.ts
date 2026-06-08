@@ -8,7 +8,7 @@
  */
 
 import { db } from "./connection";
-import { newsPosts, eventsTable, calendarPages } from "./schema";
+import { newsPosts, eventsTable, calendarPages, guides } from "./schema";
 import { eq, and, desc, asc } from "drizzle-orm";
 
 // ─── Locale ───────────────────────────────────────────────────────────────────
@@ -115,12 +115,14 @@ export interface EventSummary {
 }
 
 export interface EventDetail extends EventSummary {
-  body:             string;   // locale field, no fallback
-  seoTitle:         string;   // locale field, no fallback
-  metaDescription:  string;   // locale field, no fallback
-  sourceUrl:        string;
-  relatedGuideSlug: string;
-  relatedNewsSlug:  string;
+  body:                 string;   // locale field, no fallback
+  seoTitle:             string;   // locale field, no fallback
+  metaDescription:      string;   // locale field, no fallback
+  sourceUrl:            string;
+  relatedGuideSlug:     string;
+  relatedGuideTitle?:   string;   // guide en_title / ru_title lookup; undefined when no related guide
+  relatedNewsSlug:      string;
+  calendarDetailSlug?:  string;   // SSG calendar page slug for event's month; undefined if none published
 }
 
 // ─── Calendar page interfaces ─────────────────────────────────────────────────
@@ -430,27 +432,56 @@ export function getEventBySlug(
   // Strict RU gate: both ru_title and ru_body must be non-empty
   if (locale === "ru" && (row.ruTitle.trim() === "" || row.ruBody.trim() === "")) return null;
 
+  // Secondary: calendar detail page slug for this event's month
+  const evtYear  = parseInt(row.eventDateStart.slice(0, 4), 10);
+  const evtMonth = parseInt(row.eventDateStart.slice(5, 7), 10);
+  const calRow = !isNaN(evtYear) && !isNaN(evtMonth)
+    ? db.select({ slug: calendarPages.slug })
+        .from(calendarPages)
+        .where(and(
+          eq(calendarPages.status, "published"),
+          eq(calendarPages.year, evtYear),
+          eq(calendarPages.month, evtMonth),
+        ))
+        .get()
+    : null;
+
+  // Secondary: guide title for the related guide
+  let relatedGuideTitle: string | undefined;
+  if (row.relatedGuideSlug) {
+    const guideRow = db.select({ enTitle: guides.enTitle, ruTitle: guides.ruTitle })
+      .from(guides)
+      .where(and(eq(guides.slug, row.relatedGuideSlug), eq(guides.published, true)))
+      .get();
+    if (guideRow) {
+      relatedGuideTitle =
+        (locale === "ru" ? guideRow.ruTitle.trim() : "") || guideRow.enTitle || undefined;
+    }
+  }
+
   return {
-    slug:             row.slug,
-    category:         row.category,
-    colorType:        row.colorType,
-    tagsJson:         row.tagsJson,
-    title:            field(locale, row.ruTitle, row.enTitle),
-    summary:          field(locale, row.ruSummary, row.enSummary),
-    body:             field(locale, row.ruBody, row.enBody),
-    seoTitle:         field(locale, row.ruSeoTitle, row.enSeoTitle),
-    metaDescription:  field(locale, row.ruMetaDescription, row.enMetaDescription),
-    eventDateStart:   row.eventDateStart,
-    eventDateEnd:     row.eventDateEnd,
-    dateConfidence:   row.dateConfidence,
-    year:             row.year,
-    featuredHomepage: row.featuredHomepage,
-    featuredCalendar: row.featuredCalendar,
-    featuredDigest:   row.featuredDigest,
-    schemaEligible:   row.schemaEligible,
-    sourceUrl:        row.sourceUrl,
-    relatedGuideSlug: row.relatedGuideSlug,
-    relatedNewsSlug:  row.relatedNewsSlug,
+    slug:                row.slug,
+    category:            row.category,
+    colorType:           row.colorType,
+    tagsJson:            row.tagsJson,
+    title:               field(locale, row.ruTitle, row.enTitle),
+    summary:             field(locale, row.ruSummary, row.enSummary),
+    body:                field(locale, row.ruBody, row.enBody),
+    seoTitle:            field(locale, row.ruSeoTitle, row.enSeoTitle),
+    metaDescription:     field(locale, row.ruMetaDescription, row.enMetaDescription),
+    eventDateStart:      row.eventDateStart,
+    eventDateEnd:        row.eventDateEnd,
+    dateConfidence:      row.dateConfidence,
+    year:                row.year,
+    featuredHomepage:    row.featuredHomepage,
+    featuredCalendar:    row.featuredCalendar,
+    featuredDigest:      row.featuredDigest,
+    schemaEligible:      row.schemaEligible,
+    sourceUrl:           row.sourceUrl,
+    relatedGuideSlug:    row.relatedGuideSlug,
+    relatedGuideTitle,
+    relatedNewsSlug:     row.relatedNewsSlug,
+    calendarDetailSlug:  calRow?.slug,
   };
 }
 

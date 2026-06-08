@@ -63,6 +63,7 @@ interface Props {
   range?: { start: string; end?: string };  // for events — auto-expanded into chips
   dateItems?: { date: string }[];           // for calendar pages — formatted as chips
   yearBadge?: string;         // e.g., "2026" for yearly pages without a single month
+  detailSlug?: string;        // when set, links to SSG calendar detail page instead of ?month=
 }
 
 export default function CalendarMiniPreview({
@@ -72,9 +73,12 @@ export default function CalendarMiniPreview({
   range,
   dateItems,
   yearBadge,
+  detailSlug,
 }: Props) {
   const isRu = locale === "ru";
-  const href = calendarMonth ? `${calendarBase}?month=${calendarMonth}` : calendarBase;
+  const href = detailSlug
+    ? `${calendarBase}/${detailSlug}`
+    : calendarMonth ? `${calendarBase}?month=${calendarMonth}` : calendarBase;
   const monthName = calendarMonth ? monthDisplayName(calendarMonth, locale) : null;
 
   const chips: string[] = [];

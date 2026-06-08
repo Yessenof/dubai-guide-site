@@ -109,6 +109,7 @@ export default async function RuEventDetailPage({ params }: Props) {
         calendarBase="/ru/calendar"
         calendarMonth={calendarMonth}
         range={{ start: event.eventDateStart, end: event.eventDateEnd ?? undefined }}
+        detailSlug={event.calendarDetailSlug}
       />
 
       {event.body && (
@@ -125,7 +126,7 @@ export default async function RuEventDetailPage({ params }: Props) {
             className="flex items-center justify-between group"
           >
             <span className="text-[13px] font-medium text-gray-800 group-hover:text-navy transition-colors">
-              {event.relatedGuideSlug.replace(/-/g, " ")}
+              {event.relatedGuideTitle || event.relatedGuideSlug.replace(/-/g, " ")}
             </span>
             <span className="text-gray-400 group-hover:text-navy transition-colors text-sm">→</span>
           </Link>

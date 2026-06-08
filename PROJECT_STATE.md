@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-08 (Phase 6C-98B DEPLOYED -- Calendar detail page internal link rendering fix live on production. Commit: bde7dba. SSG monthly calendar pages now render clickable "View event guide →" / "Открыть гид →" links for dates_json items that have detail_url. Build: 88 pages, 0 TS errors. 14/14 live routes 200. December SSG shows GITEX + F1 links. November shows Design Week + Big 5 links. September clean. PM2 online 145.8 MB. No DB write, no migrations, no admin, no content import.)
+Last updated: 2026-06-08 (Phase 6C-98C COMPLETE (local only) -- UAE Calendar internal linking improvements. CalendarMiniPreview on event pages now links to SSG calendar detail pages (e.g. /calendar/december-2026-uae-calendar) instead of dynamic listing. Related guide label now shows actual guide title. 4 code files changed: reader (EventDetail + getEventBySlug secondary lookups), CalendarMiniPreview (detailSlug prop), EN + RU event templates. Build: 88 pages, 0 TS errors. 16/16 local routes 200. Recommendation: APPROVE_INTERNAL_LINKING_DEPLOY.)
 
 ---
 

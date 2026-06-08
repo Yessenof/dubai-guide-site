@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-08 — Phase 6C-98D DEPLOYED -- UAE Calendar internal linking improvements live on production
+
+Commit: 8726038. Deploy: zero-downtime 49s build, PM2 reload ~1s. 14/14 live routes 200. GITEX/F1/Design Week/Big 5 event pages now link to SSG calendar detail pages via CalendarMiniPreview (e.g. /calendar/december-2026-uae-calendar). Related guide box shows "How to Set Up a Mainland Company in Dubai" instead of slug text. RU event pages use /ru/calendar/... hrefs. December + November SSG calendar regression: PASS. PM2 online 138.2 MB. No DB write, no migrations, no admin, no content import. Final report: UAE_CALENDAR_INTERNAL_LINKING_DEPLOY_REPORT_6C98D.md.
+
+---
+
 ## 2026-06-08 — Phase 6C-98C COMPLETE (local only) -- UAE Calendar internal linking improvements
 
 4 code files changed. (1) lib/db/news-events-calendar.ts: EventDetail gains calendarDetailSlug? and relatedGuideTitle? fields; getEventBySlug() does two secondary lookups -- calendar_pages by year+month to find SSG slug, guides by slug to get actual guide title. (2) CalendarMiniPreview.tsx: new optional detailSlug prop; when set, href = calendarBase/detailSlug (SSG page) instead of ?month= (dynamic listing). (3) EN event template: passes detailSlug, shows relatedGuideTitle. (4) RU event template: same, /ru/ prefix applied correctly. Result: GITEX/F1/Design Week/Big 5 event pages now link to SSG calendar detail pages. Guide box shows "How to Set Up a Mainland Company in Dubai" instead of slug text. Build: 88 pages, 0 TS errors. 16/16 local routes 200. No DB write, no push, no deploy. Recommendation: APPROVE_INTERNAL_LINKING_DEPLOY.

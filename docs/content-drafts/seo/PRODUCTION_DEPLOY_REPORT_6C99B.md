@@ -13,7 +13,7 @@ Phase 6C-99B implemented confirmed technical SEO discovery gaps found in the 6C-
 
 | Field | Value |
 |---|---|
-| Commit hash | [see below after commit] |
+| Commit hash | 33d4460 |
 | Branch | main |
 | Commit message | "fix: improve SEO sitemap hreflang and schema" |
 
@@ -74,7 +74,30 @@ Phase 6C-99B implemented confirmed technical SEO discovery gaps found in the 6C-
 
 ## Live QA results (post-deploy)
 
-[To be filled after deploy]
+| Check | Result |
+|---|---|
+| All 13 routes HTTP 200 (homepage, ru, sitemap, robots, 5 event/news/calendar/guide routes) | PASS |
+| Sitemap total URLs: 92 | PASS |
+| Sitemap event URLs: 5 EN + 5 RU = 10 | PASS |
+| Sitemap news URLs: 3 EN + 3 RU = 6 | PASS |
+| Sitemap: no admin/API routes | PASS |
+| EN GITEX hreflang: en, ru, x-default | PASS |
+| RU GITEX hreflang: ru, en, x-default | PASS |
+| EN F1 hreflang: en, ru, x-default | PASS |
+| EN News hreflang: en, ru, x-default | PASS |
+| RU News hreflang: ru, en, x-default | PASS |
+| EN Calendar Dec hreflang: en, ru, x-default | PASS |
+| Homepage hreflang: en, ru, x-default | PASS |
+| EN GITEX schemas: Organization, WebSite, Event | PASS |
+| RU GITEX schemas: Organization, WebSite, Event | PASS |
+| EN F1 schemas: Organization, WebSite, Event | PASS |
+| EN News schemas: Organization, WebSite, NewsArticle | PASS |
+| RU News schemas: Organization, WebSite, NewsArticle | PASS |
+| EN Calendar Dec schemas: Organization, WebSite | PASS |
+| Homepage schemas: Organization, WebSite | PASS |
+| EN Guide regression schemas: Organization, WebSite, BreadcrumbList | PASS |
+| PM2 status: online, 149.3 MB | PASS |
+| Build time: 49s | PASS |
 
 ---
 

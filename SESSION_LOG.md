@@ -5,9 +5,9 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
-## 2026-06-08 — Phase 6C-99B-PROD IN PROGRESS -- committing + deploying SEO fixes
+## 2026-06-08 — Phase 6C-99B-PROD COMPLETE -- Technical SEO fixes deployed to production
 
-Owner approved commit + push + zero-downtime deploy of Phase 6C-99B. Files: 9 source files + seo docs. Commit message: "fix: improve SEO sitemap hreflang and schema". Deploy command: ssh root@85.9.203.69 "cd /var/www/guidex && bash scripts/deploy-zero-downtime.sh". Live QA to follow.
+Commit 33d4460. Push to origin/main. Deploy: zero-downtime 49s build, PM2 reload ~1s, online 149.3MB. All 13 live routes HTTP 200. Sitemap: 92 URLs (5+5 events, 3+3 news). EN GITEX: hreflang=[en, ru, x-default], schemas=[Organization, WebSite, Event]. RU GITEX: hreflang=[ru, en, x-default], schemas=[Organization, WebSite, Event]. EN/RU F1, News, Calendar: all correct. Homepage: Organization+WebSite schemas, hreflang=[en, ru, x-default]. Guide regression: Organization+WebSite+BreadcrumbList. No DB write, no PM2 stop/start, no migrations, no admin. Production deploy report: docs/content-drafts/seo/PRODUCTION_DEPLOY_REPORT_6C99B.md.
 
 ---
 

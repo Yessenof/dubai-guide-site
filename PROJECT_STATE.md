@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-08 (Phase 6C-99B-PROD IN PROGRESS -- commit + push + deploy approved by owner. Changes: sitemap now includes events/news (92 URLs), EN event/news/calendar hreflang ru alternate, WebSite schema, Event JSON-LD, NewsArticle JSON-LD, homepage title/description. 27/27 QA local pass. Now committing. Next: push → zero-downtime deploy → live QA.)
+Last updated: 2026-06-08 (Phase 6C-99B-PROD COMPLETE -- Technical SEO fixes deployed to production. Commit 33d4460. Deploy: zero-downtime 49s build, PM2 online 149MB. All 13 live routes 200. Sitemap: 92 URLs (10 event, 6 news). All pages: Organization+WebSite schemas. Event pages: Event JSON-LD. News pages: NewsArticle JSON-LD. Hreflang correct on all EN/RU pages. Guide regression: PASS. Next recommended: Phase 6C-99C HowTo schema on guide pages, or submit sitemap in Google Search Console.)
 
 ---
 

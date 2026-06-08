@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-08 (Phase 6C-99B-PROD COMPLETE -- Technical SEO fixes deployed to production. Commit 33d4460. Deploy: zero-downtime 49s build, PM2 online 149MB. All 13 live routes 200. Sitemap: 92 URLs (10 event, 6 news). All pages: Organization+WebSite schemas. Event pages: Event JSON-LD. News pages: NewsArticle JSON-LD. Hreflang correct on all EN/RU pages. Guide regression: PASS. Next recommended: Phase 6C-99C HowTo schema on guide pages, or submit sitemap in Google Search Console.)
+Last updated: 2026-06-08 (Phase 6C-99C COMPLETE (local only) -- Guide schema + RAG/AEO fixes. Added Article + HowTo JSON-LD to all 17 published guide pages (EN+RU = 34 pages). Added missing BreadcrumbList to TRC custom page. Added updatedAt field to GuideData interface. Build: 88 pages, 0 TS errors. QA: 32/32 checks pass. NO DEPLOY, NO PUSH. Awaiting owner approval to commit + deploy.)
 
 ---
 

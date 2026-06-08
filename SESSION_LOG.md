@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-08 — Phase 6C-99C COMPLETE (local only) -- Guide schema + RAG/AEO improvements
+
+5 files changed. (1) lib/db/reader.ts: added updatedAt to GuideData interface + getGuideGroup + getPublishedGuideBySlug returns. (2) EN [slug]/page.tsx: Article + HowTo JSON-LD. (3) RU [slug]/page.tsx: Article + HowTo JSON-LD. (4) EN TRC custom page: BreadcrumbList (was missing) + Article + HowTo. (5) RU TRC custom page: same. All 17 guides x EN+RU = 34 pages now have [Organization, WebSite, BreadcrumbList, Article, HowTo] schemas. Article: headline, description, url, inLanguage, dateModified (ISO), publisher. HowTo: name, description, step[]{name, text} per locale. No totalTime/estimatedCost (human text). No author/image/datePublished (not reliably available). Build: 88 pages, 0 TS errors. QA: 32/32 pass. No deploy, no push, no DB write, no migrations. 3 docs created. Awaiting owner approval.
+
+---
+
 ## 2026-06-08 — Phase 6C-99B-PROD COMPLETE -- Technical SEO fixes deployed to production
 
 Commit 33d4460. Push to origin/main. Deploy: zero-downtime 49s build, PM2 reload ~1s, online 149.3MB. All 13 live routes HTTP 200. Sitemap: 92 URLs (5+5 events, 3+3 news). EN GITEX: hreflang=[en, ru, x-default], schemas=[Organization, WebSite, Event]. RU GITEX: hreflang=[ru, en, x-default], schemas=[Organization, WebSite, Event]. EN/RU F1, News, Calendar: all correct. Homepage: Organization+WebSite schemas, hreflang=[en, ru, x-default]. Guide regression: Organization+WebSite+BreadcrumbList. No DB write, no PM2 stop/start, no migrations, no admin. Production deploy report: docs/content-drafts/seo/PRODUCTION_DEPLOY_REPORT_6C99B.md.

@@ -44,8 +44,56 @@ export default function TrcPage() {
 
   const overviewParagraphs = guide.overview.split("\n\n").filter(Boolean);
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: BASE },
+      { "@type": "ListItem", position: 2, name: "All Guides", item: `${BASE}/guides` },
+      { "@type": "ListItem", position: 3, name: guide.title, item: `${BASE}/guides/${SLUG}` },
+    ],
+  };
+
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: guide.title,
+    description: guide.summary,
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE}/guides/${SLUG}` },
+    url: `${BASE}/guides/${SLUG}`,
+    inLanguage: "en",
+    dateModified: guide.updatedAt,
+    publisher: { "@type": "Organization", name: "Guidex Consulting", url: BASE },
+  };
+
+  const howToSchema = guide.steps.length >= 2 ? {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: guide.title,
+    description: guide.summary,
+    step: guide.steps.map((s) => ({
+      "@type": "HowToStep",
+      name: s.title,
+      text: s.what,
+    })),
+  } : null;
+
   return (
     <div className="max-w-2xl mx-auto px-5 pt-5 pb-14">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      {howToSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+        />
+      )}
 
       {/* Breadcrumb */}
       <div className="flex items-center justify-between mb-5 -mx-1">

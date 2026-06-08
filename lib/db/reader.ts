@@ -45,6 +45,7 @@ export interface GuideData {
   price:         string;
   timeline:      string;
   lastUpdated:   string;
+  updatedAt:     string;    // ISO timestamp of last admin save — used for dateModified in Article schema
   title:         string;
   summary:       string;
   audience:      string;
@@ -209,6 +210,7 @@ export function getGuideGroup(
       price:        guide.price,
       timeline:     guide.timeline,
       lastUpdated:  guide.lastUpdated,
+      updatedAt:    guide.updatedAt,
       hasRuContent: guide.ruTitle.trim() !== "",
       title:        pick(locale, guide.ruTitle, guide.enTitle),
       summary:      pick(locale, guide.ruSummary, guide.enSummary),
@@ -256,6 +258,7 @@ export function getPublishedGuideBySlug(
     price:        guide.price,
     timeline:     guide.timeline,
     lastUpdated:  guide.lastUpdated,
+    updatedAt:    guide.updatedAt,
     hasRuContent: guide.ruTitle.trim() !== "",
     title:        pick(locale, guide.ruTitle, guide.enTitle),
     summary:      pick(locale, guide.ruSummary, guide.enSummary),

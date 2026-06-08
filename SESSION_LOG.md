@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-08 — Phase 6C-99C-PROD COMPLETE -- Guide structured data deployed to production
+
+Commit 27c6f67. Deploy: zero-downtime 50s build, PM2 online 147MB, health check 200. 21/21 live QA checks pass. All 17 guides x EN+RU = 34 pages now have [Organization, WebSite, BreadcrumbList, Article, HowTo]. TRC custom page gained BreadcrumbList. Article: headline, description, url, inLanguage (en/ru), dateModified (ISO from updated_at), publisher. HowTo: name, description, steps[]{name, text} locale-aware — no fake totalTime/estimatedCost/author/datePublished. EN mainland HowTo step count=8 confirmed live. RU TRC step 1 = "Определить цель сертификата" confirmed. Event/News/Calendar regression PASS. Sitemap 92 URLs unchanged. Report: PRODUCTION_DEPLOY_REPORT_6C99C.md.
+
+---
+
 ## 2026-06-08 — Phase 6C-99C COMPLETE (local only) -- Guide schema + RAG/AEO improvements
 
 5 files changed. (1) lib/db/reader.ts: added updatedAt to GuideData interface + getGuideGroup + getPublishedGuideBySlug returns. (2) EN [slug]/page.tsx: Article + HowTo JSON-LD. (3) RU [slug]/page.tsx: Article + HowTo JSON-LD. (4) EN TRC custom page: BreadcrumbList (was missing) + Article + HowTo. (5) RU TRC custom page: same. All 17 guides x EN+RU = 34 pages now have [Organization, WebSite, BreadcrumbList, Article, HowTo] schemas. Article: headline, description, url, inLanguage, dateModified (ISO), publisher. HowTo: name, description, step[]{name, text} per locale. No totalTime/estimatedCost (human text). No author/image/datePublished (not reliably available). Build: 88 pages, 0 TS errors. QA: 32/32 pass. No deploy, no push, no DB write, no migrations. 3 docs created. Awaiting owner approval.

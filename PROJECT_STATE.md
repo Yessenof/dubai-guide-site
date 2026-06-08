@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-08 (Phase 6C-99C COMPLETE (local only) -- Guide schema + RAG/AEO fixes. Added Article + HowTo JSON-LD to all 17 published guide pages (EN+RU = 34 pages). Added missing BreadcrumbList to TRC custom page. Added updatedAt field to GuideData interface. Build: 88 pages, 0 TS errors. QA: 32/32 checks pass. NO DEPLOY, NO PUSH. Awaiting owner approval to commit + deploy.)
+Last updated: 2026-06-08 (Phase 6C-99C-PROD COMPLETE -- Guide schema deployed. Commit 27c6f67. Deploy: zero-downtime 50s build, PM2 online 147MB. All 21 live QA checks pass. All 17 guides (EN+RU = 34 pages) now have [Organization, WebSite, BreadcrumbList, Article, HowTo] schemas. TRC custom page gained BreadcrumbList. Article: inLanguage, dateModified (ISO). HowTo: locale-aware steps, no fake totalTime/estimatedCost/author. Event/News/Calendar regression: PASS. Sitemap: 92 URLs unchanged. Next: Phase 6C-99D — Internal Linking, Hub Pages, Commercial SEO Architecture (not started).)
 
 ---
 

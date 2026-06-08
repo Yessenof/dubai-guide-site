@@ -37,6 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `${BASE}/news/${slug}`,
       languages: {
         en: `${BASE}/news/${slug}`,
+        ...(post.ruPublished ? { ru: `${BASE}/ru/news/${slug}` } : {}),
         "x-default": `${BASE}/news/${slug}`,
       },
     },
@@ -66,8 +67,37 @@ export default async function NewsDetailPage({ params }: Props) {
     : categoryLabel;
   const calendarMonth = NEWS_CALENDAR_MONTH[slug];
 
+  const articleSchema = post.noindex !== 1
+    ? {
+        "@context": "https://schema.org",
+        "@type":    "NewsArticle",
+        headline:    post.seoTitle || post.title,
+        description: post.metaDescription || post.summary,
+        ...(post.datePublished ? { datePublished: post.datePublished } : {}),
+        ...(post.dateUpdated && post.dateUpdated !== post.datePublished
+          ? { dateModified: post.dateUpdated }
+          : {}),
+        mainEntityOfPage: {
+          "@type": "WebPage",
+          "@id":   `${BASE}/news/${post.slug}`,
+        },
+        publisher: {
+          "@type": "Organization",
+          name:    "Guidex Consulting",
+          url:     BASE,
+        },
+      }
+    : null;
+
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
+
+      {articleSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        />
+      )}
 
       <Link
         href="/news"

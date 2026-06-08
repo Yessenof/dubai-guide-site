@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-08 (Phase 6C-98D DEPLOYED -- UAE Calendar internal linking improvements live on production. Commit: 8726038. Event pages CalendarMiniPreview now links to SSG calendar detail pages (/calendar/december-2026-uae-calendar) instead of dynamic listing. Related guide box shows real guide title. RU pages use /ru/calendar/... hrefs. Build: 88 pages, 0 TS errors. 14/14 live routes 200. PM2 online 138.2 MB. No DB write, no migrations, no admin, no content import.)
+Last updated: 2026-06-08 (Phase 6C-99B-PROD IN PROGRESS -- commit + push + deploy approved by owner. Changes: sitemap now includes events/news (92 URLs), EN event/news/calendar hreflang ru alternate, WebSite schema, Event JSON-LD, NewsArticle JSON-LD, homepage title/description. 27/27 QA local pass. Now committing. Next: push → zero-downtime deploy → live QA.)
 
 ---
 

@@ -41,6 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `${BASE}/calendar/${slug}`,
       languages: {
         en: `${BASE}/calendar/${slug}`,
+        ...(page.ruPublished ? { ru: `${BASE}/ru/calendar/${slug}` } : {}),
         "x-default": `${BASE}/calendar/${slug}`,
       },
     },

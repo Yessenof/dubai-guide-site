@@ -5,6 +5,24 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-08 — Phase 6C-99B-PROD IN PROGRESS -- committing + deploying SEO fixes
+
+Owner approved commit + push + zero-downtime deploy of Phase 6C-99B. Files: 9 source files + seo docs. Commit message: "fix: improve SEO sitemap hreflang and schema". Deploy command: ssh root@85.9.203.69 "cd /var/www/guidex && bash scripts/deploy-zero-downtime.sh". Live QA to follow.
+
+---
+
+## 2026-06-08 — Phase 6C-99B COMPLETE (local only) -- Technical SEO discovery fixes
+
+7 files changed + 2 docs created. (1) app/sitemap.ts: added getPublishedEvents + getPublishedNewsPosts imports; 5 EN events + 5 RU events + 3 EN news + 3 RU news added to sitemap (92 total URLs). (2) lib/db/news-events-calendar.ts: added ruPublished to EventDetail, NewsPostDetail, CalendarPageDetail interfaces + getEventBySlug/getNewsPostBySlug/getCalendarPageBySlug return values. (3) EN event page: added ru hreflang (conditional on ruPublished) + Event JSON-LD when schema_eligible=1. (4) RU event page: added Event JSON-LD. (5) EN news page: added ru hreflang + NewsArticle JSON-LD when noindex!=1. (6) RU news page: added NewsArticle JSON-LD. (7) EN calendar page: added ru hreflang conditional. (8) OrgSchema.tsx: added WebSite schema alongside existing Organization schema. (9) Homepage page.tsx: added explicit title + description. Build: 88 pages, 0 TS errors. 27/27 QA checks passed. Awaiting deploy approval.
+
+---
+
+## 2026-06-08 — Phase 6C-99A COMPLETE -- Full SEO/RAG/AEO organic growth audit
+
+8 audit files written to docs/content-drafts/seo/. No code changes made. Key findings: (1) Event pages (5 published) and news pages (3 published) not in sitemap — app/sitemap.ts never queries those tables. (2) All events have schema_eligible=1 but zero JSON-LD output — Event schema missing. (3) No HowTo schema on guide pages (BreadcrumbList only). (4) EN event/news/calendar pages missing hreflang ru alternate (guide pages are CORRECT — conditional on hasRuContent, true for all 17). (5) No Organization/WebSite schema. (6) New domain zero backlinks is primary organic growth blocker. Quick-win fix order: sitemap.ts event+news entries → hreflang ru for event/news/calendar EN pages → Organization schema → Event/HowTo/NewsArticle schemas. Audit files: FULL_SEO_RAG_AUDIT, TECHNICAL_SEO_INDEXING, SITEMAP_ROBOTS_CANONICAL_HREFLANG, CONTENT_QUALITY_AND_SEARCH_INTENT, KEYWORD_CLUSTER_AND_PAGE_MAPPING, RAG_AEO_ENTITY_READINESS, INTERNAL_LINKING_AND_SITE_ARCHITECTURE, ORGANIC_GROWTH_FIX_ROADMAP.
+
+---
+
 ## 2026-06-08 — Phase 6C-98D DEPLOYED -- UAE Calendar internal linking improvements live on production
 
 Commit: 8726038. Deploy: zero-downtime 49s build, PM2 reload ~1s. 14/14 live routes 200. GITEX/F1/Design Week/Big 5 event pages now link to SSG calendar detail pages via CalendarMiniPreview (e.g. /calendar/december-2026-uae-calendar). Related guide box shows "How to Set Up a Mainland Company in Dubai" instead of slug text. RU event pages use /ru/calendar/... hrefs. December + November SSG calendar regression: PASS. PM2 online 138.2 MB. No DB write, no migrations, no admin, no content import. Final report: UAE_CALENDAR_INTERNAL_LINKING_DEPLOY_REPORT_6C98D.md.

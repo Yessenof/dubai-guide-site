@@ -1,6 +1,6 @@
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://guidex-consulting.ae";
 
-const schema = {
+const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Guidex Consulting",
@@ -13,11 +13,24 @@ const schema = {
   },
 };
 
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Guidex Consulting",
+  url: BASE,
+};
+
 export function OrgSchema() {
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+    </>
   );
 }

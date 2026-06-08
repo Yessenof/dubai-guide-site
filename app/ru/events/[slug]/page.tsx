@@ -66,8 +66,30 @@ export default async function RuEventDetailPage({ params }: Props) {
   const heroImage = categoryImage(event.category);
   const eyebrow   = `${categoryLabel} · ${dateDisplay}`;
 
+  const eventSchema = event.schemaEligible
+    ? {
+        "@context": "https://schema.org",
+        "@type":    "Event",
+        name:        event.seoTitle || event.title,
+        description: event.metaDescription || event.summary,
+        startDate:   event.eventDateStart,
+        ...(event.eventDateEnd && event.eventDateEnd !== event.eventDateStart
+          ? { endDate: event.eventDateEnd }
+          : {}),
+        eventStatus: "https://schema.org/EventScheduled",
+        url:         `${BASE}/ru/events/${event.slug}`,
+      }
+    : null;
+
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
+
+      {eventSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
+        />
+      )}
 
       <Link
         href="/ru/events"

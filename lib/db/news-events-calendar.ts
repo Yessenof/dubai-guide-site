@@ -90,6 +90,7 @@ export interface NewsPostDetail extends NewsPostSummary {
   metaDescription:    string;   // locale field, no fallback
   sourceUrl:          string;
   noindex:            number;
+  ruPublished:        number;   // 1 = RU version is live; used for hreflang decisions
   relatedGuideSlug:   string;
   relatedServiceSlug: string;
   relatedToolSlug:    string;
@@ -119,6 +120,7 @@ export interface EventDetail extends EventSummary {
   seoTitle:             string;   // locale field, no fallback
   metaDescription:      string;   // locale field, no fallback
   sourceUrl:            string;
+  ruPublished:          number;   // 1 = RU version is live; used for hreflang decisions
   relatedGuideSlug:     string;
   relatedGuideTitle?:   string;   // guide en_title / ru_title lookup; undefined when no related guide
   relatedNewsSlug:      string;
@@ -148,6 +150,7 @@ export interface CalendarPageDetail extends CalendarPageSummary {
   metaDescription:   string;   // locale field, no fallback
   officialSourceUrl: string;
   lastVerifiedDate:  string;
+  ruPublished:       number;   // 1 = RU version is live; used for hreflang decisions
 }
 
 // ─── News readers ─────────────────────────────────────────────────────────────
@@ -292,6 +295,7 @@ export function getNewsPostBySlug(
     imagePath:          row.imagePath,
     imageAlt:           field(locale, row.ruImageAlt, row.imageAlt),
     noindex:            row.noindex,
+    ruPublished:        row.ruPublished,
     featuredHomepage:   row.featuredHomepage,
     featuredDigest:     row.featuredDigest,
     relatedGuideSlug:   row.relatedGuideSlug,
@@ -478,6 +482,7 @@ export function getEventBySlug(
     featuredDigest:      row.featuredDigest,
     schemaEligible:      row.schemaEligible,
     sourceUrl:           row.sourceUrl,
+    ruPublished:         row.ruPublished,
     relatedGuideSlug:    row.relatedGuideSlug,
     relatedGuideTitle,
     relatedNewsSlug:     row.relatedNewsSlug,
@@ -629,6 +634,7 @@ export function getCalendarPageBySlug(
     hasIslamicDates:   row.hasIslamicDates,
     officialSourceUrl: row.officialSourceUrl,
     lastVerifiedDate:  row.lastVerifiedDate,
+    ruPublished:       row.ruPublished,
     featuredHomepage:  row.featuredHomepage,
     dates:             parseDatesJson(row.datesJson),
   };

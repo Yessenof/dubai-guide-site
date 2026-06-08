@@ -24,6 +24,9 @@ import { localizeValue } from "@/lib/localize-value";
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export const metadata: Metadata = {
+  title: "Guidex — Dubai Guides, UAE Calendar & Expat Life Setup",
+  description:
+    "Step-by-step guides for visas, company setup, and UAE procedures. Monthly UAE calendar, regulatory updates, and life-setup planning for expats in Dubai.",
   alternates: {
     canonical: BASE,
     languages: {

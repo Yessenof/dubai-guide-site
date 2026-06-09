@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-09 — Phase 6C-100A-PROD COMPLETE -- Hijri New Year 2026 holiday live at guidex-consulting.ae
+
+Commit 4a085af. Push to origin/main. Deploy: 50s build, PM2 reload ~1s, online 146.3MB. 4/4 new routes 200. NewsArticle JSON-LD present EN+RU. Sitemap 200, 2 new hijri-new-year entries. RU text correct, no EN fallback. 6 regression routes 200. Source status: MEDIA_CONFIRMED_OFFICIAL_ANNOUNCEMENT_CITED + OFFICIAL_SOCIAL_SIGNAL_FOUND (Gulf News + Khaleej Times + The National citing FAHR+MoHRE; UAE Media Office @UAEmediaoffice social confirmation). Production DB: JUN-15-HIJRI prepended to june-2026-dubai-calendar dates_json (8→9), has_islamic_dates=1. News post UUID=0233b8e5-cd47-469f-b92e-0f4aeb5c4219. Server backup: /var/backups/guidex/guides.db.pre-hijri-6c100a-20260609-130933. No issues. No rollback. Report: HIJRI_NEW_YEAR_2026_PRODUCTION_REPORT_6C100A.md.
+
+---
+
 ## 2026-06-09 — Phase 6C-100A LOCAL QA COMPLETE -- Hijri New Year 2026 holiday import (LOCAL ONLY)
 
 Emergency import: Hijri New Year 1448 AH (June 15, 2026) was missing from Guidex. Source verification: MEDIA_CONFIRMED_OFFICIAL_ANNOUNCEMENT_CITED — Gulf News + Khaleej Times + The National all confirm June 15, citing FAHR+MoHRE. No direct FAHR/MoHRE URL found (JS-rendered). Calendar update: JUN-15-HIJRI entry prepended to june-2026-dubai-calendar dates_json (8→9 entries); type=public-holiday, priority=1, confidence=confirmed; has_islamic_dates set 0→1. News post: uae-hijri-new-year-holiday-june-15-2026 inserted (published, noindex=0, ru_published=1, category=government, source_label=media_citing_official). Build: 88 pages, 0 TS errors. 19/19 QA checks pass — all 4 routes 200, NewsArticle JSON-LD present, RU titles correct, calendar shows holiday. Docs: HIJRI_NEW_YEAR_2026_SOURCE_VERIFICATION_6C100A, HIJRI_NEW_YEAR_2026_IMPORT_PLAN_6C100A, HIJRI_NEW_YEAR_2026_PRODUCTION_REPORT_6C100A, PUBLIC_HOLIDAY_RADAR_GAP_FIX_6C100A. Script: scripts/hijri-new-year-2026-local-import-6c100a.ts. LOCAL ONLY — no production DB write, no deploy. Awaiting owner approval. URGENT: 6 days to holiday.

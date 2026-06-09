@@ -3,7 +3,8 @@
 
 ---
 
-## Status: LOCAL QA COMPLETE — AWAITING OWNER APPROVAL FOR PRODUCTION
+## Status: PRODUCTION COMPLETE — LIVE at guidex-consulting.ae
+## Commit: 4a085af | Deploy: 2026-06-09 13:13 UTC
 
 ---
 
@@ -40,7 +41,7 @@
 | u.ae official portal | 200 ✓ | Legal framework confirmed |
 | Gulf News / DGHR | 200 ✓ | Dubai Government holiday confirmed |
 
-No direct FAHR/MoHRE press release URL found. Three independent tier-1 sources all confirm June 15, 2026. Source standard: MEDIA_CONFIRMED_OFFICIAL_ANNOUNCEMENT_CITED — sufficient for production import.
+No direct FAHR/MoHRE press release URL found (JS-rendered sites). Three independent tier-1 sources + UAE Media Office (@UAEmediaoffice) official social signal all confirm June 15, 2026. Source standard: MEDIA_CONFIRMED_OFFICIAL_ANNOUNCEMENT_CITED + OFFICIAL_SOCIAL_SIGNAL_FOUND — sufficient for production import.
 
 ---
 
@@ -185,7 +186,45 @@ STRICTLY FORBIDDEN: no migrations, no schema changes, no admin panel changes, no
 
 ---
 
-## 10. Radar gap — post-phase actions required
+## 10. Production server details
+
+| Field | Value |
+|---|---|
+| Production server | 85.9.203.69 |
+| App path | /var/www/guidex |
+| Git HEAD | 4a085af |
+| Build time | 50s |
+| PM2 status | online, 146.3MB |
+| Reload time | ~1s |
+| Server-side backup | /var/backups/guidex/guides.db.pre-hijri-6c100a-20260609-130933 |
+| Script-side backup | /var/www/guidex/backups/local/guides.db.pre-hijri-6c100a-2026-06-09T13-12-43 |
+| News post UUID (production) | 0233b8e5-cd47-469f-b92e-0f4aeb5c4219 |
+
+---
+
+## 11. Live QA results (9/9 pass + 6 regression checks)
+
+| Check | Expected | Actual | Pass |
+|---|---|---|---|
+| EN news route | 200 | 200 | PASS |
+| RU news route | 200 | 200 | PASS |
+| EN June calendar route | 200 | 200 | PASS |
+| RU June calendar route | 200 | 200 | PASS |
+| NewsArticle JSON-LD EN | present | "@type":"NewsArticle" | PASS |
+| NewsArticle JSON-LD RU | present | "@type":"NewsArticle" | PASS |
+| June 15 Hijri New Year in EN calendar | >0 | 3 matches | PASS |
+| RU text present, no EN fallback | 0 fallback | 0 | PASS |
+| sitemap.xml | 200, hijri entries | 200, 2 entries | PASS |
+| / | 200 | 200 | PASS (regression) |
+| /ru | 200 | 200 | PASS (regression) |
+| /news | 200 | 200 | PASS (regression) |
+| /ru/news | 200 | 200 | PASS (regression) |
+| /calendar/october-2026-dubai-calendar | 200 | 200 | PASS (regression) |
+| /ru/calendar/october-2026-dubai-calendar | 200 | 200 | PASS (regression) |
+
+---
+
+## 12. Radar gap — post-phase actions required
 
 After production deploy, check:
 - Prophet's Birthday 1448 (~Sep 4, 2026) — verify present in september calendar

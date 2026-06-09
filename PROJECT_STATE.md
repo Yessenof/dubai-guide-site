@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-09 (Phase 6C-100A LOCAL QA COMPLETE -- Hijri New Year 2026 (June 15) import. JUN-15-HIJRI public holiday added to june-2026-dubai-calendar dates_json (8→9 entries, has_islamic_dates=1). News post uae-hijri-new-year-holiday-june-15-2026 inserted (published, noindex=0, ru_published=1). Build 88 pages, 0 TS errors. 19/19 QA checks pass. Source: MEDIA_CONFIRMED_OFFICIAL_ANNOUNCEMENT_CITED (Gulf News + Khaleej Times + The National, citing FAHR+MoHRE). LOCAL ONLY -- no production DB write, no deploy, no push, no commit. URGENT: holiday June 15 is 6 days away. Awaiting owner approval for production. Next: 6C-100A-PROD deploy OR 6C-99E Hub BreadcrumbList+cross-links.)
+Last updated: 2026-06-09 (Phase 6C-100A-PROD COMPLETE -- Commit 4a085af. Deploy: 50s build, PM2 online 146.3MB. 15/15 live QA checks pass (4 new routes 200, NewsArticle JSON-LD EN+RU, Hijri holiday in calendar, RU text correct, sitemap 2 new entries, 6 regression routes 200). JUN-15-HIJRI public holiday and news post live at guidex-consulting.ae. Source: MEDIA_CONFIRMED_OFFICIAL_ANNOUNCEMENT_CITED + OFFICIAL_SOCIAL_SIGNAL_FOUND. No rollback. Next: 6C-99E Hub BreadcrumbList, static guide-to-guide cross-links, hub CTAs (not started). Also: check Prophet's Birthday + Dec holidays in calendar DB.)
 
 ---
 

@@ -92,6 +92,7 @@ export default async function RuGuidePage({ params }: Props) {
       "@type": "HowToStep",
       name: s.title,
       text: s.what,
+      url: `${BASE}/ru/guides/${slug}#step-${s.stepOrder}`,
     })),
   } : null;
 

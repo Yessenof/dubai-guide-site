@@ -75,6 +75,7 @@ export default function TrcPage() {
       "@type": "HowToStep",
       name: s.title,
       text: s.what,
+      url: `${BASE}/guides/${SLUG}#step-${s.stepOrder}`,
     })),
   } : null;
 

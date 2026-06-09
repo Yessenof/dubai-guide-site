@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-08 — Phase 6C-99D COMPLETE (local only) -- Internal linking, step anchors, GuideTabs schema
+
+9 source files changed + 5 SEO docs created. (1) components/StepCard.tsx: added id="step-{number}" to outer wrapper div — every step now has a direct URL anchor. (2-5) EN [slug], RU [slug], EN TRC, RU TRC guide templates: added url field to HowToStep in HowTo schema pointing to step anchors (e.g. .../guides/employment-visa#step-1). (6-9) 4 GuideTabs hub pages (child EN+RU, spouse EN+RU): added BreadcrumbList (Home→All Guides→page) + Article schema (headline/description from GUIDE_GROUPS config, inLanguage en/ru). Schema types on group pages now: [Organization, WebSite, BreadcrumbList, Article]. Build: 88 pages, 0 TS errors. QA: 13/13 pass (StepCard anchors present, HowToStep urls correct, group page schemas confirmed, regressions PASS). 5 docs: INTERNAL_LINKING_ARCHITECTURE_FIX_LOG, INTERNAL_LINK_INVENTORY, HUB_AND_TOPIC_CLUSTER_MAP, COMMERCIAL_SEO_AND_CTA_PATH_AUDIT, FUTURE_INTERNAL_LINKING_IMPLEMENTATION_PLAN. LOCAL ONLY — awaiting owner approval.
+
+---
+
 ## 2026-06-08 — Phase 6C-99C-PROD COMPLETE -- Guide structured data deployed to production
 
 Commit 27c6f67. Deploy: zero-downtime 50s build, PM2 online 147MB, health check 200. 21/21 live QA checks pass. All 17 guides x EN+RU = 34 pages now have [Organization, WebSite, BreadcrumbList, Article, HowTo]. TRC custom page gained BreadcrumbList. Article: headline, description, url, inLanguage (en/ru), dateModified (ISO from updated_at), publisher. HowTo: name, description, steps[]{name, text} locale-aware — no fake totalTime/estimatedCost/author/datePublished. EN mainland HowTo step count=8 confirmed live. RU TRC step 1 = "Определить цель сертификата" confirmed. Event/News/Calendar regression PASS. Sitemap 92 URLs unchanged. Report: PRODUCTION_DEPLOY_REPORT_6C99C.md.

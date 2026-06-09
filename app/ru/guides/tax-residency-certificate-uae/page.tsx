@@ -76,6 +76,7 @@ export default function RuTrcPage() {
       "@type": "HowToStep",
       name: s.title,
       text: s.what,
+      url: `${BASE}/ru/guides/${SLUG}#step-${s.stepOrder}`,
     })),
   } : null;
 

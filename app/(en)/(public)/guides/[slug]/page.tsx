@@ -92,6 +92,7 @@ export default async function GuidePage({ params }: Props) {
       "@type": "HowToStep",
       name: s.title,
       text: s.what,
+      url: `${BASE}/guides/${slug}#step-${s.stepOrder}`,
     })),
   } : null;
 

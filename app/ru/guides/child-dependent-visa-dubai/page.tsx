@@ -28,12 +28,43 @@ export default async function RuChildDependentVisaPage({ searchParams }: Props) 
   const { route } = await searchParams;
   const guides = getGuideGroup(group.variants.map((v) => v.slug), "ru");
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Главная", item: `${BASE}/ru` },
+      { "@type": "ListItem", position: 2, name: "Все гайды", item: `${BASE}/ru/guides` },
+      { "@type": "ListItem", position: 3, name: group.ruTitle ?? group.title, item: `${BASE}/ru/guides/${GROUP_KEY}` },
+    ],
+  };
+
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: group.ruTitle ?? group.title,
+    description: group.ruSummary ?? group.summary,
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE}/ru/guides/${GROUP_KEY}` },
+    url: `${BASE}/ru/guides/${GROUP_KEY}`,
+    inLanguage: "ru",
+    publisher: { "@type": "Organization", name: "Guidex Consulting", url: BASE },
+  };
+
   return (
-    <GuideTabs
-      group={group}
-      guides={guides}
-      defaultRoute={route ?? "outside"}
-      locale="ru"
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <GuideTabs
+        group={group}
+        guides={guides}
+        defaultRoute={route ?? "outside"}
+        locale="ru"
+      />
+    </>
   );
 }

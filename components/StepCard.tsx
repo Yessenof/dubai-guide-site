@@ -45,7 +45,7 @@ export default function StepCard({
   const L = LABELS[locale];
 
   return (
-    <div className="relative pl-10 pb-7 last:pb-0 before:content-[''] before:absolute before:left-3.5 before:top-8 before:bottom-0 before:w-px before:bg-stone-100 last:before:hidden">
+    <div id={`step-${number}`} className="relative pl-10 pb-7 last:pb-0 before:content-[''] before:absolute before:left-3.5 before:top-8 before:bottom-0 before:w-px before:bg-stone-100 last:before:hidden">
       {/* Step number bubble */}
       <div className="absolute left-0 top-0 w-7 h-7 rounded-full bg-navy flex items-center justify-center">
         <span className="text-xs font-bold text-white tabular-nums">{number}</span>

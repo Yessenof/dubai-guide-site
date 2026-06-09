@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-08 (Phase 6C-99C-PROD COMPLETE -- Guide schema deployed. Commit 27c6f67. Deploy: zero-downtime 50s build, PM2 online 147MB. All 21 live QA checks pass. All 17 guides (EN+RU = 34 pages) now have [Organization, WebSite, BreadcrumbList, Article, HowTo] schemas. TRC custom page gained BreadcrumbList. Article: inLanguage, dateModified (ISO). HowTo: locale-aware steps, no fake totalTime/estimatedCost/author. Event/News/Calendar regression: PASS. Sitemap: 92 URLs unchanged. Next: Phase 6C-99D — Internal Linking, Hub Pages, Commercial SEO Architecture (not started).)
+Last updated: 2026-06-08 (Phase 6C-99D COMPLETE locally -- StepCard step anchors (id="step-{n}"), HowToStep url fields on all 4 guide templates, Article+BreadcrumbList schema on 4 GuideTabs hub pages (child/spouse EN+RU). Build: 88 pages, 0 errors. 13/13 QA checks pass. 5 SEO docs created. LOCAL ONLY -- awaiting owner approval to commit/push/deploy.)
 
 ---
 
@@ -229,6 +229,27 @@ Group pages live:
 ---
 
 ## Current Next Step
+
+**Phase 6C-99D — COMPLETE locally (2026-06-08) — awaiting owner approval to commit/push/deploy.**
+
+Changes:
+- `components/StepCard.tsx` — added `id="step-{n}"` to outer div for per-step anchors
+- `app/(en)/(public)/guides/[slug]/page.tsx` — added `url` to HowToStep in HowTo schema
+- `app/ru/guides/[slug]/page.tsx` — same (RU)
+- `app/(en)/(public)/guides/tax-residency-certificate-uae/page.tsx` — same (TRC custom page)
+- `app/ru/guides/tax-residency-certificate-uae/page.tsx` — same (RU TRC)
+- `app/(en)/(public)/guides/child-dependent-visa-dubai/page.tsx` — added Article + BreadcrumbList schema
+- `app/(en)/(public)/guides/spouse-dependent-visa-dubai/page.tsx` — same
+- `app/ru/guides/child-dependent-visa-dubai/page.tsx` — same (RU)
+- `app/ru/guides/spouse-dependent-visa-dubai/page.tsx` — same (RU)
+
+Docs: 5 SEO docs created in `docs/content-drafts/seo/`.
+
+Next: owner approves → commit + push + deploy with `ssh root@85.9.203.69 "cd /var/www/guidex && bash scripts/deploy-zero-downtime.sh"`.
+
+Deferred (ready for next phase): hub page BreadcrumbList (5 pages), guide-to-guide cross-links (static config, no DB migration), hub page WhatsApp CTAs.
+
+---
 
 **Phase 6C-49 — COMPLETE — Live content copy audit — 2026-05-22.**
 

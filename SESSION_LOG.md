@@ -5,6 +5,18 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-09 — Phase 6C-100C-A COMPLETE -- August 2026 Mawlid DB flag fixes live
+
+Commit 21092df. Deploy: 51s build, PM2 reload ~1s, online 146.6MB. Fixed two DB bugs on august-2026-dubai-calendar: (1) has_islamic_dates 0→1 (Mawlid entry AUG-NEW-02 was present but flag was off); (2) AUG-NEW-02 source_status "confirmed"→"expected" (was internally inconsistent with confidence="expected"). Confidence remains "expected" — Mawlid not yet officially confirmed by FAHR as of Jun 9. Islamic disclaimer amber box now renders live on EN+RU August calendar pages. 10/10 live QA pass: both routes 200, amber box present (4 moon-sighting EN matches), RU uses Russian text, no English fallback, no "officially confirmed" wording, no duplicate entries, sitemap 200. No rollback. Production backup: /var/backups/guidex/guides.db.pre-mawlid-flags-6c100ca-20260609-155216. Report: MAWLID_2026_STATUS_FIX_6C100C_A.md. 6C-100C-B trigger: July 26, 2026 onward.
+
+---
+
+## 2026-06-09 — Phase 6C-100B COMPLETE (local/docs only) -- Holiday radar audit Sep-Jan 2027
+
+Checked all UAE public holidays Jun 2026–Jan 2027. Mawlid 1448 (~Aug 24-25) seeded in August calendar as AUG-NEW-02 (confidence=expected, publicholidays.ae source). Commemoration Day Dec 1 and National Day Dec 2-3: both present and correct in December calendar. New Year 2027: not seeded (no Jan 2027 page). Isra Wal Miraj confirmed NOT a public holiday in UAE since 2019. Two DB bugs found: (1) august-2026-dubai-calendar has_islamic_dates=0 must be 1; (2) AUG-NEW-02 source_status="confirmed" contradicts confidence="expected". Mawlid not yet officially confirmed by FAHR — radar watch from July 26, 2026. 3 docs created: PUBLIC_HOLIDAY_SEED_CHECK_6C100B, PUBLIC_HOLIDAY_RADAR_RULES_6C100B, UPCOMING_HOLIDAY_CANDIDATE_PACK_6C100B. No DB writes, no deploy, no push.
+
+---
+
 ## 2026-06-09 — Phase 6C-100A-PROD COMPLETE -- Hijri New Year 2026 holiday live at guidex-consulting.ae
 
 Commit 4a085af. Push to origin/main. Deploy: 50s build, PM2 reload ~1s, online 146.3MB. 4/4 new routes 200. NewsArticle JSON-LD present EN+RU. Sitemap 200, 2 new hijri-new-year entries. RU text correct, no EN fallback. 6 regression routes 200. Source status: MEDIA_CONFIRMED_OFFICIAL_ANNOUNCEMENT_CITED + OFFICIAL_SOCIAL_SIGNAL_FOUND (Gulf News + Khaleej Times + The National citing FAHR+MoHRE; UAE Media Office @UAEmediaoffice social confirmation). Production DB: JUN-15-HIJRI prepended to june-2026-dubai-calendar dates_json (8→9), has_islamic_dates=1. News post UUID=0233b8e5-cd47-469f-b92e-0f4aeb5c4219. Server backup: /var/backups/guidex/guides.db.pre-hijri-6c100a-20260609-130933. No issues. No rollback. Report: HIJRI_NEW_YEAR_2026_PRODUCTION_REPORT_6C100A.md.

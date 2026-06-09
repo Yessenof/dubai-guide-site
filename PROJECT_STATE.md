@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-09 (Phase 6C-100A-PROD COMPLETE -- Commit 4a085af. Deploy: 50s build, PM2 online 146.3MB. 15/15 live QA checks pass (4 new routes 200, NewsArticle JSON-LD EN+RU, Hijri holiday in calendar, RU text correct, sitemap 2 new entries, 6 regression routes 200). JUN-15-HIJRI public holiday and news post live at guidex-consulting.ae. Source: MEDIA_CONFIRMED_OFFICIAL_ANNOUNCEMENT_CITED + OFFICIAL_SOCIAL_SIGNAL_FOUND. No rollback. Next: 6C-99E Hub BreadcrumbList, static guide-to-guide cross-links, hub CTAs (not started). Also: check Prophet's Birthday + Dec holidays in calendar DB.)
+Last updated: 2026-06-09 (Phase 6C-100C-A COMPLETE -- Commit 21092df. Deploy: 51s build, PM2 online 146.6MB. Fixed two August 2026 Mawlid DB bugs: (1) has_islamic_dates 0→1 on august-2026-dubai-calendar; (2) AUG-NEW-02 source_status "confirmed"→"expected". Confidence intentionally stays "expected" -- FAHR not announced yet. Islamic disclaimer now renders on live August calendar page (amber box). 10/10 live QA pass. No rollback. 6C-100C-B: watch FAHR from Jul 26 for official Mawlid announcement. NEXT: Phase 6C-99E -- Hub BreadcrumbList, static guide-to-guide cross-links, hub CTAs.)
 
 ---
 

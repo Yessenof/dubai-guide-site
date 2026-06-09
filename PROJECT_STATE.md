@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-08 (Phase 6C-99D COMPLETE locally -- StepCard step anchors (id="step-{n}"), HowToStep url fields on all 4 guide templates, Article+BreadcrumbList schema on 4 GuideTabs hub pages (child/spouse EN+RU). Build: 88 pages, 0 errors. 13/13 QA checks pass. 5 SEO docs created. LOCAL ONLY -- awaiting owner approval to commit/push/deploy.)
+Last updated: 2026-06-09 (Phase 6C-100A LOCAL QA COMPLETE -- Hijri New Year 2026 (June 15) import. JUN-15-HIJRI public holiday added to june-2026-dubai-calendar dates_json (8→9 entries, has_islamic_dates=1). News post uae-hijri-new-year-holiday-june-15-2026 inserted (published, noindex=0, ru_published=1). Build 88 pages, 0 TS errors. 19/19 QA checks pass. Source: MEDIA_CONFIRMED_OFFICIAL_ANNOUNCEMENT_CITED (Gulf News + Khaleej Times + The National, citing FAHR+MoHRE). LOCAL ONLY -- no production DB write, no deploy, no push, no commit. URGENT: holiday June 15 is 6 days away. Awaiting owner approval for production. Next: 6C-100A-PROD deploy OR 6C-99E Hub BreadcrumbList+cross-links.)
 
 ---
 
@@ -230,24 +230,15 @@ Group pages live:
 
 ## Current Next Step
 
-**Phase 6C-99D — COMPLETE locally (2026-06-08) — awaiting owner approval to commit/push/deploy.**
+**Phase 6C-99D-PROD — COMPLETE (2026-06-09) — commit 7f09d84, deployed, 58/58 QA checks pass.**
 
-Changes:
-- `components/StepCard.tsx` — added `id="step-{n}"` to outer div for per-step anchors
-- `app/(en)/(public)/guides/[slug]/page.tsx` — added `url` to HowToStep in HowTo schema
-- `app/ru/guides/[slug]/page.tsx` — same (RU)
-- `app/(en)/(public)/guides/tax-residency-certificate-uae/page.tsx` — same (TRC custom page)
-- `app/ru/guides/tax-residency-certificate-uae/page.tsx` — same (RU TRC)
-- `app/(en)/(public)/guides/child-dependent-visa-dubai/page.tsx` — added Article + BreadcrumbList schema
-- `app/(en)/(public)/guides/spouse-dependent-visa-dubai/page.tsx` — same
-- `app/ru/guides/child-dependent-visa-dubai/page.tsx` — same (RU)
-- `app/ru/guides/spouse-dependent-visa-dubai/page.tsx` — same (RU)
+Changes deployed:
+- `components/StepCard.tsx` — `id="step-{n}"` anchors on every step
+- 4 guide templates (EN+RU `[slug]`, EN+RU TRC) — HowToStep `url` field added
+- 4 GuideTabs pages (child/spouse EN+RU) — Article + BreadcrumbList schema added
+- 5 SEO docs + 2 memory files
 
-Docs: 5 SEO docs created in `docs/content-drafts/seo/`.
-
-Next: owner approves → commit + push + deploy with `ssh root@85.9.203.69 "cd /var/www/guidex && bash scripts/deploy-zero-downtime.sh"`.
-
-Deferred (ready for next phase): hub page BreadcrumbList (5 pages), guide-to-guide cross-links (static config, no DB migration), hub page WhatsApp CTAs.
+Next: Phase 6C-99E — Hub page BreadcrumbList (5 pages), static guide-to-guide cross-links, hub page CTAs. No DB migration needed. Do NOT start until owner approves.
 
 ---
 

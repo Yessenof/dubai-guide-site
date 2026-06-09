@@ -5,6 +5,18 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-09 — Phase 6C-100A LOCAL QA COMPLETE -- Hijri New Year 2026 holiday import (LOCAL ONLY)
+
+Emergency import: Hijri New Year 1448 AH (June 15, 2026) was missing from Guidex. Source verification: MEDIA_CONFIRMED_OFFICIAL_ANNOUNCEMENT_CITED — Gulf News + Khaleej Times + The National all confirm June 15, citing FAHR+MoHRE. No direct FAHR/MoHRE URL found (JS-rendered). Calendar update: JUN-15-HIJRI entry prepended to june-2026-dubai-calendar dates_json (8→9 entries); type=public-holiday, priority=1, confidence=confirmed; has_islamic_dates set 0→1. News post: uae-hijri-new-year-holiday-june-15-2026 inserted (published, noindex=0, ru_published=1, category=government, source_label=media_citing_official). Build: 88 pages, 0 TS errors. 19/19 QA checks pass — all 4 routes 200, NewsArticle JSON-LD present, RU titles correct, calendar shows holiday. Docs: HIJRI_NEW_YEAR_2026_SOURCE_VERIFICATION_6C100A, HIJRI_NEW_YEAR_2026_IMPORT_PLAN_6C100A, HIJRI_NEW_YEAR_2026_PRODUCTION_REPORT_6C100A, PUBLIC_HOLIDAY_RADAR_GAP_FIX_6C100A. Script: scripts/hijri-new-year-2026-local-import-6c100a.ts. LOCAL ONLY — no production DB write, no deploy. Awaiting owner approval. URGENT: 6 days to holiday.
+
+---
+
+## 2026-06-09 — Phase 6C-99D-PROD COMPLETE -- Internal linking and hub schema deployed
+
+Commit 7f09d84. Push to origin/main. Deploy: zero-downtime 48s build, PM2 reload ~1s, online 146.5MB. 23/23 live routes HTTP 200. 35/35 live schema+anchor checks PASS. StepCard id="step-{n}" anchors live — confirmed id="step-1" through id="step-8" on employment-visa. HowToStep url="...#step-1" live on all 17 guides EN+RU including TRC custom pages. GuideTabs group pages (child EN+RU, spouse EN+RU) now serve [Organization, WebSite, BreadcrumbList, Article] — GuideTabs were the last schema gap in guides section. GITEX Event + News NewsArticle + Homepage schema: regression PASS. No issues. No rollback. Report: PRODUCTION_DEPLOY_REPORT_6C99D.md.
+
+---
+
 ## 2026-06-08 — Phase 6C-99D COMPLETE (local only) -- Internal linking, step anchors, GuideTabs schema
 
 9 source files changed + 5 SEO docs created. (1) components/StepCard.tsx: added id="step-{number}" to outer wrapper div — every step now has a direct URL anchor. (2-5) EN [slug], RU [slug], EN TRC, RU TRC guide templates: added url field to HowToStep in HowTo schema pointing to step anchors (e.g. .../guides/employment-visa#step-1). (6-9) 4 GuideTabs hub pages (child EN+RU, spouse EN+RU): added BreadcrumbList (Home→All Guides→page) + Article schema (headline/description from GUIDE_GROUPS config, inLanguage en/ru). Schema types on group pages now: [Organization, WebSite, BreadcrumbList, Article]. Build: 88 pages, 0 TS errors. QA: 13/13 pass (StepCard anchors present, HowToStep urls correct, group page schemas confirmed, regressions PASS). 5 docs: INTERNAL_LINKING_ARCHITECTURE_FIX_LOG, INTERNAL_LINK_INVENTORY, HUB_AND_TOPIC_CLUSTER_MAP, COMMERCIAL_SEO_AND_CTA_PATH_AUDIT, FUTURE_INTERNAL_LINKING_IMPLEMENTATION_PLAN. LOCAL ONLY — awaiting owner approval.

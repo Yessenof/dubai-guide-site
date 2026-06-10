@@ -5,7 +5,13 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
-## 2026-06-10 — Phase 6C-99F LOCAL COMPLETE -- Hreflang, sub-hub breadcrumbs, TRC related guides
+## 2026-06-10 — Phase 6C-99F PRODUCTION COMPLETE -- Hreflang, sub-hub breadcrumbs, TRC related guides
+
+Commit e43f6e9. Push: origin/main. Deploy: 49s build, PM2 reload ~1s, online 146.4MB. 23/23 live QA pass. No rollback. Hard-stop compliance confirmed: no DB writes, no migrations, no admin, no content import. Changes deployed: (1) Hreflang alternates added to EN /visas/family and /visas/golden (were missing entirely); (2) 3-level BreadcrumbList on /visas/family, /visas/golden, /ru/visas/family, /ru/visas/golden; (3) 2-level BreadcrumbList on /life-setup and /ru/life-setup; (4) Related guides block (Related guides / Похожие гайды) on TRC custom pages EN+RU — 3 related guides, no self-link, RU uses /ru/guides/ prefix. Regressions clean: GITEX 200 + Event schema, Hijri news 200, August amber, 6C-99E related guides, sitemap 200.
+
+---
+
+## 2026-06-10 — Phase 6C-99F LOCAL COMPLETE -- (superseded by PROD entry above)
 
 8 files changed. Build clean (88 pages, 0 errors). 21/21 QA pass. LOCAL ONLY — no push, no deploy. (1) Hreflang: added BASE + alternates (en/ru/x-default) to EN /visas/family and /visas/golden — both were missing entirely; (2) BreadcrumbList: added 3-level schema to /visas/family, /visas/golden, /ru/visas/family, /ru/visas/golden; added 2-level to /life-setup and /ru/life-setup; (3) TRC custom pages: added related guides block (Related guides / Похожие гайды) to EN+RU using existing getPublishedGuidesForBand — open-business-bank-account-dubai, golden-visa-dubai-property, mainland-company-setup-dubai. No self-link. RU links use /ru/guides/ prefix. No EN fallback on RU. Regressions clean: GITEX, Hijri news, August amber, 6C-99E related guides all present. Docs: SEO_ARCHITECTURE_CLEANUP_6C99F.md.
 

@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-10 (Phase 6C-99F LOCAL COMPLETE -- 8 files changed. Hreflang fixed on EN /visas/family + /visas/golden. BreadcrumbList added to /life-setup, /ru/life-setup, /visas/family, /visas/golden, /ru/visas/family, /ru/visas/golden. Related guides block added to TRC custom pages EN+RU. Build clean, 21/21 QA pass. LOCAL ONLY -- awaiting deploy approval. 6C-100C-B: watch FAHR from Jul 26.)
+Last updated: 2026-06-10 (Phase 6C-99F PRODUCTION COMPLETE -- Commit e43f6e9. Build: 49s, 88 pages. PM2 online 146.4MB. 23/23 live QA pass. Hreflang added to EN /visas/family + /visas/golden. BreadcrumbList on 6 pages. TRC related guides EN+RU. No regressions. 6C-100C-B: watch FAHR from Jul 26.)
 
 ---
 

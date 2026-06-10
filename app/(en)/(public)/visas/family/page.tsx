@@ -2,10 +2,20 @@ import Link from "next/link";
 import CategoryIcon from "@/components/CategoryIcon";
 import type { Metadata } from "next";
 
+const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
   title: "Family Residence Visas in Dubai — Guidex Consulting",
   description:
     "Sponsor a spouse or child on a Dubai residence visa. Step-by-step guides for inside-UAE and outside-UAE routes, with exact government fees and timelines.",
+  alternates: {
+    canonical: `${BASE}/visas/family`,
+    languages: {
+      "en":        `${BASE}/visas/family`,
+      "ru":        `${BASE}/ru/visas/family`,
+      "x-default": `${BASE}/visas/family`,
+    },
+  },
 };
 
 const guides = [
@@ -26,8 +36,22 @@ const guides = [
 ];
 
 export default function FamilyVisaHubPage() {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: BASE },
+      { "@type": "ListItem", position: 2, name: "Visas", item: `${BASE}/visas` },
+      { "@type": "ListItem", position: 3, name: "Family visas", item: `${BASE}/visas/family` },
+    ],
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-5 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
       <Link
         href="/visas"

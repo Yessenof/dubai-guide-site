@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getPublishedGuideBySlug } from "@/lib/db/reader";
+import { getPublishedGuideBySlug, getPublishedGuidesForBand } from "@/lib/db/reader";
+import { RELATED_GUIDES } from "@/lib/related-guides";
 import StepCard from "@/components/StepCard";
 import { localizeValue } from "@/lib/localize-value";
 import { GuideCta } from "@/components/GuideCta";
@@ -44,6 +45,7 @@ export default function RuTrcPage() {
   if (!guide) notFound();
 
   const overviewParagraphs = guide.overview.split("\n\n").filter(Boolean);
+  const relatedGuides = getPublishedGuidesForBand(RELATED_GUIDES[SLUG] ?? [], "ru");
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -243,6 +245,33 @@ export default function RuTrcPage() {
               {text}
             </p>
           ))}
+        </div>
+      )}
+
+      {/* Related guides */}
+      {relatedGuides.length > 0 && (
+        <div className="mt-10 pt-8 border-t border-stone-100">
+          <div className="w-6 h-0.5 bg-brass rounded-full mb-2" />
+          <h2 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-4">
+            Похожие гайды
+          </h2>
+          <div className="space-y-2.5">
+            {relatedGuides.map((g) => (
+              <Link key={g.slug} href={`/ru/guides/${g.slug}`} className="block group">
+                <div className="border border-stone-200 rounded-2xl p-4 hover:border-stone-300 hover:bg-stone-100 transition-all bg-stone-50">
+                  <div className="flex items-start justify-between gap-3 mb-1">
+                    <h3 className="text-[14px] font-semibold text-gray-900 leading-snug">
+                      {g.title}
+                    </h3>
+                    <span className="text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0 text-sm mt-0.5">
+                      →
+                    </span>
+                  </div>
+                  <p className="text-[12px] text-gray-500 leading-snug">{g.summary}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
 

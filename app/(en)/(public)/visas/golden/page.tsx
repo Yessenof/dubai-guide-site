@@ -2,10 +2,20 @@ import Link from "next/link";
 import CategoryIcon from "@/components/CategoryIcon";
 import type { Metadata } from "next";
 
+const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
   title: "Dubai Golden Visa — Guidex Consulting",
   description:
     "Long-term residency in Dubai for property owners and eligible applicants. Step-by-step guides with official fees and timelines.",
+  alternates: {
+    canonical: `${BASE}/visas/golden`,
+    languages: {
+      "en":        `${BASE}/visas/golden`,
+      "ru":        `${BASE}/ru/visas/golden`,
+      "x-default": `${BASE}/visas/golden`,
+    },
+  },
 };
 
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -45,8 +55,22 @@ const advisorRoutes = [
 ];
 
 export default function GoldenVisaHubPage() {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: BASE },
+      { "@type": "ListItem", position: 2, name: "Visas", item: `${BASE}/visas` },
+      { "@type": "ListItem", position: 3, name: "Golden visa", item: `${BASE}/visas/golden` },
+    ],
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-5 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
       <Link
         href="/visas"

@@ -216,8 +216,21 @@ const ROUTES: RouteCard[] = [
 ];
 
 export default function LifeSetupRuPage() {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Главная", item: `${BASE}/ru` },
+      { "@type": "ListItem", position: 2, name: "Переезд в Дубай", item: `${BASE}/ru/life-setup` },
+    ],
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
       {/* Back */}
       <Link

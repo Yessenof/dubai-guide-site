@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-10 — Phase 6C-99F LOCAL COMPLETE -- Hreflang, sub-hub breadcrumbs, TRC related guides
+
+8 files changed. Build clean (88 pages, 0 errors). 21/21 QA pass. LOCAL ONLY — no push, no deploy. (1) Hreflang: added BASE + alternates (en/ru/x-default) to EN /visas/family and /visas/golden — both were missing entirely; (2) BreadcrumbList: added 3-level schema to /visas/family, /visas/golden, /ru/visas/family, /ru/visas/golden; added 2-level to /life-setup and /ru/life-setup; (3) TRC custom pages: added related guides block (Related guides / Похожие гайды) to EN+RU using existing getPublishedGuidesForBand — open-business-bank-account-dubai, golden-visa-dubai-property, mainland-company-setup-dubai. No self-link. RU links use /ru/guides/ prefix. No EN fallback on RU. Regressions clean: GITEX, Hijri news, August amber, 6C-99E related guides all present. Docs: SEO_ARCHITECTURE_CLEANUP_6C99F.md.
+
+---
+
 ## 2026-06-10 — Phase 6C-99E PRODUCTION COMPLETE -- Hub BreadcrumbList, Related Guides, Hub CTAs live
 
 Commit 83fc5ae. Push: origin/main. Deploy: 51s build, PM2 reload ~1s, online 144.2MB. 21/21 live QA pass. No rollback. Hard-stop compliance confirmed: no DB writes, no migrations, no admin, no content import. Changes deployed: (1) lib/related-guides.ts — 17-slug static map; (2) Related guides block on all EN+RU guide templates; (3) BreadcrumbList JSON-LD on 10 hub pages; (4) WhatsApp CTA on /visas and /ru/visas. Regressions clean: GITEX 200 + Event schema, Hijri news 200, August amber disclaimer present, sitemap 200, PM2 online.

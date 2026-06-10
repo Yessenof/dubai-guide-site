@@ -5,9 +5,9 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
-## 2026-06-10 — Phase 6C-99E LOCAL COMPLETE -- Hub BreadcrumbList, Related Guides, Hub CTAs
+## 2026-06-10 — Phase 6C-99E PRODUCTION COMPLETE -- Hub BreadcrumbList, Related Guides, Hub CTAs live
 
-Build clean (0 errors). 20/20 QA checks pass. No DB writes. Awaiting owner approval for deploy. Changes: (1) Created lib/related-guides.ts — 17-slug static map, 3 related per guide; (2) Added related guides block ("Related guides" / "Похожие гайды") to EN+RU guide templates using existing getPublishedGuidesForBand; (3) Added BreadcrumbList JSON-LD to all 10 hub pages (5 EN + 5 RU: /visas, /company-setup, /government, /banking-tax, /tourism); (4) Added missing footer WhatsApp CTA to /visas (EN+RU) — "Not sure which visa route applies to you?" / "Не знаете, какой визовый маршрут вам подходит?". Doc: HUB_RELATED_GUIDES_CTA_FIX_LOG_6C99E.md.
+Commit 83fc5ae. Push: origin/main. Deploy: 51s build, PM2 reload ~1s, online 144.2MB. 21/21 live QA pass. No rollback. Hard-stop compliance confirmed: no DB writes, no migrations, no admin, no content import. Changes deployed: (1) lib/related-guides.ts — 17-slug static map; (2) Related guides block on all EN+RU guide templates; (3) BreadcrumbList JSON-LD on 10 hub pages; (4) WhatsApp CTA on /visas and /ru/visas. Regressions clean: GITEX 200 + Event schema, Hijri news 200, August amber disclaimer present, sitemap 200, PM2 online.
 
 ---
 

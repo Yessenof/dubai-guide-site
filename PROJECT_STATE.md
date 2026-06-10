@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-10 (Phase 6C-99E LOCAL COMPLETE -- BreadcrumbList on 10 hub pages, lib/related-guides.ts, related guides block on all EN+RU guide pages, WhatsApp CTA on visas hub EN+RU. Build clean, 20/20 QA pass. AWAITING OWNER APPROVAL FOR DEPLOY. 6C-100C-B: watch FAHR from Jul 26 for Mawlid confirmation.)
+Last updated: 2026-06-10 (Phase 6C-99E PRODUCTION COMPLETE -- Commit 83fc5ae. Deploy: 51s build, PM2 online 144.2MB. BreadcrumbList on 10 hub pages, related guides on all EN+RU guide pages, visas hub WhatsApp CTA. 21/21 live QA pass. No rollback. 6C-100C-B: watch FAHR from Jul 26 for Mawlid confirmation.)
 
 ---
 

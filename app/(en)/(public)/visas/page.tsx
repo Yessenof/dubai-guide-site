@@ -2,6 +2,8 @@ import Link from "next/link";
 import CategoryIcon from "@/components/CategoryIcon";
 import type { Metadata } from "next";
 
+const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
   title: "Dubai Visa Guides — Guidex Consulting",
   description:
@@ -36,8 +38,21 @@ const hubs = [
 ];
 
 export default function VisasHubPage() {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: BASE },
+      { "@type": "ListItem", position: 2, name: "Visas", item: `${BASE}/visas` },
+    ],
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-5 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
       <Link
         href="/"
@@ -94,6 +109,19 @@ export default function VisasHubPage() {
             </div>
           </Link>
         ))}
+      </div>
+
+      <div className="mt-8 bg-navy rounded-2xl px-5 py-5">
+        <p className="text-[14px] font-semibold text-white mb-1">Not sure which visa route applies to you?</p>
+        <p className="text-[12px] text-white/60 mb-3">We review your situation and recommend the correct route before you start the process.</p>
+        <a
+          href="https://wa.me/971506304817"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity py-2"
+        >
+          Chat on WhatsApp →
+        </a>
       </div>
     </div>
   );

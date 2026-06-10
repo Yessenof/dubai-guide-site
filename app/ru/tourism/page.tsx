@@ -30,8 +30,21 @@ const services = [
 ];
 
 export default function RuTourismHubPage() {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Главная", item: `${BASE}/ru` },
+      { "@type": "ListItem", position: 2, name: "Туризм и аренда", item: `${BASE}/ru/tourism` },
+    ],
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-5 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
       <Link
         href="/ru"

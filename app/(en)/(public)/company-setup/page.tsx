@@ -3,6 +3,8 @@ import CategoryIcon from "@/components/CategoryIcon";
 import CtaCard from "@/components/CtaCard";
 import type { Metadata } from "next";
 
+const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
   title: "Set Up a Company in Dubai — Guidex Consulting",
   description:
@@ -76,8 +78,21 @@ const processSteps = [
 ];
 
 export default function CompanySetupHubPage() {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: BASE },
+      { "@type": "ListItem", position: 2, name: "Company Setup", item: `${BASE}/company-setup` },
+    ],
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-5 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
       {/* Back */}
       <Link

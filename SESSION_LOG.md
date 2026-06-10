@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-10 — Phase 6C-99E LOCAL COMPLETE -- Hub BreadcrumbList, Related Guides, Hub CTAs
+
+Build clean (0 errors). 20/20 QA checks pass. No DB writes. Awaiting owner approval for deploy. Changes: (1) Created lib/related-guides.ts — 17-slug static map, 3 related per guide; (2) Added related guides block ("Related guides" / "Похожие гайды") to EN+RU guide templates using existing getPublishedGuidesForBand; (3) Added BreadcrumbList JSON-LD to all 10 hub pages (5 EN + 5 RU: /visas, /company-setup, /government, /banking-tax, /tourism); (4) Added missing footer WhatsApp CTA to /visas (EN+RU) — "Not sure which visa route applies to you?" / "Не знаете, какой визовый маршрут вам подходит?". Doc: HUB_RELATED_GUIDES_CTA_FIX_LOG_6C99E.md.
+
+---
+
 ## 2026-06-09 — Phase 6C-100C-A COMPLETE -- August 2026 Mawlid DB flag fixes live
 
 Commit 21092df. Deploy: 51s build, PM2 reload ~1s, online 146.6MB. Fixed two DB bugs on august-2026-dubai-calendar: (1) has_islamic_dates 0→1 (Mawlid entry AUG-NEW-02 was present but flag was off); (2) AUG-NEW-02 source_status "confirmed"→"expected" (was internally inconsistent with confidence="expected"). Confidence remains "expected" — Mawlid not yet officially confirmed by FAHR as of Jun 9. Islamic disclaimer amber box now renders live on EN+RU August calendar pages. 10/10 live QA pass: both routes 200, amber box present (4 moon-sighting EN matches), RU uses Russian text, no English fallback, no "officially confirmed" wording, no duplicate entries, sitemap 200. No rollback. Production backup: /var/backups/guidex/guides.db.pre-mawlid-flags-6c100ca-20260609-155216. Report: MAWLID_2026_STATUS_FIX_6C100C_A.md. 6C-100C-B trigger: July 26, 2026 onward.

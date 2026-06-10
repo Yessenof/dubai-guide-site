@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getRuPublishedGuidesSlugs, getPublishedGuideBySlug } from "@/lib/db/reader";
+import { getRuPublishedGuidesSlugs, getPublishedGuideBySlug, getPublishedGuidesForBand } from "@/lib/db/reader";
+import { RELATED_GUIDES } from "@/lib/related-guides";
 import { GuideCta } from "@/components/GuideCta";
 import { localizeValue } from "@/lib/localize-value";
 import GuideHeader from "@/components/GuideHeader";
@@ -60,6 +61,7 @@ export default async function RuGuidePage({ params }: Props) {
   if (!guide) notFound();
 
   const overviewParagraphs = guide.overview.split("\n\n").filter(Boolean);
+  const relatedGuides = getPublishedGuidesForBand(RELATED_GUIDES[slug] ?? [], "ru");
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -232,7 +234,34 @@ export default async function RuGuidePage({ params }: Props) {
         </div>
       )}
 
-      {/* 7. Footer CTA */}
+      {/* 7. Related guides */}
+      {relatedGuides.length > 0 && (
+        <div className="mt-10 pt-8 border-t border-stone-100">
+          <div className="w-6 h-0.5 bg-brass rounded-full mb-2" />
+          <h2 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-4">
+            Похожие гайды
+          </h2>
+          <div className="space-y-2.5">
+            {relatedGuides.map((g) => (
+              <Link key={g.slug} href={`/ru/guides/${g.slug}`} className="block group">
+                <div className="border border-stone-200 rounded-2xl p-4 hover:border-stone-300 hover:bg-stone-100 transition-all bg-stone-50">
+                  <div className="flex items-start justify-between gap-3 mb-1">
+                    <h3 className="text-[14px] font-semibold text-gray-900 leading-snug">
+                      {g.title}
+                    </h3>
+                    <span className="text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0 text-sm mt-0.5">
+                      →
+                    </span>
+                  </div>
+                  <p className="text-[12px] text-gray-500 leading-snug">{g.summary}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 8. Footer CTA */}
       <div className="mt-10 bg-navy rounded-2xl px-5 py-5">
         <p className="text-[14px] font-semibold text-white mb-1">Нужна помощь?</p>
         <p className="text-[12px] text-white/60 mb-3">Берём на себя подачу документов, сопровождение этапов и оформление.</p>

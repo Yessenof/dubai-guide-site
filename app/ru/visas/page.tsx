@@ -46,8 +46,21 @@ const hubs = [
 ];
 
 export default function RuVisasHubPage() {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Главная", item: `${BASE}/ru` },
+      { "@type": "ListItem", position: 2, name: "Визы", item: `${BASE}/ru/visas` },
+    ],
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-5 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
       <Link
         href="/ru"
@@ -104,6 +117,19 @@ export default function RuVisasHubPage() {
             </div>
           </Link>
         ))}
+      </div>
+
+      <div className="mt-8 bg-navy rounded-2xl px-5 py-5">
+        <p className="text-[14px] font-semibold text-white mb-1">Не знаете, какой визовый маршрут вам подходит?</p>
+        <p className="text-[12px] text-white/60 mb-3">Разберём вашу ситуацию и определим правильный маршрут до начала процесса.</p>
+        <a
+          href="https://wa.me/971506304817"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity py-2"
+        >
+          Написать в WhatsApp →
+        </a>
       </div>
     </div>
   );

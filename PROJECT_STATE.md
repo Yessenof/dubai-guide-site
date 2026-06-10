@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-09 (Phase 6C-100C-A COMPLETE -- Commit 21092df. Deploy: 51s build, PM2 online 146.6MB. Fixed two August 2026 Mawlid DB bugs: (1) has_islamic_dates 0→1 on august-2026-dubai-calendar; (2) AUG-NEW-02 source_status "confirmed"→"expected". Confidence intentionally stays "expected" -- FAHR not announced yet. Islamic disclaimer now renders on live August calendar page (amber box). 10/10 live QA pass. No rollback. 6C-100C-B: watch FAHR from Jul 26 for official Mawlid announcement. NEXT: Phase 6C-99E -- Hub BreadcrumbList, static guide-to-guide cross-links, hub CTAs.)
+Last updated: 2026-06-10 (Phase 6C-99E LOCAL COMPLETE -- BreadcrumbList on 10 hub pages, lib/related-guides.ts, related guides block on all EN+RU guide pages, WhatsApp CTA on visas hub EN+RU. Build clean, 20/20 QA pass. AWAITING OWNER APPROVAL FOR DEPLOY. 6C-100C-B: watch FAHR from Jul 26 for Mawlid confirmation.)
 
 ---
 

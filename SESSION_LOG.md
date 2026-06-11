@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-11 — Phase 6C-99G-A COMPLETE -- Source Notes + Content Trust Model (docs/design only)
+
+4 docs created in docs/seo-rag/. No deploy, no DB, no live template changes. Outputs: (1) SOURCE_NOTES_MODEL.md — 13-field model (source_name, source_url, source_type, authority_type, last_checked, status, applies_to, risk_level, visible_note_en, visible_note_ru, blocked_claims, verification_notes, next_recheck_date), source type hierarchy (official→organizer→media_signal→pdf→internal_verification), authority types, status values, risk levels, blocked claims rule, recheck cadence; (2) CONTENT_TRUST_RULES.md — 7 rules: official source required for high-risk claims, media/social are signals only, Islamic holidays must show confirmed/provisional, events must distinguish source layers, offers need valid_from/valid_until/expiry plan, EN/RU parity, UI rules; (3) SOURCE_NOTE_UI_PLAN.md — SourceNote component spec (confirmed=gray, provisional=amber), per-page audit for 10 priority groups, 99G-B recommended scope (6 high-risk groups + 1 new component); (4) PHASE_6C_99G_A_REPORT.md. High-risk gaps: /visas/family, /visas/golden, TRC custom pages, golden-visa-property, mainland-company, open-business. Mawlid 1448 amber box already live.
+
+---
+
 ## 2026-06-10 — Phase 6C-99F PRODUCTION COMPLETE -- Hreflang, sub-hub breadcrumbs, TRC related guides
 
 Commit e43f6e9. Push: origin/main. Deploy: 49s build, PM2 reload ~1s, online 146.4MB. 23/23 live QA pass. No rollback. Hard-stop compliance confirmed: no DB writes, no migrations, no admin, no content import. Changes deployed: (1) Hreflang alternates added to EN /visas/family and /visas/golden (were missing entirely); (2) 3-level BreadcrumbList on /visas/family, /visas/golden, /ru/visas/family, /ru/visas/golden; (3) 2-level BreadcrumbList on /life-setup and /ru/life-setup; (4) Related guides block (Related guides / Похожие гайды) on TRC custom pages EN+RU — 3 related guides, no self-link, RU uses /ru/guides/ prefix. Regressions clean: GITEX 200 + Event schema, Hijri news 200, August amber, 6C-99E related guides, sitemap 200.

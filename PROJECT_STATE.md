@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-10 (Phase 6C-99F PRODUCTION COMPLETE -- Commit e43f6e9. Build: 49s, 88 pages. PM2 online 146.4MB. 23/23 live QA pass. Hreflang added to EN /visas/family + /visas/golden. BreadcrumbList on 6 pages. TRC related guides EN+RU. No regressions. 6C-100C-B: watch FAHR from Jul 26.)
+Last updated: 2026-06-11 (Phase 6C-99G-A COMPLETE -- docs/design only. Source Notes + Content Trust Model created. 4 files in docs/seo-rag/: SOURCE_NOTES_MODEL.md, CONTENT_TRUST_RULES.md, SOURCE_NOTE_UI_PLAN.md, PHASE_6C_99G_A_REPORT.md. 13-field source note model, 7 trust rules, per-page audit for 10 priority groups. No deploy, no DB, no live changes. Next: 6C-99G-B — SourceNote component + apply to 6 high-risk groups. 6C-100C-B: watch FAHR from Jul 26.)
 
 ---
 

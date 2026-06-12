@@ -5,6 +5,7 @@ import { RELATED_GUIDES } from "@/lib/related-guides";
 import StepCard from "@/components/StepCard";
 import { localizeValue } from "@/lib/localize-value";
 import { GuideCta } from "@/components/GuideCta";
+import SourceNote from "@/components/SourceNote";
 import type { Metadata } from "next";
 
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -192,6 +193,16 @@ export default function RuTrcPage() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Source note */}
+      <div className="mb-10">
+        <SourceNote
+          status="confirmed"
+          note="Условия и процедура получения TRC основаны на официальных правилах FTA через EmaraTax. Требования зависят от типа заявителя и основания резидентства."
+          sourceLabel="Федеральная налоговая служба"
+          lastChecked="Проверено май 2026"
+        />
       </div>
 
       {/* Steps */}

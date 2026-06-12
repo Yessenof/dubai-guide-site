@@ -5,6 +5,7 @@ import { GuideCta } from "@/components/GuideCta";
 import GuideHeader from "@/components/GuideHeader";
 import RouteSnapshot from "@/components/RouteSnapshot";
 import StepCard from "@/components/StepCard";
+import SourceNote from "@/components/SourceNote";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -16,6 +17,24 @@ interface Props {
 }
 
 const CUSTOM_PAGE_SLUGS = new Set(["tax-residency-certificate-uae"]);
+
+const SOURCE_NOTES: Record<string, { note: string; sourceLabel: string; lastChecked: string }> = {
+  "golden-visa-dubai-property": {
+    note: "Property route eligibility and DLD requirements based on ICA and GDRFA official guidance. Minimum property value thresholds may be revised.",
+    sourceLabel: "ICA · GDRFA · DLD",
+    lastChecked: "Checked May 2026",
+  },
+  "mainland-company-setup-dubai": {
+    note: "Company formation process based on DED (Dubai Economy) official procedures. Regulated activities require additional approvals not covered in this guide.",
+    sourceLabel: "DED (Dubai Economy)",
+    lastChecked: "Checked May 2026",
+  },
+  "open-business-bank-account-dubai": {
+    note: "Account opening requirements vary by bank and business type. Regulatory framework based on CBUAE guidelines.",
+    sourceLabel: "CBUAE",
+    lastChecked: "Checked May 2026",
+  },
+};
 
 export async function generateStaticParams() {
   const guides = getAllPublishedGuides();
@@ -191,6 +210,18 @@ export default async function GuidePage({ params }: Props) {
           >
             See full step-by-step guide ↓
           </a>
+        </div>
+      )}
+
+      {/* Source note — for selected high-risk guides */}
+      {SOURCE_NOTES[slug] && (
+        <div className="mt-5">
+          <SourceNote
+            status="confirmed"
+            note={SOURCE_NOTES[slug].note}
+            sourceLabel={SOURCE_NOTES[slug].sourceLabel}
+            lastChecked={SOURCE_NOTES[slug].lastChecked}
+          />
         </div>
       )}
 

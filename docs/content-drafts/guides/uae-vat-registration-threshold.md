@@ -12,7 +12,10 @@ risk_level:            high
 source_reliability:    official
 verification_required: true
 primary_source_ledger: docs/content-drafts/source-ledgers/uae-vat-registration-threshold-sources.md
-last_reviewed:         2026-05-18
+lifecycle:             compliance_evergreen
+recheck_annually:      true
+recheck_trigger:       FTA VAT registration page update — confirm AED 375,000 and AED 187,500 thresholds unchanged
+last_reviewed:         2026-05-20
 owner_review_required: true
 admin_status:          not_used
 ai_inbox_status:       not_used
@@ -41,7 +44,7 @@ VAT registration in UAE: AED 375,000 threshold explained
 
 ### en_summary
 
-UAE VAT registration is required when taxable supplies and imports exceed AED 375,000. Voluntary registration is available from AED 187,500. Getting a trade license does not automatically trigger VAT registration — the threshold depends on taxable supplies, imports, and business-specific facts.
+UAE VAT registration is required when taxable supplies and imports exceed AED 375,000. Voluntary registration is available from AED 187,500. Getting a trade license does not automatically trigger VAT registration. The threshold depends on taxable supplies, imports, and business-specific facts.
 
 ### seo_title_en
 
@@ -49,7 +52,7 @@ VAT Registration in UAE: AED 375,000 Threshold Explained
 
 ### meta_description_en
 
-Find out when UAE businesses need VAT registration. The mandatory threshold is AED 375,000 in taxable supplies and imports. Voluntary registration starts at AED 187,500. Includes mainland, free zone, and practical checklist.
+UAE VAT registration: mandatory threshold AED 375,000, voluntary AED 187,500. Covers mainland, free zone, and the 12-month and 30-day tests.
 
 ### target_keywords_en
 
@@ -74,7 +77,7 @@ The mandatory VAT registration threshold in the UAE is **AED 375,000** in taxabl
 
 The voluntary VAT registration threshold is **AED 187,500**. At this level, a business can choose to register before reaching the mandatory level.
 
-The threshold is tested against the previous 12 months of taxable supplies and imports, or expected taxable supplies and imports in the next 30 days — whichever applies first.
+The threshold is tested against the previous 12 months of taxable supplies and imports, or expected taxable supplies and imports in the next 30 days, whichever applies first.
 
 Getting a UAE trade license does not automatically mean VAT registration is required. The obligation depends on your taxable supply position and business-specific facts, not on the license itself.
 
@@ -113,7 +116,7 @@ If your taxable supplies and imports for the past 12 months have exceeded AED 37
 
 ## What counts for the threshold
 
-Not all business activity counts equally when calculating whether you have crossed the threshold. The test focuses on **taxable supplies and imports** — this is a specific category and does not automatically equal total revenue or turnover.
+Not all business activity counts equally when calculating whether you have crossed the threshold. The test focuses on **taxable supplies and imports**, a specific category that does not automatically equal total revenue or turnover.
 
 A few important points:
 
@@ -166,11 +169,11 @@ Use this as a working checklist, not a substitute for professional advice:
 - Work with an accountant to separate taxable, exempt, and out-of-scope supplies in your records
 - Monitor your cumulative taxable supplies and imports over the previous 12 months on a rolling basis
 - If any month brings you close to AED 375,000 on a trailing 12-month basis, review your position with a tax adviser
-- If you expect to cross AED 375,000 in the next 30 days, that is a registration trigger — do not wait until the end of the month
-- Voluntary registration from AED 187,500 may benefit businesses that incur significant taxable expenses and want to recover input VAT — discuss this with an accountant
+- If you expect to cross AED 375,000 in the next 30 days, that is a registration trigger: do not wait until the end of the month
+- Voluntary registration from AED 187,500 may benefit businesses that incur significant taxable expenses and want to recover input VAT; discuss this with an accountant
 - Set up and maintain your EmaraTax account ahead of any registration requirement
 - If you are in a free zone, confirm whether your zone is a designated zone and how your supply types are treated
-- Keep accounting records complete and current — these will form the basis of any VAT return once registered
+- Keep accounting records complete and current, as they will form the basis of any VAT return once registered
 
 ---
 
@@ -180,7 +183,7 @@ VAT threshold monitoring is not tied to a single public date. It is a rolling ob
 
 Businesses approaching the AED 375,000 threshold should review their position at least quarterly, and monthly once they are within 20 to 25 percent of the mandatory level.
 
-The Guidex Calendar can surface this as a quarterly business planning reminder rather than a fixed regulatory deadline. The reminder is advisory — the actual trigger depends on your specific taxable supply position.
+The Guidex Calendar can surface this as a quarterly business planning reminder rather than a fixed regulatory deadline. The reminder is advisory: the actual trigger depends on your specific taxable supply position.
 
 See the calendar item planning section below for the suggested item type.
 
@@ -188,10 +191,10 @@ See the calendar item planning section below for the suggested item type.
 
 ## What not to assume
 
-- Registering a UAE company does not automatically make you liable for VAT — the threshold trigger is based on taxable supplies and imports.
-- Being in a free zone does not automatically exempt you from VAT — zone type, supply type, and customer location all matter.
-- The AED 375,000 VAT threshold is not the same as any Corporate Tax threshold — they are different obligations.
-- Penalty amounts for late VAT registration exist under UAE law but are not covered in this draft — do not add penalty figures without a confirmed official source.
+- Registering a UAE company does not automatically make you liable for VAT. The obligation depends on taxable supplies and imports, not the license itself.
+- Being in a free zone does not automatically exempt you from VAT; zone type, supply type, and customer location all matter.
+- The AED 375,000 VAT threshold is not the same as any Corporate Tax threshold; they are different obligations under different regimes.
+- Penalty amounts for late VAT registration exist under UAE law. Specific figures are not covered in this guide; verify any amount from an official FTA source before relying on it.
 - This guide is an information resource. It does not constitute legal or tax advice. For your specific situation, consult a qualified UAE tax adviser or registered tax agent.
 
 ---
@@ -209,7 +212,7 @@ Both source URLs must be rechecked before this draft moves to any publish consid
 
 *For AI indexing and retrieval use only — not published.*
 
-UAE VAT registration is mandatory when taxable supplies and imports exceed AED 375,000. Voluntary registration is available from AED 187,500. The threshold is tested against the previous 12 months or expected next 30 days — whichever applies first. Getting a UAE trade license does not automatically trigger VAT registration. Mainland and free zone businesses may both have VAT obligations depending on taxable supply type, customer, and place of supply. The VAT threshold is separate from the Corporate Tax natural person threshold (AED 1,000,000). Businesses must apply for VAT registration within 30 days of becoming required to register. Source: FTA VAT registration pages at tax.gov.ae (rechecked 2026-05-18).
+UAE VAT registration is mandatory when taxable supplies and imports exceed AED 375,000. Voluntary registration is available from AED 187,500. The threshold is tested against the previous 12 months or expected next 30 days, whichever applies first. Getting a UAE trade license does not automatically trigger VAT registration. Mainland and free zone businesses may both have VAT obligations depending on taxable supply type, customer, and place of supply. The VAT threshold is separate from the Corporate Tax natural person threshold (AED 1,000,000). Businesses must apply for VAT registration within 30 days of becoming required to register. Source: FTA VAT registration pages at tax.gov.ae (rechecked 2026-05-18).
 
 ---
 
@@ -229,7 +232,7 @@ UAE VAT registration is mandatory when taxable supplies and imports exceed AED 3
 
 ### meta_description_ru
 
-Объясняем, когда бизнесу в ОАЭ может понадобиться регистрация VAT, чем отличается обязательный порог AED 375,000 от добровольного AED 187,500 и что проверять владельцу компании.
+Регистрация VAT в ОАЭ: обязательный порог AED 375,000, добровольный AED 187,500. Тест 12 месяцев и 30 дней, mainland, free zone, практический чеклист.
 
 ### target_keywords_ru
 
@@ -237,7 +240,7 @@ UAE VAT registration is mandatory when taxable supplies and imports exceed AED 3
 - VAT в Дубае
 - порог VAT AED 375,000
 - VAT для компании в ОАЭ
-- VAT free zone UAE
+- VAT для компаний в свободных зонах ОАЭ
 - налоговая регистрация VAT ОАЭ
 
 ### search_intent_ru
@@ -293,7 +296,7 @@ UAE VAT registration is mandatory when taxable supplies and imports exceed AED 3
 
 ## Что учитывается при расчёте порога
 
-Не весь оборот компании учитывается одинаково при расчёте порога. В расчёт включаются **налогооблагаемые поставки и импорт** — это конкретная категория, которая не всегда совпадает с суммарной выручкой.
+Не весь оборот компании учитывается одинаково при расчёте порога. В расчёт включаются **налогооблагаемые поставки и импорт**: конкретная категория, которая не всегда совпадает с суммарной выручкой.
 
 Важные моменты:
 
@@ -347,9 +350,10 @@ UAE VAT registration is mandatory when taxable supplies and imports exceed AED 3
 - Ежемесячно отслеживайте накопленные налогооблагаемые поставки и импорт за последние 12 месяцев в скользящем режиме
 - Если в каком-либо месяце совокупные поставки за 12 месяцев приближаются к AED 375,000, обратитесь к налоговому консультанту
 - Если вы ожидаете превышение порога в течение 30 дней, это уже основание для регистрации: не откладывайте
-- Добровольная регистрация с AED 187,500 может быть выгодна компаниям с существенными налогооблагаемыми расходами — обсудите это с бухгалтером
+- Добровольная регистрация с AED 187,500 может быть выгодна компаниям с существенными налогооблагаемыми расходами; обсудите это с бухгалтером
 - Заведите и поддерживайте аккаунт в EmaraTax заранее, до возникновения обязательства по регистрации
 - Если вы в free zone, уточните, является ли ваша зона designated zone и как классифицируются ваши виды поставок
+- Ведите бухгалтерские записи полными и актуальными: они станут основой для VAT-деклараций после регистрации
 
 ---
 
@@ -368,7 +372,7 @@ Guidex Calendar может отображать это как ежекварта
 - Регистрация компании в ОАЭ не означает автоматической обязанности по VAT.
 - Нахождение в free zone не даёт автоматического освобождения от VAT.
 - Порог VAT AED 375,000 не совпадает с порогом Corporate Tax для физических лиц AED 1,000,000.
-- Суммы штрафов за несвоевременную регистрацию VAT в этом гайде не приводятся. Не указывайте конкретные суммы без подтверждённого официального источника.
+- Суммы штрафов за несвоевременную регистрацию VAT существуют в законодательстве ОАЭ, однако конкретные цифры здесь не приводятся. Проверьте актуальные данные на официальной странице FTA перед тем, как ссылаться на какую-либо сумму.
 - Этот гайд носит информационный характер и не является налоговой или юридической консультацией. Для оценки конкретной ситуации обратитесь к квалифицированному налоговому консультанту или зарегистрированному налоговому агенту в ОАЭ.
 
 ---
@@ -408,6 +412,14 @@ Guidex Calendar может отображать это как ежекварта
 | priority | 2 |
 | confidence | official_threshold_rule |
 | source_ledger | docs/content-drafts/source-ledgers/uae-vat-registration-threshold-sources.md |
+| detail_url_en | /guides/uae-vat-registration-threshold |
+| detail_url_ru | /ru/guides/uae-vat-registration-threshold |
+| lifecycle | relative_reminder |
+| noindex_after | not_applicable |
+| archive_action | keep_public |
+| external_cta_status | not_applicable |
+| location_display | uae |
+| emirate | uae_nationwide |
 | note | Not a fixed public legal deadline for all businesses. Trigger date depends on individual taxable supply position. Calendar UI label must make this clear. |
 
 ---
@@ -422,6 +434,26 @@ Guidex Calendar может отображать это как ежекварта
 | `docs/content-drafts/verification/uae-e-invoicing-2026-deadline-conflict.md` | created | E-invoicing deadline conflict tracking |
 | Future: `docs/content-drafts/guide-updates/uae-company-setup-vat-registration-threshold.md` | not yet created | Adds a VAT registration note to existing mainland company setup guide |
 | Future: `docs/content-drafts/source-ledgers/uae-vat-deregistration-sources.md` | not yet created | Deregistration rules — separate topic |
+
+---
+
+## Admin import notes
+
+*Internal notes for use when importing into the admin panel. Not published.*
+
+**Service/CTA angle:** Tax and compliance content. Monetization path: Path A (WhatsApp consultation → referral to UAE registered tax agent or accountant). CTA text should be non-alarmist: "Unsure whether your business needs VAT registration? A registered UAE tax agent can assess your position." Do not amplify anxiety. Do not imply urgency that is not warranted by the user's situation.
+
+**Content type for admin:** `guide` — import as a Guidex guide, not as a news post or event.
+
+**Slug:** `uae-vat-registration-threshold`
+
+**Source recheck required before publish:**
+- FTA VAT Registration Topic Page: https://tax.gov.ae/en/taxes/Vat/vat.topics/registration.for.vat.aspx
+- FTA VAT Registration Service Page: https://tax.gov.ae/en/services/vat.registration.aspx
+- Confirm AED 375,000 and AED 187,500 thresholds are unchanged on both pages.
+- Penalty source not captured — do not add penalty amounts to published version until an official FTA penalty source is confirmed.
+
+**RU publish status:** RU body is complete and parallel. Can publish EN and RU together. No English fallback text.
 
 ---
 
@@ -443,4 +475,4 @@ The following statements must NOT appear in any published version of this guide:
 ---
 
 *This is a file-based draft only. No admin action. No DB write. No publish.*  
-*Last updated: 2026-05-18 — first full EN/RU guide draft. Both source URLs must be rechecked before any publish consideration. Penalty source not captured — penalty amounts not included.*
+*Last updated: 2026-05-20 (Phase 6C-28) — em dash scan complete; meta descriptions rewritten under 160 chars; lifecycle and recheck fields added; calendar item detail_url and full metadata added; RU checklist parity fix (item 9 added); RU keyword #5 corrected to Russian; admin import notes added. Phase 6C-18: first full EN/RU guide draft. Penalty source not captured — penalty amounts not included.*

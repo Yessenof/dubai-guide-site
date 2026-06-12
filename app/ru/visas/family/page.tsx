@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CategoryIcon from "@/components/CategoryIcon";
+import SourceNote from "@/components/SourceNote";
 import type { Metadata } from "next";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -70,9 +71,18 @@ export default function RuFamilyVisaHubPage() {
       <h1 className="text-[26px] font-bold text-gray-900 leading-snug mb-3">
         Семейные визы в Дубае
       </h1>
-      <p className="text-[15px] text-gray-600 leading-snug mb-6">
+      <p className="text-[15px] text-gray-600 leading-snug mb-4">
         Виза для супруга или ребёнка. Маршруты изнутри ОАЭ и из-за рубежа с официальными сборами.
       </p>
+
+      <div className="mb-6">
+        <SourceNote
+          status="confirmed"
+          note="Информация основана на официальных правилах ICA и GDRFA. Требования к документам могут изменяться. Уточняйте актуальные условия у PRO или в GDRFA перед подачей."
+          sourceLabel="ICA · GDRFA Dubai"
+          lastChecked="Проверено май 2026"
+        />
+      </div>
 
       <Link
         href="/ru/find-my-visa?flow=family-new"

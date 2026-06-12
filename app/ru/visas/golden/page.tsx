@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CategoryIcon from "@/components/CategoryIcon";
+import SourceNote from "@/components/SourceNote";
 import type { Metadata } from "next";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -87,9 +88,18 @@ export default function RuGoldenVisaHubPage() {
       <h1 className="text-[26px] font-bold text-gray-900 leading-snug mb-3">
         Золотая виза ОАЭ
       </h1>
-      <p className="text-[15px] text-gray-600 leading-snug mb-6">
+      <p className="text-[15px] text-gray-600 leading-snug mb-4">
         10-летнее резидентство без привязки к работодателю. Четыре маршрута: недвижимость, профессиональный статус, бизнес-инвестиции, выдающийся талант.
       </p>
+
+      <div className="mb-6">
+        <SourceNote
+          status="confirmed"
+          note="Маршруты и пороговые значения Golden Visa основаны на официальных данных ICA и GDRFA. Инвестиционные категории и минимальные суммы периодически пересматриваются."
+          sourceLabel="ICA · GDRFA · DLD"
+          lastChecked="Проверено май 2026"
+        />
+      </div>
 
       <Link
         href="/ru/find-my-visa?flow=golden"

@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-12 — Phase 6C-99G-B LOCAL COMPLETE -- SourceNote component + 11 high-risk routes
+
+New component: components/SourceNote.tsx — confirmed (compact gray ● dot) + provisional (amber box, matching calendar pattern). Applied to: (1) /visas/family + /ru/visas/family — ICA/GDRFA note, confirmed; (2) /visas/golden + /ru/visas/golden — ICA/GDRFA/DLD note, confirmed; (3) /guides/tax-residency-certificate-uae + /ru equivalent — FTA/EmaraTax note, confirmed, placed after "Why Guidex" section, before steps; (4) Standard guide template EN+RU ([slug]/page.tsx) — SOURCE_NOTES/SOURCE_NOTES_RU slug-keyed maps for golden-visa-dubai-property, mainland-company-setup-dubai, open-business-bank-account-dubai. All 11 routes carry correct EN or RU text. No provisional variant used (all targets are confirmed status). Build: 88 pages, 0 TypeScript errors, all static HTML verified. Regression: all 6C-99F fixes intact — hreflang, BreadcrumbList, TRC related guides, sitemap, GITEX, Hijri/Mawlid amber, August amber. LOCAL ONLY. Scope strictly respected: no DB, no admin, no JSON-LD, no GITEX page (in scope for "build second" per plan), no /life-setup (deferred).
+
+---
+
 ## 2026-06-11 — Phase 6C-99G-A COMPLETE -- Source Notes + Content Trust Model (docs/design only)
 
 4 docs created in docs/seo-rag/. No deploy, no DB, no live template changes. Outputs: (1) SOURCE_NOTES_MODEL.md — 13-field model (source_name, source_url, source_type, authority_type, last_checked, status, applies_to, risk_level, visible_note_en, visible_note_ru, blocked_claims, verification_notes, next_recheck_date), source type hierarchy (official→organizer→media_signal→pdf→internal_verification), authority types, status values, risk levels, blocked claims rule, recheck cadence; (2) CONTENT_TRUST_RULES.md — 7 rules: official source required for high-risk claims, media/social are signals only, Islamic holidays must show confirmed/provisional, events must distinguish source layers, offers need valid_from/valid_until/expiry plan, EN/RU parity, UI rules; (3) SOURCE_NOTE_UI_PLAN.md — SourceNote component spec (confirmed=gray, provisional=amber), per-page audit for 10 priority groups, 99G-B recommended scope (6 high-risk groups + 1 new component); (4) PHASE_6C_99G_A_REPORT.md. High-risk gaps: /visas/family, /visas/golden, TRC custom pages, golden-visa-property, mainland-company, open-business. Mawlid 1448 amber box already live.

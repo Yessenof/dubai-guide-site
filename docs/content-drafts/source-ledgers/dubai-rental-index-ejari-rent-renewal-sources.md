@@ -9,7 +9,7 @@ content_status:          source_verification_only
 risk_level:              medium_high
 source_reliability:      official
 verification_required:   true
-last_reviewed:           2026-05-18
+last_reviewed:           2026-05-19
 owner_review_required:   true
 admin_status:            not_used
 ai_inbox_status:         not_used
@@ -251,16 +251,18 @@ Complete these before publishing any content based on this ledger.
 
 The following may be used in internal draft planning. They must not appear in published content without owner review and source recheck.
 
-1. DLD provides a Rental Index service for calculating rental increase and average rental based on user-entered property and area data.
-2. DLD has a Rental Index calculator that requires user-specific inputs: contract end date, property type, and search method (DEWA premise number, Ejari contract number, or area).
-3. DLD has a Register / Renew Ejari Contract service for tenancy contracts in Dubai.
-4. DLD has a Download Rental Certificate (Ejari) service accessible via Ejari contract number and property identifiers.
-5. DLD launched the Smart Rental Index 2025 as part of rental market regulation and transparency.
-6. Smart Rental Index background can be used to explain that rent guidance depends on property-specific and market data, including building classification.
-7. Dubai REST app is an official DLD access point for some real estate services including Rental Index and Sale Index.
-8. Rent renewal reminders in the Guidex Calendar should be relative to each user's tenancy contract end date — not one fixed public date.
-9. Any rent increase estimate must be calculated through official DLD tools (Rental Index calculator) with user-specific data.
-10. Ejari is a required tenancy registration system in Dubai — registration and certificate download are available through official DLD services.
+**Claim status key:** `[allowed]` = safe for draft use | `[allowed — recheck]` = safe but must verify from live source at publish | `[allowed — legal-caution]` = usable framing only; do not add specific legal figures without legal notice source
+
+1. `[allowed — recheck]` DLD provides a Rental Index service for calculating rental increase and average rental based on user-entered property and area data.
+2. `[allowed — recheck]` DLD has a Rental Index calculator that requires user-specific inputs: contract end date, property type, and search method (DEWA premise number, Ejari contract number, or area).
+3. `[allowed — recheck]` DLD has a Register / Renew Ejari Contract service for tenancy contracts in Dubai.
+4. `[allowed — recheck]` DLD has a Download Rental Certificate (Ejari) service accessible via Ejari contract number and property identifiers.
+5. `[allowed — recheck]` DLD launched the Smart Rental Index 2025 as part of rental market regulation and transparency.
+6. `[allowed — recheck]` Smart Rental Index background can be used to explain that rent guidance depends on property-specific and market data, including building classification.
+7. `[allowed — recheck]` Dubai REST app is an official DLD access point for some real estate services including Rental Index and Sale Index.
+8. `[allowed]` Rent renewal reminders in the Guidex Calendar should be relative to each user's tenancy contract end date — not one fixed public date.
+9. `[allowed — legal-caution]` Any rent increase estimate must be calculated through official DLD tools (Rental Index calculator) with user-specific data. Do not state a percentage; direct the user to the calculator.
+10. `[allowed — recheck]` Ejari is a required tenancy registration system in Dubai — registration and certificate download are available through official DLD services.
 
 ---
 
@@ -290,13 +292,13 @@ The following must NOT appear in any Guidex draft, article, calendar item, or pu
 
 The following reminders are relative (tied to each tenant's contract date), not fixed public-date reminders. Plan calendar items accordingly.
 
-| Reminder | Date logic | Type | Priority | Confidence | Source | Publish status | Notes |
-|---|---|---|---|---|---|---|---|
-| A. Rent renewal check | 90–120 days before tenancy end | property_reminder | 1 | editorial_planning — legal notice source needed before publish | DLD Rental Index + future legal notice source | source_check_required | Useful reminder; do not publish exact notice window until official legal source captured |
-| B. Rental Index check | Before rent renewal discussion | property_reminder | 1 | official_tool_available | DLD Rental Index service | can_use_after_recheck | Relative reminder, not a fixed public date |
-| C. Ejari renewal reminder | When tenancy contract is renewed | property_reminder | 2 | official_service_available | DLD Register / Renew Ejari Contract | can_use_after_recheck | Relative to tenancy renewal date |
-| D. Ejari certificate download | After registration or when needed for visa, DEWA, school, or bank | property_reminder | 3 | official_service_available | DLD Download Ejari Certificate | can_use_after_recheck | Supports Dubai Life Setup and visa/family workflows |
-| E. Dubai Life Setup property check | First 30 days after move-in | relocation_reminder | 3 | editorial_planning | DLD / Dubai REST service map | soft_reminder_only | Connect to home setup, DEWA, internet, school, visa documents |
+| Reminder | Date logic | Type | Priority | Confidence | Source | Publish status | Claim status | Notes |
+|---|---|---|---|---|---|---|---|---|
+| A. Rent renewal check | 90–120 days before tenancy end | property_reminder | 1 | editorial_planning — legal notice source needed before publish | DLD Rental Index + future legal notice source | source_check_required | needs-legal-caution | Useful reminder framing; do not publish a specific notice window (days) until official RERA/DLD legal notice source is captured |
+| B. Rental Index check | Before rent renewal discussion | property_reminder | 1 | official_tool_available | DLD Rental Index service | can_use_after_recheck | calendar-ready-after-recheck | Relative reminder; not a fixed public date; link to DLD calculator only |
+| C. Ejari renewal reminder | When tenancy contract is renewed | property_reminder | 2 | official_service_available | DLD Register / Renew Ejari Contract | can_use_after_recheck | calendar-ready-after-recheck | Relative to tenancy renewal date; recheck DLD service page before publish |
+| D. Ejari certificate download | After registration or when needed for visa, DEWA, school, or bank | property_reminder | 3 | official_service_available | DLD Download Ejari Certificate | can_use_after_recheck | calendar-ready-after-recheck | Supports Dubai Life Setup and visa/family workflows |
+| E. Dubai Life Setup property check | First 30 days after move-in | relocation_reminder | 3 | editorial_planning | DLD / Dubai REST service map | soft_reminder_only | soft-reminder-allowed | Connect to home setup, DEWA, internet, school, visa documents |
 
 **Key planning rule:** No rent renewal reminder has a single public date. Each reminder must be generated relative to the user's tenancy contract end date. Do not publish a fixed-date rent reminder as if it applies to all tenants.
 
@@ -425,4 +427,4 @@ Guidex should explain:
 ---
 
 *This is a source ledger — internal use only. Nothing in this file is published. No admin action. No DB write.*
-*Last updated: 2026-05-18 — Nine official DLD sources captured. Sources still needed: legal notice period source, rent increase percentage banding source, Ejari fees/docs from official page before publish. All content opportunities blocked until owner review and source recheck.*
+*Last updated: 2026-05-19 (Phase 6C-22) — Claim status markers added to "Claims allowed now" section and calendar reminder table. Calendar items B/C/D marked calendar-ready-after-recheck; item A marked needs-legal-caution (legal notice period source still required before publishing any specific notice window); item E marked soft-reminder-allowed. No new sources captured in this sprint. Sources still needed: legal notice period source, rent increase percentage banding source, Ejari fees/docs from official page before publish.*

@@ -9,7 +9,7 @@ content_status:          source_verification_only
 risk_level:              medium
 source_reliability:      official_event_sources
 verification_required:   true
-last_reviewed:           2026-05-18
+last_reviewed:           2026-05-19
 owner_review_required:   true
 admin_status:            not_used
 ai_inbox_status:         not_used
@@ -117,15 +117,19 @@ db_status:               not_touched
 - Summit: 7 December 2026.
 - Four-day expo: 8 to 11 December 2026.
 
+**Venue recheck (Phase 6C-22):** Venue confirmed as Dubai Exhibition Centre, Expo City Dubai. Prior GITEX years (up to 2024) used Dubai World Trade Centre (DWTC). The 2026 venue is Expo City — consistent across gitex.com and Expo City Dubai official site. No DWTC venue signal found for 2026. `venue_recheck_required` flag is resolved.
+
+**Phase 6C-23 permalink recheck (2026-05-19):** Official gitex.com page confirmed live and accessible. Dates confirmed: Summit 7 December 2026; Expo 8-11 December 2026. Venue confirmed: Dubai Exhibition Centre, Expo City Dubai. The gitex.com page notes this is "the first-ever edition at Expo City" and describes the venue as "the world's largest indoor events venue - 2.2M sq. ft." Additional confirmation: https://www.dubaiexhibitioncentre.com/en/whats-on/gitex-global-2026 (Dubai Exhibition Centre official site lists GITEX 2026). Both URLs accessed 2026-05-19.
+
 **Claim constraints:**
 - Do not list specific speakers, exhibitors, or sessions without official programme source.
 - Do not state ticket prices unless official page confirms.
 - Do not claim free visitor registration without confirming from official source.
-- Recheck venue details — prior years used DWTC; 2026 is listed as Expo City.
+- Venue is confirmed as Dubai Exhibition Centre, Expo City Dubai — confirmed from two official sources.
 
 **Guidex angle:** Strong — business, founders, investors, technology, company setup, banking, UAE tax, networking. One of the highest-priority standalone event pages for Guidex. Connects to company setup guides, Golden Visa, and business banking content.
 
-**Recheck before publish:** Yes — confirm venue, exact dates, and whether exhibitor/visitor registration is live.
+**Recheck before publish:** Yes — confirm exhibitor/visitor registration is live at time of publish; confirm programme has not changed.
 
 ---
 
@@ -1065,4 +1069,4 @@ In addition to the blocked claims in the main claims section and the lifecycle s
 ---
 
 *This is a source ledger — internal use only. Nothing in this file is published. No admin action. No DB write.*
-*Last updated: 2026-05-19 — Eleven official Dubai event sources captured. Short-lived offer lifecycle model added (Phase 6C-16b). UAE/Abu Dhabi/other Emirates expansion added (Phase 6C-16c). Formula 1 Abu Dhabi GP 2026 updated from source_to_capture to official_source_captured (Phase 6C-18): three official sources captured (formula1.com, abudhabigp.com, yasmarinacircuit.com); race weekend 4–6 December 2026; race day 6 December 2026; event window 3–6 December 2026. F1 calendar rows added. Content opportunity for formula-1-abu-dhabi-grand-prix-2026.md added. Location display rule documented. All content opportunities blocked until source recheck and owner review.*
+*Last updated: 2026-05-19 (Phase 6C-22) — GITEX venue recheck resolved: Dubai Exhibition Centre, Expo City Dubai confirmed as the 2026 venue (no DWTC signal found for 2026). venue_recheck_required flag removed from Source C. Venue note updated in Source C claim constraints. Location display rule already correctly showed Expo City. All other Phase 6C-22 updates: last_reviewed date updated. Prior history: Eleven official Dubai event sources captured. Short-lived offer lifecycle model added (Phase 6C-16b). UAE/Abu Dhabi/other Emirates expansion added (Phase 6C-16c). Formula 1 Abu Dhabi GP 2026 updated from source_to_capture to official_source_captured (Phase 6C-18): three official sources captured (formula1.com, abudhabigp.com, yasmarinacircuit.com); race weekend 4–6 December 2026; race day 6 December 2026; event window 3–6 December 2026. F1 calendar rows added. Content opportunity for formula-1-abu-dhabi-grand-prix-2026.md added. Location display rule documented. All content opportunities blocked until source recheck and owner review.*

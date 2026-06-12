@@ -9,7 +9,7 @@ content_status:          source_verification_only
 risk_level:              medium_high
 source_reliability:      official_where_captured
 verification_required:   true
-last_reviewed:           2026-05-18
+last_reviewed:           2026-05-19
 owner_review_required:   true
 admin_status:            not_used
 ai_inbox_status:         not_used
@@ -92,31 +92,33 @@ The official DET Holiday Homes portal has communicated that licensed individuals
 |---|---|
 | Authority | Dubai Economy and Tourism — DET |
 | Purpose | Official DET source for holiday home permit rules, classification, application process, fees, and documents |
-| Source type | source_needed |
-| Reliability | official_when_found |
-| URL | Not yet captured |
-| Access date | — |
-| Verification status | source_needed — high priority |
+| Source type | media_research_signal — official_portal_blocked |
+| Reliability | signals_only — official_verification_required |
+| URL (DET service page) | https://www.dubaidet.gov.ae/en/our-services/for-consumers-and-students/apply-for-a-holiday-home-permit |
+| URL status | HTTP 403 Forbidden — page inaccessible during Phase 6C-22 research sprint |
+| Access date | 2026-05-19 (access failed) |
+| Verification status | official_portal_blocked — media_research_signals_only |
 
-**What is needed:**
-- An official DET page, service card, or portal instructions page explaining:
-  - What permits are required to operate a holiday home in Dubai
-  - What unit types or classifications are eligible
-  - What the application process looks like
-  - What documents are required
-  - What fees apply (if published officially)
-  - What the permit validity period is
+**DET official portal status:** The DET service page at the URL above returned HTTP 403 Forbidden during both Phase 6C-22 and Phase 6C-23 research sprints. A second DET URL was also tried in Phase 6C-23: https://www.dubaidet.gov.ae/en/our-services/for-consumers-and-students/issue-a-new-holiday-homes-permit — also returned HTTP 403 Forbidden. Both DET service page URLs were inaccessible as of 2026-05-19. The portal entry point at `hhpermits.det.gov.ae` (Source A) remains the accessible official starting point but does not contain detailed fee/validity/document information.
 
-**Why this matters:**
-Without this source, a guide cannot describe the permit process. Any permit workflow, fee, or eligibility claim is blocked until this source is found and recorded.
+**Media research signals captured (Phase 6C-22):**
 
-**Where to look:**
-- `hhpermits.det.gov.ae` inner pages after login or registration flow
-- `dubailand.gov.ae` if DLD and DET co-publish holiday home rules
-- `visitdubai.com/en` if Visit Dubai publishes operator instructions
-- UAE government service card aggregators (government.ae or similar)
+The following figures appear in multiple UAE media and advisory sources. They are signals only — all figures must be verified directly from the official DET portal before any content publishes. Do not treat these as confirmed official facts.
 
-**Blocked until found:** All permit workflow content, all fee claims, all eligibility claims.
+| Signal | Signal source type | Confidence | Status in Guidex content |
+|---|---|---|---|
+| Application fee: AED 1,500 | media_research_signal | signal_only | BLOCKED — must verify from official portal |
+| Knowledge fee: AED 10 | media_research_signal | signal_only | BLOCKED — must verify from official portal |
+| Innovation fee: AED 10 | media_research_signal | signal_only | BLOCKED — must verify from official portal |
+| Per-night charge: AED 10/bedroom (standard) | media_research_signal | signal_only | BLOCKED — must verify from official portal |
+| Per-night charge: AED 15/bedroom (deluxe) | media_research_signal | signal_only | BLOCKED — must verify from official portal |
+
+**Why these signals are not sufficient:**
+- The DET portal page was inaccessible; figures cannot be cross-checked against the live official source.
+- Fee structures for DET permits have changed historically — signals may reflect outdated amounts.
+- All fee claims remain blocked until the official DET service page is read directly.
+
+**Blocked until official page found:** All permit workflow content, all fee claims, all eligibility claims. The URL above should be retried when portal access is restored.
 
 ---
 
@@ -126,21 +128,27 @@ Without this source, a guide cannot describe the permit process. Any permit work
 |---|---|
 | Authority | Dubai Economy and Tourism — DET |
 | Purpose | Official DET source confirming whether owner-managed holiday home units are permitted and under what conditions |
-| Source type | source_needed |
-| Reliability | official_when_found |
-| URL | Not yet captured |
+| Source type | media_research_signal — official_source_not_yet_captured |
+| Reliability | signals_only — official_verification_required |
+| URL | Not yet captured — DET service page returned 403 (see Source C) |
 | Access date | — |
-| Verification status | source_needed — high priority |
+| Verification status | media_research_signal — high priority |
 
-**Research signal:**
-Holiday home units in Dubai may be managed directly by the property owner or through a licensed operator. The rules governing owner-managed units — whether a trade licence is required, what the eligibility conditions are, and whether any building or community approval applies — are a key question for property owners.
+**Research signal (Phase 6C-22):**
+Holiday home units in Dubai may be managed directly by the property owner or through a licensed operator. The following signal was captured during Phase 6C-22 media research:
+
+| Signal | Signal source type | Confidence | Status in Guidex content |
+|---|---|---|---|
+| An individual owner can manage up to 8 holiday home units independently without a separate trade license | media_research_signal | signal_only | BLOCKED — must verify from official DET source |
+| Managing more than 8 units requires a holiday home operator trade license | media_research_signal | signal_only | BLOCKED — must verify from official DET source |
 
 **Why this signal is not sufficient:**
 - The specific DET rule for owner-managed units has not been captured from an official source.
 - "Owner-managed is allowed" and "owner-managed is not allowed" are both blocked claims until this source is found.
+- The 8-unit threshold is a research signal that appears consistently in UAE media and advisory content — but it must be confirmed from the official DET source, not media.
 - Blanket claims either way could mislead property owners about their compliance obligations.
 
-**Blocked until found:** Any claim about owner-managed eligibility, licensing requirements for owners vs operators, or building approval.
+**Blocked until found:** Any claim about owner-managed eligibility, licensing requirements for owners vs operators, or the unit count threshold.
 
 ---
 
@@ -150,16 +158,22 @@ Holiday home units in Dubai may be managed directly by the property owner or thr
 |---|---|
 | Authority | Dubai Economy and Tourism — DET |
 | Purpose | Official DET source confirming the permit validity period and renewal cycle for holiday home permits |
-| Source type | source_needed |
-| Reliability | official_when_found |
-| URL | Not yet captured |
+| Source type | media_research_signal — official_source_not_yet_captured |
+| Reliability | signals_only — official_verification_required |
+| URL | Not yet captured — DET service page returned 403 (see Source C) |
 | Access date | — |
-| Verification status | source_needed — high priority |
+| Verification status | media_research_signal — high priority |
 
-**Why this matters:**
-Permit renewal reminders are one of the most useful calendar items for property owners. Without knowing the official validity period, a renewal reminder cannot have a meaningful date logic (e.g., "renew 60 days before expiry" requires knowing the expiry cycle). All permit renewal reminder date logic is editorial planning only until this source is captured.
+**Research signal (Phase 6C-22):**
 
-**Blocked until found:** Specific permit renewal date logic published as confirmed; any claim that permits expire after a specific period.
+| Signal | Signal source type | Confidence | Status in Guidex content |
+|---|---|---|---|
+| Holiday home permits are valid for approximately 1 year and require annual renewal | media_research_signal | signal_only | BLOCKED — must verify from official DET source |
+
+**Why this signal is not sufficient:**
+Permit renewal reminders are one of the most useful calendar items for property owners. The ~1-year validity signal appears in multiple UAE advisory and media sources, but it must be confirmed from the official DET portal before any renewal reminder can specify a validity period or renewal window.
+
+**Blocked until found:** Any published claim that permits expire after a specific period; any renewal reminder date logic tied to a specific validity duration.
 
 ---
 
@@ -169,12 +183,12 @@ Complete these before publishing any content based on this ledger.
 
 **High priority — required before any content publishes:**
 
-- [ ] **Official DET page or service card for holiday home permit application** — Required before any guide describes the permit workflow, application steps, or eligibility. Record: exact URL, page title, access date.
-- [ ] **Official DET page or portal instructions for permit renewal** — Required before any renewal reminder or renewal guide section is published. Record: exact URL, access date.
-- [ ] **Official DET source for permit validity / expiry period** — Required before any calendar reminder specifies a renewal window. Record: exact validity duration from official source.
-- [ ] **Official DET source for owner-managed unit rules** — Required before any content claims owner-managed units are or are not permitted. Record: exact URL and official language.
+- [~] **Official DET page or service card for holiday home permit application** — Two DET service page URLs tried: (1) https://www.dubaidet.gov.ae/en/our-services/for-consumers-and-students/apply-for-a-holiday-home-permit and (2) https://www.dubaidet.gov.ae/en/our-services/for-consumers-and-students/issue-a-new-holiday-homes-permit — both returned HTTP 403 Forbidden in both Phase 6C-22 and Phase 6C-23. Portal access remains blocked as of 2026-05-19. Fee signals captured (AED 1,500 + AED 10 + AED 10) but BLOCKED until official page readable. Next action: retry DET portal in a new browser session or check for DET press release with confirmed fee schedule.
+- [~] **Official DET page or portal instructions for permit renewal** — Partially signalled: ~1-year annual renewal signal captured from media research. BLOCKED until official page confirms validity period from official source.
+- [~] **Official DET source for permit validity / expiry period** — Signal captured (~1 year). BLOCKED until verified from official DET page.
+- [~] **Official DET source for owner-managed unit rules** — Signal captured (up to 8 units owner-managed; beyond 8 requires operator trade license). BLOCKED until verified from official DET source.
 - [ ] **Official DET source for operator/company licence requirements** — Required before any content discusses whether a trade or operator licence is needed. Do not publish either way without this.
-- [ ] **Official DET source for fees/documents/service times** — Required if guide includes any permit cost or document list. Read directly from official portal before publish.
+- [~] **Official DET source for fees/documents/service times** — Fee signals captured (AED 1,500 application + per-night charges). BLOCKED until official portal page is readable.
 - [ ] **Official QR code display notice with stable URL** — Required before any content says QR code display is mandatory. Record: exact URL, direct quote or close paraphrase, access date.
 
 **Medium priority — needed to expand content scope:**
@@ -359,4 +373,4 @@ Guidex should explain:
 ---
 
 *This is a source ledger — internal use only. Nothing in this file is published. No admin action. No DB write.*
-*Last updated: 2026-05-18 — One official DET portal URL captured (Source A). QR code notice signal recorded but exact URL not confirmed (Source B). Sources C, D, and E are source-needed entries blocking all permit workflow, fee, eligibility, owner-managed, and renewal content. All content opportunities blocked until owner review and source recheck.*
+*Last updated: 2026-05-19 (Phase 6C-22) — DET service page URL captured for Source C but returned HTTP 403 Forbidden; portal inaccessible. Media research signals captured for Sources C, D, and E: fee signals (AED 1,500 + AED 10 + AED 10 + per-night charges AED 10/15); owner-managed threshold signal (up to 8 units); permit validity signal (~1 year annual). All signals marked as BLOCKED pending official portal verification. Sources C/D/E status changed from source_needed to media_research_signal. All content opportunities remain blocked until owner review and source recheck.*

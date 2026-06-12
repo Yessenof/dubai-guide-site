@@ -1,4 +1,4 @@
-# Phase 6C-64 Part 2 — Calendar-First Indexed Event Brief Model Summary
+r# Phase 6C-64 Part 2 — Calendar-First Indexed Event Brief Model Summary
 
 **Date:** 2026-05-25
 **Phase:** 6C-64 (Part 2)

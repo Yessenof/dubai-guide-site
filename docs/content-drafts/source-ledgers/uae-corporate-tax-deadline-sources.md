@@ -72,6 +72,8 @@ If a company's Tax Period ends on 31 December, nine months later falls on 30 Sep
 - This is a registration deadline — it is not the Corporate Tax return filing or payment deadline.
 - This threshold (AED 1,000,000) must not be confused with the VAT mandatory threshold (AED 375,000). They are separate obligations under separate tax regimes.
 
+**2026 framing note (Phase 6C-22):** Source B uses 31 March 2025 as the example date for natural persons who crossed AED 1,000,000 in the 2024 calendar year. For content published in 2026, the forward-looking frame is: natural persons who crossed AED 1,000,000 in the **2025 calendar year** must register by **31 March 2026**. Natural persons crossing the threshold in **2026** must register by **31 March 2027**. Do not use the 2025 date as a "current" example in content drafted after May 2026 — it is now a historical anchor. Use the "31 March of the following year" rule generically and give the 2026/2027 example instead.
+
 ---
 
 ### Source C — FTA: Public clarification on natural person Corporate Tax registration timelines
@@ -93,6 +95,8 @@ If a company's Tax Period ends on 31 December, nine months later falls on 30 Sep
 - Natural persons who met the AED 1,000,000 threshold in 2024 had a registration deadline of **31 March 2025**.
 - This source confirms the calendar-year logic and helps distinguish natural person registration rules from juridical person (company) rules.
 - Useful for establishing the precedent and illustrating the registration timeline to readers without inventing examples.
+
+**2026 framing note (Phase 6C-22):** The 31 March 2025 date in this source is a historical anchor for the first cohort of natural persons subject to Corporate Tax. For content drafted in May 2026 or later, the relevant examples are: 2025 exceedance - register by 31 March 2026 (this deadline has already passed as of May 2026); 2026 exceedance - register by 31 March 2027. The existing guide draft `uae-corporate-tax-deadline-9-month-rule.md` references "31 March 2025" — this must be updated to use the generic rule formula before publish.
 
 ---
 
@@ -338,4 +342,4 @@ This is not just a tax news summary. Guidex Corporate Tax deadline content shoul
 ---
 
 *This is a source ledger — internal use only. Nothing in this file is published. No admin action. No DB write.*  
-*Last updated: 2026-05-18 — four official FTA sources captured. Penalty source not yet captured. Qualifying Free Zone Person treatment deferred. Natural person registration (Source B + C) uses March 2025 example as historical anchor — recheck currency before publishing forward-looking claims.*
+*Last updated: 2026-05-19 (Phase 6C-22) — four official FTA sources remain valid. 2026 framing notes added to Sources B and C: the "31 March 2025" historical anchor must not be used as a current example in content drafted after May 2026. Forward-looking claims should use the generic rule (31 March of the following year) with 2026/2027 as the working example. Penalty source not yet captured. Qualifying Free Zone Person treatment deferred. All content publishing blocked pending owner review.*

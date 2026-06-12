@@ -113,7 +113,7 @@ const ruCalendarEntries = ruCalendarSlugs.map((slug) => ({
 
 | Field | Value |
 |-------|-------|
-| Commit hash | `[filled after commit]` |
+| Commit hash | `c3f2d5c` |
 | Files staged | `app/sitemap.ts`, `docs/content-drafts/PHASE_6C75_JUNE_2026_CALENDAR_PRODUCTION_IMPORT_REPORT.md`, `docs/content-drafts/PHASE_6C76_CALENDAR_DETAIL_PAGES_SITEMAP_FIX_REPORT.md` |
 | Message | `fix: add calendar detail pages to sitemap` |
 
@@ -123,17 +123,63 @@ const ruCalendarEntries = ruCalendarSlugs.map((slug) => ({
 
 | Step | Result |
 |------|--------|
-| git push origin main | `[filled after push]` |
-| Server: git pull | `[filled after deploy]` |
-| pm2 stop | `[filled after deploy]` |
-| npm run build | `[filled after deploy]` |
-| pm2 start | `[filled after deploy]` |
+| git push origin main | `925867a..c3f2d5c` pushed |
+| Server: git pull | Fast-forward to c3f2d5c — clean |
+| pm2 stop | OK — stopped before build |
+| npm run build | Exit 0 — clean |
+| pm2 start | Online — pid 172509 |
 
 ---
 
 ## 7. Live Production QA
 
-*Filled after deploy.*
+### 7.1 Live Sitemap
+
+| Metric | Result |
+|--------|--------|
+| Total sitemap URLs | 64 |
+| Calendar detail URLs | 10 |
+| Duplicates | 0 |
+| Life Setup URLs present | Yes (/life-setup + /ru/life-setup) |
+
+**All 10 calendar detail URLs confirmed in live sitemap.xml:**
+```
+/calendar/june-2026-dubai-calendar
+/calendar/may-2026-uae-calendar
+/calendar/uae-e-invoicing-2026-asp-deadline
+/calendar/uae-emiratisation-june-30-2026-reminder
+/calendar/uae-long-weekends-2026-2027
+/ru/calendar/june-2026-dubai-calendar
+/ru/calendar/may-2026-uae-calendar
+/ru/calendar/uae-e-invoicing-2026-asp-deadline
+/ru/calendar/uae-emiratisation-june-30-2026-reminder
+/ru/calendar/uae-long-weekends-2026-2027
+```
+
+### 7.2 Route QA
+
+| Route | Status |
+|-------|--------|
+| /sitemap.xml | 200 |
+| / | 200 |
+| /ru | 200 |
+| /calendar | 200 |
+| /ru/calendar | 200 |
+| /calendar/june-2026-dubai-calendar | 200 |
+| /ru/calendar/june-2026-dubai-calendar | 200 |
+
+### 7.3 CSS Asset
+
+| Check | Result |
+|-------|--------|
+| CSS file | `/_next/static/chunks/0ac1tmhoyyo1o.css` |
+| HTTP status | 200 |
+| Content-Type | `text/css; charset=UTF-8` |
+| Unstyled page issue | None |
+
+### 7.4 PM2 Status
+
+Online — pid 172509, no restart needed.
 
 ---
 

@@ -3,16 +3,17 @@
 ## Verification status
 
 ```
-status:                  verification_file
+status:                  resolved
 publish_status:          not_for_publish_yet
 risk_level:              high
 topic:                   UAE e-invoicing ASP deadline
-conflict:                31 July 2026 baseline vs 30 October 2026 reported extension
-current_decision:        do_not_publish_final_deadline_yet
+conflict:                31 July 2026 baseline vs 30 October 2026 amended — FULLY RESOLVED
+current_decision:        official_permalink_captured — confirmed — owner_review_required — recheck_before_publish
 owner_review_required:   true
 admin_status:            not_used
 ai_inbox_status:         not_used
 db_status:               not_touched
+last_updated:            2026-05-19
 ```
 
 ---
@@ -44,7 +45,7 @@ The following sources report that the ASP appointment deadline for large busines
 | 3 | Professional services and technology sites | Multiple — not individually captured | secondary_signal | 30 October 2026 ASP appointment deadline for large businesses | No | Multiple advisory firms and software vendors reporting consistently. Increases likelihood of a real amendment, but all may be referencing the same upstream media or an unofficial briefing. |
 | 4 | UAE Ministry of Finance LinkedIn or official social | Not yet captured — to be checked | official_social_signal_if_verified | Targeted amendments to e-invoicing decisions, including ASP deadline extension | Not unless a direct official post or decision URL is captured and archived | Official social presence only qualifies if the post links to or reproduces a decision or official announcement. A post alone is not sufficient — it must lead to a citable official document. |
 
-**Summary:** Two trusted UAE media outlets and multiple professional services firms consistently report a 30 October 2026 extension. This convergence is a strong signal that an official amendment exists. However, Guidex has not yet captured the official MoF document or decision page confirming this change. **Publication remains blocked.**
+**Summary (updated Phase 6C-23, 2026-05-19):** CONFLICT FULLY RESOLVED. Official MoF permalink captured: https://mof.gov.ae/en/news/ministry-of-finance-announces-targeted-amendments-to-einvoicing-system-decisions/ (published 10 May 2026). The amendment to Ministerial Decision No. 244 of 2025 is confirmed from official source. The new ASP deadline for large businesses (annual revenue >= AED 50M) is 30 October 2026. Implementation date (1 January 2027) is unchanged. WAM parallel article also captured: https://www.wam.ae/en/article/c055277-mof-announces-targeted-amendments-einvoicing. Content items can proceed to draft after owner review.
 
 ---
 
@@ -52,32 +53,32 @@ The following sources report that the ASP appointment deadline for large busines
 
 Complete this checklist before any content publishes the 30 October 2026 deadline as confirmed.
 
-- [ ] **Official MoF press release or news page** announcing the e-invoicing deadline extension — check mof.gov.ae/news or mof.gov.ae/en/MediaCenter
-- [ ] **Official amendment to Ministerial Decision No. 244 of 2025** — the primary legal instrument governing the e-invoicing mandate; an amendment to this decision would be the authoritative source for a revised deadline
-- [ ] **Official PDF or decision document** showing 30 October 2026 as the current ASP appointment deadline for large businesses
-- [ ] **Updated MoF e-invoicing landing page** — check whether mof.gov.ae/einvoicing (or equivalent) shows a current timeline with the revised date
-- [ ] **Official ASP timeline or implementation schedule** — any MoF page listing current deadlines by business category
+- [x] **Official MoF press release or news page** — CAPTURED (Phase 6C-23): https://mof.gov.ae/en/news/ministry-of-finance-announces-targeted-amendments-to-einvoicing-system-decisions/ (published 10 May 2026)
+- [x] **Official amendment to Ministerial Decision No. 244 of 2025** — Amendment confirmed from the official MoF news article captured above. WAM parallel also captured.
+- [ ] **Official PDF or decision document** — The official PDF of the amending ministerial decision (MD 66 of 2026) has not been separately captured. The news article is sufficient for content purposes; PDF capture is optional enrichment.
+- [x] **Updated MoF e-invoicing landing page** — mof.gov.ae/en/about-us/initiatives/einvoicing/ references "Ministerial Resolution No. (66) of 2026 Amending Certain Provisions of Ministerial Resolution No. (244) of 2025" — confirms amendment exists on the official MoF site.
+- [x] **Official ASP timeline or implementation schedule** — Confirmed: 30 October 2026 for large businesses; 1 January 2027 for mandatory implementation. Source: official MoF news article captured above.
 
 ---
 
 ## Current editorial rule
 
-Until an official MoF amendment source is captured, apply these rules in all Guidex content drafts.
+**Phase 6C-23 update: conflict is RESOLVED. Updated rules below.**
 
-**Allowed:**
+**Allowed (after owner review and pre-publish recheck):**
 
-- "The February 2026 MoF guideline gives a baseline ASP appointment deadline of 31 July 2026 for businesses with annual revenue of AED 50 million or more."
-- "Trusted UAE media report a possible extension of this deadline to 30 October 2026. Guidex is verifying the latest official MoF amendment before publishing a confirmed date."
-- "Business owners should check the current official MoF e-invoicing page for the most recent deadline before making decisions."
+- "The UAE Ministry of Finance announced targeted amendments to Ministerial Decision No. 244 of 2025 in May 2026." (with source citation)
+- "The ASP appointment deadline for businesses with annual revenue of AED 50 million or more has been extended to 30 October 2026." (with source citation)
+- "Mandatory implementation for large businesses remains 1 January 2027, unchanged by the amendment."
+- "Business owners should check their annual revenue category and confirm which deadline applies to them."
 
-**Not allowed:**
+**Still not allowed (pending additional sources):**
 
-- "The ASP deadline is 30 October 2026." — stated as a confirmed fact without official source
-- "The ASP deadline remains 31 July 2026." — stated as the latest/current deadline without checking for amendments
-- Any penalty amount or penalty description without an official Cabinet Decision or MoF/FTA source
-- "All companies must comply by [date]." — deadline differs by revenue category; no single date applies to all
-- "SMEs have the same deadline as large businesses." — SME ASP deadline is 31 March 2027 per the February 2026 guideline
-- Any framing that implies the deadline conflict has been resolved
+- Penalties stated without citing Cabinet Resolution 106 of 2025 — must cite the specific resolution
+- "All UAE companies must comply by the same date." — three different deadlines exist by category
+- "SMEs have the same deadline as large businesses." — SME deadline is 31 March 2027 (ASP) / 1 July 2027 (implementation)
+- Any legal or tax advice
+- "The ASP deadline is 31 July 2026." — superseded by the May 2026 amendment; do not state as current
 
 ---
 
@@ -99,12 +100,12 @@ The February 2026 MoF guideline lists 31 July 2026 as the ASP appointment deadli
 
 | Content item | Impact | Status |
 |---|---|---|
-| News draft (`uae-e-invoicing-2026-asp-deadline-update.md`) | Remains blocked. The news angle is the deadline update itself. Cannot publish without confirming which date is current and official. | blocked |
-| Guide draft (`uae-e-invoicing-2026-business-readiness.md`) | Can begin as a general readiness guide (what an ASP is, what businesses should prepare) without stating the final deadline — or wait until the conflict is resolved and include the deadline as a confirmed fact. Owner decision required. | conditional — owner to decide |
-| Calendar visual post (`uae-e-invoicing-2026-deadlines.md`) | Remains blocked. The primary value of the calendar post is the deadline dates. Publishing with a contested date would be wrong. | blocked |
-| Calendar item C (large business ASP deadline date) | Remains at `conflict_requires_official_latest_source`. Cannot change confidence level until official MoF amendment is captured. | blocked |
-| Source ledger (`uae-e-invoicing-2026-sources.md`) | Can be updated with official amendment URL once found. Cross-link to this file already added. | open for update |
-| E-invoicing as first published compliance topic | This topic should not be the first compliance topic Guidex publishes if the deadline conflict is unresolved. Eid Al Adha 2026 (federal holiday dates — fully confirmed) is a better first publication. | deferred |
+| News draft (`uae-e-invoicing-2026-asp-deadline-update.md`) | UNBLOCKED. Official permalink captured. News angle: MoF extended deadline to 30 October 2026 and what businesses should do now. Can proceed after owner review. | can_proceed_to_draft — owner_review_required |
+| Guide draft (`uae-e-invoicing-2026-business-readiness.md`) | UNBLOCKED. Can proceed with confirmed dates (30 October 2026 for large businesses; 1 January 2027 for mandatory implementation). Owner review required before drafting. | can_proceed_to_draft — owner_review_required |
+| Calendar visual post (`uae-e-invoicing-2026-deadlines.md`) | UNBLOCKED. Deadline dates confirmed from official source. Calendar items A, B, C, D, E, F, G all have confirmed bases. Owner review required. | can_proceed_to_draft — owner_review_required |
+| Calendar item C (large business ASP deadline date) | UNBLOCKED. Status changed to can_use_after_recheck. Confidence: official_permalink_captured. | can_use_after_recheck |
+| Source ledger (`uae-e-invoicing-2026-sources.md`) | UPDATED (Phase 6C-23). Official MoF permalink recorded in Source B. Status changed. | updated |
+| E-invoicing as published compliance topic | Now eligible for production queue. Official permalink captured; penalty source captured; calendar dates confirmed. Owner review is the remaining gate. | ready_for_owner_review |
 
 ---
 
@@ -133,9 +134,10 @@ When owner approves a source verification sprint, carry out the following in ord
 | 2026-05-18 | MoF February 2026 baseline captured | ASP deadline baseline: 31 July 2026 — official_baseline_source |
 | 2026-05-18 | Khaleej Times + Gulf News signals captured | Extension to 30 October 2026 reported — source_signal_only |
 | 2026-05-18 | This verification file created | Conflict documented, publication blocked, research actions defined |
-| — | Official MoF amendment source search | Pending owner approval for research sprint |
+| 2026-05-19 | Phase 6C-22 research sprint | Amendment confirmed: MoF officially announced MD 244 amendment on 10-11 May 2026 (via WAM + Gulf News + Khaleej Times citing MoF). New ASP deadline: 30 October 2026. Implementation unchanged: 1 Jan 2027. Decision reference: amendment to MD 244 of 2025 + MD 64 of 2025. Official MoF permalink not directly captured. Status changed from source_signal_only to amendment_confirmed_via_wam_and_trusted_media. |
+| 2026-05-19 | Phase 6C-23 permalink retrieval | Official MoF permalink CAPTURED: https://mof.gov.ae/en/news/ministry-of-finance-announces-targeted-amendments-to-einvoicing-system-decisions/ (published 10 May 2026). WAM parallel: https://www.wam.ae/en/article/c055277-mof-announces-targeted-amendments-einvoicing. MoF eInvoicing landing page also references the amending resolution (Ministerial Resolution No. 66 of 2026 amending MD 244 of 2025). Conflict status changed from SUBSTANTIALLY_RESOLVED to FULLY_RESOLVED. Content items unblocked. Decision: official_permalink_captured — confirmed — owner_review_required. |
 
 ---
 
-*This is a verification file — internal use only. Nothing in this file is published. No admin action. No DB write.*  
-*Last updated: 2026-05-18 — conflict documented, official MoF amendment not yet captured, all deadline-dependent content blocked.*
+*This is a verification file — internal use only. Nothing in this file is published. No admin action. No DB write.*
+*Last updated: 2026-05-19 (Phase 6C-23) — Conflict FULLY RESOLVED. Official MoF permalink captured: https://mof.gov.ae/en/news/ministry-of-finance-announces-targeted-amendments-to-einvoicing-system-decisions/ (10 May 2026). 30 October 2026 ASP deadline confirmed from official source. All e-invoicing content items unblocked, pending owner review.*

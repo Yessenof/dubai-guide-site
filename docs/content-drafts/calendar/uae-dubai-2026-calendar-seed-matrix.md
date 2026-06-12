@@ -452,19 +452,19 @@
 | **type** | calendar + news |
 | **source_type** | official |
 | **source_url** | https://mof.gov.ae/wp-content/uploads/2026/02/UAE-Electronic-Invoicing-Guidelines_V-1.0-23Feb2026.pdf |
-| **source_status** | official_baseline_confirmed (MoF guideline Feb 2026); no amendment to this date |
+| **source_status** | official_baseline_confirmed (MoF guideline Feb 2026); no amendment to this date detected — Phase 6C-64 recheck 2026-05-25 |
 | **risk** | medium |
 | **calendar_readiness** | OWNER_REVIEW |
-| **detail_page_needed** | no (pilot start note — part of e-invoicing news/guide) |
-| **detail_url** | /calendar/uae-e-invoicing-2026-asp-deadline (when created) |
+| **detail_page_needed** | no (pilot start note — part of e-invoicing calendar page and news) |
+| **detail_url** | /calendar/uae-e-invoicing-2026-asp-deadline (when created); items inside datesJson link to /news/uae-e-invoicing-2026-asp-deadline-update |
 | **cta_rule** | hidden |
 | **en_copy** | draft exists (see calendar/uae-e-invoicing-2026-asp-deadline.md) |
 | **ru_copy** | draft exists |
 | **seo_rag** | high |
 | **social** | medium |
 | **monetization** | high |
-| **notes** | Jul 1 is the voluntary start date AND pilot start — applies to all businesses, not just large. Safer than TAX-05C because no deadline conflict. Recheck MoF guideline URL is still current before import. |
-| **next_action** | Owner review → import alongside TAX-05C as part of e-invoicing calendar package. |
+| **notes** | Jul 1 is the voluntary start date AND pilot start — applies to all businesses, not just large. Safer than TAX-05C because no deadline conflict. **Phase 6C-64 (2026-05-25):** MoF guidelines PDF confirmed accessible. No amendment to Jul 1 date detected in post-May 10 MoF news. Source safe for import after owner approval. Import as part of calendar_pages `important_dates` page alongside TAX-05C and TAX-05D. datesJson detail_url should point to news post (not /guides/ — guide does not fit guides table schema). |
+| **next_action** | Owner review → URL recheck at time of import → import as calendar_pages item A in e-invoicing important_dates page. |
 
 ---
 
@@ -483,19 +483,19 @@
 | **type** | calendar + news + guide |
 | **source_type** | official |
 | **source_url** | https://mof.gov.ae/en/news/ministry-of-finance-announces-targeted-amendments-to-einvoicing-system-decisions/ |
-| **source_status** | official_permalink_captured (Phase 6C-23, 2026-05-19) — confirmed; recheck before import |
+| **source_status** | official_permalink_captured (Phase 6C-23, 2026-05-19) — **Phase 6C-64 recheck 2026-05-25: MoF article LIVE, 30 Oct 2026 CONFIRMED, no further amendments detected** |
 | **risk** | high |
 | **calendar_readiness** | OWNER_REVIEW |
-| **detail_page_needed** | yes — draft exists: `docs/content-drafts/calendar/uae-e-invoicing-2026-asp-deadline.md` |
-| **detail_url** | /calendar/uae-e-invoicing-2026-asp-deadline (when imported) |
-| **cta_rule** | WhatsApp (compliance advisory) |
-| **en_copy** | draft complete |
-| **ru_copy** | draft complete |
+| **detail_page_needed** | yes — calendar page draft: `docs/content-drafts/calendar/uae-e-invoicing-2026-asp-deadline.md`; news draft: `docs/content-drafts/news/uae-e-invoicing-2026-asp-deadline-update.md` |
+| **detail_url** | /calendar/uae-e-invoicing-2026-asp-deadline (calendar page slug); datesJson items link to /news/uae-e-invoicing-2026-asp-deadline-update |
+| **cta_rule** | WhatsApp (compliance advisory) — on news post |
+| **en_copy** | draft complete (news + calendar + guide) |
+| **ru_copy** | draft complete (news + calendar + guide) |
 | **seo_rag** | very high |
 | **social** | medium |
 | **monetization** | high |
-| **notes** | Applies ONLY to large businesses (annual revenue ≥ AED 50M). SME deadline is March 31, 2027. Do not state "all UAE businesses." Fine for non-compliance: AED 5,000/month (Cabinet Resolution 106 of 2025). Recheck MoF source URL is still live before import. |
-| **next_action** | Owner review → recheck MoF URL → import. |
+| **notes** | Applies ONLY to large businesses (annual revenue ≥ AED 50M). SME deadline March 31, 2027. Do not state "all UAE businesses." Fine: AED 5,000/month (Cabinet Resolution 106/2025). **Phase 6C-64 (2026-05-25):** All sources confirmed live. No post-May 10 amendment to deadlines. "32 providers" figure stale — update to current count or remove specific number pre-publish. Guide does NOT fit guides table (steps-based schema); import guide as news_posts OR keep file-based. **Import path: Option B — import news_posts + calendar_pages first; hold guide.** |
+| **next_action** | Owner review → pre-import checklist (recheck MoF URL; update ASP count wording; update detail_url in calendar items to news post URL) → import news_post + calendar_pages as paired operation. |
 
 ---
 

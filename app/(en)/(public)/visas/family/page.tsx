@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CategoryIcon from "@/components/CategoryIcon";
+import SourceNote from "@/components/SourceNote";
 import type { Metadata } from "next";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -72,9 +73,18 @@ export default function FamilyVisaHubPage() {
       <h1 className="text-[26px] font-bold text-gray-900 leading-snug mb-3">
         Family Residence Visas in Dubai
       </h1>
-      <p className="text-[15px] text-gray-600 leading-snug mb-6">
+      <p className="text-[15px] text-gray-600 leading-snug mb-4">
         Sponsor a spouse or child on a Dubai residence visa. Inside-UAE and outside-UAE routes with exact government fees.
       </p>
+
+      <div className="mb-6">
+        <SourceNote
+          status="confirmed"
+          note="Based on ICA and GDRFA official guidelines. Eligibility requirements and document lists may be updated. Check with a registered PRO or GDRFA before applying."
+          sourceLabel="ICA · GDRFA Dubai"
+          lastChecked="Checked May 2026"
+        />
+      </div>
 
       <Link
         href="/find-my-visa?flow=family-new"

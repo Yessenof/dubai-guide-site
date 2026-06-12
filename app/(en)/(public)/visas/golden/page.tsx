@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CategoryIcon from "@/components/CategoryIcon";
+import SourceNote from "@/components/SourceNote";
 import type { Metadata } from "next";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -91,9 +92,18 @@ export default function GoldenVisaHubPage() {
       <h1 className="text-[26px] font-bold text-gray-900 leading-snug mb-3">
         Dubai Golden Visa
       </h1>
-      <p className="text-[15px] text-gray-600 leading-snug mb-6">
+      <p className="text-[15px] text-gray-600 leading-snug mb-4">
         10-year UAE residency without employer sponsorship. Four routes: property ownership, professional salary, business investment, and special talent.
       </p>
+
+      <div className="mb-6">
+        <SourceNote
+          status="confirmed"
+          note="Golden Visa routes and thresholds based on ICA and GDRFA official guidelines. Investment categories and minimum values are periodically reviewed."
+          sourceLabel="ICA · GDRFA · DLD"
+          lastChecked="Checked May 2026"
+        />
+      </div>
 
       <Link
         href="/find-my-visa?flow=golden"

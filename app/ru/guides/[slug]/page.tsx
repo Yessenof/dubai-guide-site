@@ -6,6 +6,7 @@ import { localizeValue } from "@/lib/localize-value";
 import GuideHeader from "@/components/GuideHeader";
 import RouteSnapshot from "@/components/RouteSnapshot";
 import StepCard from "@/components/StepCard";
+import SourceNote from "@/components/SourceNote";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -13,6 +14,24 @@ const WHATSAPP_HREF = "https://wa.me/971506304817";
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 const CUSTOM_PAGE_SLUGS = new Set(["tax-residency-certificate-uae"]);
+
+const SOURCE_NOTES_RU: Record<string, { note: string; sourceLabel: string; lastChecked: string }> = {
+  "golden-visa-dubai-property": {
+    note: "Требования к имущественному маршруту и процедуры DLD основаны на официальных данных ICA и GDRFA. Минимальная стоимость недвижимости может пересматриваться.",
+    sourceLabel: "ICA · GDRFA · DLD",
+    lastChecked: "Проверено май 2026",
+  },
+  "mainland-company-setup-dubai": {
+    note: "Процедура регистрации компании основана на официальных требованиях DED (Dubai Economy). Для лицензируемых видов деятельности требуются дополнительные согласования.",
+    sourceLabel: "DED (Dubai Economy)",
+    lastChecked: "Проверено май 2026",
+  },
+  "open-business-bank-account-dubai": {
+    note: "Требования к открытию счёта зависят от банка и типа компании. Регуляторная база — в соответствии с правилами CBUAE.",
+    sourceLabel: "CBUAE",
+    lastChecked: "Проверено май 2026",
+  },
+};
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -193,6 +212,18 @@ export default async function RuGuidePage({ params }: Props) {
           >
             Читать полное руководство ↓
           </a>
+        </div>
+      )}
+
+      {/* Source note — for selected high-risk guides */}
+      {SOURCE_NOTES_RU[slug] && (
+        <div className="mt-5">
+          <SourceNote
+            status="confirmed"
+            note={SOURCE_NOTES_RU[slug].note}
+            sourceLabel={SOURCE_NOTES_RU[slug].sourceLabel}
+            lastChecked={SOURCE_NOTES_RU[slug].lastChecked}
+          />
         </div>
       )}
 

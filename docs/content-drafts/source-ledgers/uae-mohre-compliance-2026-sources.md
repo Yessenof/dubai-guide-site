@@ -9,7 +9,7 @@ content_status:          source_verification_only
 risk_level:              high
 source_reliability:      official
 verification_required:   true
-last_reviewed:           2026-05-18
+last_reviewed:           2026-05-19
 owner_review_required:   true
 admin_status:            not_used
 ai_inbox_status:         not_used
@@ -98,13 +98,67 @@ db_status:               not_touched
 | Field | Value |
 |---|---|
 | Authority | MoHRE — Ministry of Human Resources and Emiratisation (mohre.gov.ae) |
-| Purpose | Emiratisation 2026 semi-annual target obligations for private-sector companies with 50+ employees |
+| Purpose | Emiratisation 2026 semi-annual target obligations for private-sector companies with 20+ employees |
 | Source type | official |
-| Status | source_signal_only — stable_url_not_yet_captured |
-| Signal | Research indicates MoHRE has communicated a 1% semi-annual Emiratisation growth target in skilled jobs before 30 June 2026, for companies with 50+ employees |
-| Priority | High — stable URL must be captured before any Emiratisation deadline is published or presented as confirmed |
+| Reliability | official |
+| URL (primary — MoHRE news) | https://mohre.gov.ae/en/media-center/news/7/5/2026/mohre-30-june-deadline-for-achieving-emiratisation-targets-for-first-half-of-2026 |
+| URL (targets page) | https://www.mohre.gov.ae/en/guidance-and-awareness-portal-new/emiratisation-targets |
+| Access date | 2026-05-19 |
+| Publication date | 7 May 2026 |
+| Verification status | stable_url_captured — recheck_before_publish |
+| Re-check before publish | Yes — confirm both pages still live, deadline and scope thresholds unchanged before any content publishes |
 
-**Note on Source C:** Emiratisation targets and deadlines are high-risk compliance content. The 30 June 2026 date and the 1% growth figure are research signals — they must not be published as confirmed facts without a stable official MoHRE URL (not a homepage banner or transient announcement) or a Cabinet Decision reference. If only a homepage signal is found, status remains `source_signal_only` and all Emiratisation deadline content stays blocked until a permalink or official archived document is captured.
+#### Facts captured from this source
+
+- **30 June 2026** is the MoHRE-confirmed semi-annual deadline for private-sector companies to achieve their first-half 2026 Emiratisation targets.
+- **Two scope thresholds apply — both confirmed from the MoHRE targets page:**
+  - Companies with **50 or more employees**: 1% growth in Emiratisation rate in skilled jobs for the first half of 2026 (equivalent to 2% annual target).
+  - Companies with **20–49 employees**: at least **1 UAE national** employed in a skilled job.
+- Companies that do not meet the 30 June 2026 target face **financial contributions starting from 1 July 2026**.
+- The programme applies to private-sector companies. Free zone company scope must be confirmed from a separate official source before any claim is published.
+- The exact definition of "skilled jobs" eligible for Emiratisation counting must be verified from the official MoHRE Emiratisation targets page before any content specifies which roles count.
+
+**Important scope update:** Prior planning in this ledger referenced only the 50+ employee threshold. The MoHRE targets page confirms a **second threshold covering companies with 20–49 employees** (1 UAE national in a skilled job). All content and calendar items must address both thresholds correctly. Do not apply the 50+ percentage rule to the 20–49 cohort or vice versa.
+
+**Penalty note:** Financial contributions for non-compliance from 1 July 2026 are referenced in the MoHRE source. The exact contribution amount must be verified from an official penalty notice, Cabinet Decision, or MoHRE announcement before any figure is published.
+
+**Recheck before publish:** Yes — confirm both URLs still live; confirm deadline and scope thresholds unchanged.
+
+---
+
+### Source D — MoHRE Emiratisation: Financial Contribution Reference Data (partial)
+
+| Field | Value |
+|---|---|
+| Authority | MoHRE — Ministry of Human Resources and Emiratisation (mohre.gov.ae) |
+| Purpose | Reference data for Emiratisation financial contribution amounts from official MoHRE announcements |
+| Source type | official — historical reference |
+| Reliability | official — base rates confirmed; 2026 semi-annual contribution amount not yet in a 2026-specific source |
+| URL (50+ employees base rate — 2022) | https://mohre.gov.ae/en/media-center/news/6/1/2023/mohre-applies-financial-contributions-to-companies-failing-to-raise-emiratisation-rates-by-2-during- |
+| URL (20-49 employees — 2024 targets) | https://www.mohre.gov.ae/en/media-center/news/2/1/2024/mohre-begins-implementing-emiratisation-targets-on-over-12000-private-companies-with-20-49-employees |
+| Access date | 2026-05-19 |
+| Verification status | partial_data_captured — 2026_semi-annual_contribution_amount_not_confirmed — recheck_required |
+| Re-check before publish | Yes — these are historical base-rate sources; a 2026-specific official announcement is needed before publishing any contribution amount |
+
+#### Facts captured from these sources (Phase 6C-23)
+
+**For companies with 50+ employees (annual target non-compliance):**
+- 2022 target failure: AED 6,000 per month per unfilled Emirati position = AED 72,000/year
+- Progressive increase: AED 1,000/month/year "until the year 2026" (per the January 2023 MoHRE announcement)
+- Implied 2026 annual target rate: AED 10,000/month = AED 120,000/year (derived from progressive schedule — NOT confirmed from a 2026-specific official source)
+
+**For companies with 20-49 employees (failure to hire at least 1 Emirati):**
+- 2024 target failure: AED 96,000 per unappointed UAE national (confirmed from January 2024 MoHRE announcement)
+- 2025 target failure: AED 108,000 per unappointed UAE national (confirmed from January 2024 MoHRE announcement as the subsequent year rate)
+- 2026 semi-annual contribution amount: NOT YET CONFIRMED from an official 2026-specific source
+
+**What is still needed before any contribution amount can be published:**
+- A 2026-specific official MoHRE announcement confirming the contribution amount for failure to meet the 30 June 2026 semi-annual target
+- Clarification on whether the semi-annual non-compliance triggers a different rate from annual non-compliance
+- Confirmation that the progressive schedule applies in the same way to semi-annual targets as to annual targets
+
+**Why partial data is captured but cannot be published:**
+The base rates and progressive schedule are from official sources. However: (1) these sources reference annual targets, not the 30 June 2026 semi-annual target; (2) the 2026 rate is derived, not officially confirmed; (3) a separate contribution trigger may apply for semi-annual vs annual non-compliance. Do not publish any specific contribution amount until a 2026-specific official source confirms it.
 
 ---
 
@@ -119,7 +173,7 @@ The following claims may appear in internal draft planning only. Publishing rema
 5. Basic health insurance can inform employment visa, residence renewal, and employee onboarding calendar reminders and guide content.
 6. The MoHRE basic health insurance scheme page indicates an effective date of 1 January 2025 — this can be used in draft planning but must be rechecked before publish.
 7. Emiratisation is a high-risk compliance topic for private-sector companies with 50+ employees — it is a distinct and separate obligation from VAT and Corporate Tax.
-8. A 30 June 2026 Emiratisation target check date can be treated as a source signal for calendar planning purposes only — it must not be published as a confirmed regulatory deadline until a stable official MoHRE URL is captured.
+8. A 30 June 2026 Emiratisation semi-annual deadline is now supported by a stable official MoHRE URL (Source C, captured 2026-05-19). It may appear in Guidex content after owner review and source recheck. Two scope thresholds apply: companies with 50+ employees (1% semi-annual growth in skilled jobs) and companies with 20–49 employees (1 UAE national in a skilled job). Financial contributions apply from 1 July 2026 for non-compliant companies. Do not publish penalty amounts until an official source confirming the contribution amount is captured.
 9. ILOE and basic health insurance are not one fixed public date for all users — they are relative reminders tied to individual employment or visa events.
 10. These three topics (ILOE, health insurance, Emiratisation) connect naturally to employment visa, company setup, HR onboarding, and the Dubai Calendar content streams.
 
@@ -138,10 +192,11 @@ The following statements must NOT appear in any Guidex draft, article, calendar 
 | "Basic health insurance replaces all emirate-specific insurance rules" | Dubai DHA and Abu Dhabi rules interact with this scheme — do not make a blanket replacement claim |
 | "The health insurance package costs X AED" | Any cost figure must be rechecked against the live MoHRE source before publish |
 | "All residence visas require the same health insurance package" | Visa type and employer category may affect which scheme applies |
-| "All companies must meet Emiratisation targets" | Applies to companies with 50+ employees in the private sector — not universal |
-| "The Emiratisation deadline is confirmed as 30 June 2026" | Research signal only — not published as confirmed until stable official URL captured |
-| "The Emiratisation penalty is X AED" | No official penalty source captured |
-| "Companies below 50 employees have Emiratisation obligations" | Scope threshold must be confirmed and applied carefully |
+| "All companies must meet Emiratisation targets" | Applies to companies with 20+ employees in the private sector — not universal; two separate thresholds apply (50+ and 20–49) |
+| "The Emiratisation financial contribution is X AED" | Exact contribution amount not yet captured from an official source |
+| "Free zone companies must meet Emiratisation targets" | Free zone scope not confirmed from official source |
+| "All roles count toward the Emiratisation target" | Skilled job definition not fully captured — do not specify which roles count without official source |
+| "Companies below 20 employees have Emiratisation obligations" | No official source confirms obligations for sub-20 employee companies |
 | "This is legal or HR advice" | Guidex is an information resource — always recommend verification with MoHRE or a qualified professional |
 | Copy or close-paraphrase of MoHRE text | Not permitted — original writing required |
 | Content published before owner review | Owner review is required before any of these topics go to publish consideration |
@@ -156,9 +211,9 @@ Complete this checklist before any related content moves to publish consideratio
 
 - [ ] **MoHRE ILOE scheme/service page** — A stable MoHRE service or scheme page for ILOE subscription (not a news article). Confirm: who must subscribe, exemptions, subscription process, current fine amounts, and enforcement timeline. Source A1 (Dec 2023 news) is not sufficient alone.
 - [ ] **MoHRE basic health insurance page rechecked** — Confirm Source B is still live and unchanged. Verify: effective date (1 January 2025), which employer categories are covered, and whether any cost figure is still accurate.
-- [ ] **Stable MoHRE Emiratisation 2026 URL** — Find and record a stable permalink (not a homepage banner) confirming the 30 June 2026 target and the 1% semi-annual growth obligation for companies with 50+ employees. Until captured, Emiratisation deadline content stays blocked.
-- [ ] **MoHRE Emiratisation obligations page** — Official MoHRE page listing which companies are in scope, what the target is, and what the calculation method is.
-- [ ] **Official penalty source (Emiratisation)** — Only if penalty amounts are mentioned in any content — must come from an official MoHRE announcement, Cabinet Decision, or UAE Gazette reference.
+- [x] **Stable MoHRE Emiratisation 2026 URL** — CAPTURED (2026-05-19): https://mohre.gov.ae/en/media-center/news/7/5/2026/mohre-30-june-deadline-for-achieving-emiratisation-targets-for-first-half-of-2026 (published 7 May 2026). Confirms 30 June 2026 deadline and two scope thresholds.
+- [x] **MoHRE Emiratisation obligations page** — CAPTURED (2026-05-19): https://www.mohre.gov.ae/en/guidance-and-awareness-portal-new/emiratisation-targets. Confirms: 50+ employees (1% semi-annual / 2% annual in skilled jobs); 20–49 employees (1 UAE national in skilled job).
+- [~] **Official contribution source (Emiratisation)** — PARTIALLY CAPTURED (Phase 6C-23): Base rates for 50+ employees (AED 6,000/month for 2022, +AED 1,000/year until 2026) and 20-49 employees (AED 96,000 for 2024; AED 108,000 for 2025) captured from official MoHRE announcements (Source D above). 2026 semi-annual contribution amount not yet confirmed from a 2026-specific official source. Still needed: MoHRE announcement confirming the contribution amount for failure to meet the 30 June 2026 semi-annual target. Do not publish any specific AED amount until this is captured.
 
 **Medium priority — needed to expand content scope:**
 
@@ -185,12 +240,12 @@ These items are relative or event-based compliance reminders. They are not fixed
 |---|---|---|---|---|---|---|---|---|---|
 | A | ILOE subscription reminder | Напоминание: подписка на страхование ILOE | Relative to work permit or employment activation — no fixed universal date | employment_reminder | 2 | official_topic_but_relative_timing | MoHRE Source A1 | blocked_until_scheme_page_captured | Employee-facing; avoid overstating employer responsibility; primary scheme page needed before publish |
 | B | Basic health insurance check | Проверка базовой медицинской страховки | Residence permit issuance or renewal | employment_reminder / visa_reminder | 2 | official_topic | MoHRE Source B | can_use_after_recheck | Relevant for employment visa and renewal workflows; recheck Source B before publish |
-| C | Emiratisation target: 30 June 2026 | Проверка цели Emiratisation: 30 июня 2026 | 2026-06-30 if stable official MoHRE source captured | government_deadline / business_deadline | 1 | source_signal_only | MoHRE Source C (not yet stable) | blocked_until_stable_source | Only for companies with 50+ employees in scope; do not generalize; publish date blocked |
+| C | Emiratisation target: 30 June 2026 | Проверка цели Emiratisation: 30 июня 2026 | 2026-06-30 | government_deadline / business_deadline | 1 | stable_url_captured | MoHRE Source C — stable URL captured 2026-05-19 | can_use_after_recheck | Two thresholds: 50+ employees (1% semi-annual growth); 20–49 employees (1 UAE national). Financial contributions from 1 July 2026. Recheck source before publish. Do not generalize to all companies. |
 | D | Employee onboarding compliance check | Проверка compliance при трудоустройстве | First 30 days after hiring (editorial planning) | business_reminder | 3 | editorial_planning | Guidex planning + MoHRE topics | soft_reminder_only | Soft reminder connecting ILOE + health insurance + employment visa; all items must link to official sources |
 
 **Note on calendar items A and B:** These are business planning reminders, not fixed regulatory deadlines that apply to all users on the same date. If added to the Guidex calendar, they must be labeled as relative reminders and include a note that the actual trigger depends on individual employment and visa circumstances.
 
-**Note on calendar item C:** The Emiratisation deadline is blocked. Publishing "30 June 2026" as a confirmed calendar item requires a stable official MoHRE URL. Until captured, this item must not appear in any published calendar or content.
+**Note on calendar item C:** Stable official MoHRE URL captured 2026-05-19. This item can be used in drafts and progressed toward publish after owner review. Two scope thresholds apply: 50+ employees and 20–49 employees — do not generalize to all companies. Financial contributions from 1 July 2026 for non-compliant companies. Recheck MoHRE source immediately before publish. Contribution amount not yet captured — do not publish a specific figure.
 
 ---
 
@@ -341,4 +396,4 @@ This is not generic HR news. Guidex content in this area should be practical and
 ---
 
 *This is a source ledger — internal use only. Nothing in this file is published. No admin action. No DB write.*
-*Last updated: 2026-05-18 — Source A1 (MoHRE ILOE fines news, Dec 2023) and Source B (MoHRE basic health insurance guidance) captured with URLs. Source C (Emiratisation 30 June 2026) is a research signal only — stable URL not yet captured. Dedicated verification file created at docs/content-drafts/verification/uae-emiratisation-30-june-2026-source-check.md. All content publishing blocked pending owner review and pre-publish source recheck.*
+*Last updated: 2026-05-19 (Phase 6C-22) — Source C (Emiratisation) updated from source_signal_only to stable_url_captured. Two stable MoHRE URLs captured: (1) 7 May 2026 news article confirming 30 June 2026 deadline; (2) Emiratisation targets page confirming two scope thresholds — 50+ employees (1% semi-annual / 2% annual growth in skilled jobs) and 20–49 employees (1 UAE national in skilled job). Financial contributions from 1 July 2026 for non-compliant companies. Calendar item C updated from blocked_until_stable_source to can_use_after_recheck. Claims allowed #8 updated to reflect captured URLs. Claims blocked table updated — Emiratisation deadline row removed (now allowed); new rows added for contribution amount, free zone scope, and skilled job definition. Sources still needed: ILOE scheme page, health insurance recheck, skilled jobs definition, financial contribution amount, optional penalty Cabinet Decision.*

@@ -4,6 +4,7 @@ import { getPublishedGuideBySlug, getPublishedGuidesForBand } from "@/lib/db/rea
 import { RELATED_GUIDES } from "@/lib/related-guides";
 import StepCard from "@/components/StepCard";
 import { GuideCta } from "@/components/GuideCta";
+import SourceNote from "@/components/SourceNote";
 import type { Metadata } from "next";
 
 const WHATSAPP_HREF = "https://wa.me/971506304817";
@@ -191,6 +192,16 @@ export default function TrcPage() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Source note */}
+      <div className="mb-10">
+        <SourceNote
+          status="confirmed"
+          note="TRC eligibility and process based on FTA official guidelines via EmaraTax. Requirements differ by applicant type and residency route."
+          sourceLabel="Federal Tax Authority"
+          lastChecked="Checked May 2026"
+        />
       </div>
 
       {/* Steps */}

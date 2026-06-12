@@ -222,7 +222,25 @@ When approved for publish:
 
 ---
 
+## Phase 6C-49 correction — public notes fields
+
+**Date:** 2026-05-22 | **Issue:** Internal label "Calendar Item B" / "Пункт B" was imported into public-facing `en_notes` / `ru_notes` fields. Also "2026-специфичным" compound in RU notes.
+
+**Corrected `en_notes` (for Phase 6C-50 DB write):**
+```
+Applies to private-sector mainland companies with 50 or more employees only. For companies with 20 to 49 employees: the June 30 2026 deadline for that band has not been confirmed from an official 2026 source. Check with MoHRE for your applicable deadline.
+```
+
+**Corrected `ru_notes` (for Phase 6C-50 DB write):**
+```
+Распространяется только на компании частного сектора материкового ОАЭ с 50 и более сотрудниками. Для компаний с 20–49 сотрудниками: дата 30 июня 2026 года для этой категории не подтверждена официальным источником 2026 года. Уточните применимый срок в MoHRE.
+```
+
+No factual changes — scope fact preserved. Internal labels removed, RU naturalness fixed. DB write requires Phase 6C-50 approval.
+
+---
+
 *This is a draft file — internal use only. Not for publish. No admin action. No DB write.*
-*Created: 2026-05-20 (Phase 6C-35). Updated: 2026-05-20 (Phase 6C-36) — Item B reclassified to HOLD. Item A promoted to owner_review_ready.*
+*Created: 2026-05-20 (Phase 6C-35). Updated: 2026-05-20 (Phase 6C-36) — Item B reclassified to HOLD. Item A promoted to owner_review_ready. Updated: 2026-05-22 (Phase 6C-49) — corrected public notes text added.*
 *Item A: owner_review_ready — import pending owner approval + pre-import source recheck.*
-*Item B: HOLD — 30 June 2026 not confirmed for 20–49 employee band from captured 2026-specific MoHRE source. Do not import.*
+*Item B: HOLD — 30 June 2026 not confirmed for 20–49 employee band from official MoHRE sources.*

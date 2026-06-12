@@ -119,9 +119,9 @@ Free zone companies: the MoHRE sources reviewed for this article do not confirm 
 
 MoHRE has confirmed 30 June 2026 as the deadline for private-sector companies to achieve their first-half 2026 Emiratisation targets. The announcement was published by MoHRE on 7 May 2026. Companies that miss the deadline face financial contributions starting from 1 July 2026.
 
-For companies with 50 or more employees, the requirement is to achieve 1% semi-annual growth in their Emiratisation rate in skilled jobs, equivalent to the annual 2% growth target, for the first half of 2026. This is the threshold for which the 30 June 2026 deadline is confirmed in MoHRE's official communications. Separate Emiratisation requirements apply to companies with 20 to 49 employees. These companies are required to have at least one UAE national in a skilled job. The applicable 2026 deadline for this band should be verified directly with MoHRE, as the captured 2026-specific source does not clearly state June 30 applies to this category.
+For companies with 50 or more employees, the requirement is to achieve 1% semi-annual growth in their Emiratisation rate in skilled jobs, equivalent to the annual 2% growth target, for the first half of 2026. This is the threshold for which the 30 June 2026 deadline is confirmed in MoHRE's official communications. Separate Emiratisation requirements apply to companies with 20 to 49 employees. These companies are required to have at least one UAE national in a skilled job. The applicable 2026 deadline for this band should be verified directly with MoHRE, as the 2026 MoHRE sources do not clearly confirm June 30 applies to this category.
 
-Before 30 June, companies with 50 or more employees should verify their current Emiratisation headcount in skilled jobs and confirm their progress toward the 1% growth target. The specific financial contribution amount for failure to meet the semi-annual target has not been confirmed by MoHRE in a format suitable for Guidex to report. Verify the current contribution schedule with MoHRE or a qualified HR adviser before taking decisions based on a specific figure.
+Before 30 June, companies with 50 or more employees should verify their current Emiratisation headcount in skilled jobs and confirm their progress toward the 1% growth target. The specific financial contribution amount for failure to meet the semi-annual target has not been confirmed in MoHRE's official communications. Verify the current contribution schedule with MoHRE or a qualified HR adviser before taking decisions based on a specific figure.
 
 This deadline applies to private-sector companies. Scope for free zone companies has not been confirmed from an official MoHRE source. If your company operates in a free zone, check your obligations directly with MoHRE.
 
@@ -141,14 +141,14 @@ Emiratisation counting is based on UAE nationals in skilled jobs. The exact cate
 ### What not to assume
 
 - That free zone companies are exempt. Scope for free zone companies has not been confirmed from an official source in either direction.
-- The exact financial contribution amount. Historical contribution rates exist but a 2026 semi-annual specific amount has not been confirmed by Guidex from an official source.
+- The exact financial contribution amount. Historical contribution rates exist but a 2026 semi-annual specific amount has not been confirmed from an official MoHRE source.
 - That any role qualifies. The definition of skilled jobs for Emiratisation counting should be verified with MoHRE for your specific workforce.
-- That companies with 20 to 49 employees have a June 30 2026 deadline. Separate requirements apply to this band, but the June 30 2026 date for this category was not confirmed from the 2026-specific MoHRE source reviewed for this article.
+- That companies with 20 to 49 employees have a June 30 2026 deadline. Separate requirements apply to this band, but the June 30 2026 date for this category was not confirmed from the official MoHRE sources reviewed.
 - That companies with fewer than 20 employees have Emiratisation obligations. No official source reviewed for this article confirms obligations for sub-20 employee companies.
 
 ### Source note
 
-Two official MoHRE sources support this article. The MoHRE news page published 7 May 2026 confirms the 30 June 2026 deadline for the first-half Emiratisation targets for private-sector companies. This source is the basis for the June 30 deadline as it applies to companies with 50 or more employees. The MoHRE Emiratisation targets page confirms the 1% semi-annual growth requirement for companies with 50 or more employees, and also confirms that a separate Emiratisation threshold exists for companies with 20 to 49 employees (1 UAE national in a skilled job). The 2026-specific deadline for the 20–49 band is not clearly stated in the captured sources. The article accordingly directs readers in this band to check directly with MoHRE. Both URLs must be checked immediately before this article is published to confirm they are live and unchanged.
+Two official MoHRE sources support this article. The MoHRE news page published 7 May 2026 confirms the 30 June 2026 deadline for the first-half Emiratisation targets for private-sector companies. This source is the basis for the June 30 deadline as it applies to companies with 50 or more employees. The MoHRE Emiratisation targets page confirms the 1% semi-annual growth requirement for companies with 50 or more employees, and also confirms that a separate Emiratisation threshold exists for companies with 20 to 49 employees (1 UAE national in a skilled job). The 2026-specific deadline for the 20–49 band is not clearly stated in the official MoHRE sources reviewed. The article accordingly directs readers in this band to check directly with MoHRE. Both URLs must be checked immediately before this article is published to confirm they are live and unchanged.
 
 This article is an information resource. It is not HR or legal advice. For advice on your specific company situation, consult MoHRE or a qualified HR adviser.
 
@@ -217,9 +217,9 @@ MoHRE подтвердил 30 июня 2026 года как полугодово
 
 MoHRE подтвердил 30 июня 2026 года как срок для компаний частного сектора по выполнению полугодовых целей Emiratisation. Официальное сообщение было опубликовано MoHRE 7 мая 2026 года. Компании, не выполнившие целевые показатели, несут финансовые обязательства с 1 июля 2026 года.
 
-Для компаний с 50 и более сотрудниками требование предполагает рост доли граждан ОАЭ на квалифицированных должностях на 1% в первом полугодии, что соответствует годовому целевому показателю в 2%. Именно для этой категории срок 30 июня 2026 года подтверждён официальными материалами MoHRE. Для компаний с 20 до 49 сотрудников действует отдельное требование по Emiratisation: как минимум один гражданин ОАЭ должен быть трудоустроен на квалифицированной должности. Применимый срок 2026 года для этой категории следует уточнить непосредственно в MoHRE, поскольку захваченный источник 2026 года не подтверждает явно применимость даты 30 июня к компаниям с 20–49 сотрудниками.
+Для компаний с 50 и более сотрудниками требование предполагает рост доли граждан ОАЭ на квалифицированных должностях на 1% в первом полугодии, что соответствует годовому целевому показателю в 2%. Именно для этой категории срок 30 июня 2026 года подтверждён официальными материалами MoHRE. Для компаний с 20 до 49 сотрудников действует отдельное требование по Emiratisation: как минимум один гражданин ОАЭ должен быть трудоустроен на квалифицированной должности. Применимый срок 2026 года для этой категории следует уточнить непосредственно в MoHRE, поскольку официальные источники MoHRE 2026 года не подтверждают явно применимость даты 30 июня к компаниям с 20–49 сотрудниками.
 
-До 30 июня компаниям с 50 и более сотрудниками следует проверить текущее количество граждан ОАЭ на квалифицированных позициях и оценить прогресс в достижении нормы 1% роста. Конкретная сумма финансовых взносов за несоблюдение полугодового срока в 2026 году не подтверждена MoHRE в виде, пригодном для публикации на Guidex. Рекомендуем уточнить актуальный размер взносов непосредственно в MoHRE или у квалифицированного HR-консультанта.
+До 30 июня компаниям с 50 и более сотрудниками следует проверить текущее количество граждан ОАЭ на квалифицированных позициях и оценить прогресс в достижении нормы 1% роста. Конкретная сумма финансовых взносов за несоблюдение полугодового срока в 2026 году не подтверждена в официальных материалах MoHRE. Рекомендуем уточнить актуальный размер взносов непосредственно в MoHRE или у квалифицированного HR-консультанта.
 
 Данный срок распространяется на компании частного сектора. Применимость требований к компаниям в свободных зонах официально не подтверждена в доступных источниках MoHRE. Если ваша компания зарегистрирована в свободной зоне, уточните свои обязательства по Emiratisation непосредственно в MoHRE.
 
@@ -233,7 +233,7 @@ MoHRE подтвердил 30 июня 2026 года как срок для ко
 |------|--------|----------|
 | Срок | 30 июня 2026 | MoHRE, новость от 7 мая 2026 |
 | Компании с 50+ сотрудниками | Рост доли граждан ОАЭ на квалифицированных должностях на 1% за полугодие (2% годовой показатель) | Страница целей Emiratisation, MoHRE |
-| Компании с 20–49 сотрудниками | Отдельное требование: минимум 1 гражданин ОАЭ на квалифицированной должности. Применимый срок 2026 года для этой категории не подтверждён захваченным источником 2026 года. Уточнить в MoHRE | Страница целей Emiratisation (требование подтверждено); дата 30 июня 2026 для данной категории не подтверждена |
+| Компании с 20–49 сотрудниками | Отдельное требование: минимум 1 гражданин ОАЭ на квалифицированной должности. Применимый срок 2026 года для этой категории не подтверждён официальными источниками MoHRE 2026 года. Уточнить в MoHRE | Страница целей Emiratisation (требование подтверждено); дата 30 июня 2026 для данной категории не подтверждена |
 | Компании менее 20 сотрудников | Обязательства не подтверждены официальным источником | Не указано в источниках MoHRE |
 | Финансовые взносы | Начисляются с 1 июля 2026 для компаний с 50+ сотрудниками, не выполнивших норму | Страница целей Emiratisation, MoHRE |
 | Сумма взносов | Не опубликована в подтверждённом источнике 2026 года | Уточнить в MoHRE |
@@ -245,7 +245,7 @@ MoHRE подтвердил 30 июня 2026 года как срок для ко
 
 Компании частного сектора с 50 и более сотрудниками, работающие в ОАЭ. Именно для этой категории срок 30 июня 2026 года подтверждён официальными источниками MoHRE, использованными для данной статьи.
 
-Компании с 20–49 сотрудниками: для данной категории действуют отдельные требования по Emiratisation. Применимый срок 2026 года для этой категории не подтверждён захваченным источником 2026 года, рассмотренным для данной статьи. Если в вашей компании 20–49 сотрудников, проверьте актуальные требования и сроки Emiratisation непосредственно в MoHRE.
+Компании с 20–49 сотрудниками: для данной категории действуют отдельные требования по Emiratisation. Применимый срок 2026 года для этой категории не подтверждён официальными источниками MoHRE 2026 года, рассмотренными для данной статьи. Если в вашей компании 20–49 сотрудников, проверьте актуальные требования и сроки Emiratisation непосредственно в MoHRE.
 
 Компании в свободных зонах: источники MoHRE, изученные для данной статьи, не подтверждают напрямую, распространяются ли требования Emiratisation на компании в свободных зонах. Уточните ситуацию в MoHRE, если ваша компания зарегистрирована в свободной зоне.
 
@@ -261,14 +261,14 @@ MoHRE подтвердил 30 июня 2026 года как срок для ко
 ### RU what not to assume
 
 - Что компании в свободных зонах освобождены от требований. Применимость к свободным зонам не подтверждена официальным источником ни в одном из направлений.
-- Конкретную сумму финансовых взносов. Guidex не публикует исторические ставки в качестве подтверждённых данных для 2026 года.
+- Конкретную сумму финансовых взносов. Исторические ставки взносов существуют, однако сумма для 2026 года официально не подтверждена.
 - Что любая должность учитывается при подсчёте. Перечень квалифицированных должностей следует уточнить в MoHRE.
-- Что для компаний с 20–49 сотрудниками срок составляет 30 июня 2026. Для данной категории действуют отдельные требования, но дата 30 июня 2026 для этой группы не подтверждена в 2026-специфичном источнике MoHRE, рассмотренном для данной статьи.
+- Что для компаний с 20–49 сотрудниками срок составляет 30 июня 2026. Для данной категории действуют отдельные требования, но дата 30 июня 2026 для этой группы не подтверждена в источниках MoHRE 2026 года, рассмотренных для данной статьи.
 - Что компании менее 20 сотрудников не имеют обязательств. Источники MoHRE не подтверждают обязательства для компаний с менее чем 20 сотрудниками.
 
 ### RU source note
 
-Данная статья основана на двух официальных источниках MoHRE. Новость MoHRE от 7 мая 2026 года подтверждает срок 30 июня 2026 для компаний частного сектора. Этот источник является основанием для даты 30 июня применительно к компаниям с 50 и более сотрудниками. Страница целей Emiratisation на сайте MoHRE подтверждает показатель 1% роста за полугодие для компаний с 50+ сотрудниками, а также наличие отдельного порога для компаний с 20–49 сотрудниками (1 гражданин ОАЭ на квалифицированной должности). Срок 2026 года для категории 20–49 сотрудников в захваченных источниках не указан явно. Статья соответственно направляет читателей из этой категории уточнять срок в MoHRE. Оба источника должны быть проверены непосредственно перед публикацией.
+Данная статья основана на двух официальных источниках MoHRE. Новость MoHRE от 7 мая 2026 года подтверждает срок 30 июня 2026 для компаний частного сектора. Этот источник является основанием для даты 30 июня применительно к компаниям с 50 и более сотрудниками. Страница целей Emiratisation на сайте MoHRE подтверждает показатель 1% роста за полугодие для компаний с 50+ сотрудниками, а также наличие отдельного порога для компаний с 20–49 сотрудниками (1 гражданин ОАЭ на квалифицированной должности). Срок 2026 года для категории 20–49 сотрудников в официальных источниках MoHRE не указан явно. Статья соответственно направляет читателей из этой категории уточнять срок в MoHRE. Оба источника должны быть проверены непосредственно перед публикацией.
 
 Данная статья является информационным ресурсом. Она не является юридической или HR-консультацией. По вопросам, касающимся конкретной ситуации вашей компании, обращайтесь в MoHRE или к квалифицированному HR-специалисту.
 

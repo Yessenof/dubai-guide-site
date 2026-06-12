@@ -90,6 +90,30 @@ db_status:               not_touched
 
 ---
 
+### Source D — FTA VAT return filing deadline
+
+| Field | Value |
+|---|---|
+| Authority | Federal Tax Authority (FTA) — tax.gov.ae |
+| Purpose | Official FTA guidance on when UAE VAT returns and payments are due |
+| Source type | official |
+| Reliability | official |
+| URL | https://tax.gov.ae/DataFolder/Files/Pdf/4-steps-file-vat-returns.pdf |
+| Access date | 2026-05-19 |
+| Verification status | captured_url_present — recheck_before_publish |
+| Re-check before publish | Yes — confirm PDF is still live and deadline unchanged |
+
+#### Facts captured from this source
+
+- UAE VAT returns must be submitted and VAT payment made **by the 28th day of the month following the end of each Tax Period** (or the next working day if the 28th falls on a non-working day).
+- Tax Period is usually one calendar quarter for most registrants; monthly periods apply in specific circumstances.
+- This is not a fixed annual public date — the deadline recurs every tax period end.
+- This source is relevant for: (a) business reminders in the Guidex Calendar, (b) any content explaining VAT compliance obligations after registration.
+
+**Calendar note:** VAT return deadlines are relative, not fixed annual public dates. In the Guidex Calendar, VAT return reminders should be framed as quarterly business reminders (e.g., 28 April, 28 July, 28 October, 28 January for quarter-end filers), clearly labeled as business compliance reminders rather than public regulatory deadlines for all readers.
+
+---
+
 ## Claims allowed now
 
 The following claims may appear in internal draft planning only. Publishing remains blocked pending owner review and a pre-publish source recheck.
@@ -283,4 +307,4 @@ This is not just a tax definition page. Guidex VAT threshold content should expl
 ---
 
 *This is a source ledger — internal use only. Nothing in this file is published. No admin action. No DB write.*  
-*Last updated: 2026-05-18 — two official FTA sources captured (registration topic page + service page). Penalty source not yet captured. Free zone and non-resident treatment deferred to future content phases.*
+*Last updated: 2026-05-19 (Phase 6C-22) — Source D added: FTA VAT return deadline (28th day of month following tax period end). Total: 4 sources captured (registration topic, registration service, deregistration, return deadline). Penalty source not yet captured. Free zone and non-resident treatment deferred.*

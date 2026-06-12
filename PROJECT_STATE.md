@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-11 (Phase 6C-99G-A COMPLETE -- docs/design only. Source Notes + Content Trust Model created. 4 files in docs/seo-rag/: SOURCE_NOTES_MODEL.md, CONTENT_TRUST_RULES.md, SOURCE_NOTE_UI_PLAN.md, PHASE_6C_99G_A_REPORT.md. 13-field source note model, 7 trust rules, per-page audit for 10 priority groups. No deploy, no DB, no live changes. Next: 6C-99G-B — SourceNote component + apply to 6 high-risk groups. 6C-100C-B: watch FAHR from Jul 26.)
+Last updated: 2026-06-12 (Phase 6C-99G-B LOCAL COMPLETE -- SourceNote component built + applied to 11 target routes (6 EN + 5 RU, plus 6 guide pages via slug map). Build clean: 88 pages, 0 TypeScript errors. All route HTML confirmed. Regression clean: hreflang, BreadcrumbList, TRC related guides, sitemap, GITEX, Hijri/Mawlid amber, August amber all intact. LOCAL ONLY — no push, no deploy. Next: push + deploy when owner approves.)
 
 ---
 

@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-12 (Phase 6C-99G-B LOCAL COMPLETE -- SourceNote component built + applied to 11 target routes (6 EN + 5 RU, plus 6 guide pages via slug map). Build clean: 88 pages, 0 TypeScript errors. All route HTML confirmed. Regression clean: hreflang, BreadcrumbList, TRC related guides, sitemap, GITEX, Hijri/Mawlid amber, August amber all intact. LOCAL ONLY — no push, no deploy. Next: push + deploy when owner approves.)
+Last updated: 2026-06-12 (Phase 6C-99G-PROD COMPLETE -- SourceNote trust layer live on production. Commit 861300d. 12 routes live. All route QA pass (12/12 × 200). EN/RU language isolation confirmed. All regressions clean. PM2 online 145.7MB. Phase closed. Next: 6C-99G-B "build second" scope — GITEX event source note, /life-setup hub note.)
 
 ---
 

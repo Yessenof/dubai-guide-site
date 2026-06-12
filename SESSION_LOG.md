@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-12 — Phase 6C-99G-PROD COMPLETE -- SourceNote trust layer live on production
+
+Commit 861300d. Push: origin/main. Deploy: 51s build, ~1s PM2 reload, online 145.7MB. 12/12 live QA pass. EN/RU language isolation confirmed (RU pages: Информация основана, Маршруты и пороговые значения, Условия и процедура, Требования к имущественному, Процедура регистрации, Требования к открытию; EN pages: no RU text). All regressions clean: hreflang en/ru/x-default on visas/family, BreadcrumbList on visa + life-setup pages, TRC related guides (count 1), sitemap has visas/family, visas/golden, golden-visa-dubai-property, gitex-global-2026, August amber count 1, June amber count 1. Rollback command available if needed: ssh root@85.9.203.69 "cd /var/www/guidex && bash scripts/rollback.sh". Phase 6C-99G closed.
+
+---
+
 ## 2026-06-12 — Phase 6C-99G-B LOCAL COMPLETE -- SourceNote component + 11 high-risk routes
 
 New component: components/SourceNote.tsx — confirmed (compact gray ● dot) + provisional (amber box, matching calendar pattern). Applied to: (1) /visas/family + /ru/visas/family — ICA/GDRFA note, confirmed; (2) /visas/golden + /ru/visas/golden — ICA/GDRFA/DLD note, confirmed; (3) /guides/tax-residency-certificate-uae + /ru equivalent — FTA/EmaraTax note, confirmed, placed after "Why Guidex" section, before steps; (4) Standard guide template EN+RU ([slug]/page.tsx) — SOURCE_NOTES/SOURCE_NOTES_RU slug-keyed maps for golden-visa-dubai-property, mainland-company-setup-dubai, open-business-bank-account-dubai. All 11 routes carry correct EN or RU text. No provisional variant used (all targets are confirmed status). Build: 88 pages, 0 TypeScript errors, all static HTML verified. Regression: all 6C-99F fixes intact — hreflang, BreadcrumbList, TRC related guides, sitemap, GITEX, Hijri/Mawlid amber, August amber. LOCAL ONLY. Scope strictly respected: no DB, no admin, no JSON-LD, no GITEX page (in scope for "build second" per plan), no /life-setup (deferred).

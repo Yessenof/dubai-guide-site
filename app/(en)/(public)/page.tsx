@@ -23,6 +23,12 @@ import { localizeValue } from "@/lib/localize-value";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
+// Homepage surfaces "current month" calendar content computed from new Date().
+// Without revalidate, Next.js prerenders this page once at build time and
+// freezes that date until the next deploy — revalidate forces a periodic
+// recompute so "current month" stays correct between deploys.
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Guidex — Dubai Guides, UAE Calendar & Expat Life Setup",
   description:
@@ -118,19 +124,25 @@ function buildCarouselSlides(
 
   const slides: CarouselSlide[] = [];
 
-  // 1. Current and upcoming monthly calendar pages — most time-sensitive product
+  // 1. Current and upcoming monthly calendar pages — most time-sensitive product.
+  // A past month is only eligible if explicitly pinned via featuredHomepage —
+  // otherwise it must never outrank or tie with the current/future months.
   const monthlyPages = calPages
     .filter((cp) => {
       if (!cp.year || !cp.month) return false;
-      // Include current month, next 3 months, and 1 previous month (for transition)
+      if (cp.featuredHomepage === 1) return true;
       if (cp.year > curYear) return true;
-      if (cp.year === curYear && cp.month >= curMonth - 1 && cp.month <= curMonth + 3) return true;
+      if (cp.year === curYear && cp.month >= curMonth && cp.month <= curMonth + 3) return true;
       return false;
     })
     .sort((a, b) => {
-      const aDiff = Math.abs((a.year! - curYear) * 12 + ((a.month ?? 0) - curMonth));
-      const bDiff = Math.abs((b.year! - curYear) * 12 + ((b.month ?? 0) - curMonth));
-      return aDiff - bDiff; // closest month first
+      const aKey = a.year! * 12 + (a.month ?? 0);
+      const bKey = b.year! * 12 + (b.month ?? 0);
+      const curKey = curYear * 12 + curMonth;
+      const aIsPast = aKey < curKey;
+      const bIsPast = bKey < curKey;
+      if (aIsPast !== bIsPast) return aIsPast ? 1 : -1; // featured past months sort after current/future
+      return aKey - bKey; // chronological — current month first, then future
     });
 
   // 2. Topic calendar pages (compliance, deadlines — no month)

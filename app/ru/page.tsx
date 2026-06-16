@@ -23,6 +23,9 @@ import type {
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
 
+// See app/(en)/(public)/page.tsx — same freshness fix applied to the RU homepage.
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Guidex Consulting — Визы, компании и жизнь в Дубае",
   description:
@@ -102,18 +105,24 @@ function buildCarouselSlides(
 
   const slides: CarouselSlide[] = [];
 
-  // 1. Current and upcoming monthly calendar pages
+  // 1. Current and upcoming monthly calendar pages. A past month is only
+  // eligible if explicitly pinned via featuredHomepage.
   const monthlyPages = calPages
     .filter((cp) => {
       if (!cp.year || !cp.month) return false;
+      if (cp.featuredHomepage === 1) return true;
       if (cp.year > curYear) return true;
-      if (cp.year === curYear && cp.month >= curMonth - 1 && cp.month <= curMonth + 3) return true;
+      if (cp.year === curYear && cp.month >= curMonth && cp.month <= curMonth + 3) return true;
       return false;
     })
     .sort((a, b) => {
-      const aDiff = Math.abs((a.year! - curYear) * 12 + ((a.month ?? 0) - curMonth));
-      const bDiff = Math.abs((b.year! - curYear) * 12 + ((b.month ?? 0) - curMonth));
-      return aDiff - bDiff;
+      const aKey = a.year! * 12 + (a.month ?? 0);
+      const bKey = b.year! * 12 + (b.month ?? 0);
+      const curKey = curYear * 12 + curMonth;
+      const aIsPast = aKey < curKey;
+      const bIsPast = bKey < curKey;
+      if (aIsPast !== bIsPast) return aIsPast ? 1 : -1;
+      return aKey - bKey;
     });
 
   const topicPages = calPages.filter((cp) => !cp.month || !cp.year);

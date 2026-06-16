@@ -560,6 +560,26 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
         ))}
       </div>
 
+      {/* ── Mobile: "This month" highlights — shown above the grid so the   ── */}
+      {/* ── answer-bearing content renders before the visual calendar ──────── */}
+      {!selectedDay && groupedHighlights.length > 0 && (
+        <div className="md:hidden mb-5">
+          <div className="w-5 h-0.5 bg-brass rounded-full mb-2.5" />
+          <p className="text-[12px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
+            {isRu ? "В этом месяце в ОАЭ" : "This month in the UAE"}
+          </p>
+          <div className="space-y-1.5">
+            {groupedHighlights.map((entry, i) =>
+              Array.isArray(entry) ? (
+                <GroupedAgendaRow key={i} items={entry} locale={locale} />
+              ) : (
+                <AgendaRow key={i} item={entry} locale={locale} />
+              )
+            )}
+          </div>
+        </div>
+      )}
+
       {/* ── Desktop: two-column layout ─────────────────────────────────────── */}
       <div className="md:grid md:grid-cols-[1fr_288px] md:gap-6 md:items-start">
 
@@ -712,24 +732,6 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
             </div>
           )}
 
-          {/* Mobile: no selection — "This month" mini list */}
-          {!selectedDay && groupedHighlights.length > 0 && (
-            <div className="md:hidden mt-5">
-              <div className="w-5 h-0.5 bg-brass rounded-full mb-2.5" />
-              <p className="text-[12px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
-                {isRu ? "В этом месяце в ОАЭ" : "This month in the UAE"}
-              </p>
-              <div className="space-y-1.5">
-                {groupedHighlights.map((entry, i) =>
-                  Array.isArray(entry) ? (
-                    <GroupedAgendaRow key={i} items={entry} locale={locale} />
-                  ) : (
-                    <AgendaRow key={i} item={entry} locale={locale} />
-                  )
-                )}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Right column: desktop side panel */}

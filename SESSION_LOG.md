@@ -5,6 +5,36 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-18 — Phase 6C-CONTENT-01-FIX-BODY COMPLETE -- Production October calendar en_body/ru_body corrected to AED 50M+
+
+Patched production calendar_pages row slug=october-2026-dubai-calendar: en_body "AED 150 million and above" → "AED 50 million and above"; ru_body "от 150 млн дирхамов" → "от 50 млн дирхамов". One substitution each, same row, rowcount=1. Server backup: guides.db.pre-einvoicing-body-fix-6c-content-01-fix-body-20260618-093925. Local backup: backups/production-db/same. MD5 match confirmed. dates_json OCT-04-EINV confirmed already correct (50M+, not touched). ISR cache files deleted + pm2 reload (graceful, zero downtime, no rebuild) to flush in-process cache. Live EN/RU QA: 0 "150 million"/"150 млн" hits; "AED 50 million and above" present (2 hits EN); "от 50 млн дирхамов" present (4 hits RU - 2 body + 2 label); Oct 30 confirmed unchanged; HTTP 200 both pages. No deploy, no commit, no push, no schema, no admin, no AI Inbox. All three e-invoicing threshold corrections now complete in production.
+
+---
+
+## 2026-06-17 — Phase 6C-CONTENT-01-DEV-SYNC COMPLETE -- Local dev DB e-invoicing threshold synced to 50M+
+
+Patched local data/guides.db, calendar_pages row slug=october-2026-dubai-calendar: (1) dates_json OCT-04-EINV label_en "AED 150M+" → "AED 50M+", label_ru "от 150 млн дирхамов" → "от 50 млн дирхамов"; (2) en_body "AED 150 million and above" → "AED 50 million and above"; (3) ru_body "ежегодные поставки от 150 млн дирхамов" → "ежегодные поставки от 50 млн дирхамов". All changes within the same row. Structural diff: exactly 1 dates_json item changed. Route verification: EN e-invoicing+150M hits=0, 50M+ hits=2; RU 150 млн hits=0, 50 млн hits=4. Backup: data/guides.db.pre-local-einvoicing-dev-sync-6c-content-01-dev-sync-20260617-203053. No SSH, no deploy, no commit, no schema. Production DB not touched.
+
+---
+
+## 2026-06-17 — Phase 6C-UI-02 LOCAL COMPLETE -- Premium visual refresh (awaiting deploy approval)
+
+Audit + implementation of 5 targeted CSS opacity changes. FeaturedSlider: custom gradient mid-stop 0.65→0.52, default bottom navy/95→navy/80. EN+RU homepage GRAD_* constants: all 0.97→0.82. EN+RU primary hero cards: Calendar navy/97→navy/82, Life Setup 0.97→0.82. DetailHero: from-black/85→from-black/72 via-black/45→via-black/38 to-black/10→to-black/05. StickyRouteCta: extended hide logic to cover /calendar, /calendar/*, /ru/calendar, /ru/calendar/* (was only hiding on /find-my-visa). Build: 88/88 pages, 0 TS errors. Playwright automated visual QA: 32 screenshots (16 viewport + 16 full-page), desktop (1280×900) + mobile (390×844). All 6 check groups pass: carousel lighter ✓, hero cards lighter ✓, calendar StickyRouteCta absent ✓, DetailHero image depth ✓, StickyRouteCta rules correct ✓, no content regression ✓. Production AED 50M+ e-invoicing confirmed via SSH. No deploy, no commit. Docs: audit, decision, screenshots, final report in docs/content-drafts/ui/.
+
+---
+
+## 2026-06-17 — Phase 6C-CONTENT-01-CLEANUP COMPLETE -- Stale e-invoicing July draft deleted from local dev DB
+
+Stale event `uae-e-invoicing-asp-deadline-july-2026` (status=draft, date 2026-07-31 — superseded deadline) confirmed absent from production, present only in local dev DB. Parameterized Python delete: pre-check, rowcount=1 assertion, post-check. Local backup: data/guides.db.pre-einvoicing-july-draft-cleanup-6c-content-01-cleanup-20260617-112027. Production DB untouched (stale draft was never in production). 5 remaining events (all published) confirmed untouched. Production Oct 2026 AED 50M+ confirmed live via curl after cleanup. No deploy, no commit, no DB schema change.
+
+---
+
+## 2026-06-16 — Phase 6C-CONTENT-01-FIX COMPLETE -- October 2026 e-invoicing threshold patched on production
+
+Patched production DB calendar_pages row (slug=october-2026-dubai-calendar): OCT-04-EINV label_en changed "AED 150M+" → "AED 50M+", label_ru "от 150 млн" → "от 50 млн дирхамов". Python parameterized update via SSH: pre-check (count=1), rowcount=1, verified. Server-side backup: /var/www/guidex/data/guides.db.pre-einvoicing-threshold-fix-6c-content-01-fix-20260616-223325. Live curl confirmed AED 50M+ visible on EN + RU pages (200 OK). Zero false positive from diff check. No deploy, no commit. Local dev DB NOT patched (production-only fix).
+
+---
+
 ## 2026-06-12 — Phase 6C-99G-PROD COMPLETE -- SourceNote trust layer live on production
 
 Commit 861300d. Push: origin/main. Deploy: 51s build, ~1s PM2 reload, online 145.7MB. 12/12 live QA pass. EN/RU language isolation confirmed (RU pages: Информация основана, Маршруты и пороговые значения, Условия и процедура, Требования к имущественному, Процедура регистрации, Требования к открытию; EN pages: no RU text). All regressions clean: hreflang en/ru/x-default on visas/family, BreadcrumbList on visa + life-setup pages, TRC related guides (count 1), sitemap has visas/family, visas/golden, golden-visa-dubai-property, gitex-global-2026, August amber count 1, June amber count 1. Rollback command available if needed: ssh root@85.9.203.69 "cd /var/www/guidex && bash scripts/rollback.sh". Phase 6C-99G closed.

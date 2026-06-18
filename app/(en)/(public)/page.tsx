@@ -99,12 +99,12 @@ function formatShortDate(iso: string): string {
 }
 
 // Gradient bottom colors for visual variety per content type
-const GRAD_CALENDAR    = "rgba(4,47,46,0.97)";   // deep teal-green
-const GRAD_COMPLIANCE  = "rgba(55,28,0,0.97)";   // deep amber
-const GRAD_EVENT       = "rgba(10,22,40,0.97)";   // navy (default)
-const GRAD_NEWS        = "rgba(18,18,40,0.97)";   // indigo-navy
-const GRAD_GUIDE_VISA  = "rgba(10,22,40,0.97)";   // navy
-const GRAD_GUIDE_BIZ   = "rgba(20,15,5,0.97)";    // dark brown
+const GRAD_CALENDAR    = "rgba(4,47,46,0.82)";   // deep teal-green
+const GRAD_COMPLIANCE  = "rgba(55,28,0,0.82)";   // deep amber
+const GRAD_EVENT       = "rgba(10,22,40,0.82)";   // navy (default)
+const GRAD_NEWS        = "rgba(18,18,40,0.82)";   // indigo-navy
+const GRAD_GUIDE_VISA  = "rgba(10,22,40,0.82)";   // navy
+const GRAD_GUIDE_BIZ   = "rgba(20,15,5,0.82)";    // dark brown
 
 function buildCarouselSlides(
   news: NewsPostSummary[],
@@ -395,7 +395,7 @@ export default function HomePage() {
               className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
               sizes="(max-width: 672px) 45vw, 310px"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy/97 via-navy/72 to-navy/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy/82 via-navy/60 to-navy/15" />
             <div className="absolute inset-0 flex flex-col justify-end p-3">
               <p className="text-[10px] font-bold uppercase tracking-widest text-white/65 mb-0.5">
                 Calendar
@@ -431,7 +431,7 @@ export default function HomePage() {
             />
             <div
               className="absolute inset-0"
-              style={{ background: "linear-gradient(to top, rgba(75,40,5,0.97) 0%, rgba(105,60,12,0.62) 50%, rgba(165,105,38,0.10) 100%)" }}
+              style={{ background: "linear-gradient(to top, rgba(75,40,5,0.82) 0%, rgba(105,60,12,0.52) 50%, rgba(165,105,38,0.10) 100%)" }}
             />
             <div className="absolute inset-0 flex flex-col justify-end p-3">
               <p className="text-[10px] font-bold uppercase tracking-widest text-white/65 mb-0.5">

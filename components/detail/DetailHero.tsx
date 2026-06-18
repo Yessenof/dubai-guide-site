@@ -28,7 +28,7 @@ export default function DetailHero({ eyebrow, title, image, imageAlt }: Props) {
         sizes="(max-width: 672px) calc(100vw - 40px), 632px"
         priority
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/38 to-black/05" />
       <div className="absolute inset-0 flex flex-col justify-end p-5">
         <p className="text-[10px] font-semibold uppercase tracking-widest text-white/60 mb-1.5">
           {eyebrow}

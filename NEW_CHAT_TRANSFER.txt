@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-06-02 (Phase 6C-95C COMPLETE -- UAE Calendar UX live + Batch 1 imported. Commit d60c513. 22/22 live routes OK. Dec page: december-2026-uae-calendar. DB backup: .backup-pre-6c95c-20260602-120350. NEXT: 6C-95D -- F1 Abu Dhabi + GITEX detail event pages, July density, DFC/Global Village retry.)
+Last updated: 2026-06-17 (Phase 6C-UI-02 LOCAL COMPLETE -- Premium visual refresh. Lighter overlays (FeaturedSlider, EN+RU homepage hero cards, DetailHero). StickyRouteCta now hidden on /calendar/* and /ru/calendar/*. Build 88/88, 0 TS errors. Screenshot QA pass. No deploy yet — awaiting owner approval. NEXT: owner review → git commit → deploy via deploy-zero-downtime.sh.)
 
 WHAT TO ATTACH
 --------------

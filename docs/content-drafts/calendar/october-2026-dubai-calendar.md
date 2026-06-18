@@ -47,12 +47,12 @@ October 2026 in Dubai brings two major DWTC exhibitions: Beautyworld Dubai (6-8 
 В октябре 2026 года в Дубае проходят две крупные выставки в DWTC: Beautyworld Dubai (6-8 октября, юбилейное 30-е издание) и WETEX (20-22 октября, организатор DEWA). Важные даты для бизнеса: срок подачи декларации по НДС за III квартал (28 октября), дедлайн назначения ASP для электронных счетов-фактур для крупных компаний (30 октября) и старт Dubai Fitness Challenge 2026 (31 октября).
 
 ### en_body
-October 2026 in Dubai opens with Beautyworld Dubai, the 30th edition of the region's leading beauty and wellness trade show at Dubai World Trade Centre (6-8 October), organized by Messe Frankfurt Exhibition GmbH. WETEX 2026, the Water, Energy, Technology and Environment Exhibition, takes place 20-22 October at DWTC, organized by Dubai Electricity and Water Authority (DEWA). Quarterly UAE VAT filers should note 28 October as the Q3 2026 (July-September period) filing deadline. The e-invoicing Phase A ASP appointment deadline falls on 30 October for large taxpayers with annual supplies of AED 150 million and above. Dubai Fitness Challenge 2026, Dubai's 30-day citywide fitness campaign, is expected to launch on 31 October.
+October 2026 in Dubai opens with Beautyworld Dubai, the 30th edition of the region's leading beauty and wellness trade show at Dubai World Trade Centre (6-8 October), organized by Messe Frankfurt Exhibition GmbH. WETEX 2026, the Water, Energy, Technology and Environment Exhibition, takes place 20-22 October at DWTC, organized by Dubai Electricity and Water Authority (DEWA). Quarterly UAE VAT filers should note 28 October as the Q3 2026 (July-September period) filing deadline. The e-invoicing Phase A ASP appointment deadline falls on 30 October for large taxpayers with annual revenue exceeding AED 50 million. Dubai Fitness Challenge 2026, Dubai's 30-day citywide fitness campaign, is expected to launch on 31 October.
 
 Source dates in this calendar are drawn from official government and organizer announcements. Confirm compliance-related details with a qualified adviser before acting.
 
 ### ru_body
-Октябрь 2026 года в Дубае открывается выставкой Beautyworld Dubai -- юбилейный 30-й выпуск ведущей региональной ярмарки красоты и здоровья в Dubai World Trade Centre (6-8 октября), организованной Messe Frankfurt Exhibition GmbH. Следом проходит WETEX 2026, выставка воды, энергетики, технологий и экологии (20-22 октября, DWTC), организованная Dubai Electricity and Water Authority (DEWA). Для ежеквартальных плательщиков НДС 28 октября -- срок подачи декларации за III квартал 2026 года (период июль-сентябрь). 30 октября -- дедлайн для крупных налогоплательщиков (ежегодные поставки от 150 млн дирхамов) по назначению аккредитованного поставщика услуг (ASP) для e-invoicing Фаза A. Dubai Fitness Challenge 2026, 30-дневный городской фитнес-марафон, ожидается к запуску 31 октября.
+Октябрь 2026 года в Дубае открывается выставкой Beautyworld Dubai -- юбилейный 30-й выпуск ведущей региональной ярмарки красоты и здоровья в Dubai World Trade Centre (6-8 октября), организованной Messe Frankfurt Exhibition GmbH. Следом проходит WETEX 2026, выставка воды, энергетики, технологий и экологии (20-22 октября, DWTC), организованная Dubai Electricity and Water Authority (DEWA). Для ежеквартальных плательщиков НДС 28 октября -- срок подачи декларации за III квартал 2026 года (период июль-сентябрь). 30 октября -- дедлайн для крупных налогоплательщиков (годовая выручка свыше 50 млн дирхамов) по назначению аккредитованного поставщика услуг (ASP) для e-invoicing Фаза A. Dubai Fitness Challenge 2026, 30-дневный городской фитнес-марафон, ожидается к запуску 31 октября.
 
 Даты в этом календаре основаны на официальных объявлениях государственных органов и организаторов. По вопросам соблюдения требований законодательства рекомендуется проконсультироваться с квалифицированным советником.
 
@@ -210,8 +210,8 @@ October 2026 in Dubai: Beautyworld Dubai (6-8 Oct), WETEX 2026 organized by DEWA
 {
   "id": "OCT-04-EINV",
   "date": "2026-10-30",
-  "label_en": "E-invoicing Phase A: ASP appointment deadline for large businesses (AED 150M+) — 30 October",
-  "label_ru": "E-invoicing Фаза A: дедлайн назначения ASP для крупных компаний (от 150 млн дирхамов) — 30 октября",
+  "label_en": "E-invoicing Phase A: ASP appointment deadline for large businesses (AED 50M+) — 30 October",
+  "label_ru": "E-invoicing Фаза A: дедлайн назначения ASP для крупных компаний (от 50 млн дирхамов) — 30 октября",
   "short_label_en": "E-invoicing ASP",
   "short_label_ru": "E-invoicing ASP",
   "type": "compliance",
@@ -240,7 +240,7 @@ October 2026 in Dubai: Beautyworld Dubai (6-8 Oct), WETEX 2026 organized by DEWA
 - This is a CROSS-REFERENCE to the existing live page /calendar/uae-e-invoicing-2026-asp-deadline
 - Do NOT duplicate the full e-invoicing content
 - detail_url points to the existing calendar page (internal link, no is_external flag)
-- Oct 30 deadline: Phase A for large taxpayers with annual supplies >= AED 150 million
+- Oct 30 deadline: Phase A for large taxpayers with annual revenue exceeding AED 50 million
 - Source: MoF Phase A circular
 - Full details, source ledger, and compliance caveats are on the dedicated e-invoicing page
 - This item is L1 because all detail lives on the cross-linked page

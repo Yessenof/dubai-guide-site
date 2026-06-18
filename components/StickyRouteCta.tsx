@@ -6,8 +6,16 @@ import { usePathname } from "next/navigation";
 import { getLocaleFromPathname } from "@/lib/locale-path";
 import { pushEvent } from "@/lib/gtm";
 
-const HIDDEN_ON = ["/find-my-visa", "/ru/find-my-visa"];
 const SCROLL_THRESHOLD = 100;
+
+function isHiddenRoute(pathname: string): boolean {
+  // Exact exclusions
+  if (pathname === "/find-my-visa" || pathname === "/ru/find-my-visa") return true;
+  // Calendar hub and all monthly detail pages — interactive planning tool, not a reading surface
+  if (pathname === "/calendar" || pathname.startsWith("/calendar/")) return true;
+  if (pathname === "/ru/calendar" || pathname.startsWith("/ru/calendar/")) return true;
+  return false;
+}
 
 export default function StickyRouteCta() {
   const pathname = usePathname();
@@ -23,7 +31,7 @@ export default function StickyRouteCta() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  if (HIDDEN_ON.includes(pathname)) return null;
+  if (isHiddenRoute(pathname)) return null;
 
   return (
     /*

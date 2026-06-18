@@ -122,11 +122,11 @@ export default function FeaturedSlider({
                     <div
                       className="absolute inset-0"
                       style={{
-                        background: `linear-gradient(to top, ${slide.gradientFrom} 0%, rgba(10,22,40,0.65) 55%, rgba(10,22,40,0.08) 100%)`,
+                        background: `linear-gradient(to top, ${slide.gradientFrom} 0%, rgba(10,22,40,0.52) 55%, rgba(10,22,40,0.08) 100%)`,
                       }}
                     />
                   ) : (
-                    <div className="absolute inset-0 bg-gradient-to-t from-navy/95 via-navy/55 to-navy/10" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/55 to-navy/10" />
                   )}
 
                   {/* Content */}

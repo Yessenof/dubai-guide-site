@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-18 — Phase 6C-UI-02-PROD COMPLETE -- Premium visual refresh live on production
+
+Commit 22e8d8c. Push origin/main. Deploy: build 49s, PM2 graceful reload ~1s, online 146.4MB. 21 files committed: 5 UI component/page changes (FeaturedSlider, DetailHero, StickyRouteCta, page.tsx EN+RU), 3 memory files, 5 e-invoicing docs, 4 UI docs, 2 content docs, 2 package files. Screenshots excluded (16MB > 10MB threshold). HTTP QA: 13/13 routes 200 — December slug corrected (december-2026-uae-calendar not december-2026-dubai-calendar, no regression). E-invoicing: 0 "AED 150M"/"150 млн" hits on EN+RU October pages; AED 50M+/от 50 млн confirmed present. Homepage freshness: June→July→August order confirmed. GITEX, F1, sitemap all 200. StickyRouteCta verified via local Playwright QA (client-only component, not verifiable in server HTML): absent on calendar, present on guides, absent on find-my-visa. No rollback needed.
+
+---
+
 ## 2026-06-18 — Phase 6C-CONTENT-01-FIX-BODY COMPLETE -- Production October calendar en_body/ru_body corrected to AED 50M+
 
 Patched production calendar_pages row slug=october-2026-dubai-calendar: en_body "AED 150 million and above" → "AED 50 million and above"; ru_body "от 150 млн дирхамов" → "от 50 млн дирхамов". One substitution each, same row, rowcount=1. Server backup: guides.db.pre-einvoicing-body-fix-6c-content-01-fix-body-20260618-093925. Local backup: backups/production-db/same. MD5 match confirmed. dates_json OCT-04-EINV confirmed already correct (50M+, not touched). ISR cache files deleted + pm2 reload (graceful, zero downtime, no rebuild) to flush in-process cache. Live EN/RU QA: 0 "150 million"/"150 млн" hits; "AED 50 million and above" present (2 hits EN); "от 50 млн дирхамов" present (4 hits RU - 2 body + 2 label); Oct 30 confirmed unchanged; HTTP 200 both pages. No deploy, no commit, no push, no schema, no admin, no AI Inbox. All three e-invoicing threshold corrections now complete in production.

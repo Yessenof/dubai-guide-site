@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-18 (Phase 6C-CONTENT-01-FIX-BODY COMPLETE -- Production October 2026 calendar en_body/ru_body prose corrected: "AED 150 million" → "AED 50 million". Backup: guides.db.pre-einvoicing-body-fix-6c-content-01-fix-body-20260618-093925 (server + local, MD5 matched). PM2 reload for cache flush (zero downtime, no rebuild). Live QA: 0 "150 million"/"150 млн" hits on EN+RU. All e-invoicing threshold corrections complete in production. Local 6C-UI-02 visual changes still staged (no commit/deploy). Next: commit + deploy 6C-UI-02.)
+Last updated: 2026-06-18 (Phase 6C-UI-02-PROD COMPLETE -- Premium visual refresh deployed. Commit 22e8d8c. Build 49s. PM2 online 146.4MB. 13/13 routes 200 (December slug corrected to december-2026-uae-calendar). E-invoicing AED 50M+ confirmed live (0 stale 150M hits). Homepage June→July→August freshness confirmed. GITEX/F1/sitemap all 200. No rollback. Next: Phase 6C-EVENTS-CTR-01 — F1 + GITEX CTR/source/detail polish.)
 
 ---
 

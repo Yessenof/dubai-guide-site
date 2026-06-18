@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-06-17 (Phase 6C-UI-02 LOCAL COMPLETE -- Premium visual refresh. Lighter overlays (FeaturedSlider, EN+RU homepage hero cards, DetailHero). StickyRouteCta now hidden on /calendar/* and /ru/calendar/*. Build 88/88, 0 TS errors. Screenshot QA pass. No deploy yet — awaiting owner approval. NEXT: owner review → git commit → deploy via deploy-zero-downtime.sh.)
+Last updated: 2026-06-18 (Phase 6C-UI-02-PROD COMPLETE -- Commit 22e8d8c deployed. Build 49s, PM2 146.4MB. All e-invoicing threshold fixes live (AED 50M+). Premium visual refresh live: lighter overlays, calendar StickyRouteCta hidden. All routes 200. No rollback. NEXT: Phase 6C-EVENTS-CTR-01 — F1 + GITEX CTR/source/detail polish.)
 
 WHAT TO ATTACH
 --------------

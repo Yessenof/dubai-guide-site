@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-06-18 (Phase 6C-UI-02-PROD COMPLETE -- Commit 22e8d8c deployed. Build 49s, PM2 146.4MB. All e-invoicing threshold fixes live (AED 50M+). Premium visual refresh live: lighter overlays, calendar StickyRouteCta hidden. All routes 200. No rollback. NEXT: Phase 6C-EVENTS-CTR-01 — F1 + GITEX CTR/source/detail polish.)
+Last updated: 2026-06-19 (Phase 6C-EVENTS-DB-01 COMPLETE -- GITEX DB accuracy patch live. Phase 6C-EVENTS-CTR-01 complete locally (template only). Both phases uncommitted. NEXT: final local build check, then single commit+deploy for CTR-01 + DB-01 together. Files to stage: app/(en)/(public)/events/[slug]/page.tsx, app/ru/events/[slug]/page.tsx, PROJECT_STATE.md, SESSION_LOG.md, NEW_CHAT_TRANSFER.txt, docs/content-drafts/events/.)
 
 WHAT TO ATTACH
 --------------

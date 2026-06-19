@@ -5,6 +5,18 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-19 — Phase 6C-EVENTS-DB-01 COMPLETE -- GITEX Global 2026 DB accuracy patch live
+
+Production DB patched: gitex-global-2026 event row. 8 surgical replacements each in en_body/ru_body + 6 full field replacements (en_title, en_summary, en_meta_description, ru_title, ru_summary, ru_meta_description). Key corrections: (1) Scale Summit venue changed from implied "Expo City Dubai" to explicit "Dubai World Trade Centre (7 Dec)" across all content fields; (2) "First GITEX outside DWTC since 1981" removed — replaced with "Main GITEX Expo moves outside DWTC for the first time; Scale Summit remains at DWTC"; (3) 200,000+ visitors and 6,800+ companies replaced with "Not yet confirmed for 2026" in key facts tables; (4) source note corrected to hold scale figures as unconfirmed. Local dev DB also patched with same changes. Server backup at guides.db.pre-gitex-db-accuracy-fix-6c-events-db-01-20260618-231118, MD5 6a0700ba3b7b6f822950ad402184e010 (matches local copy). ISR cache flushed: files deleted + pm2 reload (graceful, zero downtime). Rowcount=1, F1 row unchanged (2026-06-07 timestamp), no unrelated rows modified. Live QA: 12/12 routes 200, zero stale phrases on GITEX EN+RU pages, Dec 7–11 dates unchanged, DWTC wording and Expo City Dubai both correctly present.
+
+---
+
+## 2026-06-18 — Phase 6C-EVENTS-CTR-01 COMPLETE (local) -- Event template JSON-LD + source domain improvements
+
+Both EN/RU event page templates updated: (1) JSON-LD now includes `location` (Place+PostalAddress), `organizer` (Organization), and `eventAttendanceMode: OfflineEventAttendanceMode` for F1 and GITEX — no effect on other events; (2) source block now shows domain name extracted from `sourceUrl` (abudhabigp.com for F1, gitex.com for GITEX) instead of generic "Official source". Official source check: F1 Abu Dhabi all facts confirmed from abudhabigp.com/en/. GITEX: dates+main expo venue confirmed; 3 DB issues flagged — Summit (Dec 7) venue is DWTC not Expo City (DB implies Expo City), "first GITEX outside DWTC since 1981" is partially wrong (Summit still at DWTC), 200K+/6,800+ visitor numbers not yet confirmed for 2026 on official page. Build 88/88, zero TypeScript errors. 10/10 QA routes 200. No deploy, no commit, no push, no DB, no admin. Docs: audit + source ledger + final report in docs/content-drafts/events/. GITEX DB correction requires separate owner-approved DB patch phase.
+
+---
+
 ## 2026-06-18 — Phase 6C-UI-02-PROD COMPLETE -- Premium visual refresh live on production
 
 Commit 22e8d8c. Push origin/main. Deploy: build 49s, PM2 graceful reload ~1s, online 146.4MB. 21 files committed: 5 UI component/page changes (FeaturedSlider, DetailHero, StickyRouteCta, page.tsx EN+RU), 3 memory files, 5 e-invoicing docs, 4 UI docs, 2 content docs, 2 package files. Screenshots excluded (16MB > 10MB threshold). HTTP QA: 13/13 routes 200 — December slug corrected (december-2026-uae-calendar not december-2026-dubai-calendar, no regression). E-invoicing: 0 "AED 150M"/"150 млн" hits on EN+RU October pages; AED 50M+/от 50 млн confirmed present. Homepage freshness: June→July→August order confirmed. GITEX, F1, sitemap all 200. StickyRouteCta verified via local Playwright QA (client-only component, not verifiable in server HTML): absent on calendar, present on guides, absent on find-my-visa. No rollback needed.

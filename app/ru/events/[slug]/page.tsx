@@ -10,6 +10,35 @@ import DetailHero, { categoryImage } from "@/components/detail/DetailHero";
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP_HREF = "https://wa.me/971506304817";
 
+const VENUE_BY_SLUG: Record<string, { name: string; streetAddress: string; city: string }> = {
+  "formula-1-abu-dhabi-grand-prix-2026": {
+    name:          "Yas Marina Circuit",
+    streetAddress: "Yas Island",
+    city:          "Abu Dhabi",
+  },
+  "gitex-global-2026": {
+    name:          "Dubai Exhibition Centre at Expo City Dubai",
+    streetAddress: "Expo City Dubai",
+    city:          "Dubai",
+  },
+};
+
+const ORGANIZER_BY_SLUG: Record<string, { name: string; url: string }> = {
+  "formula-1-abu-dhabi-grand-prix-2026": {
+    name: "Abu Dhabi Motorsport Management",
+    url:  "https://www.abudhabigp.com/",
+  },
+  "gitex-global-2026": {
+    name: "Dubai World Trade Centre",
+    url:  "https://www.gitex.com/",
+  },
+};
+
+function sourceDomain(url: string): string {
+  try { return new URL(url).hostname.replace(/^www\./, ""); }
+  catch { return "Официальный источник"; }
+}
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
@@ -66,6 +95,9 @@ export default async function RuEventDetailPage({ params }: Props) {
   const heroImage = categoryImage(event.category);
   const eyebrow   = `${categoryLabel} · ${dateDisplay}`;
 
+  const venue     = VENUE_BY_SLUG[slug];
+  const organizer = ORGANIZER_BY_SLUG[slug];
+
   const eventSchema = event.schemaEligible
     ? {
         "@context": "https://schema.org",
@@ -76,8 +108,28 @@ export default async function RuEventDetailPage({ params }: Props) {
         ...(event.eventDateEnd && event.eventDateEnd !== event.eventDateStart
           ? { endDate: event.eventDateEnd }
           : {}),
-        eventStatus: "https://schema.org/EventScheduled",
-        url:         `${BASE}/ru/events/${event.slug}`,
+        eventStatus:          "https://schema.org/EventScheduled",
+        eventAttendanceMode:  "https://schema.org/OfflineEventAttendanceMode",
+        url:                  `${BASE}/ru/events/${event.slug}`,
+        ...(venue ? {
+          location: {
+            "@type": "Place",
+            name:    venue.name,
+            address: {
+              "@type":          "PostalAddress",
+              streetAddress:    venue.streetAddress,
+              addressLocality:  venue.city,
+              addressCountry:   "AE",
+            },
+          },
+        } : {}),
+        ...(organizer ? {
+          organizer: {
+            "@type": "Organization",
+            name:    organizer.name,
+            url:     organizer.url,
+          },
+        } : {}),
       }
     : null;
 
@@ -113,7 +165,7 @@ export default async function RuEventDetailPage({ params }: Props) {
             rel="noopener noreferrer"
             className="text-[11px] font-medium text-brass hover:opacity-75 transition-opacity"
           >
-            Официальный источник ↗
+            {sourceDomain(event.sourceUrl)} ↗
           </a>
         </div>
       )}

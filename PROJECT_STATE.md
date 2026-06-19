@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-18 (Phase 6C-UI-02-PROD COMPLETE -- Premium visual refresh deployed. Commit 22e8d8c. Build 49s. PM2 online 146.4MB. 13/13 routes 200 (December slug corrected to december-2026-uae-calendar). E-invoicing AED 50M+ confirmed live (0 stale 150M hits). Homepage June→July→August freshness confirmed. GITEX/F1/sitemap all 200. No rollback. Next: Phase 6C-EVENTS-CTR-01 — F1 + GITEX CTR/source/detail polish.)
+Last updated: 2026-06-19 (Phase 6C-EVENTS-DB-01 COMPLETE -- GITEX Global 2026 DB accuracy patch live on production. Fixed: Summit venue (Scale Summit at DWTC, not Expo City Dubai), removed "first outside DWTC since 1981" claim, replaced 200,000+/6,800+ with "not yet confirmed for 2026". Local dev DB also patched. ISR cache flushed (files deleted + pm2 reload). Live QA: 12/12 routes 200, zero stale phrases on GITEX EN+RU pages. CTR-01 template changes still local only (JSON-LD location/organizer, source domain display). Next: final local build check, then single commit+deploy for 6C-EVENTS-CTR-01 + 6C-EVENTS-DB-01 together.)
 
 ---
 

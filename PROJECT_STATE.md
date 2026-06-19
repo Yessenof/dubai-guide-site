@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-19 (Phase 6C-EVENTS-DB-01 COMPLETE -- GITEX Global 2026 DB accuracy patch live on production. Fixed: Summit venue (Scale Summit at DWTC, not Expo City Dubai), removed "first outside DWTC since 1981" claim, replaced 200,000+/6,800+ with "not yet confirmed for 2026". Local dev DB also patched. ISR cache flushed (files deleted + pm2 reload). Live QA: 12/12 routes 200, zero stale phrases on GITEX EN+RU pages. CTR-01 template changes still local only (JSON-LD location/organizer, source domain display). Next: final local build check, then single commit+deploy for 6C-EVENTS-CTR-01 + 6C-EVENTS-DB-01 together.)
+Last updated: 2026-06-19 (Phase 6C-CALENDAR-EXPANSION-03 IN PROGRESS — DB writes complete, code edit done, build passed, deploying. 7 DB writes applied to local + production: DP World Tour Championship event INSERT (events), NOV-DPWT + NOV-DFTS appended + NOV-R1 updated (november-2026-dubai-calendar), OCT-DFC appended (october-2026-dubai-calendar), DEC-CTAX + DEC-EMIR appended (december-2026-uae-calendar). DP World Tour VENUE_BY_SLUG + ORGANIZER_BY_SLUG added to both EN+RU event page templates. Build: 88 pages, zero TypeScript errors. Now deploying. Next: live QA, Phase 03 report, memory update.)
 
 ---
 

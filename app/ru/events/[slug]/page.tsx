@@ -21,6 +21,11 @@ const VENUE_BY_SLUG: Record<string, { name: string; streetAddress: string; city:
     streetAddress: "Expo City Dubai",
     city:          "Dubai",
   },
+  "dp-world-tour-championship-2026": {
+    name:          "Jumeirah Golf Estates (Earth Course)",
+    streetAddress: "Jumeirah Golf Estates",
+    city:          "Dubai",
+  },
 };
 
 const ORGANIZER_BY_SLUG: Record<string, { name: string; url: string }> = {
@@ -31,6 +36,10 @@ const ORGANIZER_BY_SLUG: Record<string, { name: string; url: string }> = {
   "gitex-global-2026": {
     name: "Dubai World Trade Centre",
     url:  "https://www.gitex.com/",
+  },
+  "dp-world-tour-championship-2026": {
+    name: "DP World Tour",
+    url:  "https://www.europeantour.com/dpworld-tour/",
   },
 };
 

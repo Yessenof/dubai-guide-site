@@ -5,6 +5,30 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-19 — Phase 6C-CALENDAR-EXPANSION-03 IN PROGRESS — DB writes + code edit + build complete, deploying
+
+7 DB writes applied to local + production (preconditions verified, all 7 post-write assertions passed): (1) DP World Tour Championship 2026 event INSERT into events table — slug dp-world-tour-championship-2026, status published, dates 2026-11-12 to 2026-11-15, full EN+RU body; (2) NOV-DPWT appended to november-2026-dubai-calendar; (3) NOV-DFTS appended to november-2026-dubai-calendar; (4) NOV-R1 updated (type: deadline→sports_event, label corrected to DFC 30x30 Oct 31–Nov 29, noindex_after 2026-11-02→2026-11-30); (5) OCT-DFC appended to october-2026-dubai-calendar; (6) DEC-CTAX appended to december-2026-uae-calendar; (7) DEC-EMIR appended (no penalty figure — "administrative penalties under MoHRE enforcement"). November: 14→16 items. October: 13→14 items. December: 7→9 items. DP World Tour JSON-LD enrichment: VENUE_BY_SLUG + ORGANIZER_BY_SLUG entries added to both app/(en)/(public)/events/[slug]/page.tsx and app/ru/events/[slug]/page.tsx. Build: 88/88 static pages, zero TypeScript errors. Committing + deploying. No penalty figure, no "all companies" wording confirmed.
+
+---
+
+## 2026-06-19 — Phase 6C-CALENDAR-EXPANSION-02 COMPLETE — source recheck + implementation plan
+
+8 items rechecked against official sources. Key findings: Dubai FinTech Summit confirmed live on dubaifintechsummit.com (Nov 2-3, Madinat Jumeirah, DIFC); Global Village globalvillage.ae confirms "Season 31 Oct 2026-May 2027" (no specific opening date yet); ILT20 BLOCKED (ilt20.com redirects to HugeDomains domain reseller — no official website exists); DP World Tour all official tour sites returned 403 (Phase 01 confirmation stands); DFC all sites 403; MoHRE confirms semi-annual structure but H2 deadline not explicitly stated on accessible pages (penalty figure BLOCKED); FTA accessible but PDFs not directly fetched (9-month CT Law rule stands). Import readiness: 5 IMPORT-READY (DP World Tour event page, FinTech Summit Nov calendar item, DFC correction Oct+Nov, Corporate Tax Dec 31 item, Emiratisation H2 Dec 31 item without penalty figure), 2 DRAFT-ONLY (Global Village skeleton, DSF skeleton), 1 BLOCKED (ILT20), 2 RECHECK-LATER (Frieze Abu Dhabi, NYE Dubai). Full implementation plan created with exact field values for 7 DB writes (1 events INSERT + 3 calendar_pages UPDATEs). Owner decision needed: approve Phase 03 import? Include DP World Tour JSON-LD code edit in Phase 03? Import Global Village skeleton now or hold?
+
+---
+
+## 2026-06-19 — Phase 6C-CALENDAR-EXPANSION-01 COMPLETE — November/December 2026 expansion planning and drafts
+
+15 candidates reviewed from 6C-CALENDAR-RESEARCH-01 + current DB state cross-check (5 live event pages, 14 Nov + 7 Dec calendar items). 7-item first batch selected: DP World Tour Championship 2026 (event page + calendar item — confirmed, P0), Corporate Tax 31 Dec deadline (calendar item — confirmed), Emiratisation H2 deadline (calendar item — confirmed, verify penalty figure), Global Village Season 31 (skeleton — month confirmed, date blocked), DSF 2026-27 (skeleton — dates blocked), Dubai FinTech Summit (calendar item — confirmed, reconfirm on summit site), DFC date correction (Oct 31 start + full Nov 30x30 window). Items not in batch: Frieze Abu Dhabi (provisional — needs organizer-direct source), ILT20 Season 5 (provisional — needs ilt20.com), NYE Dubai (too early). Fold-ins (Downtown Design → Design Week page; Expand North Star → GITEX page) noted for later. 10 docs created: 5 planning docs (audit, candidate matrix, first batch plan, detail page strategy, report) + 3 event/skeleton drafts (DP World Tour, Global Village, DSF) + 2 calendar item draft sets (Nov + Dec). No DB writes, no imports, no deploy, no commit, no push, no schema changes, no admin, no AI Inbox.
+
+---
+
+## 2026-06-19 — Phase 6C-EVENTS-CTR-01-PROD COMPLETE — commit + zero-downtime deploy
+
+Commit 2eee78c on main. Files staged: app/(en)/(public)/events/[slug]/page.tsx, app/ru/events/[slug]/page.tsx (JSON-LD enrichment + source domain display), 5 event docs, memory files. DB files, backups, .env, .next, node_modules excluded. Build: 48s, 88/88 pages. PM2: graceful reload, online 148.0 MB. Health check during deploy: /, /ru, /calendar, /calendar?month=2026-07 all 200. Live QA 11/11 routes 200. Content verification: GITEX source=gitex.com ✓; F1 source=abudhabigp.com ✓; JSON-LD location+organizer+eventAttendanceMode live on all 4 event pages ✓; GITEX Scale Summit at DWTC (7 Dec) + main expo at Expo City Dubai (8–11 Dec) ✓; no 200,000/6,800 claims ✓; no "first outside DWTC since 1981" ✓; F1 Abu Dhabi+Yas Marina Circuit ✓, no "Dubai Grand Prix" ✓; October e-invoicing AED 50M ✓, no AED 150M ✓. No DB/admin/AI Inbox/schema changes. Rollback not needed.
+
+---
+
 ## 2026-06-19 — Phase 6C-EVENTS-DB-01 COMPLETE -- GITEX Global 2026 DB accuracy patch live
 
 Production DB patched: gitex-global-2026 event row. 8 surgical replacements each in en_body/ru_body + 6 full field replacements (en_title, en_summary, en_meta_description, ru_title, ru_summary, ru_meta_description). Key corrections: (1) Scale Summit venue changed from implied "Expo City Dubai" to explicit "Dubai World Trade Centre (7 Dec)" across all content fields; (2) "First GITEX outside DWTC since 1981" removed — replaced with "Main GITEX Expo moves outside DWTC for the first time; Scale Summit remains at DWTC"; (3) 200,000+ visitors and 6,800+ companies replaced with "Not yet confirmed for 2026" in key facts tables; (4) source note corrected to hold scale figures as unconfirmed. Local dev DB also patched with same changes. Server backup at guides.db.pre-gitex-db-accuracy-fix-6c-events-db-01-20260618-231118, MD5 6a0700ba3b7b6f822950ad402184e010 (matches local copy). ISR cache flushed: files deleted + pm2 reload (graceful, zero downtime). Rowcount=1, F1 row unchanged (2026-06-07 timestamp), no unrelated rows modified. Live QA: 12/12 routes 200, zero stale phrases on GITEX EN+RU pages, Dec 7–11 dates unchanged, DWTC wording and Expo City Dubai both correctly present.

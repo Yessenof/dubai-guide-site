@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-19 (Phase 6C-CALENDAR-EXPANSION-03 IN PROGRESS — DB writes complete, code edit done, build passed, deploying. 7 DB writes applied to local + production: DP World Tour Championship event INSERT (events), NOV-DPWT + NOV-DFTS appended + NOV-R1 updated (november-2026-dubai-calendar), OCT-DFC appended (october-2026-dubai-calendar), DEC-CTAX + DEC-EMIR appended (december-2026-uae-calendar). DP World Tour VENUE_BY_SLUG + ORGANIZER_BY_SLUG added to both EN+RU event page templates. Build: 88 pages, zero TypeScript errors. Now deploying. Next: live QA, Phase 03 report, memory update.)
+Last updated: 2026-06-19 (Phase 6C-CALENDAR-EXPANSION-03 COMPLETE — 7 DB writes + DP World Tour JSON-LD code edit + build + zero-downtime deploy. QA: 10/10 routes 200, Event JSON-LD verified (venue: Jumeirah Golf Estates, organizer: DP World Tour, dates 2026-11-12–15), November calendar shows NOV-DPWT+NOV-DFTS+corrected NOV-R1, October shows OCT-DFC on Oct 31, December shows DEC-CTAX (March 2026 year-end) + DEC-EMIR (no AED penalty figure). Commit e8e863d pushed. Held: Global Village (opening date not announced), DSF (dates blocked), ILT20 (parked domain), Frieze (recheck Sep 2026), NYE (recheck Nov 2026). NEXT: await owner direction — next content batch or QA review.)
 
 ---
 

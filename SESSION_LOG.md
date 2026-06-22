@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-22 — Phase 6C-CALENDAR-UX-01 LOCAL COMPLETE — mobile calendar readability improvements
+
+CalendarGrid.tsx: nav arrows enlarged w-7→w-9 (28→36px touch targets); grid cell mobile height h-64→h-70px; grid pill label 9px→10px; section headings ("This Month in UAE", "All dates this month") 12px gray-400→13px gray-500; brass accent lines w-5→w-6; legend label 11px→12px; AgendaRow date 12px gray-500→13px gray-600; AgendaRow/GroupedAgendaRow badge 10px→11px; CTA links 12px→13px; added confidence inline label in AgendaRow for expected/subject_to_official_confirmation items ("expected"/"moon sighting" in amber-600 11px). Build: 88 pages, 0 errors. Route QA: 14/14 200. All regression checks pass (Oct 50M not 150M, Nov/Dec correct slugs, no Global Village/DSF exact dates, no Emiratisation penalty figure). NOT committed/deployed — awaiting owner review. GSC Event schema warnings (image, performer on DP World Tour) deferred to 6C-EVENTS-SCHEMA-01.
+
+---
+
 ## 2026-06-19 — Phase 6C-CALENDAR-EXPANSION-03 COMPLETE — import + JSON-LD code edit + deploy
 
 7 DB writes applied to local + production (all preconditions verified, all post-write assertions passed): (1) dp-world-tour-championship-2026 event INSERT — status published, dates 2026-11-12–2026-11-15, EN+RU body complete; (2) NOV-DPWT appended to november-2026-dubai-calendar; (3) NOV-DFTS appended; (4) NOV-R1 corrected (type: deadline→sports_event, label updated to DFC 30x30 Oct 31–Nov 29, noindex_after→2026-11-30); (5) OCT-DFC appended to october-2026-dubai-calendar; (6) DEC-CTAX appended (March 2026 year-end explicitly stated); (7) DEC-EMIR appended (no penalty figure, "administrative penalties under MoHRE"). November: 14→16 items. October: 13→14. December: 7→9. DP World Tour VENUE_BY_SLUG + ORGANIZER_BY_SLUG added to EN+RU event templates. Build: 88 pages, 0 TypeScript errors, 50s. Commit e8e863d, pushed. Deploy: zero-downtime, PM2 148.2MB, health check 200. QA: 10/10 routes 200. Event JSON-LD: venue Jumeirah Golf Estates (Earth Course), organizer DP World Tour, startDate 2026-11-12, OfflineEventAttendanceMode ✓. November: NOV-DPWT + NOV-DFTS visible, NOV-R1 has "30x30 running 31 October to 29 November" ✓. October: DFC opens Oct 31 ✓. December: Corporate Tax (March 2026 year-end) + Emiratisation (no AED figure, "administrative penalties") ✓. Held: Global Village (Sep 2026), DSF (Sep 2026), ILT20 (blocked), Frieze (Sep 2026), NYE (Nov 2026).

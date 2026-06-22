@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-19 (Phase 6C-CALENDAR-EXPANSION-03 COMPLETE — 7 DB writes + DP World Tour JSON-LD code edit + build + zero-downtime deploy. QA: 10/10 routes 200, Event JSON-LD verified (venue: Jumeirah Golf Estates, organizer: DP World Tour, dates 2026-11-12–15), November calendar shows NOV-DPWT+NOV-DFTS+corrected NOV-R1, October shows OCT-DFC on Oct 31, December shows DEC-CTAX (March 2026 year-end) + DEC-EMIR (no AED penalty figure). Commit e8e863d pushed. Held: Global Village (opening date not announced), DSF (dates blocked), ILT20 (parked domain), Frieze (recheck Sep 2026), NYE (recheck Nov 2026). NEXT: await owner direction — next content batch or QA review.)
+Last updated: 2026-06-22 (Phase 6C-CALENDAR-UX-01 LOCAL COMPLETE — mobile calendar readability improvements applied to CalendarGrid.tsx. Changes: nav arrows w-7→w-9, grid cell h-64→h-70 mobile, pill label 9px→10px, section headings 12px gray-400→13px gray-500, AgendaRow date/badge/CTA 12px→13px, badge 10px→11px, added confidence label in AgendaRow for expected/moon-sighting items. Build: 88 pages, 0 errors. Route QA: 14/14 200. Regression: all pass. NOT committed/deployed — pending owner review. GSC Event schema warnings (image, performer) deferred to 6C-EVENTS-SCHEMA-01.)
 
 ---
 

@@ -418,7 +418,7 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
           <button
             onClick={prevMonth}
             aria-label={isRu ? "Предыдущий месяц" : "Previous month"}
-            className="w-7 h-7 flex items-center justify-center rounded-full border border-stone-200 text-gray-500 hover:border-stone-300 hover:text-gray-900 transition-colors text-[14px] flex-shrink-0"
+            className="w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 text-gray-500 hover:border-stone-300 hover:text-gray-900 transition-colors text-[14px] flex-shrink-0"
           >
             ←
           </button>
@@ -467,7 +467,7 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
           <button
             onClick={nextMonth}
             aria-label={isRu ? "Следующий месяц" : "Next month"}
-            className="w-7 h-7 flex items-center justify-center rounded-full border border-stone-200 text-gray-500 hover:border-stone-300 hover:text-gray-900 transition-colors text-[14px] flex-shrink-0"
+            className="w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 text-gray-500 hover:border-stone-300 hover:text-gray-900 transition-colors text-[14px] flex-shrink-0"
           >
             →
           </button>
@@ -546,7 +546,7 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
 
       {/* ── Adaptive legend ─────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-4">
-        <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
+        <span className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider">
           {isRu ? "Обозначения:" : "Legend:"}
         </span>
         {legend.map((l) => (
@@ -564,8 +564,8 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
       {/* ── answer-bearing content renders before the visual calendar ──────── */}
       {!selectedDay && groupedHighlights.length > 0 && (
         <div className="md:hidden mb-5">
-          <div className="w-5 h-0.5 bg-brass rounded-full mb-2.5" />
-          <p className="text-[12px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
+          <div className="w-6 h-0.5 bg-brass rounded-full mb-2.5" />
+          <p className="text-[13px] font-semibold uppercase tracking-widest text-gray-500 mb-3">
             {isRu ? "В этом месяце в ОАЭ" : "This month in the UAE"}
           </p>
           <div className="space-y-1.5">
@@ -601,7 +601,7 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
           <div className="grid grid-cols-7 gap-px bg-stone-100 rounded-xl overflow-hidden border border-stone-100">
             {gridCells.map((cell, i) => {
               if (cell === null) {
-                return <div key={i} className="bg-white h-[64px] md:h-[86px]" />;
+                return <div key={i} className="bg-white h-[70px] md:h-[86px]" />;
               }
 
               const iso = isoDate(year, month, cell);
@@ -636,7 +636,7 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
                   key={i}
                   type="button"
                   onClick={() => setSelectedDay(isSelected ? null : iso)}
-                  className={`relative bg-white h-[64px] md:h-[86px] flex flex-col items-center pt-2 pb-1.5 transition-colors cursor-pointer ${
+                  className={`relative bg-white h-[70px] md:h-[86px] flex flex-col items-center pt-2 pb-1.5 transition-colors cursor-pointer ${
                     isSelected ? "bg-navy/[0.04]" : "hover:bg-stone-50"
                   }`}
                 >
@@ -672,7 +672,7 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
                       // Start date: full labeled pill
                       return (
                         <div
-                          className="w-full text-center text-[9px] font-bold text-white rounded-sm px-0.5 py-[2px] leading-tight truncate"
+                          className="w-full text-center text-[10px] font-bold text-white rounded-sm px-0.5 py-[2px] leading-tight truncate"
                           style={{ backgroundColor: itemColor(pillItem) }}
                         >
                           {itemShortLabel(pillItem, locale)}
@@ -759,8 +759,8 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
             </>
           ) : (
             <>
-              <div className="w-5 h-0.5 bg-brass rounded-full mb-2.5" />
-              <p className="text-[12px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
+              <div className="w-6 h-0.5 bg-brass rounded-full mb-2.5" />
+              <p className="text-[13px] font-semibold uppercase tracking-widest text-gray-500 mb-3">
                 {isRu ? "В этом месяце в ОАЭ" : "This month in the UAE"}
               </p>
               {groupedHighlights.length === 0 ? (
@@ -793,8 +793,8 @@ export default function CalendarGrid({ items, locale, initialYear, initialMonth,
       {/* ── Full month agenda ─────────────────────────────────────────────── */}
       {groupedMonthItems.length > 0 && (
         <div className="mt-8">
-          <div className="w-5 h-0.5 bg-brass rounded-full mb-2.5" />
-          <p className="text-[12px] font-semibold uppercase tracking-widest text-gray-400 mb-3">
+          <div className="w-6 h-0.5 bg-brass rounded-full mb-2.5" />
+          <p className="text-[13px] font-semibold uppercase tracking-widest text-gray-500 mb-3">
             {isRu ? "Все даты месяца" : "All dates this month"}
           </p>
           <div className="space-y-1.5">
@@ -1070,12 +1070,12 @@ function GroupedAgendaRow({
   return (
     <div className="flex items-start gap-3 border border-stone-100 rounded-xl px-3.5 py-3 bg-stone-50/50 hover:bg-stone-50 transition-colors">
       {/* Date range */}
-      <span className="text-[12px] font-semibold text-gray-500 tabular-nums flex-shrink-0 w-[52px] pt-0.5 leading-snug">
+      <span className="text-[13px] font-semibold text-gray-600 tabular-nums flex-shrink-0 w-[52px] pt-0.5 leading-snug">
         {rangeLabel}
       </span>
       {/* Badge */}
       <span
-        className="text-[10px] font-bold text-white px-2 py-[3px] rounded-full flex-shrink-0 uppercase tracking-wide mt-0.5"
+        className="text-[11px] font-bold text-white px-2 py-[3px] rounded-full flex-shrink-0 uppercase tracking-wide mt-0.5"
         style={{ backgroundColor: color }}
       >
         {badge}
@@ -1089,7 +1089,7 @@ function GroupedAgendaRow({
             const dateStr = end && end !== start ? `${start} – ${end}` : start;
             return (
               <p key={i} className="text-[13px] font-medium text-gray-800 leading-snug">
-                <span className="text-gray-400 text-[12px] font-normal">{dateStr}:</span>{" "}
+                <span className="text-gray-400 text-[13px] font-normal">{dateStr}:</span>{" "}
                 {itemLabel(item, locale)}
               </p>
             );
@@ -1101,14 +1101,14 @@ function GroupedAgendaRow({
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity"
+              className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity"
             >
               {cta} ↗
             </a>
           ) : (
             <Link
               href={href}
-              className="inline-flex items-center gap-1 text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity"
+              className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity"
             >
               {cta}
             </Link>
@@ -1145,38 +1145,47 @@ function AgendaRow({
 
   const dateLabel = formatShortDate(item.date, locale);
 
+  const confidence = item.confidence;
+  const showRowConfidence = confidence === "expected" || confidence === "subject_to_official_confirmation";
+  const rowConfidenceText = confidence === "subject_to_official_confirmation"
+    ? (isRu ? "лунный календарь" : "moon sighting")
+    : (isRu ? "ожидается" : "expected");
+
   return (
     <div className="flex items-start gap-3 border border-stone-100 rounded-xl px-3.5 py-3 bg-stone-50/50 hover:bg-stone-50 transition-colors">
       {/* Date */}
-      <span className="text-[12px] font-semibold text-gray-500 tabular-nums flex-shrink-0 w-[52px] pt-0.5">
+      <span className="text-[13px] font-semibold text-gray-600 tabular-nums flex-shrink-0 w-[52px] pt-0.5">
         {dateLabel}
       </span>
       {/* Badge */}
       <span
-        className="text-[10px] font-bold text-white px-2 py-[3px] rounded-full flex-shrink-0 uppercase tracking-wide mt-0.5"
+        className="text-[11px] font-bold text-white px-2 py-[3px] rounded-full flex-shrink-0 uppercase tracking-wide mt-0.5"
         style={{ backgroundColor: color }}
       >
         {badge}
       </span>
-      {/* Title + CTA */}
+      {/* Title + confidence + CTA */}
       <div className="flex-1 min-w-0">
         <p className="text-[14px] font-semibold text-gray-900 leading-snug">
           {label}
         </p>
+        {showRowConfidence && (
+          <p className="text-[11px] text-amber-600 mt-0.5">{rowConfidenceText}</p>
+        )}
         {href && (
           useExternal ? (
             <a
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity mt-1"
+              className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity mt-1"
             >
               {cta} ↗
             </a>
           ) : (
             <Link
               href={href}
-              className="inline-flex items-center gap-1 text-[12px] font-semibold text-brass hover:opacity-75 transition-opacity mt-1"
+              className="inline-flex items-center gap-1 text-[13px] font-semibold text-brass hover:opacity-75 transition-opacity mt-1"
             >
               {cta}
             </Link>

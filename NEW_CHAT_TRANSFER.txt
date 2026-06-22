@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-06-19 (Phase 6C-CALENDAR-EXPANSION-03 COMPLETE — commit e8e863d. dp-world-tour-championship-2026 event live (EN+RU, JSON-LD with venue+organizer). November: NOV-DPWT + NOV-DFTS added, NOV-R1 corrected to DFC 30x30 Oct 31–Nov 29. October: OCT-DFC added (DFC opens Oct 31). December: DEC-CTAX (Corporate Tax, March 2026 year-end) + DEC-EMIR (Emiratisation H2, no penalty figure) added. QA: 10/10 routes 200. HELD: Global Village (recheck Sep 2026), DSF (recheck Sep 2026), ILT20 (blocked), Frieze (Sep 2026), NYE (Nov 2026). NEXT: await owner direction — next content batch or QA review.)
+Last updated: 2026-06-22 (Phase 6C-CALENDAR-UX-01 LOCAL COMPLETE — mobile calendar UX improvements applied locally to CalendarGrid.tsx. NOT yet committed or deployed. Changes: larger nav arrows, taller grid cells, larger pill labels, stronger section headings, larger AgendaRow dates/badges/CTAs, confidence labels added to AgendaRow list for expected/moon-sighting items. Build 88 pages, 0 errors, 14/14 routes 200. Awaiting owner review before commit+deploy. GSC Event schema warnings (DP World Tour: missing image, performer) deferred to 6C-EVENTS-SCHEMA-01. NEXT: owner reviews local changes → commit + deploy → 6C-EVENTS-SCHEMA-01.)
 
 WHAT TO ATTACH
 --------------

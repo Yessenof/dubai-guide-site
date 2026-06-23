@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-06-22 (Phase 6C-CALENDAR-UX-01 LOCAL COMPLETE — mobile calendar UX improvements applied locally to CalendarGrid.tsx. NOT yet committed or deployed. Changes: larger nav arrows, taller grid cells, larger pill labels, stronger section headings, larger AgendaRow dates/badges/CTAs, confidence labels added to AgendaRow list for expected/moon-sighting items. Build 88 pages, 0 errors, 14/14 routes 200. Awaiting owner review before commit+deploy. GSC Event schema warnings (DP World Tour: missing image, performer) deferred to 6C-EVENTS-SCHEMA-01. NEXT: owner reviews local changes → commit + deploy → 6C-EVENTS-SCHEMA-01.)
+Last updated: 2026-06-22 (Phase 6C-EVENTS-SCHEMA-01 LOCAL COMPLETE — added `image` field to Event JSON-LD for all 3 events (EN+RU). Image: https://guidex-consulting.ae/images/hubs/dubai-skyline-downtown.webp. Performer: blocked for all (DP World Tour: no player data; GITEX: trade expo; F1: race vs. concert conflation). Build 88 pages, 0 errors, 9/9 routes 200. NOT committed/deployed — awaiting owner review. GSC image warning will be resolved after deploy; performer warning remains (intentional). NEXT: owner review → commit + deploy.)
 
 WHAT TO ATTACH
 --------------

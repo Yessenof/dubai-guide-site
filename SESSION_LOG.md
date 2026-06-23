@@ -5,6 +5,18 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-22 — Phase 6C-EVENTS-SCHEMA-01 LOCAL COMPLETE — Event JSON-LD image field added
+
+Added `image` field to Event JSON-LD in both EN and RU event page templates (2 files, 1 line each). Image: absolute URL `${BASE}${heroImage}` → `https://guidex-consulting.ae/images/hubs/dubai-skyline-downtown.webp` (existing page hero, 960×1200px, crawlable, meets 720px width minimum). Performer blocked for all 3 events: DP World Tour (player list not in data, schema type mismatch), GITEX (trade expo, no performer), F1 (race vs. Yasalam concert conflation, needs separate event model). Build: 88 pages, 0 errors. Route QA: 9/9 200. JSON-LD: image=True on all 6 event routes, performer=False, location+organizer intact. NOT committed/deployed — awaiting owner review.
+
+---
+
+## 2026-06-22 — Phase 6C-CALENDAR-UX-01-PROD COMPLETE — zero-downtime deploy
+
+Commit 9a9d7be deployed to production (85.9.203.69). git pull applied 7 files (CalendarGrid.tsx + 2 audit docs + 3 memory files + calendar-expansion report). Build: 56s, 88 pages, 0 TypeScript errors. PM2 graceful reload: online 146.5MB, uptime 2s after reload. Health check: 200. Live QA: 14/14 routes 200 — /, /ru, /calendar, /ru/calendar, Oct/Nov/Dec EN+RU, DP World Tour, GITEX, F1, sitemap. Regression: Oct AED 50M ✓, no 150M ✓, Nov slug november-2026-dubai-calendar ✓, Dec slug december-2026-uae-calendar ✓, F1 Abu Dhabi/Yas Marina ✓ no Dubai Grand Prix ✓, GITEX ✓, DP World Tour ✓, no Emiratisation penalty ✓, no all-companies ✓. No rollback. No DB/admin/AI Inbox/schema/import changes.
+
+---
+
 ## 2026-06-22 — Phase 6C-CALENDAR-UX-01 LOCAL COMPLETE — mobile calendar readability improvements
 
 CalendarGrid.tsx: nav arrows enlarged w-7→w-9 (28→36px touch targets); grid cell mobile height h-64→h-70px; grid pill label 9px→10px; section headings ("This Month in UAE", "All dates this month") 12px gray-400→13px gray-500; brass accent lines w-5→w-6; legend label 11px→12px; AgendaRow date 12px gray-500→13px gray-600; AgendaRow/GroupedAgendaRow badge 10px→11px; CTA links 12px→13px; added confidence inline label in AgendaRow for expected/subject_to_official_confirmation items ("expected"/"moon sighting" in amber-600 11px). Build: 88 pages, 0 errors. Route QA: 14/14 200. All regression checks pass (Oct 50M not 150M, Nov/Dec correct slugs, no Global Village/DSF exact dates, no Emiratisation penalty figure). NOT committed/deployed — awaiting owner review. GSC Event schema warnings (image, performer on DP World Tour) deferred to 6C-EVENTS-SCHEMA-01.

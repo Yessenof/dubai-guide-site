@@ -114,6 +114,7 @@ export default async function EventDetailPage({ params }: Props) {
         "@type":    "Event",
         name:        event.seoTitle || event.title,
         description: event.metaDescription || event.summary,
+        image:       `${BASE}${heroImage}`,
         startDate:   event.eventDateStart,
         ...(event.eventDateEnd && event.eventDateEnd !== event.eventDateStart
           ? { endDate: event.eventDateEnd }

@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-22 (Phase 6C-CALENDAR-UX-01 LOCAL COMPLETE — mobile calendar readability improvements applied to CalendarGrid.tsx. Changes: nav arrows w-7→w-9, grid cell h-64→h-70 mobile, pill label 9px→10px, section headings 12px gray-400→13px gray-500, AgendaRow date/badge/CTA 12px→13px, badge 10px→11px, added confidence label in AgendaRow for expected/moon-sighting items. Build: 88 pages, 0 errors. Route QA: 14/14 200. Regression: all pass. NOT committed/deployed — pending owner review. GSC Event schema warnings (image, performer) deferred to 6C-EVENTS-SCHEMA-01.)
+Last updated: 2026-06-22 (Phase 6C-EVENTS-SCHEMA-01 LOCAL COMPLETE — added `image` field to Event JSON-LD for all 3 events (EN+RU, 6 routes). Image: https://guidex-consulting.ae/images/hubs/dubai-skyline-downtown.webp — existing page hero, publicly crawlable, 960px wide. Performer: BLOCKED for all events (DP World Tour: player list not in data; GITEX: trade expo not performance; F1: race vs. concert conflation). Build: 88 pages, 0 errors. Route QA: 9/9 200. JSON-LD validation: image present, no performer, all existing facts intact. NOT committed/deployed — pending owner review.)
 
 ---
 

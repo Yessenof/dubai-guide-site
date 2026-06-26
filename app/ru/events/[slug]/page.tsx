@@ -26,6 +26,11 @@ const VENUE_BY_SLUG: Record<string, { name: string; streetAddress: string; city:
     streetAddress: "Jumeirah Golf Estates",
     city:          "Dubai",
   },
+  "expand-north-star-2026": {
+    name:          "Dubai Exhibition Centre",
+    streetAddress: "Expo City Dubai",
+    city:          "Dubai",
+  },
 };
 
 const ORGANIZER_BY_SLUG: Record<string, { name: string; url: string }> = {
@@ -40,6 +45,10 @@ const ORGANIZER_BY_SLUG: Record<string, { name: string; url: string }> = {
   "dp-world-tour-championship-2026": {
     name: "DP World Tour",
     url:  "https://www.europeantour.com/dpworld-tour/",
+  },
+  "expand-north-star-2026": {
+    name: "DWTC / Dubai Chamber of Digital Economy",
+    url:  "https://www.expandnorthstar.com/",
   },
 };
 

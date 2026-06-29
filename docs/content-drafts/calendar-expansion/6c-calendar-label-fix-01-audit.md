@@ -86,11 +86,41 @@ Not a rendering-layer issue. The data itself contains `  --`.
 
 ---
 
+## Additional affected fields (extended fix — pass 2)
+
+After pass 1 fixed `label_en`/`label_ru`, live QA revealed `  --` still visible in CTA button labels on the December calendar page. Further DB inspection found `brief_ru` also affected in both calendars.
+
+### December — cta_label_en / cta_label_ru
+
+| Item ID | Field | Before | After |
+|---|---|---|---|
+| DEC-CTAX | cta_label_en | `FTA  -- Corporate Tax` | `FTA -- Corporate Tax` |
+| DEC-CTAX | cta_label_ru | `FTA  -- Corporate Tax` | `FTA -- Corporate Tax` |
+| DEC-EMIR | cta_label_en | `MoHRE  -- Emiratisation` | `MoHRE -- Emiratisation` |
+| DEC-EMIR | cta_label_ru | `MoHRE  -- Эмиратизация` | `MoHRE -- Эмиратизация` |
+
+### December + November — brief_ru
+
+| Item ID | Field | Had `  --`? | Visible in list? |
+|---|---|---|---|
+| DEC-CTAX | brief_ru | Yes | No (accordion/expand only) |
+| NOV-R1 | brief_ru | Yes | No (accordion/expand only) |
+| NOV-DPWT | brief_ru | Yes | No (accordion/expand only) |
+| NOV-DFTS | brief_ru | Yes | No (accordion/expand only) |
+
+DEC-EMIR brief_ru: no `  --` found — no change needed.
+
+---
+
 ## Fix approach
 
 **Type:** DB update only. No code change.
 
-**Method:** `replace(/  --/g, ' --')` applied to `label_en` and `label_ru` of the 5 affected items, then `updateCalendarDraft` + `publishCalendar` for each calendar page.
+**Pass 1:** `replace(/  --/g, ' --')` applied to `label_en` and `label_ru` of the 5 affected items.
+
+**Pass 2 (extended):** Same pattern applied to `cta_label_en`, `cta_label_ru`, and `brief_ru` of affected items. DEC-EMIR brief_ru was already clean.
+
+Both passes use `updateCalendarDraft` + `publishCalendar` per calendar page.
 
 **Risk:** Very low.
 - No facts changed
@@ -99,7 +129,7 @@ Not a rendering-layer issue. The data itself contains `  --`.
 - Admin API em-dash check: N/A — no em dashes being introduced or present in current data
 - En-dash in `NOV-DPWT`/`NOV-DFTS` date ranges: U+2013, not U+2014 — passes em-dash check
 
-**What stays unchanged:** All item IDs, dates, detail_url, source_url, source_label, source_status, confidence, type, notes_en, notes_ru.
+**What stays unchanged:** All item IDs, dates, detail_url, source_url, source_label, source_status, confidence, type, notes_en.
 
 ---
 
@@ -112,6 +142,7 @@ Not a rendering-layer issue. The data itself contains `  --`.
 
 ---
 
-## Fix script
+## Fix scripts
 
-`scripts/fix-calendar-label-dashes-local.ts` — local-only, creates DB backup, applies `  --` → ` --`, validates, reports.
+`scripts/fix-calendar-label-dashes-local.ts` — local-only, covers all fields, creates DB backup, validates.
+`scripts/fix-calendar-label-dashes-production.ts` — production equivalent, no local-only safety gate.

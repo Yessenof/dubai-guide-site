@@ -1,72 +1,76 @@
-# 6C-CALENDAR-LABEL-FIX-01 -- Local Fix Report
+# 6C-CALENDAR-LABEL-FIX-01 -- Full Deploy Report (Pass 1 + Pass 2)
 
 **Date:** 2026-06-29
 **Phase:** 6C-CALENDAR-LABEL-FIX-01 -- Calendar Label Dash Cosmetic Fix
-**Commit before fix:** e87effe (Phase 6C-CALENDAR-EXPANSION-04B)
-**Status:** LOCAL FIX COMPLETE -- awaiting owner approval for commit/deploy
+**Status:** COMPLETE (both passes deployed to production)
 
 ---
 
-## Files created/changed
+## Summary
+
+Two-pass fix of `  --` (double space + double dash) cosmetic artifacts in November and December 2026 calendar pages, caused by Phase 04B em-dash sanitization.
+
+**Pass 1** (commit `d9b3d5e`): Fixed `label_en` and `label_ru` for 5 items.  
+**Pass 2** (this commit): Fixed `cta_label_en`, `cta_label_ru`, and `brief_ru` for affected items. Pass 1 fields re-checked and already clean.
+
+---
+
+## Files
 
 | File | Type | Change |
 |---|---|---|
-| `scripts/fix-calendar-label-dashes-local.ts` | NEW | Local-only fix script with backup, targeted fix, verification |
-| `scripts/fix-calendar-label-dashes-production.ts` | NEW | Production fix script for server-side run |
-| `docs/content-drafts/calendar-expansion/6c-calendar-label-fix-01-audit.md` | NEW | Pre-fix audit with all affected items, before/after strings |
-| `docs/content-drafts/calendar-expansion/6c-calendar-label-fix-01-report.md` | NEW | This file |
-| `data/guides.db` | MODIFIED | 5 items updated via admin API (local DB only) |
-
-**Code changed:** None. DB-only fix.
+| `scripts/fix-calendar-label-dashes-local.ts` | UPDATED | Extended to cover cta_label_en/ru + brief_ru |
+| `scripts/fix-calendar-label-dashes-production.ts` | UPDATED | Same extension |
+| `docs/content-drafts/calendar-expansion/6c-calendar-label-fix-01-audit.md` | UPDATED | Pass 2 findings added |
+| `docs/content-drafts/calendar-expansion/6c-calendar-label-fix-01-report.md` | UPDATED | This file |
 
 ---
 
-## Issue source
+## Root cause
 
-**DB-stored** — `calendar_pages.dates_json` in two rows.
-
-Root cause: Phase 04B em-dash sanitization used `replace(/—/g, " --")`. Original labels had ` — ` (space + em dash + space). After replacement, the existing space before `—` was preserved, and `—` was replaced with ` --`, giving `  --` (double space + double dash). Not a rendering layer issue.
+Phase 04B used `replace(/—/g, " --")`. Source strings had ` — ` (space + em dash + space). The existing space before `—` was preserved, and `—` → ` --`, producing `  --`. Correct pattern: `replace(/\s*—\s*/g, " -- ")`.
 
 ---
 
-## Affected items fixed
+## All fields fixed across both passes
 
-### December 2026 — december-2026-uae-calendar (2 items, 4 fields)
+### December 2026 — december-2026-uae-calendar
 
-| Item ID | Field | Before | After |
-|---|---|---|---|
-| DEC-CTAX | label_en | `…2026  -- for companies…` | `…2026 -- for companies…` |
-| DEC-CTAX | label_ru | `…2026  -- для компаний…` | `…2026 -- для компаний…` |
-| DEC-EMIR | label_en | `…(31 December)  -- second…` | `…(31 December) -- second…` |
-| DEC-EMIR | label_ru | `…(31 декабря)  -- второй…` | `…(31 декабря) -- второй…` |
+| Item | Fields fixed (Pass 1) | Fields fixed (Pass 2) |
+|---|---|---|
+| DEC-CTAX | label_en, label_ru | cta_label_en, cta_label_ru, brief_ru |
+| DEC-EMIR | label_en, label_ru | cta_label_en, cta_label_ru |
 
-### November 2026 — november-2026-dubai-calendar (3 items, 6 fields)
+DEC-EMIR brief_ru: no `  --` found in either pass — no change.
 
-| Item ID | Field | Before | After |
-|---|---|---|---|
-| NOV-R1 | label_en | `Dubai Ride 2026  -- citywide…` | `Dubai Ride 2026 -- citywide…` |
-| NOV-R1 | label_ru | Two: `2026  --` and `октября  --` | Both: `2026 --` and `октября --` |
-| NOV-DPWT | label_en | `(12–15 November)  -- Race…` | `(12–15 November) -- Race…` |
-| NOV-DPWT | label_ru | `(12–15 ноября)  -- финал…` | `(12–15 ноября) -- финал…` |
-| NOV-DFTS | label_en | `(2–3 November)  -- organised…` | `(2–3 November) -- organised…` |
-| NOV-DFTS | label_ru | `(2–3 ноября)  -- организатор…` | `(2–3 ноября) -- организатор…` |
+### November 2026 — november-2026-dubai-calendar
+
+| Item | Fields fixed (Pass 1) | Fields fixed (Pass 2) |
+|---|---|---|
+| NOV-R1 | label_en, label_ru | brief_ru |
+| NOV-DPWT | label_en, label_ru | brief_ru |
+| NOV-DFTS | label_en, label_ru | brief_ru |
 
 ---
 
-## DB rows changed
+## DB rows changed (this pass)
 
-| Table | slug | rows affected | Fields changed |
-|---|---|---|---|
-| calendar_pages | december-2026-uae-calendar | 1 (dates_json only) | label_en, label_ru of DEC-CTAX and DEC-EMIR |
-| calendar_pages | november-2026-dubai-calendar | 1 (dates_json only) | label_en, label_ru of NOV-R1, NOV-DPWT, NOV-DFTS |
+| Table | slug | Change |
+|---|---|---|
+| calendar_pages | december-2026-uae-calendar | cta_label_en/ru of DEC-CTAX + DEC-EMIR; brief_ru of DEC-CTAX |
+| calendar_pages | november-2026-dubai-calendar | brief_ru of NOV-R1, NOV-DPWT, NOV-DFTS |
 
 ---
 
 ## DB backups
 
-| Location | Path |
-|---|---|
-| Local | `data/guides.db.backup-pre-label-fix-01-2026-06-29-07-48-11` |
+| Pass | Location | Path |
+|---|---|---|
+| Pass 1 local | data/ | `data/guides.db.backup-pre-label-fix-01-2026-06-29-07-48-11` |
+| Pass 1 production (manual) | /var/www/guidex/data/ | `data/guides.db.backup-pre-label-fix-01-20260629-120201` |
+| Pass 1 production (script) | /var/www/guidex/data/ | `data/guides.db.backup-pre-label-fix-01-prod-2026-06-29-08-02-20` |
+| Pass 2 local | data/ | `data/guides.db.backup-pre-label-fix-01b-2026-06-29-08-28-13` |
+| Pass 2 production (script) | /var/www/guidex/data/ | created by production script at deploy time |
 
 ---
 
@@ -78,94 +82,52 @@ Root cause: Phase 04B em-dash sanitization used `replace(/—/g, " --")`. Origin
 - detail_url: unchanged
 - type, priority: unchanged
 - notes_en, notes_ru: unchanged
-- brief_en, brief_ru: unchanged
-- DEC-ENS, DEC-05-WINBRK, NOV-GFMFG and all other clean items: unchanged
-- En-dash date ranges like `12–15 November`: untouched (only `  --` pattern was matched)
+- brief_en fields: no `  --` found, no change
+- DEC-ENS, NOV-GFMFG and all other clean items: unchanged
+- En-dash date ranges (`12–15 November`): U+2013, not touched
 
 ---
 
-## Build result
+## Build results (both passes)
 
-```
-✓ Compiled successfully in 2.5s
-✓ Generating static pages using 7 workers (88/88) in 282ms
-TypeScript errors: 0
-```
-
-Build: PASS, 88/88 pages, 0 errors.
+Pass 1: ✓ 88/88 pages, 0 TypeScript errors  
+Pass 2: ✓ 88/88 pages, 0 TypeScript errors
 
 ---
 
-## Local DB verification (post-fix)
-
-| Item | double_space_en | double_space_ru | intact |
-|---|---|---|---|
-| DEC-CTAX | False | False | ✓ |
-| DEC-EMIR | False | False | ✓ |
-| DEC-ENS | False | False | ✓ (untouched) |
-| DEC-05-WINBRK | False | False | ✓ (untouched, date range `--` preserved) |
-| NOV-R1 | False | False | ✓ |
-| NOV-DPWT | False | False | ✓ |
-| NOV-DFTS | False | False | ✓ |
-| NOV-GFMFG | False | False | ✓ (untouched) |
-
----
-
-## Regression checks
+## Local DB verification (pass 2 post-fix)
 
 | Check | Result |
 |---|---|
-| No NYE added | ✓ |
-| No ADIPEC detail page | ✓ |
-| No January 2027 page | ✓ |
-| No Global Village / DSF / ILT20 / Frieze | ✓ |
-| No fake performer | ✓ |
-| No facts changed | ✓ |
-| DEC-ENS detail_url still /events/expand-north-star-2026 | ✓ |
-| DEC-05-WINBRK date range `--` preserved | ✓ |
-| No em dashes in any item (November or December) | ✓ |
-| NOV-GFMFG intact | ✓ |
+| november-2026-dubai-calendar: no `  --` in any checked field | PASS |
+| december-2026-uae-calendar: no `  --` in any checked field | PASS |
+| DEC-CTAX cta_label_en: `FTA -- Corporate Tax` | PASS |
+| DEC-EMIR cta_label_en: `MoHRE -- Emiratisation` | PASS |
+| DEC-ENS label_en intact | PASS |
+| NOV-GFMFG label_en intact | PASS |
+| No em dashes in any item | PASS |
 
 ---
 
-## Confirmation — what was NOT done
+## Commits
+
+| Pass | Commit | Message |
+|---|---|---|
+| Pass 1 | d9b3d5e | fix: clean calendar label separators (6C-CALENDAR-LABEL-FIX-01) |
+| Pass 2 | (this commit) | fix: clean remaining calendar CTA separators (6C-CALENDAR-LABEL-FIX-01) |
+
+---
+
+## Confirmation — what was NOT done (either pass)
 
 | Action | Status |
 |---|---|
-| Commit | NOT done — awaiting owner approval |
-| Push | NOT done |
-| Deploy | NOT done |
 | Admin panel used | NO |
 | AI Inbox used | NO |
 | Schema changed | NO |
 | Broad imports run | NO |
 | Sitemap manually edited | NO |
-| Production content changed | NO — local only |
 | Facts/dates/sources changed | NO — cosmetic only |
-
----
-
-## Owner approval required for
-
-1. **Commit** — commit message suggestion: `fix: clean calendar label separators (6C-CALENDAR-LABEL-FIX-01)`
-2. **Push** to origin/main
-3. **Production DB fix** — run `npx tsx scripts/fix-calendar-label-dashes-production.ts` on server before or after deploy (must run before rebuild for calendar SSG to pick up clean labels)
-4. **Zero-downtime deploy** — rebuild picks up clean DB labels into static calendar pages
-
-### Suggested deploy sequence (after owner approval):
-```
-# 1. Run production DB fix
-ssh root@85.9.203.69 "cd /var/www/guidex && npx tsx scripts/fix-calendar-label-dashes-production.ts"
-
-# 2. Zero-downtime deploy (git pull + rebuild + pm2 reload)
-ssh root@85.9.203.69 "cd /var/www/guidex && bash scripts/deploy-zero-downtime.sh"
-```
-
----
-
-## Fix type summary
-
-- **Fix type:** DB update only (no code change)
-- **Method:** `replace(/  --/g, " --")` on `label_en` and `label_ru` of 5 items
-- **Admin API used:** Yes — `updateCalendarDraft` + `publishCalendar`
-- **Script:** `scripts/fix-calendar-label-dashes-local.ts` (local), `scripts/fix-calendar-label-dashes-production.ts` (prod)
+| NYE/ADIPEC/Jan 2027/Global Village/DSF/ILT20/Frieze added | NO |
+| Fake numbers/performers added | NO |
+| PM2 manually stopped/started | NO — only graceful reload via deploy script |

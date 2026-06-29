@@ -3,7 +3,8 @@
  * LOCAL ONLY -- refuses to run on production server paths.
  *
  * Fixes: "  --" (double space + double dash) -> " --" (single space + double dash)
- * in label_en and label_ru of affected items in November and December 2026 calendars.
+ * in label_en, label_ru, cta_label_en, cta_label_ru, brief_ru of affected items
+ * in November and December 2026 calendars.
  *
  * Caused by: Phase 04B em-dash sanitization used replace(/—/g, " --") which
  * added a space before "--" but did not consume the existing space before "—",
@@ -37,7 +38,7 @@ function log(msg: string) { console.log(msg); }
 function section(t: string) { console.log(`\n-- ${t} ${"-".repeat(Math.max(0, 55 - t.length))}`); }
 function abort(msg: string): never { console.error(`\nABORT: ${msg}`); process.exit(1); }
 
-section("Phase 6C-CALENDAR-LABEL-FIX-01 -- Local Fix");
+section("Phase 6C-CALENDAR-LABEL-FIX-01 -- Local Fix (extended)");
 log(`  DB path:   ${DB_PATH}`);
 log(`  Timestamp: ${new Date().toISOString()}`);
 
@@ -46,15 +47,15 @@ log(`  Timestamp: ${new Date().toISOString()}`);
 section("Creating DB backup");
 if (!fs.existsSync(DB_PATH)) abort(`DB not found: ${DB_PATH}`);
 const TS = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19).replace("T", "-");
-const BACKUP_PATH = `${DB_PATH}.backup-pre-label-fix-01-${TS}`;
+const BACKUP_PATH = `${DB_PATH}.backup-pre-label-fix-01b-${TS}`;
 fs.copyFileSync(DB_PATH, BACKUP_PATH);
 if (fs.statSync(BACKUP_PATH).size === 0) abort("Backup is empty.");
 log(`  Backup: ${BACKUP_PATH}  PASS`);
 
 // ---- Fix function ----------------------------------------------------------
 
-/** Replace "  --" (double space) with " --" (single space) in label fields only. */
-function fixLabel(value: string | undefined): string {
+/** Replace "  --" (double space) with " --" (single space). */
+function fixField(value: string | undefined): string {
   if (!value) return value ?? "";
   return value.replace(/  --/g, " --");
 }
@@ -64,12 +65,25 @@ function hasEmDash(s: string): boolean {
   return s.includes("—");
 }
 
-// ---- Apply fixes -----------------------------------------------------------
+// ---- Target fields per item ID ---------------------------------------------
+// November: label_en/label_ru already fixed in pass 1; add brief_ru
+// December: label_en/label_ru already fixed in pass 1; add cta_label_en/ru + brief_ru
+
+const TARGET_FIELDS: Record<string, string[]> = {
+  "NOV-R1":   ["label_en", "label_ru", "brief_ru"],
+  "NOV-DPWT": ["label_en", "label_ru", "brief_ru"],
+  "NOV-DFTS": ["label_en", "label_ru", "brief_ru"],
+  "DEC-CTAX": ["label_en", "label_ru", "cta_label_en", "cta_label_ru", "brief_ru"],
+  "DEC-EMIR": ["label_en", "label_ru", "cta_label_en", "cta_label_ru", "brief_ru"],
+};
 
 const AFFECTED_IDS_NOV = new Set(["NOV-R1", "NOV-DPWT", "NOV-DFTS"]);
 const AFFECTED_IDS_DEC = new Set(["DEC-CTAX", "DEC-EMIR"]);
 
-let totalFixCount = 0;
+let totalItemsChanged = 0;
+let totalFieldsChanged = 0;
+
+// ---- Apply fixes -----------------------------------------------------------
 
 for (const [SLUG, AFFECTED_IDS] of [
   ["november-2026-dubai-calendar", AFFECTED_IDS_NOV],
@@ -84,61 +98,56 @@ for (const [SLUG, AFFECTED_IDS] of [
   log(`  id=${page.id}`);
 
   const items = JSON.parse(page.datesJson) as Array<Record<string, unknown>>;
-  let pageFixCount = 0;
+  let pageItemsChanged = 0;
 
   const fixedItems = items.map(item => {
     const id = item["id"] as string;
     if (!AFFECTED_IDS.has(id)) return item;
 
-    const origEn  = (item["label_en"]  as string | undefined) ?? "";
-    const origRu  = (item["label_ru"]  as string | undefined) ?? "";
-    const fixedEn = fixLabel(origEn);
-    const fixedRu = fixLabel(origRu);
+    const fields = TARGET_FIELDS[id] ?? [];
+    const updates: Record<string, string> = {};
+    let itemChanged = false;
 
-    const changedEn = fixedEn !== origEn;
-    const changedRu = fixedRu !== origRu;
+    for (const field of fields) {
+      const orig = (item[field] as string | undefined) ?? "";
+      const fixed = fixField(orig);
+      if (fixed !== orig) {
+        if (hasEmDash(fixed)) abort(`${id}.${field}: em dash detected after fix.`);
+        updates[field] = fixed;
+        itemChanged = true;
+        totalFieldsChanged++;
+        log(`  ${id}.${field}: "${orig.slice(0, 65)}..."`);
+        log(`          -> "${fixed.slice(0, 65)}..."`);
+      }
+    }
 
-    if (!changedEn && !changedRu) {
-      log(`  ${id}: already clean -- no change needed`);
+    if (!itemChanged) {
+      log(`  ${id}: all target fields already clean.`);
       return item;
     }
 
-    if (hasEmDash(fixedEn) || hasEmDash(fixedRu)) {
-      abort(`${id}: em dash detected after fix -- unexpected.`);
-    }
-
-    if (changedEn) {
-      log(`  ${id} EN:  "${origEn.slice(0, 70)}..."`);
-      log(`       -> "${fixedEn.slice(0, 70)}..."`);
-    }
-    if (changedRu) {
-      log(`  ${id} RU:  "${origRu.slice(0, 70)}..."`);
-      log(`       -> "${fixedRu.slice(0, 70)}..."`);
-    }
-
-    pageFixCount++;
-    totalFixCount++;
-    return { ...item, label_en: fixedEn, label_ru: fixedRu };
+    pageItemsChanged++;
+    totalItemsChanged++;
+    return { ...item, ...updates };
   });
 
-  // Guard: verify no unintended changes
+  // Guard: non-affected items must be byte-identical
   for (const [orig, fixed] of items.map((o, i) => [o, fixedItems[i]])) {
     const id = orig["id"] as string;
     if (AFFECTED_IDS.has(id)) continue;
-    // Non-affected items must be byte-identical
     if (JSON.stringify(orig) !== JSON.stringify(fixed)) {
       abort(`Non-affected item ${id} was modified unexpectedly.`);
     }
   }
 
-  if (pageFixCount === 0) {
-    log(`  No changes needed for ${SLUG} -- all items already clean.`);
+  if (pageItemsChanged === 0) {
+    log(`  No changes needed for ${SLUG} -- all fields already clean.`);
     continue;
   }
 
   const upd = updateCalendarDraft(page.id, { dates_json: JSON.stringify(fixedItems) });
   if (!upd.ok) abort(`updateCalendarDraft ${SLUG} failed: ${JSON.stringify(upd.errors)}`);
-  log(`  updateCalendarDraft: OK  (fixed ${pageFixCount} item(s))`);
+  log(`  updateCalendarDraft: OK  (${pageItemsChanged} item(s) changed)`);
 
   const pub = publishCalendar(page.id);
   if (!pub.ok) abort(`publishCalendar ${SLUG} failed: ${JSON.stringify(pub.errors)}`);
@@ -152,78 +161,80 @@ section("Post-fix verification");
 const verPages = getAllCalendarPages();
 let anyFail = false;
 
+const CHECK_FIELDS = ["label_en", "label_ru", "cta_label_en", "cta_label_ru", "brief_en", "brief_ru"];
+
 for (const SLUG of ["november-2026-dubai-calendar", "december-2026-uae-calendar"]) {
   const page = verPages.find(p => p.slug === SLUG);
   if (!page) { console.error(`  FAIL: ${SLUG} not found.`); anyFail = true; continue; }
 
   const items = JSON.parse(page.datesJson) as Array<Record<string, unknown>>;
-
   let remaining = 0;
+
   for (const item of items) {
-    const en = (item["label_en"] as string | undefined) ?? "";
-    const ru = (item["label_ru"] as string | undefined) ?? "";
-    if (en.includes("  --") || ru.includes("  --")) {
-      console.error(`  FAIL: ${SLUG} / ${item["id"]}: still contains "  --"`);
-      anyFail = true;
-      remaining++;
-    }
-  }
-
-  if (remaining === 0) {
-    log(`  ${SLUG}: no "  --" remaining.  PASS`);
-  }
-
-  // Spot-check known clean items remain intact
-  const decEns = SLUG.includes("december")
-    ? items.find(x => x["id"] === "DEC-ENS")
-    : null;
-  if (decEns) {
-    const label = (decEns["label_en"] as string | undefined) ?? "";
-    if (!label.includes("Expand North Star") || !label.includes("-- co-located")) {
-      console.error(`  FAIL: DEC-ENS label_en changed unexpectedly.`);
-      anyFail = true;
-    } else {
-      log(`  DEC-ENS label_en intact.  PASS`);
-    }
-  }
-
-  const decCtax = SLUG.includes("december")
-    ? items.find(x => x["id"] === "DEC-CTAX")
-    : null;
-  if (decCtax) {
-    const label = (decCtax["label_en"] as string | undefined) ?? "";
-    if (!label.includes("31 December 2026 -- for companies")) {
-      console.error(`  FAIL: DEC-CTAX label_en unexpected after fix.`);
-      anyFail = true;
-    } else {
-      log(`  DEC-CTAX: "31 December 2026 -- for companies"  PASS`);
-    }
-  }
-
-  const novGfmfg = SLUG.includes("november")
-    ? items.find(x => x["id"] === "NOV-GFMFG")
-    : null;
-  if (novGfmfg) {
-    const label = (novGfmfg["label_en"] as string | undefined) ?? "";
-    if (!label.includes("Gulfood Manufacturing") || !label.includes("-- 2,500+")) {
-      console.error(`  FAIL: NOV-GFMFG label_en changed unexpectedly.`);
-      anyFail = true;
-    } else {
-      log(`  NOV-GFMFG label_en intact.  PASS`);
-    }
-  }
-
-  // Confirm no em dashes in any item
-  for (const item of items) {
-    for (const f of ["label_en", "label_ru", "notes_en", "notes_ru"] as const) {
+    for (const f of CHECK_FIELDS) {
       const v = (item[f] as string | undefined) ?? "";
+      if (v.includes("  --")) {
+        console.error(`  FAIL: ${item["id"]}.${f} still has "  --": ${v.slice(0,80)}`);
+        anyFail = true;
+        remaining++;
+      }
       if (hasEmDash(v)) {
-        console.error(`  FAIL: ${SLUG}/${item["id"]} field "${f}" contains em dash.`);
+        console.error(`  FAIL: ${item["id"]}.${f} has em dash.`);
         anyFail = true;
       }
     }
   }
-  log(`  ${SLUG}: no em dashes.  PASS`);
+
+  if (remaining === 0) log(`  ${SLUG}: no "  --" in any checked field.  PASS`);
+
+  // Spot-checks
+  if (SLUG.includes("december")) {
+    const ens = items.find(x => x["id"] === "DEC-ENS");
+    if (ens) {
+      const label = (ens["label_en"] as string | undefined) ?? "";
+      if (!label.includes("Expand North Star") || !label.includes("-- co-located")) {
+        console.error(`  FAIL: DEC-ENS label_en changed.`); anyFail = true;
+      } else {
+        log(`  DEC-ENS label_en intact.  PASS`);
+      }
+    }
+    const ctax = items.find(x => x["id"] === "DEC-CTAX");
+    if (ctax) {
+      const label = (ctax["label_en"] as string | undefined) ?? "";
+      const cta   = (ctax["cta_label_en"] as string | undefined) ?? "";
+      if (!label.includes("31 December 2026 -- for companies")) {
+        console.error(`  FAIL: DEC-CTAX label_en wrong.`); anyFail = true;
+      } else {
+        log(`  DEC-CTAX label_en clean.  PASS`);
+      }
+      if (cta.includes("  --")) {
+        console.error(`  FAIL: DEC-CTAX cta_label_en still has "  --".`); anyFail = true;
+      } else {
+        log(`  DEC-CTAX cta_label_en: "${cta}"  PASS`);
+      }
+    }
+    const emir = items.find(x => x["id"] === "DEC-EMIR");
+    if (emir) {
+      const cta = (emir["cta_label_en"] as string | undefined) ?? "";
+      if (cta.includes("  --")) {
+        console.error(`  FAIL: DEC-EMIR cta_label_en still has "  --".`); anyFail = true;
+      } else {
+        log(`  DEC-EMIR cta_label_en: "${cta}"  PASS`);
+      }
+    }
+  }
+
+  if (SLUG.includes("november")) {
+    const gfmfg = items.find(x => x["id"] === "NOV-GFMFG");
+    if (gfmfg) {
+      const label = (gfmfg["label_en"] as string | undefined) ?? "";
+      if (!label.includes("Gulfood Manufacturing") || !label.includes("-- 2,500+")) {
+        console.error(`  FAIL: NOV-GFMFG label_en changed.`); anyFail = true;
+      } else {
+        log(`  NOV-GFMFG label_en intact.  PASS`);
+      }
+    }
+  }
 }
 
 if (anyFail) abort("Post-fix verification failed. See FAIL lines above.");
@@ -233,18 +244,17 @@ log(`
 DB PATH: ${DB_PATH}
 BACKUP:  ${BACKUP_PATH}
 
-Total items changed: ${totalFixCount}
+Items changed: ${totalItemsChanged}
+Fields changed: ${totalFieldsChanged}
 
-Items fixed:
-  DEC-CTAX  (december-2026-uae-calendar): label_en, label_ru
-  DEC-EMIR  (december-2026-uae-calendar): label_en, label_ru
-  NOV-R1    (november-2026-dubai-calendar): label_en, label_ru
-  NOV-DPWT  (november-2026-dubai-calendar): label_en, label_ru
-  NOV-DFTS  (november-2026-dubai-calendar): label_en, label_ru
+Items fixed (this run covers cta_label_en/ru and brief_ru):
+  DEC-CTAX  (december): label_en, label_ru (already clean), cta_label_en, cta_label_ru, brief_ru
+  DEC-EMIR  (december): label_en, label_ru (already clean), cta_label_en, cta_label_ru, brief_ru
+  NOV-R1    (november): label_en, label_ru (already clean), brief_ru
+  NOV-DPWT  (november): label_en, label_ru (already clean), brief_ru
+  NOV-DFTS  (november): label_en, label_ru (already clean), brief_ru
 
 Change: "  --" -> " --" (removed double space before double dash)
 
 Facts unchanged: dates, sources, IDs, structure, detail_url, confidence, source_status.
-
-Owner approval required before commit/deploy.
 `);

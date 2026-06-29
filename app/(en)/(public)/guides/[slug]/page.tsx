@@ -34,6 +34,11 @@ const SOURCE_NOTES: Record<string, { note: string; sourceLabel: string; lastChec
     sourceLabel: "CBUAE",
     lastChecked: "Checked May 2026",
   },
+  "parents-visa-dubai": {
+    note: "Process and document requirements based on Amer service-centre operational notes compiled by Guidex and GDRFA residency guidelines. Sponsor income, Ejari, and deposit figures are Amer filing references reviewed case by case at GDRFA -- not published statutory thresholds.",
+    sourceLabel: "AMER · GDRFA Dubai",
+    lastChecked: "Checked June 2026",
+  },
 };
 
 export async function generateStaticParams() {

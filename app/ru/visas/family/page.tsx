@@ -44,6 +44,12 @@ const guides = [
     href: "/ru/guides/renew-family-visa-dubai",
     meta: "Продление · Внутри ОАЭ",
   },
+  {
+    title: "Виза для родителей в Дубае",
+    description: "Как спонсировать маму или папу. Чеклист AMER: аттестация документов, Ejari, зарплата, медосмотр, Emirates ID.",
+    href: "/ru/guides/parents-visa-dubai",
+    meta: "Спонсирование родителей · Внутри или снаружи ОАЭ",
+  },
 ];
 
 export default function RuFamilyVisaHubPage() {

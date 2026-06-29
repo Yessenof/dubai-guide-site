@@ -85,4 +85,9 @@ export const RELATED_GUIDES: Record<string, string[]> = {
     "open-business-bank-account-dubai",
     "golden-visa-dubai-property",
   ],
+  "parents-visa-dubai": [
+    "renew-family-visa-dubai",
+    "golden-visa-dubai-property",
+    "employment-visa",
+  ],
 };

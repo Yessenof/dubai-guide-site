@@ -31,6 +31,11 @@ const SOURCE_NOTES_RU: Record<string, { note: string; sourceLabel: string; lastC
     sourceLabel: "CBUAE",
     lastChecked: "Проверено май 2026",
   },
+  "parents-visa-dubai": {
+    note: "Процесс и требования к документам основаны на рабочих заметках сервисных центров AMER, предоставленных Guidex, и руководящих принципах GDRFA. Данные по зарплате, Ejari и депозиту -- ориентиры AMER, которые рассматриваются в каждом случае индивидуально в GDRFA и не являются официальными пороговыми значениями.",
+    sourceLabel: "AMER · GDRFA Dubai",
+    lastChecked: "Проверено июнь 2026",
+  },
 };
 
 interface Props {

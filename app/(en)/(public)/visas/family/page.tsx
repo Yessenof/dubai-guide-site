@@ -48,6 +48,13 @@ const guides = [
     href: "/guides/renew-family-visa-dubai",
     meta: "Renewal · Inside UAE",
   },
+  {
+    title: "Parents Visa Dubai: Sponsor Mother or Father",
+    description:
+      "Sponsor a parent's UAE residence visa from Dubai. Covers Amer checklist, relationship attestation, salary and Ejari notes, medical, and Emirates ID.",
+    href: "/guides/parents-visa-dubai",
+    meta: "Parent sponsorship · Inside or outside UAE",
+  },
 ];
 
 export default function FamilyVisaHubPage() {

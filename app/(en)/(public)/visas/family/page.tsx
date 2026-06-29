@@ -34,6 +34,20 @@ const guides = [
     href: "/guides/child-dependent-visa-dubai",
     meta: "Inside or outside UAE",
   },
+  {
+    title: "Newborn Visa in Dubai",
+    description:
+      "Residence visa for a baby born in Dubai. Covers DHA birth registration, consulate passport, and Amer residency steps.",
+    href: "/guides/newborn-visa-dubai",
+    meta: "Dubai-born babies · AED 900–1,500",
+  },
+  {
+    title: "Renew a Family Residence Visa in Dubai",
+    description:
+      "Renewal process for a dependent spouse or child. Medical fitness required for adults 18+. Government fees confirmed at Amer.",
+    href: "/guides/renew-family-visa-dubai",
+    meta: "Renewal · Inside UAE",
+  },
 ];
 
 export default function FamilyVisaHubPage() {
@@ -74,7 +88,7 @@ export default function FamilyVisaHubPage() {
         Family Residence Visas in Dubai
       </h1>
       <p className="text-[15px] text-gray-600 leading-snug mb-4">
-        Sponsor a spouse or child on a Dubai residence visa. Inside-UAE and outside-UAE routes with exact government fees.
+        Sponsor a spouse or child on a Dubai residence visa. The sponsor must hold a valid UAE residence visa and a signed Ejari tenancy contract. Marriage and birth certificates must be attested by UAE MOFA before applying through Amer. Income requirements are assessed by GDRFA at submission.
       </p>
 
       <div className="mb-6">

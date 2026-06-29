@@ -5,6 +5,18 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-29 — Phase 6C-VISAS-CONTENT-OPT-01 LOCAL COMPLETE — Visa content practical additions
+
+DB backup: `data/guides.db.backup-pre-visa-opt-01-2026-06-29-16-26-10`. Updated 5 guide overviews (employment-visa, golden-visa-dubai-property, spouse-outside/inside, renew-family-visa) with document checklists, MOFA attestation detail, mortgage NOC note, off-plan note, parents-after-golden-visa note, grace period note. Updated 2 step advice fields (employment-visa Step 1: ILOE note; golden-visa Step 2: NOC timing). Edited 6 hub TSX files: /visas + /ru/visas (intro paragraph), /visas/golden + /ru/visas/golden (meta desc + AED 2M in subtitle), /visas/family + /ru/visas/family (MOFA/Ejari intro + added newborn/renewal guide cards). Build: 88/88 pages, 0 TypeScript errors. QA: all forbidden phrases clean, all new content verified in DB and built HTML. NOT deployed -- pending owner review.
+
+---
+
+## 2026-06-29 — Phase 6C-VISAS-RAG-AUDIT-01 COMPLETE — Visa content audit
+
+Full audit of all visa routes and DB guide content. Created docs/content-drafts/seo/6c-visas-rag-audit-01-report.md and 6c-visas-rag-audit-01-implementation-plan.md. Audited 9 guides, 12 hub/group pages, EN+RU parity. Biggest gaps: no document checklists, no hub page extractable text, no parents visa page, outside-UAE employment guide weak. No DB writes, no deploy, no push in audit phase.
+
+---
+
 ## 2026-06-22 — Phase 6C-EVENTS-SCHEMA-01 LOCAL COMPLETE — Event JSON-LD image field added
 
 Added `image` field to Event JSON-LD in both EN and RU event page templates (2 files, 1 line each). Image: absolute URL `${BASE}${heroImage}` → `https://guidex-consulting.ae/images/hubs/dubai-skyline-downtown.webp` (existing page hero, 960×1200px, crawlable, meets 720px width minimum). Performer blocked for all 3 events: DP World Tour (player list not in data, schema type mismatch), GITEX (trade expo, no performer), F1 (race vs. Yasalam concert conflation, needs separate event model). Build: 88 pages, 0 errors. Route QA: 9/9 200. JSON-LD: image=True on all 6 event routes, performer=False, location+organizer intact. NOT committed/deployed — awaiting owner review.

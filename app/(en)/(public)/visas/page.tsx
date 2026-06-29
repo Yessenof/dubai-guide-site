@@ -74,7 +74,7 @@ export default function VisasHubPage() {
         Dubai Visa Guides
       </h1>
       <p className="text-[15px] text-gray-600 leading-snug mb-6">
-        Official fees and exact steps for every major Dubai residency route.
+        Dubai residence visas cover three main categories: employment visas (employer-sponsored, mainland or free zone), family visas (sponsored by an existing UAE resident), and long-term investor visas (Golden Visa, 10 years without employer sponsorship). Each category has a distinct process, different government bodies, and separate government fees.
       </p>
 
       <Link

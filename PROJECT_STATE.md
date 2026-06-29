@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-22 (Phase 6C-EVENTS-SCHEMA-01 LOCAL COMPLETE — added `image` field to Event JSON-LD for all 3 events (EN+RU, 6 routes). Image: https://guidex-consulting.ae/images/hubs/dubai-skyline-downtown.webp — existing page hero, publicly crawlable, 960px wide. Performer: BLOCKED for all events (DP World Tour: player list not in data; GITEX: trade expo not performance; F1: race vs. concert conflation). Build: 88 pages, 0 errors. Route QA: 9/9 200. JSON-LD validation: image present, no performer, all existing facts intact. NOT committed/deployed — pending owner review.)
+Last updated: 2026-06-29 (Phase 6C-VISAS-CONTENT-OPT-01 LOCAL COMPLETE -- Added practical document checklists, MOFA attestation guidance, off-plan note, parents-after-GV note, grace period note to 5 visa guide overviews. Updated 2 step advice fields (employment-visa Step 1, golden-visa Step 2). Expanded 6 hub TSX pages with extractable intro text + 2 missing guide cards on family hub. Build: 88/88, 0 errors. DB backup at data/guides.db.backup-pre-visa-opt-01-2026-06-29-16-26-10. NOT deployed -- pending owner review. Calendar label fix (6C-CALENDAR-LABEL-FIX-01) previously deployed at commit 5cfe02a.)
 
 ---
 

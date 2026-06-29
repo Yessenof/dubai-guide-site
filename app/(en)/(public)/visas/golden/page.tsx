@@ -8,7 +8,7 @@ const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 export const metadata: Metadata = {
   title: "Dubai Golden Visa — Guidex Consulting",
   description:
-    "Long-term residency in Dubai for property owners and eligible applicants. Step-by-step guides with official fees and timelines.",
+    "Dubai Golden Visa grants 10-year UAE residency without employer sponsorship. Property route from AED 2 million registered with DLD. Professional salary, business investor, and special talent routes available.",
   alternates: {
     canonical: `${BASE}/visas/golden`,
     languages: {
@@ -93,7 +93,7 @@ export default function GoldenVisaHubPage() {
         Dubai Golden Visa
       </h1>
       <p className="text-[15px] text-gray-600 leading-snug mb-4">
-        10-year UAE residency without employer sponsorship. Four routes: property ownership, professional salary, business investment, and special talent.
+        The Dubai Golden Visa grants 10-year UAE residency without employer sponsorship. The property route is open to owners of freehold property registered with DLD at a value of AED 2 million or above. Professional salary, business investor, and special talent routes have separate eligibility criteria set by ICA.
       </p>
 
       <div className="mb-6">

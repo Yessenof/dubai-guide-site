@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-06-29 — Phase 6C-VISAS-AMER-DATA-INTEGRATION-01 LOCAL COMPLETE — AMER practical data integration
+
+DB backup: `data/guides.db.backup-pre-amer-data-integration-01-2026-06-29-17-29-55`. Integrated AMER service-centre data from owner photos into employment-visa (overview stamping checklist + ILOE fine; Step 3 MB number; Step 5 email/mobile; Step 8 full Amer counter checklist) and golden-visa-dubai-property (overview joint-ownership note + AMER fee note; Step 2 expanded to 4 property types + 30% off-plan; Step 4 AMER package AED 15k/17k; Step 7 parent AMER requirements with AED 10,500/5,000 as case-by-case AMER notes). Parents visa full content draft at docs/content-drafts/guides/parents-visa-dubai-draft.md. Build: 88/88 pages, 0 TypeScript errors. NOT deployed -- pending owner approval.
+
+---
+
 ## 2026-06-29 — Phase 6C-VISAS-CONTENT-OPT-01 LOCAL COMPLETE — Visa content practical additions
 
 DB backup: `data/guides.db.backup-pre-visa-opt-01-2026-06-29-16-26-10`. Updated 5 guide overviews (employment-visa, golden-visa-dubai-property, spouse-outside/inside, renew-family-visa) with document checklists, MOFA attestation detail, mortgage NOC note, off-plan note, parents-after-golden-visa note, grace period note. Updated 2 step advice fields (employment-visa Step 1: ILOE note; golden-visa Step 2: NOC timing). Edited 6 hub TSX files: /visas + /ru/visas (intro paragraph), /visas/golden + /ru/visas/golden (meta desc + AED 2M in subtitle), /visas/family + /ru/visas/family (MOFA/Ejari intro + added newborn/renewal guide cards). Build: 88/88 pages, 0 TypeScript errors. QA: all forbidden phrases clean, all new content verified in DB and built HTML. NOT deployed -- pending owner review.

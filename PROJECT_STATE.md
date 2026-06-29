@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-06-29 (Phase 6C-VISAS-CONTENT-OPT-01 LOCAL COMPLETE -- Added practical document checklists, MOFA attestation guidance, off-plan note, parents-after-GV note, grace period note to 5 visa guide overviews. Updated 2 step advice fields (employment-visa Step 1, golden-visa Step 2). Expanded 6 hub TSX pages with extractable intro text + 2 missing guide cards on family hub. Build: 88/88, 0 errors. DB backup at data/guides.db.backup-pre-visa-opt-01-2026-06-29-16-26-10. NOT deployed -- pending owner review. Calendar label fix (6C-CALENDAR-LABEL-FIX-01) previously deployed at commit 5cfe02a.)
+Last updated: 2026-06-29 (Phase 6C-VISAS-AMER-DATA-INTEGRATION-01 LOCAL COMPLETE -- AMER service-centre data integrated into employment-visa and golden-visa-dubai-property. Parents visa content draft created. Build 88/88. NOT deployed. Phase 6C-VISAS-CONTENT-OPT-01 LOCAL COMPLETE -- Added practical document checklists, MOFA attestation guidance, off-plan note, parents-after-GV note, grace period note to 5 visa guide overviews. Updated 2 step advice fields (employment-visa Step 1, golden-visa Step 2). Expanded 6 hub TSX pages with extractable intro text + 2 missing guide cards on family hub. Build: 88/88, 0 errors. DB backup at data/guides.db.backup-pre-visa-opt-01-2026-06-29-16-26-10. NOT deployed -- pending owner review. Calendar label fix (6C-CALENDAR-LABEL-FIX-01) previously deployed at commit 5cfe02a.)
 
 ---
 

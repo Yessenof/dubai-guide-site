@@ -36,14 +36,14 @@ export const RELATED_GUIDES: Record<string, string[]> = {
     "renew-family-visa-dubai",
   ],
   "renew-family-visa-dubai": [
-    "spouse-dependent-dubai-inside",
-    "child-dependent-dubai-inside",
+    "parents-visa-dubai",
+    "newborn-visa-dubai",
     "amer-center-dubai",
   ],
   "golden-visa-dubai-property": [
+    "parents-visa-dubai",
     "tax-residency-certificate-uae",
     "mainland-company-setup-dubai",
-    "open-business-bank-account-dubai",
   ],
   "free-zone-company-setup-dubai": [
     "mainland-company-setup-dubai",

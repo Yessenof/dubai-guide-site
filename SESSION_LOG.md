@@ -5,6 +5,30 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-07-01 — Phase 6C-SEO-OPERATING-SYSTEM-01 LOCAL COMPLETE — SEO operating system documentation
+
+Created 4 SEO operating system documents in `docs/content-drafts/seo/`: master operating system (`6c-seo-operating-system-01.md`, 10 sections A–J covering operating principle, weekly/monthly workflows, 4 cluster strategy, page quality standard, RAG/AEO rules, internal linking rules, regression-safe checklist, conversion system, 90-day growth plan); reusable weekly checklist template (`6c-seo-weekly-checklist-template.md`, 15 sections); cluster content backlog (`6c-seo-cluster-backlog-01.md`, 47 items across Calendar/Visa/Life Setup/Company clusters with priority/source-risk/revenue columns); phase report (`6c-seo-operating-system-01-report.md`). No DB writes. No deploy. No public content edited.
+
+---
+
+## 2026-07-01 — Phase 6C-VISAS-NEWBORN-LINKING-CLEANUP-01-PROD DEPLOYED — newborn visa related-guide cleanup
+
+Commit `6da016d`. Fixed 2 dead slugs in `lib/related-guides.ts` for `newborn-visa-dubai` entry: `child-dependent-dubai-inside` → `spouse-dependent-visa-dubai-inside-country`, `spouse-dependent-dubai-inside` → `spouse-dependent-visa-dubai-outside-country`. Deployed via zero-downtime script. Live QA: all 10 routes 200/308 ✓. Newborn guide now renders 3 related guides (was 1). No DB writes.
+
+---
+
+## 2026-07-01 — Phase 6C-VISAS-CLUSTER-LINKING-01-PROD DEPLOYED — visa cluster internal linking polish
+
+Commit `39954ed`. Fixed dead slugs across related-guides.ts (renew-family-visa, golden-visa, parents-visa entries). Reordered family hub cards EN+RU to Spouse → Child → Parents → Newborn → Renew. All dead short-form slug names replaced with verified DB slugs. Deployed via zero-downtime script. Live QA: 10 routes 200 ✓, related guide bands all rendering ≥1 card. No DB writes.
+
+---
+
+## 2026-07-01 — Phase 6C-VISAS-PARENTS-PAGE-01-PROD DEPLOYED — parents visa guide live
+
+Commit `043ada3`. Parents visa guide (`parents-visa-dubai`) deployed to production. DB insert via Python script on server (guide + 7 steps). SOURCE_NOTES added to EN and RU guide templates. Parents card added to family hub EN+RU. Related guides wired in both directions. Live QA: 8 routes 200 ✓, HowTo JSON-LD valid, hreflang bidirectional, no forbidden phrases. GSC submission list prepared.
+
+---
+
 ## 2026-06-29 — Phase 6C-VISAS-AMER-DATA-INTEGRATION-01 LOCAL COMPLETE — AMER practical data integration
 
 DB backup: `data/guides.db.backup-pre-amer-data-integration-01-2026-06-29-17-29-55`. Integrated AMER service-centre data from owner photos into employment-visa (overview stamping checklist + ILOE fine; Step 3 MB number; Step 5 email/mobile; Step 8 full Amer counter checklist) and golden-visa-dubai-property (overview joint-ownership note + AMER fee note; Step 2 expanded to 4 property types + 30% off-plan; Step 4 AMER package AED 15k/17k; Step 7 parent AMER requirements with AED 10,500/5,000 as case-by-case AMER notes). Parents visa full content draft at docs/content-drafts/guides/parents-visa-dubai-draft.md. Build: 88/88 pages, 0 TypeScript errors. NOT deployed -- pending owner approval.

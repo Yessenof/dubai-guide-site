@@ -31,8 +31,8 @@ export const RELATED_GUIDES: Record<string, string[]> = {
     "renew-family-visa-dubai",
   ],
   "newborn-visa-dubai": [
-    "child-dependent-dubai-inside",
-    "spouse-dependent-dubai-inside",
+    "spouse-dependent-visa-dubai-inside-country",
+    "spouse-dependent-visa-dubai-outside-country",
     "renew-family-visa-dubai",
   ],
   "renew-family-visa-dubai": [

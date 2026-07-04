@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-07-01 (Phase 6C-SEO-OPERATING-SYSTEM-01 LOCAL COMPLETE -- SEO operating system documentation created. 4 docs: master operating system, weekly checklist template, cluster backlog (47 items), phase report. No DB writes. No deploy. Production HEAD: 6da016d -- newborn visa linking cleanup deployed. Visa cluster fully clean: no dead slugs in related-guides.ts, family hub card order correct EN+RU, parents visa guide live (7 steps). 19 published guides in DB.)
+Last updated: 2026-07-04 (Phase 6C-GSC-WEEKLY-01 LOCAL COMPLETE -- First GSC weekly review. No GSC performance data in repo. Weekly review doc created with manual export instructions and pending submission list. Action plan: safe micro-tasks only, no new content phase until GSC export provided. OrgSchema confirmed live in EN+RU layouts (false gap corrected in operating system doc). Production HEAD unchanged: 6da016d.)
 
 ---
 

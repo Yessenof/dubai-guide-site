@@ -585,7 +585,7 @@ This is a framework, not a forecast. Do not publish fake traffic numbers.
 | Related guides | Cleaned — no dead slugs in visa cluster ✓ |
 | Hreflang | Bidirectional EN/RU on all guide pages ✓ |
 | Sitemap | Includes all published guides, events, news, calendar pages |
-| Organization schema | Not yet implemented (gap) |
+| Organization schema | Implemented — `components/OrgSchema.tsx` in EN + RU layouts ✓ |
 | GA4 | Not yet implemented (gap) |
 | Production deploy | Zero-downtime via `scripts/deploy-zero-downtime.sh` ✓ |
 | Production DB backup | Timestamped backup before every DB write ✓ |

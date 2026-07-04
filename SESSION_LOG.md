@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-07-04 — Phase 6C-GSC-WEEKLY-01 LOCAL COMPLETE — First GSC weekly review
+
+No actual GSC performance data found in repo (no CSV/XLSX exports). Created: `6c-gsc-weekly-01-review.md` (full review including pending submission log, technical state audit, manual export instructions), `6c-gsc-weekly-01-action-plan.md` (safe micro-tasks only — no new content phase until GSC data available), `6c-gsc-export-template.md` (11-section reusable template). Discovered OrgSchema.tsx already implemented and wired into both EN+RU layouts — corrected the false gap note in `6c-seo-operating-system-01.md`. No DB writes. No deploy. No public content edited.
+
+---
+
 ## 2026-07-01 — Phase 6C-SEO-OPERATING-SYSTEM-01 LOCAL COMPLETE — SEO operating system documentation
 
 Created 4 SEO operating system documents in `docs/content-drafts/seo/`: master operating system (`6c-seo-operating-system-01.md`, 10 sections A–J covering operating principle, weekly/monthly workflows, 4 cluster strategy, page quality standard, RAG/AEO rules, internal linking rules, regression-safe checklist, conversion system, 90-day growth plan); reusable weekly checklist template (`6c-seo-weekly-checklist-template.md`, 15 sections); cluster content backlog (`6c-seo-cluster-backlog-01.md`, 47 items across Calendar/Visa/Life Setup/Company clusters with priority/source-risk/revenue columns); phase report (`6c-seo-operating-system-01-report.md`). No DB writes. No deploy. No public content edited.

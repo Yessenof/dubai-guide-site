@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-07-04 (Phase 6C-GSC-WEEKLY-01 LOCAL COMPLETE -- First GSC weekly review. No GSC performance data in repo. Weekly review doc created with manual export instructions and pending submission list. Action plan: safe micro-tasks only, no new content phase until GSC export provided. OrgSchema confirmed live in EN+RU layouts (false gap corrected in operating system doc). Production HEAD unchanged: 6da016d.)
+Last updated: 2026-07-12 (Phase 6C-CALENDAR-CTR-OPT-01 LOCAL COMPLETE -- GITEX + August 2026 calendar CTR optimization. Local DB seo_title/meta_description updated for 4 pages. Build 90/90 clean. Local QA all 4 routes HTTP 200. GITEX date confirmed December 7–11 throughout. Production DB NOT yet updated — awaiting owner approval for `db-restore-to-server.sh` + rebuild. Production HEAD unchanged: 6da016d.)
 
 ---
 

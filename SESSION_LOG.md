@@ -5,6 +5,18 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-07-12 — Phase 6C-CALENDAR-CTR-OPT-01 LOCAL COMPLETE — GITEX + August calendar CTR optimization
+
+Local DB SEO title/meta updated for 4 pages (GITEX EN/RU, August calendar EN/RU). Root cause: both seo_titles were 68 chars — full `<title>` tag was 88 chars (truncated by Google before dates appeared). New GITEX title "GITEX Global 2026: 7–11 December, Dubai — Guidex Consulting" (59 chars). New August title "Dubai Events August 2026: Concerts & Festivals — Guidex Consulting" (66 chars). All meta descriptions trimmed to ≤144 chars. Build 90/90 clean. Local QA: all 4 routes HTTP 200, titles confirmed via curl. Date safety: GITEX 2026 December 7–11 confirmed throughout — October 13–17 error in prior session doc corrected. DB backup: `backups/local/guides-backup-6c-ctr-opt-01-20260712-231529.db`. No deploy. No production DB write. No push.
+
+---
+
+## 2026-07-12 — Phase 6C-GSC-WEEKLY-02 LOCAL COMPLETE — First real GSC performance data analyzed
+
+GSC export `gsc-2026-07-09-last-28-days-performance.xlsx` (Jun 12–Jul 9) analyzed. Portfolio: 104 clicks, 7,267 impressions, 1.43% CTR. Key signals: calendar cluster = primary traffic engine (July cal 2,301 imp); GITEX = biggest CTR gap (672 imp, pos 12.21, 0.15% CTR); RU content outperforms EN on CTR (7–10%); guide content buried at pos 50–82 (domain authority, no action needed). Site accelerating: Week 4 = 2,739 impressions vs Week 1 = 1,526. Docs: `6c-gsc-weekly-02-review.md`, `6c-gsc-weekly-02-action-plan.md`. No DB writes. No deploy.
+
+---
+
 ## 2026-07-04 — Phase 6C-GSC-WEEKLY-01 LOCAL COMPLETE — First GSC weekly review
 
 No actual GSC performance data found in repo (no CSV/XLSX exports). Created: `6c-gsc-weekly-01-review.md` (full review including pending submission log, technical state audit, manual export instructions), `6c-gsc-weekly-01-action-plan.md` (safe micro-tasks only — no new content phase until GSC data available), `6c-gsc-export-template.md` (11-section reusable template). Discovered OrgSchema.tsx already implemented and wired into both EN+RU layouts — corrected the false gap note in `6c-seo-operating-system-01.md`. No DB writes. No deploy. No public content edited.

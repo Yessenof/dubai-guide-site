@@ -171,7 +171,7 @@ No GSC Coverage, Enhancements, or Sitemaps data in this export. Technical state 
 
 ## 9. Key Findings
 
-1. **GITEX is the single biggest wasted opportunity.** 672 impressions, position 12.21, CTR 0.15%. The query cluster "gitex 2026 dates / gitex dubai 2026 dates / gitex dubai dates" shows 125+ impressions all at 0 clicks. GITEX is October 13–17, 2026 at DWTC. If the title/meta doesn't lead with that fact, users won't click.
+1. **GITEX is the single biggest wasted opportunity.** 672 impressions, position 12.21, CTR 0.15%. The query cluster "gitex 2026 dates / gitex dubai 2026 dates / gitex dubai dates" shows 125+ impressions all at 0 clicks. GITEX 2026 is **December 7–11** at Expo City Dubai (main expo) and DWTC (Scale Summit). *(Note: an earlier draft of this doc stated October 13–17 — that was a data-interpretation error corrected in 6C-CALENDAR-CTR-OPT-01.)* If the title/meta doesn't lead with the actual dates, users won't click.
 
 2. **Calendar cluster is the traffic engine and accelerating.** July calendar = 32% of all impressions. August calendar is the next wave (766 impressions, pos 5.73). September calendar is already on page 1 territory (288 impressions, pos 6.08).
 

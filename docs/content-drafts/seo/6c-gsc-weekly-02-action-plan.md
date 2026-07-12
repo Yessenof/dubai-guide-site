@@ -29,15 +29,14 @@ The data is clear. Guide content is buried at positions 50–82 — a domain aut
 
 **What to change (via admin panel):**
 
-Current title pattern (likely): `GITEX Global 2026 – Dubai` or similar
-Target title: `GITEX Global 2026: Dates, Tickets & What to Expect | Dubai`
+> ⚠️ **Date correction (6C-CALENDAR-CTR-OPT-01):** Earlier draft of this doc incorrectly stated October 13–17. GITEX 2026 is **December 7–11**. Verified in DB (`event_date_start: 2026-12-07`, `event_date_end: 2026-12-11`) and confirmed at gitex.com. October 13–17 was a data-interpretation error from GSC analysis session and must not be published.
 
-Meta description: Must include the exact dates in the first 10 words.
-Target: `GITEX Global 2026 runs October 13–17 at Dubai World Trade Centre. Full schedule, ticket info, and how to register.`
+Current SEO title (actual): `GITEX Global 2026: Dates, Venue and Planning Guide | Expo City Dubai`
+Implemented title: `GITEX Global 2026: 7–11 December, Dubai`
 
-**Rule:** The exact dates (October 13–17) must be in the title OR the first sentence of the meta description. Both is better.
+Meta description implemented: `GITEX Global 2026 runs 7–11 December at Expo City Dubai. Scale Summit on 7 Dec at DWTC. Visitor and business planning guide for Dubai attendees.`
 
-**Why this works:** A user who sees "GITEX Global 2026: October 13–17 | Dubai" in position 12 will click even over a position-5 result without dates.
+**Why this works:** The original title mentioned "Dates" but didn't show them — it was 88 chars total and Google truncated before "December" appeared. The new title is 59 chars total. December 7–11 is visible in the SERP title immediately.
 
 **How to execute:** Edit the GITEX event page via admin panel — update `en_title` and `en_summary` (summary is used as the meta description). No rebuild needed for DB-driven SSG if ISR is configured; otherwise trigger rebuild.
 

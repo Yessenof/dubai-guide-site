@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-07-13 — Phase 6C-CALENDAR-CTR-OPT-01-PROD DEPLOYED — GITEX + August calendar CTR optimization live in production
+
+Production DB updated in-place (2 rows, 8 fields — events `gitex-global-2026` + calendar_pages `august-2026-dubai-calendar`). Server backup at `/var/www/guidex/backups/production-db/guides.db.pre-ctr-opt-01-20260713-185822` (852K, MD5: 794a296b6a1af846b26de7d409c328b9, integrity: ok). Zero-downtime deploy: build 41s, graceful PM2 reload ~1s. Live QA: all 4 routes HTTP 200, all titles confirmed. GITEX JSON-LD schema: 2026-12-07 → 2026-12-11 ✓. October safety scan: CLEAN on all 4 live pages. GSC re-indexing: manual checklist prepared (no API access). Production HEAD: d8a79bc. Phase 6C-CALENDAR-CTR-OPT-01-PROD COMPLETE.
+
+---
+
 ## 2026-07-12 — Phase 6C-CALENDAR-CTR-OPT-01 LOCAL COMPLETE — GITEX + August calendar CTR optimization
 
 Local DB SEO title/meta updated for 4 pages (GITEX EN/RU, August calendar EN/RU). Root cause: both seo_titles were 68 chars — full `<title>` tag was 88 chars (truncated by Google before dates appeared). New GITEX title "GITEX Global 2026: 7–11 December, Dubai — Guidex Consulting" (59 chars). New August title "Dubai Events August 2026: Concerts & Festivals — Guidex Consulting" (66 chars). All meta descriptions trimmed to ≤144 chars. Build 90/90 clean. Local QA: all 4 routes HTTP 200, titles confirmed via curl. Date safety: GITEX 2026 December 7–11 confirmed throughout — October 13–17 error in prior session doc corrected. DB backup: `backups/local/guides-backup-6c-ctr-opt-01-20260712-231529.db`. No deploy. No production DB write. No push.

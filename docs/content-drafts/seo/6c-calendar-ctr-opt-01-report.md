@@ -1,7 +1,7 @@
 # Phase Report: 6C-CALENDAR-CTR-OPT-01
 **Type:** GSC-driven title/meta CTR optimization — local implementation
 **Date:** 2026-07-12
-**Status:** LOCAL COMPLETE — ready for production DB deploy
+**Status:** PRODUCTION COMPLETE (2026-07-13) — see `6c-calendar-ctr-opt-01-prod-report.md`
 
 ---
 
@@ -166,29 +166,21 @@ All QA checks passed.
 
 ---
 
-## 12. Next Production Steps
+## 12. Production Completion (2026-07-13)
 
-**This phase is local only. Production DB still has the OLD metadata.**
+**Production deployed.** See full details in `6c-calendar-ctr-opt-01-prod-report.md`.
 
-To push to production:
+- Server backup: `/var/www/guidex/backups/production-db/guides.db.pre-ctr-opt-01-20260713-185822` ✓
+- In-place DB update: 2 rows, 8 fields ✓
+- Zero-downtime deploy: build 41s, reload ~1s ✓
+- Live QA: all 4 routes HTTP 200, titles confirmed ✓
+- GITEX schema dates: 2026-12-07 → 2026-12-11 confirmed live ✓
+- October safety: CLEAN on all 4 live pages ✓
+- GSC re-indexing: manual checklist prepared — submit 4 URLs via GSC URL Inspection
 
-1. **Transfer the local DB to production** using the standard deploy script:
-   `bash scripts/db-restore-to-server.sh`
-   This will create a server-side timestamped backup before overwriting. Do not skip.
-
-2. **Trigger rebuild on Cloudways** (required — pages are SSG/ISR):
-   `npm run build && pm2 restart guidex-production`
-   Or use `bash scripts/deploy-zero-downtime.sh` if full deploy is needed.
-
-3. **Submit updated URLs to GSC** for re-indexing:
-   - https://guidex-consulting.ae/events/gitex-global-2026
-   - https://guidex-consulting.ae/ru/events/gitex-global-2026
-   - https://guidex-consulting.ae/calendar/august-2026-dubai-calendar
-   - https://guidex-consulting.ae/ru/calendar/august-2026-dubai-calendar
-
-4. **Monitor GSC** in 3–5 days for CTR signal:
-   - GITEX: target CTR improvement from 0.15% → 2–3%
-   - August calendar: target CTR improvement from 1.57% → 3%+
+**Monitor in next GSC export (mid-August 28-day window):**
+- GITEX: target CTR 0.15% → 2–3%
+- August calendar: target CTR 1.57% → 3%+
 
 ---
 

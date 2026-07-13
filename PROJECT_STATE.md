@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-07-12 (Phase 6C-CALENDAR-CTR-OPT-01 LOCAL COMPLETE -- GITEX + August 2026 calendar CTR optimization. Local DB seo_title/meta_description updated for 4 pages. Build 90/90 clean. Local QA all 4 routes HTTP 200. GITEX date confirmed December 7–11 throughout. Production DB NOT yet updated — awaiting owner approval for `db-restore-to-server.sh` + rebuild. Production HEAD unchanged: 6da016d.)
+Last updated: 2026-07-13 (Phase 6C-CALENDAR-CTR-OPT-01-PROD COMPLETE -- GITEX + August 2026 calendar CTR metadata deployed to production. In-place DB update: 2 rows, 8 fields. Server backup: guides.db.pre-ctr-opt-01-20260713-185822. Zero-downtime deploy: d8a79bc. Live QA: all 4 routes 200, titles correct, GITEX JSON-LD dates 2026-12-07→2026-12-11 ✓, October scan clean. GSC re-indexing pending manual submission. Production HEAD: d8a79bc.)
 
 ---
 

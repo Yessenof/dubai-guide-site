@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-07-15 — Phase 6C-CALENDAR-UNIVERSE-BATCH-01A-ETIHAD-RAIL COMPLETE — Etihad Rail UAE guide created
+
+New guide `etihad-rail-uae` (category: living) inserted into local SQLite DB with 5 steps, full EN + RU content. EN title: "How to Book and Ride Etihad Rail in the UAE". RU title: "Как купить билет и поехать на поезде Etihad Rail в ОАЭ". Price: AED 55–150/trip (50% launch discount). Timeline: 1h 45min. Key facts: Phase 1 service (Abu Dhabi MBZ City ↔ Fujairah Al Hilal City) launched Jun 30, 2026; Dubai station Sep 30, 2026; Al Dhafra Dec 30, 2026; Sharjah Mar 30, 2027. SOURCE_NOTES added to EN + RU guide pages. RELATED_GUIDES entry added pointing to document-attestation-dubai, employment-visa, amer-center-dubai. Build: 92 pages, 0 TS errors. EN + RU QA pass: HTTP 200, canonical, hreflang, BreadcrumbList + Article + HowTo schema, 5 steps rendered, key content verified. Implementation report: `docs/content-drafts/seo/6c-calendar-universe-batch-01a-etihad-rail.md`. No production deploy. Commit pending.
+
+---
+
 ## 2026-07-15 — Phase 6C-CALENDAR-UNIVERSE-AUDIT-01 COMPLETE — Full UAE event intelligence audit and content architecture
 
 Research-only phase. 30+ sources reviewed, 15+ search queries, 4 direct page fetches. 130+ event candidates discovered across Jul 2026–Mar 2027. Key findings: Etihad Rail Phase 1 live since Jun 30 (zero Guidex coverage — largest gap found); Mawlid Al Nabawi Aug 24-25 missing from August calendar; Chicago the Musical Dec 16-20 confirms CCA HOLD; DSF Dec 5–Jan 11 confirmed by DET; Jony (Nov 4, Coca-Cola Arena) is highest-value RU-audience concert; Dubai Comedy Festival Oct has 7 confirmed shows. No DB write. No deploy. No production changes. 7 documentation files created: master-inventory, source-ledger, gap-analysis, seo-cluster-map, implementation-backlog, monitoring-plan, audit-report. Implementation structured in 6 batches; Batch 1 immediate priority: Etihad Rail guide + Mawlid calendar item + July/August concert additions.

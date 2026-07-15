@@ -39,6 +39,11 @@ const SOURCE_NOTES: Record<string, { note: string; sourceLabel: string; lastChec
     sourceLabel: "AMER · GDRFA Dubai",
     lastChecked: "Checked June 2026",
   },
+  "etihad-rail-uae": {
+    note: "Timetable, fares, and station details based on Etihad Rail official launch materials and verified reporting from July 2026. Launch discount fares and timetables are subject to change — confirm at etihad-rail.ae before travel.",
+    sourceLabel: "Etihad Rail · The National",
+    lastChecked: "Checked July 2026",
+  },
 };
 
 export async function generateStaticParams() {

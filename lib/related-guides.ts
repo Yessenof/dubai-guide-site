@@ -90,4 +90,9 @@ export const RELATED_GUIDES: Record<string, string[]> = {
     "golden-visa-dubai-property",
     "employment-visa",
   ],
+  "etihad-rail-uae": [
+    "document-attestation-dubai",
+    "employment-visa",
+    "amer-center-dubai",
+  ],
 };

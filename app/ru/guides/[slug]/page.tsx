@@ -36,6 +36,11 @@ const SOURCE_NOTES_RU: Record<string, { note: string; sourceLabel: string; lastC
     sourceLabel: "AMER · GDRFA Dubai",
     lastChecked: "Проверено июнь 2026",
   },
+  "etihad-rail-uae": {
+    note: "Расписание, тарифы и информация о станциях основаны на официальных материалах Etihad Rail и проверенных публикациях июля 2026 года. Скидочные тарифы и расписание могут измениться — уточняйте актуальные данные на etihad-rail.ae перед поездкой.",
+    sourceLabel: "Etihad Rail · The National",
+    lastChecked: "Проверено июль 2026",
+  },
 };
 
 interface Props {

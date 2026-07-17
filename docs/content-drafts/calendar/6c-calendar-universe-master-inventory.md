@@ -39,7 +39,7 @@ Each record contains:
 
 | ID | Event | Date | Venue / City | Status | Guidex | Level | Priority | Source |
 |----|-------|------|--------------|--------|--------|-------|----------|--------|
-| AUG-01 | Mawlid Al-Nabawi (Prophet's Birthday) | Aug 24-25 | Nationwide UAE | confirmed | **MISSING** | B | P0 | UAE Government / Time Out |
+| AUG-01 | Mawlid Al-Nabawi (Prophet's Birthday) | 25 Aug (expected) | Nationwide UAE | expected | **in (calendar, AUG-NEW-02)** ⚠️ corrected | B | P0 | Cabinet Res. 27/2024 · publicholidays.ae |
 | AUG-02 | Rasha Rizk | Aug 1 | Dubai World Trade Centre | confirmed | **MISSING** | A | P2 | The National (S01) |
 | AUG-03 | SB Girls (Halukay Ube) | Aug 8 | Etihad Arena, Yas Island, Abu Dhabi | confirmed | **MISSING** | B | P1 | The National (S01) |
 | AUG-04 | Al Shami & Leen Hayek | Aug 8 | Dubai World Trade Centre | confirmed | **MISSING** | A | P2 | The National (S01) |
@@ -52,6 +52,15 @@ Each record contains:
 | AUG-11 | Miami Band — The Miami Show 3.0 | Aug 29 | Coca-Cola Arena, Dubai | confirmed | in (calendar) | B | P1 | Prior research |
 | AUG-12 | Back to School (school year start UAE) | Aug 31 | Nationwide | confirmed | in (calendar) | A | P1 | KHDA |
 | AUG-13 | Intersolar Middle East | Sep 1 (starts) | DWTC | confirmed | partial | A | P2 | EventsEye (S02) |
+
+> **⚠️ AUDIT CORRECTION (2026-07-16, Phase 6C-CALENDAR-UNIVERSE-BATCH-01B):**
+> AUG-01 originally recorded as "Aug 24–25 / confirmed / MISSING". Both the date and status were wrong:
+> - The Mawlid Al Nabawi entry already existed in the August 2026 calendar as `AUG-NEW-02` since Phase 6C-100B (May 2026), fixed in Phase 6C-100C-A (June 2026).
+> - The legal entitlement is **one day**, not a two-day holiday.
+> - The expected date is **25 August 2026** (12 Rabi Al Awwal 1448 AH) based on astronomical calculation. Gulf News and Khaleej Times (July 13, 2026) both list August 25. No official FAHR/MoHRE 2026 announcement has been issued as of 2026-07-16.
+> - A transfer to Monday 24 August requires a separate Cabinet decision and has NOT been officially announced.
+> - Status is `expected`, not `confirmed`. Row updated accordingly. DB record updated: date `2026-08-24` → `2026-08-25`, labels corrected to remove "24–25 August" range language.
+> - Monitor FAHR/MoHRE from late July 2026 for official 2026 Mawlid circular.
 
 ---
 
@@ -232,7 +241,7 @@ Each record contains:
 
 | ID | Event | Date | Status | Guidex | Notes |
 |----|-------|------|--------|--------|-------|
-| HOL-01 | Mawlid Al Nabawi | Aug 24-25, 2026 | confirmed | **MISSING** | Public + private sector holiday |
+| HOL-01 | Mawlid Al Nabawi | 25 Aug 2026 (expected) | expected | **in (AUG-NEW-02, corrected Batch-01B)** | One-day public holiday; transfer to Aug 24 not confirmed; FAHR announcement pending |
 | HOL-02 | UAE Commemoration Day | Dec 1, 2026 | confirmed | in | Martyrs Day — public + private |
 | HOL-03 | UAE National Day | Dec 2-3, 2026 | confirmed | in (partial) | 55th National Day |
 | HOL-04 | Eid Al Adha 2026 | May 25-29, 2026 | confirmed | in | Already passed |

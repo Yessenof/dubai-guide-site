@@ -115,7 +115,7 @@ Every major venue is a potential sub-hub.
 **URL:** /guides/uae-public-holidays-2026 (or /calendar/uae-public-holidays-2026)
 **Target queries:** "uae public holidays 2026", "public holidays dubai 2026", "2026 uae holidays"
 **Page type:** Level E live intelligence
-**Notes:** Mawlid Aug 24-25 is MISSING and is imminent.
+**Notes:** ~~Mawlid Aug 24-25 is MISSING and is imminent.~~ **CORRECTED (Batch-01B, 2026-07-16):** Mawlid was already present as `AUG-NEW-02`. Date corrected to 25 Aug 2026 (expected). Transfer to Aug 24 not officially confirmed. One-day holiday.
 
 ### 4.8 Formula 1 Abu Dhabi (existing)
 **URL:** /events/formula-1-abu-dhabi-grand-prix-2026 (exists)
@@ -245,7 +245,7 @@ Every major venue is a potential sub-hub.
 ## 11. Priority SEO actions from this phase
 
 1. **Etihad Rail guide** — biggest missing search opportunity. No competitor has a clean EN/RU guide yet.
-2. **Mawlid Al Nabawi Aug 24-25** — public holiday in 7 weeks. Zero coverage.
+2. **Mawlid Al Nabawi 25 Aug 2026 (expected)** — ✅ DONE (Batch-01B, 2026-07-16): AUG-NEW-02 updated with correct single date, confidence=expected. Original "Aug 24-25 / zero coverage" finding was incorrect — record existed since Phase 6C-96B.
 3. **Dubai Shopping Festival page** — Dec 5 confirmed. High commercial and search value.
 4. **Global Village Season 31 page** — date pending but should be created as draft now.
 5. **Jony (Nov 4)** — highest-value Russian-audience concert. Should have RU-priority treatment.

@@ -28,7 +28,7 @@
 | Candidate | Type | Action | EN/RU | DB table | Priority |
 |-----------|------|--------|-------|----------|----------|
 | Etihad Rail passenger service guide | Guide page | Create /guides/etihad-rail-dubai | Both | guides + steps | P0 |
-| Mawlid Al Nabawi Aug 24-25, 2026 | Calendar item | Add to august-2026-dubai-calendar | Both | calendar_pages.dates_json | P0 |
+| Mawlid Al Nabawi 25 Aug 2026 (expected) | Calendar item | **DONE** — `AUG-NEW-02` in august-2026-dubai-calendar; date corrected to 2026-08-25 in Phase 6C-CALENDAR-UNIVERSE-BATCH-01B | Both | calendar_pages.dates_json | P0 |
 | Etihad Rail Sep 30 milestone (calendar) | Calendar item | Add to september-2026-dubai-calendar | Both | calendar_pages.dates_json | P0 |
 | Dubai Shopping Festival 2026 (draft) | Event page | Create /events/dubai-shopping-festival-2026 (draft) | Both | events | P0 |
 | Global Village Season 31 (draft) | Event page | Create /events/global-village-dubai-season-31 (draft status) | Both | events | P0 |
@@ -46,7 +46,7 @@
 
 | Candidate ID | Event | Date | Action | EN/RU |
 |-------------|-------|------|--------|-------|
-| AUG-01 | Mawlid Al Nabawi | Aug 24-25 | Add to august-2026-dubai-calendar | Both (HIGH PRIORITY) |
+| AUG-01 | Mawlid Al Nabawi | 25 Aug (expected) | **DONE** — `AUG-NEW-02` updated in Phase 6C-CALENDAR-UNIVERSE-BATCH-01B; one-day record, date 2026-08-25, confidence=expected | Both ✓ |
 | AUG-02 | Rasha Rizk | Aug 1 | Add to august-2026-dubai-calendar | Both |
 | AUG-03 | SB Girls (Abu Dhabi) | Aug 8 | Add to august-2026-dubai-calendar | Both |
 | AUG-04 | Al Shami & Leen Hayek | Aug 8 | Add to august-2026-dubai-calendar | EN first |

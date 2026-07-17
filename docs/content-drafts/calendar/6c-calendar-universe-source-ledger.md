@@ -94,8 +94,8 @@
 - **Access date:** 2026-07-14
 - **Type:** T1/T3 — cross-verified
 - **Reliability:** HIGH for confirmed dates; MEDIUM for moon-sighting dependent dates
-- **Events covered:** Mawlid Al Nabawi Aug 24-25, 2026; UAE Commemoration Day Dec 1; UAE National Day Dec 2-3
-- **Notes:** Hijri New Year (Jun 15-16) already passed. Mawlid Aug 24-25 is CRITICAL — may not be in calendar.
+- **Events covered:** Mawlid Al Nabawi ~Aug 25, 2026 (expected); UAE Commemoration Day Dec 1; UAE National Day Dec 2-3
+- **Notes:** Hijri New Year (Jun 15-16) already passed. Mawlid expected 25 Aug 2026 — **now in calendar as AUG-NEW-02 (corrected in Phase 6C-CALENDAR-UNIVERSE-BATCH-01B, 2026-07-16)**. Original audit listed "Aug 24-25" in error — legal entitlement is one day, expected date is Aug 25, transfer to Aug 24 not officially confirmed. Monitor FAHR/MoHRE from late July for official 2026 circular.
 
 ### S10 — Abu Dhabi Festival: Etihad Rail + ADNEC search results
 - **URL:** Multiple (eventseye, clocate.com)

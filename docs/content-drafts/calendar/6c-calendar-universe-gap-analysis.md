@@ -15,7 +15,7 @@ Based on Phase 6C-97A (June 5, 2026) plus Batch 2B production import:
 | May 2026 | may-2026-uae-calendar | ~5 | Eid Al Adha anchor. Historical — complete. |
 | June 2026 | june-2026-dubai-calendar | ~8 | Hijri New Year, Emiratisation, corporate tax. Adequate for an administrative month. |
 | July 2026 | july-2026-dubai-calendar | ~6 | DSS, Modesh World, Beat The Heat. Was CRITICAL (3) before batch; now improved. Still missing: 4+ concerts confirmed Jul 18–26. |
-| August 2026 | august-2026-dubai-calendar | ~8 | DSS Back to School, Def Leppard, DIHAD, Back to School, This Is Michael. Missing: Mawlid Al Nabawi (public holiday!), Rasha Rizk, SB Girls, Thaalam Beats, Sonu Nigam, Miami Band. |
+| August 2026 | august-2026-dubai-calendar | ~8 | DSS Back to School, Def Leppard, DIHAD, Back to School, This Is Michael, Mawlid Al Nabawi (AUG-NEW-02 — expected 25 Aug, corrected in Batch-01B). Still missing: Rasha Rizk, SB Girls, Thaalam Beats, Sonu Nigam, Miami Band. |
 | September 2026 | september-2026-dubai-calendar | ~12 | 7 trade shows, 1 tax, Christina Aguilera, Paul Oakenfold, The Corrs, ATB. Relatively strong. Missing: K-Pop Fever, school term start. |
 | October 2026 | october-2026-dubai-calendar | ~8 | Beautyworld, WETEX, Richard Marx, mid-term, VAT Q3, El Row, DFC. Missing: Dubai Comedy Festival (7+ events), 10+ concerts, CABSAT, Airport Show, ArabLab. |
 | November 2026 | november-2026-dubai-calendar | ~14 | ADIPEC, DDW, Big 5, Sharjah BF, Dubai Ride, ANOTR, When Chai Met Toast, Anuv Jain, KEINEMUSIK, Dubai Run, Atif Aslam, Hiba Tawaji + Batch 2B. Still missing: Jony (Nov 4), Dubai 7s (Nov 27-29), Benjamin Clementine (Nov 1), Offlimits Shakira/Jonas Brothers (Nov 21), Tarkan (Nov 27), American Ballet Theatre (Nov 20). |
@@ -52,7 +52,7 @@ Etihad Rail is the UAE's biggest infrastructure news of 2026. Guidex has zero co
 
 | Gap item | Status | Notes |
 |----------|--------|-------|
-| Mawlid Al Nabawi Aug 24-25, 2026 | MISSING from calendar | Public holiday for public AND private sector |
+| Mawlid Al Nabawi 25 Aug 2026 (expected) | ✅ IN CALENDAR (AUG-NEW-02) — corrected in Phase 6C-CALENDAR-UNIVERSE-BATCH-01B (2026-07-16) | One-day holiday; transfer to Aug 24 not confirmed; monitor FAHR |
 | UAE National Day Nov 30 – Dec 3 | PARTIAL — Dec 2-3 in calendar but Nov 30 may be missing | Commemoration Day Dec 1 in calendar but National Day celebrations start earlier |
 | 2027 public holidays | NOT COVERED | Hijri New Year 2027 expected ~Jun 6; Eid Al Fitr 2027 expected ~Mar 20; Ramadan 2027 expected ~Mar (exact date TBC) |
 

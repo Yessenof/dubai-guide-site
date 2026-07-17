@@ -1,6 +1,6 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-07-15 (Phase 6C-CALENDAR-UNIVERSE-BATCH-01A-ETIHAD-RAIL COMPLETE — Etihad Rail UAE passenger guide created locally. Slug: etihad-rail-uae, category: living, 5 steps, full EN+RU, published=true. Local DB written, build passes (92 pages, 0 errors), EN + RU QA pass. 3 code files modified: SOURCE_NOTES in EN+RU guide pages, RELATED_GUIDES in lib/related-guides.ts. No production deploy. Commit pending. Next: Batch 01B — Mawlid Aug 24-25 + July/August concert additions.
+Last updated: 2026-07-16 (Phase 6C-CALENDAR-UNIVERSE-BATCH-01B-MAWLID-2026 COMPLETE — Mawlid AUG-NEW-02 record corrected in local DB: date 2026-08-24 → 2026-08-25 (expected, one day, no transfer confirmed); labels/briefs updated to remove "24-25 August" range language; explicit transfer-not-confirmed note added EN+RU. Six Calendar Universe audit docs corrected (master inventory, backlog, gap analysis, source ledger, SEO cluster map, audit report). Build: 92 pages, 0 TS errors. No code files changed. No production deploy. Commit pending. Batch 01A (Etihad Rail) also pending commit. Next: Batch 01C — July 2026 concert additions.
 
 Previously: Phase 6C-CALENDAR-UNIVERSE-AUDIT-01 COMPLETE — Full UAE event intelligence audit. 130+ candidates found. Critical gaps: Etihad Rail (zero coverage), Mawlid Aug 24-25 (missing public holiday), DSF Dec 5 (missing), Chicago Musical Dec 16-20 (HOLD resolved). 7 docs created. No DB write. No deploy. Production HEAD: d4574ad.
 

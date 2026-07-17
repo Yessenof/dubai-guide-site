@@ -102,7 +102,7 @@
 | Gap | Why critical | Action |
 |-----|-------------|--------|
 | **Etihad Rail** | Phase 1 live since June 30. Dubai station Sep 30. Zero coverage on Guidex. Massive search demand. | Create guide + calendar milestones (Batch 1) |
-| **Mawlid Al Nabawi Aug 24-25** | Confirmed public holiday in 6 weeks. MISSING from August calendar. | Calendar item this week (Batch 1) |
+| **Mawlid Al Nabawi 25 Aug 2026 (expected)** | ✅ DONE (Batch-01B): AUG-NEW-02 updated. One-day holiday, expected Aug 25 (not 24-25 — audit error). Transfer to Aug 24 not confirmed. Monitor FAHR. | Corrected 2026-07-16 |
 | **Dubai Shopping Festival Dec 5** | 31st edition officially confirmed. Major commercial and search opportunity. | Draft event page (Batch 1) |
 | **Global Village Season 31** | Expected mid-Oct. Zero coverage. ~40 impression signal already in GSC for Oct calendar. | Draft event page (Batch 1); publish when confirmed |
 | **Dubai Fitness Challenge** | Oct 31–Nov 29. Government flagship. Sub-events already in calendar but no anchor page. | Event page (Batch 2) |
@@ -119,7 +119,7 @@ Etihad Rail is the single biggest white-space opportunity. Phase 1 has been live
 
 | Item | Date | Status | Action required |
 |------|------|--------|----------------|
-| Mawlid Al Nabawi | Aug 24-25, 2026 | **MISSING from calendar** | Add calendar item NOW |
+| Mawlid Al Nabawi | 25 Aug 2026 (expected) | ✅ DONE (Batch-01B, 2026-07-16) — AUG-NEW-02 corrected | One-day holiday, confidence=expected |
 | Rasha Rizk concert | Aug 1 | Missing | Add to Aug calendar |
 | SB Girls | Aug 8 | Missing | Add to Aug calendar |
 | Thaalam Beats | Aug 15 | Missing | Add to Aug calendar |
@@ -259,7 +259,7 @@ See full plan in `6c-calendar-universe-monitoring-plan.md`.
 
 1. **Etihad Rail passenger service** — Phase 1 live Jun 30, 2026. Dubai station Sep 30. Al Dhafra Dec 30. Sharjah Mar 30, 2027. 11-city network. Completely absent from Guidex — the single largest content gap.
 
-2. **Mawlid Al Nabawi Aug 24-25** — confirmed public holiday in ~6 weeks. Missing from August calendar.
+2. **Mawlid Al Nabawi 25 Aug 2026 (expected)** — ✅ DONE (Batch-01B, 2026-07-16): AUG-NEW-02 updated with correct single date Aug 25. Audit originally said "Aug 24-25 / confirmed / MISSING" — all three assertions were wrong. Legal entitlement is one day; expected date is Aug 25 (not 24-25 range); record existed in DB since Phase 6C-96B. Transfer to Aug 24 not officially confirmed.
 
 3. **Chicago the Musical Dec 16-20, Coca-Cola Arena** — resolves the Jun 2026 HOLD on "CCA Dec 16-20 event identity."
 
@@ -282,7 +282,7 @@ See full plan in `6c-calendar-universe-monitoring-plan.md`.
 ## Next immediate action (Batch 1, Week 1)
 
 1. Create Etihad Rail passenger service guide (`/guides/etihad-rail-dubai`) — EN + RU
-2. Add Mawlid Al Nabawi Aug 24-25 to August 2026 calendar — EN + RU
+2. ✅ Mawlid Al Nabawi 25 Aug 2026 (expected) — DONE (Batch-01B): AUG-NEW-02 date corrected from Aug 24 to Aug 25
 3. Add 4 July concerts (JUL-05 through JUL-08) to July calendar
 4. Add 6+ August concerts + DUPHAT to August calendar
 5. Create draft DSF event page (`/events/dubai-shopping-festival-2026`)

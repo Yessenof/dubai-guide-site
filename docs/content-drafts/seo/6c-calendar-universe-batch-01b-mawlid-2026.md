@@ -1,8 +1,8 @@
 # Phase 6C-CALENDAR-UNIVERSE-BATCH-01B-MAWLID-2026 — Implementation Report
 
-**Phase:** 6C-CALENDAR-UNIVERSE-BATCH-01B-MAWLID-2026
-**Date:** 2026-07-16
-**Status:** COMPLETE — local DB written, audit docs corrected, build verification pending
+**Phase:** 6C-CALENDAR-UNIVERSE-BATCH-01B-MAWLID-2026 + FIX-01
+**Date:** 2026-07-16 (FIX-01: 2026-07-18)
+**Status:** COMPLETE — FIX-01 applied 2026-07-18; build verified (92 pages, 0 TS errors); dev QA EN+RU passed
 
 ---
 
@@ -355,3 +355,75 @@ Do not begin until Batch 01B is committed and pushed.
 | data/guides.db not committed | CONFIRMED ✓ |
 | No concerts modified | CONFIRMED ✓ |
 | Etihad Rail Batch 01A undeployed | CONFIRMED ✓ |
+
+---
+
+## 29. FIX-01 Addendum (2026-07-18)
+
+### What changed from Batch-01B
+
+Phase 6C-CALENDAR-UNIVERSE-BATCH-01B-FIX-01 hardened the AUG-NEW-02 record that Batch-01B created. Five issues corrected:
+
+| Issue | Batch-01B state | FIX-01 state |
+|-------|-----------------|--------------|
+| label_en | "Prophet Muhammad's Birthday (Mawlid Al Nabi) — UAE public holiday (expected 25 August 2026, subject to official moon-sighting confirmation)" | "Prophet Muhammad's Birthday (Mawlid Al Nabi)" |
+| label_ru | Long with moon-sighting wording | "День рождения пророка Мухаммеда (Мавлид ан-Наби)" |
+| short_label_en | "Mawlid holiday" | "Prophet's Birthday" |
+| short_label_ru | "Маулид" | "День Пророка" |
+| brief_en/ru wording | "subject to official moon-sighting confirmation" | "subject to official UAE confirmation of the Hijri date" |
+| source_url / cta_url | publicholidays.ae (T3 aggregator) | https://u.ae/en/information-and-services/public-holidays-and-religious-affairs/public-holidays |
+| source_label_en | "UAE Cabinet Resolution 27/2024 · publicholidays.ae" | "UAE Government Portal · Cabinet Resolution No. 27/2024" |
+| cta_label_en | "UAE public holidays" | "Official UAE public holidays" |
+| cta_label_ru | "Праздники ОАЭ" | "Праздники ОАЭ (официально)" |
+| source_label_ru | included publicholidays.ae | "Правительство ОАЭ · Постановление Кабинета № 27/2024" |
+
+**Unchanged:** date (2026-08-25), confidence (expected), source_status (expected), type, priority, emirate, lifecycle, detail_url, noindex_after, archive_action. No other datesJson items modified.
+
+### Why
+
+- **Short labels:** Status/date belongs in the confidence badge and brief, not in the title. Label fields are used as headings — cramming uncertainty language into them creates visual noise.
+- **Moon-sighting wording:** UAE authorities confirm holiday dates by administrative decree referencing the Hijri calendar. Saying "moon-sighting confirmation" implies a specific astronomical observation process as the mechanism; the accurate description is "official UAE confirmation of the Hijri date."
+- **publicholidays.ae → UAE Gov Portal:** A T3 aggregator as the primary CTA sends users to a third party when the UAE Government Portal (u.ae) carries the official list, was last updated 02 Jul 2026, and explicitly lists Prophet Mohammed's Birthday under Cabinet Resolution No. 27 of 2024. This is a T1 source.
+
+### FIX-01 source research (2026-07-18)
+
+| Source | URL | Finding |
+|--------|-----|---------|
+| UAE Government Portal — Public Holidays | u.ae/en/information-and-services/public-holidays-and-religious-affairs/public-holidays | CONFIRMED OFFICIAL ✓. Last updated 02 Jul 2026. Lists Prophet Mohammed's Birthday. Cabinet Resolution No. 27 of 2024 cited. |
+| FAHR news | fahr.gov.ae | Still no 2026-specific Mawlid circular |
+| MoHRE news | mohre.gov.ae | Still no 2026-specific Mawlid circular |
+
+### FIX-01 reproducibility script
+
+`scripts/patch-aug-mawlid-batch01b-fix01.ts` — idempotent TypeScript patch. Pattern mirrors `scripts/fix-august-mawlid-flags-6c100ca.ts`. Pre-checks verify slug exists, AUG-NEW-02 exists, date=2026-08-25, confidence=expected. Idempotency guard exits cleanly if already applied. Post-assertions verify all 11 NEW_VALUES fields, item count unchanged, no other items modified.
+
+### FIX-01 QA results (2026-07-18)
+
+| # | Check | Result |
+|---|-------|--------|
+| F1 | publicholidays.ae count in EN page = 0 | PASS ✓ |
+| F2 | href="https://u.ae/..." in EN page | PASS ✓ (appears twice — source + CTA) |
+| F3 | "Official UAE public holidays" in EN page | PASS ✓ |
+| F4 | "moon-sighting" in page from has_islamic_dates amber disclaimer only (not brief) | PASS ✓ |
+| F5 | "Мавлид ан-Наби" in RU page | PASS ✓ |
+| F6 | "Праздники ОАЭ (официально)" in RU page | PASS ✓ |
+| F7 | u.ae URL in RU page | PASS ✓ |
+| F8 | "Правительство ОАЭ" in RU page | PASS ✓ |
+| F9 | idempotent script exits cleanly on re-run | PASS ✓ |
+| F10 | Build: 92 pages, 0 TS errors | PASS ✓ |
+
+### FIX-01 files changed
+
+| File | Change type |
+|------|------------|
+| `data/guides.db` (local, gitignored) | AUG-NEW-02 mutated (11 fields) via Python3 |
+| `scripts/patch-aug-mawlid-batch01b-fix01.ts` | NEW — idempotent TS reproducibility script |
+| `docs/content-drafts/seo/6c-calendar-universe-batch-01b-mawlid-2026.md` | FIX-01 addendum + status update |
+| `PROJECT_STATE.md` | Updated |
+| `SESSION_LOG.md` | FIX-01 entry added |
+
+### FIX-01 known limitations (updated)
+
+- `has_islamic_dates=1` on August calendar page correctly triggers the amber moon-sighting disclaimer UI component — this is separate from the brief and is correct behavior.
+- source_url now points to UAE Government Portal (T1). When FAHR/MoHRE issues the official 2026 circular, Phase 6C-100C-B should update source_url to that specific circular URL.
+- Date remains expected/provisional. Official announcement window: late July – early August 2026.

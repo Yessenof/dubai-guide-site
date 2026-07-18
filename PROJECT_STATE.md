@@ -1,6 +1,8 @@
 # Project State — Dubai Guide Site
 
-Last updated: 2026-07-18 (Phase 6C-CALENDAR-UNIVERSE-BATCH-01C-JULY-LIVE-EVENTS-2026 COMPLETE — 4 July 2026 concert items added to july-2026-dubai-calendar.dates_json (6 → 10 items): JUL-NEW-04 Dystinct & Issam Najjar (Jul 18, DWTC Hall 8, AED 105+); JUL-NEW-05 Michael Lives Forever tribute show (Jul 18, Coca-Cola Arena, AED 125+); JUL-NEW-06 Talal Sam & Sultan Al Murshed (Jul 25, DWTC Hall 8, AED 105+; Platinumlist Aug 21 date error resolved → Case B July 25 confirmed); JUL-NEW-07 Indie Soulfest Bismil + Indian Ocean (Jul 26, Coca-Cola Arena, AED 99+). DB backup: backups/local/guides.db.pre-batch01c-july-events-2026-07-18-010600 (896K). Build: 92 pages, 0 TS errors. Dev QA EN+RU: all 4 events present, "tribute" label on Michael show, ticket prices correct. Six audit docs updated. Batch 01C implementation report created. No production deploy. Commits pending.
+Last updated: 2026-07-18 (Phase 6C-INFRA-UPCLOUD-DNS-CUTOVER-01 COMPLETE — Confirmed guidex-consulting.ae → 85.9.203.69 already live (DNS set April 2026, no change needed). All Batch 01ABC content live: Etihad Rail guide (5 steps EN/RU hreflang), July calendar 10 items (JUL-NEW-04/05/06/07 added), August Mawlid AUG-NEW-02 (date=2026-08-25, u.ae source). SSL valid to 2026-09-26. PM2 online, 16/16 QA routes 200. guidex.ae secondary domain still → 139.162.173.118 (not canonical, left unchanged). Production HEAD: ef8b58f. Recommended next: guidex.ae cleanup at Tasjeel + Phase 6C-GSC-INDEXING-RECOVERY for new URLs.)
+
+Previously: 2026-07-18 (Phase 6C-CALENDAR-UNIVERSE-BATCH-01C-JULY-LIVE-EVENTS-2026 COMPLETE — 4 July 2026 concert items added to july-2026-dubai-calendar.dates_json (6 → 10 items): JUL-NEW-04 Dystinct & Issam Najjar (Jul 18, DWTC Hall 8, AED 105+); JUL-NEW-05 Michael Lives Forever tribute show (Jul 18, Coca-Cola Arena, AED 125+); JUL-NEW-06 Talal Sam & Sultan Al Murshed (Jul 25, DWTC Hall 8, AED 105+; Platinumlist Aug 21 date error resolved → Case B July 25 confirmed); JUL-NEW-07 Indie Soulfest Bismil + Indian Ocean (Jul 26, Coca-Cola Arena, AED 99+). DB backup: backups/local/guides.db.pre-batch01c-july-events-2026-07-18-010600 (896K). Build: 92 pages, 0 TS errors. Dev QA EN+RU: all 4 events present, "tribute" label on Michael show, ticket prices correct. Six audit docs updated. Batch 01C implementation report created. No production deploy. Commits pending.
 
 Previously: 2026-07-18 — Phase 6C-CALENDAR-UNIVERSE-BATCH-01B-FIX-01 COMPLETE — AUG-NEW-02 Mawlid sourcing hardened: labels shortened (event identity only, no status/date/moon-sighting in title); brief rewritten ("official UAE confirmation of the Hijri date", not "moon-sighting confirmation"); publicholidays.ae CTA replaced with UAE Government Portal (u.ae, last updated 02 Jul 2026, T1 official); source_label → "UAE Government Portal · Cabinet Resolution No. 27/2024"; idempotent TS patch script scripts/patch-aug-mawlid-batch01b-fix01.ts created. DB backup: backups/local/guides.db.pre-mawlid-batch01b-fix01-2026-07-18-001319 (892K). All assertions passed. Build: 92 pages, 0 TS errors. Dev QA EN+RU pass: "Official UAE public holidays" + u.ae present, no publicholidays.ae. No production deploy. Committed: c18a5ed.
 
@@ -224,13 +226,13 @@ Group pages live:
 | Nginx | /etc/nginx/sites-enabled/guidex-consulting.ae |
 | Production domain | https://guidex-consulting.ae ✅ LIVE |
 | WWW | https://www.guidex-consulting.ae ✅ LIVE |
-| SSL | Let's Encrypt — valid to 2026-07-28, auto-renewal via certbot.timer |
+| SSL | Let's Encrypt — valid to 2026-09-26 (70 days), auto-renewal via certbot.timer |
 | HTTP → HTTPS redirect | ✅ 301 |
 | DNS A record | @ + www → 85.9.203.69 (updated at Tasjeel 2026-04-29) |
 | Smoke test | 9/9 HTTPS routes 200 ✅, HTTP→HTTPS 301 ✅ |
-| GitHub | dd2ab89 — up to date (code); DB content added to production directly via script, not committed |
-| Production DB | 2 news posts + 1 event + 3 calendar pages + 17 guides |
-| Production DB backup | /var/backups/guidex/guides.db.pre-longweekend-6c47-20260521-192515 |
+| GitHub | ef8b58f — up to date (code + patch script) |
+| Production DB | 2 news posts + 1 event + 11 calendar pages + 19 guides + 127 steps |
+| Production DB backup | /var/www/guidex/data/guides.db.pre-batch01abc-20260718-113859 (server-side) |
 | Swap | 2 GB swapfile (persistent via /etc/fstab) |
 
 **Previous host:** Cloudways (165.245.187.15) — decommissioned after migration.

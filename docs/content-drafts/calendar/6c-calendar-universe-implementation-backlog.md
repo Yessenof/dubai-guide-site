@@ -37,10 +37,10 @@
 
 | Candidate ID | Event | Date | Action | EN/RU |
 |-------------|-------|------|--------|-------|
-| JUL-05 | Dystinct & Issam Najjar | Jul 18 | Add to july-2026-dubai-calendar | EN required, RU if time |
-| JUL-06 | Michael Lives Forever | Jul 18 | Add to july-2026-dubai-calendar | Both |
-| JUL-07 | Talal Sam & Sultan Al Murshed | Jul 25 | Add to july-2026-dubai-calendar | Both |
-| JUL-08 | Indie Soulfest | Jul 26 | Add to july-2026-dubai-calendar | Both |
+| JUL-05 | Dystinct & Issam Najjar | Jul 18 | **DONE** — `JUL-NEW-04` in july-2026-dubai-calendar (Phase 6C-CALENDAR-UNIVERSE-BATCH-01C, 2026-07-18) | Both ✓ |
+| JUL-06 | Michael Lives Forever (MJ tribute) | Jul 18 | **DONE** — `JUL-NEW-05` in july-2026-dubai-calendar; tribute show clearly identified; Rodrigo Teaser performer | Both ✓ |
+| JUL-07 | Talal Sam & Sultan Al Murshed | Jul 25 | **DONE** — `JUL-NEW-06` in july-2026-dubai-calendar; date conflict resolved: July 25 confirmed (Case B) via Visit Dubai + Beat The Heat series schedule (Platinumlist ID 106643 showing Aug 21 is a data error — series runs Saturdays; Jul 25 = Saturday; Aug 21 = Friday) | Both ✓ |
+| JUL-08 | Indie Soulfest | Jul 26 | **DONE** — `JUL-NEW-07` in july-2026-dubai-calendar; Bismil + Indian Ocean, Coca-Cola Arena | Both ✓ |
 
 ### B1-C: August 2026 calendar items (within 30 days)
 

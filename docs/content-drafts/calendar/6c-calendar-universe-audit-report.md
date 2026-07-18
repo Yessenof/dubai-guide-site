@@ -47,7 +47,7 @@
 
 | Month | Total candidates | Already in Guidex | Missing | Net new to add |
 |-------|-----------------|-------------------|---------|---------------|
-| July 2026 | 10 | 6 | 4 | 4 |
+| July 2026 | 10 | 10 | 0 | 0 (all 4 implemented in Batch-01C 2026-07-18) |
 | August 2026 | 13 | 6 | 7 | 7 (incl. Mawlid P0) |
 | September 2026 | 20 | 11 | 9 | 9 |
 | October 2026 | 35 | 8 | 24 | 24 |

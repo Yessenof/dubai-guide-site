@@ -60,7 +60,7 @@ Every major venue is a potential sub-hub.
 
 | Month | Primary keyword | Secondary keywords |
 |-------|----------------|-------------------|
-| July 2026 | dubai events july 2026 | things to do dubai july, concerts dubai july |
+| July 2026 | dubai events july 2026 | things to do dubai july, concerts dubai july — **FULLY COVERED** as of Batch-01C (2026-07-18): 10 items incl. Beat The Heat (Jul 18, Jul 25), Michael Lives Forever (Jul 18), Indie Soulfest (Jul 26) |
 | August 2026 | dubai events august 2026 | concerts dubai august, festivals august dubai |
 | September 2026 | dubai events september 2026 | exhibitions september dubai, conferences september |
 | October 2026 | dubai events october 2026 | concerts october dubai, exhibitions october |

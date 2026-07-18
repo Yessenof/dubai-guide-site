@@ -145,6 +145,30 @@
 - **Events covered:** Batch 2B imports (Nov 8 items + Dec 1 item); HOLDs documented; sources exhausted note for July
 - **Notes:** Predates July 14, 2026. Some HOLDs (Beat The Heat, Global Village, DSF, Chicago CCA) now partially resolved.
 
+### S16 — Visit Dubai official events calendar (Batch 01C, 2026-07-18)
+- **URL:** https://www.visitdubai.com/en/festivals-and-events/dubai-events-calendar/
+- **Access date:** 2026-07-18
+- **Type:** T1 — official Dubai Tourism / Dubai Calendar
+- **Reliability:** HIGH — official government-backed events calendar, maintained by DXB Calendar office
+- **Events covered (Batch 01C):** Beat The Heat S5 — Dystinct & Issam Najjar (Jul 18, DWTC); Beat The Heat S5 — Talal Sam & Sultan Al Murshed (Jul 25, DWTC confirmed)
+- **Notes:** Resolved Platinumlist ID 106643 date discrepancy — Visit Dubai confirms Jul 25 for Talal Sam/Sultan; Platinumlist page shows Aug 21 (a data error; Beat The Heat series runs Saturdays, Jul 25 = Sat, Aug 21 = Fri)
+
+### S17 — Coca-Cola Arena official event pages (Batch 01C, 2026-07-18)
+- **URL:** https://coca-cola-arena.com/music/
+- **Access date:** 2026-07-18
+- **Type:** T1 — official venue (Coca-Cola Arena, City Walk Dubai)
+- **Reliability:** HIGH — official venue listings
+- **Events covered (Batch 01C):** Michael Lives Forever (Jul 18); Indie Soulfest / Bismil & Indian Ocean (Jul 26)
+- **Notes:** Michael Lives Forever confirmed as tribute show (Rodrigo Teaser), not Michael Jackson performing. Both events listed with ticket prices and doors/show times.
+
+### S18 — Beat The Heat DXB Season 5: Official schedule (mid-east.info, 2026-07-18)
+- **URL:** https://mid-east.info/dubais-beat-the-heat-returns-for-its-fifth-season-with-an-all-star-music-line-up/
+- **Access date:** 2026-07-18
+- **Type:** T3 — verified press release republication
+- **Reliability:** HIGH — quotes official organiser press release; full 7-night schedule confirmed
+- **Events covered:** Jul 11 (Cairokee), Jul 18 (Dystinct & Issam Najjar), Jul 25 (Talal Sam & Sultan Al Murshed), Aug 1 (Rasha Rizk), Aug 8 (Al Shami), Aug 15 (Marwan Moussa & Haleem), Aug 22 (Leg_cy & Aziz Maraka & Big Sam)
+- **Notes:** Confirms weekly Saturday night series. Platinumlist ID 106643 showing Aug 21 (Friday) for Talal Sam is a data error; confirmed July 25 (Saturday) from this source.
+
 ---
 
 ## Source gaps and follow-up required

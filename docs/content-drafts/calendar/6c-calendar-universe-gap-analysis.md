@@ -70,11 +70,11 @@ Etihad Rail is the UAE's biggest infrastructure news of 2026. Guidex has zero co
 
 From The National's verified July 12, 2026 list, the following are confirmed but not yet in Guidex:
 
-**July 2026** (4 missing):
-- Dystinct & Issam Najjar — Jul 18, DWTC
-- Michael Lives Forever — Jul 18, Coca-Cola Arena
-- Talal Sam & Sultan Al Murshed — Jul 25, DWTC
-- Indie Soulfest (Bismil, Indian Ocean) — Jul 26, Coca-Cola Arena
+**July 2026** (0 missing — all 4 implemented in Phase 6C-CALENDAR-UNIVERSE-BATCH-01C, 2026-07-18):
+- ✅ Dystinct & Issam Najjar — Jul 18, DWTC Hall 8 → JUL-NEW-04
+- ✅ Michael Lives Forever (MJ tribute) — Jul 18, Coca-Cola Arena → JUL-NEW-05
+- ✅ Talal Sam & Sultan Al Murshed — Jul 25, DWTC Hall 8 → JUL-NEW-06 (Platinumlist date error Aug 21 resolved: July 25 confirmed, Case B)
+- ✅ Indie Soulfest (Bismil + Indian Ocean) — Jul 26, Coca-Cola Arena → JUL-NEW-07
 
 **August 2026** (5 missing):
 - Rasha Rizk — Aug 1, DWTC

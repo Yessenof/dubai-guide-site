@@ -26,10 +26,10 @@ Each record contains:
 | JUL-02 | Modesh World | Jul 3 – Aug 9 | Dubai Exhibition Centre | confirmed | in (calendar item) | B | P1 | Visit Dubai |
 | JUL-03 | Beat The Heat DXB 2026 | Jul 11 – Aug 8 (5 nights) | DWTC | announced | partial (calendar item) | B | P1 | beattheheatdxb.ae |
 | JUL-04 | Dubai Opera (Khiran Resort) | Jul 3-4 | Dubai Opera | confirmed | in (calendar item) | A | P3 | Dubai Opera |
-| JUL-05 | Dystinct & Issam Najjar | Jul 18 | Dubai World Trade Centre | confirmed | **MISSING** | A | P1 | The National (S01) |
-| JUL-06 | Michael Lives Forever (MJ tribute) | Jul 18 | Coca-Cola Arena, Dubai | confirmed | **MISSING** | B | P1 | The National (S01) |
-| JUL-07 | Talal Sam & Sultan Al Murshed | Jul 25 | Dubai World Trade Centre | confirmed | **MISSING** | A | P2 | The National (S01) |
-| JUL-08 | Indie Soulfest (Bismil + Indian Ocean) | Jul 26 | Coca-Cola Arena, Dubai | confirmed | **MISSING** | B | P1 | The National (S01) |
+| JUL-05 | Dystinct & Issam Najjar | Jul 18 | Dubai World Trade Centre Hall 8 | confirmed | **in (JUL-NEW-04) ✓ Batch-01C** | A | P1 | Visit Dubai · Platinumlist |
+| JUL-06 | Michael Lives Forever (MJ tribute) | Jul 18 | Coca-Cola Arena, Dubai | confirmed | **in (JUL-NEW-05) ✓ Batch-01C** | B | P1 | Coca-Cola Arena official · Visit Dubai |
+| JUL-07 | Talal Sam & Sultan Al Murshed | Jul 25 | Dubai World Trade Centre Hall 8 | confirmed | **in (JUL-NEW-06) ✓ Batch-01C** | A | P2 | Visit Dubai · Beat The Heat official (Platinumlist ID 106643 shows Aug 21 — date error; series runs Saturdays, Jul 25 confirmed) |
+| JUL-08 | Indie Soulfest (Bismil + Indian Ocean) | Jul 26 | Coca-Cola Arena, Dubai | confirmed | **in (JUL-NEW-07) ✓ Batch-01C** | B | P1 | Coca-Cola Arena official · Khaleej Times |
 | JUL-09 | Dubai Comedy Festival (Jul events) | Various Jul | Multiple venues | confirmed | **MISSING** | C | P1 | Visit Dubai / Platinumlist |
 | JUL-10 | School summer holiday | Jul 1 – Aug 29 | Nationwide UAE | confirmed | in (calendar note) | A | P1 | KHDA/Ministry |
 
@@ -39,7 +39,7 @@ Each record contains:
 
 | ID | Event | Date | Venue / City | Status | Guidex | Level | Priority | Source |
 |----|-------|------|--------------|--------|--------|-------|----------|--------|
-| AUG-01 | Mawlid Al-Nabawi (Prophet's Birthday) | 25 Aug (expected) | Nationwide UAE | expected | **in (calendar, AUG-NEW-02)** ⚠️ corrected | B | P0 | Cabinet Res. 27/2024 · publicholidays.ae |
+| AUG-01 | Mawlid Al-Nabawi (Prophet's Birthday) | 25 Aug (expected) | Nationwide UAE | expected | **in (calendar, AUG-NEW-02)** ✓ corrected + hardened FIX-01 | B | P0 | UAE Government Portal (u.ae) · Cabinet Res. 27/2024 |
 | AUG-02 | Rasha Rizk | Aug 1 | Dubai World Trade Centre | confirmed | **MISSING** | A | P2 | The National (S01) |
 | AUG-03 | SB Girls (Halukay Ube) | Aug 8 | Etihad Arena, Yas Island, Abu Dhabi | confirmed | **MISSING** | B | P1 | The National (S01) |
 | AUG-04 | Al Shami & Leen Hayek | Aug 8 | Dubai World Trade Centre | confirmed | **MISSING** | A | P2 | The National (S01) |

@@ -9,9 +9,9 @@ export const metadata: Metadata = {
   title: "Обновления законодательства ОАЭ — Guidex Consulting",
   description:
     "Изменения визовых правил, налогов, корпоративного законодательства и государственных требований в ОАЭ для резидентов, инвесторов и владельцев бизнеса.",
-  robots: { index: false, follow: true },
   alternates: {
     canonical: `${BASE}/ru/news`,
+    languages: { en: `${BASE}/news` },
   },
 };
 

@@ -9,9 +9,9 @@ export const metadata: Metadata = {
   title: "Важные даты и события ОАЭ — Guidex Consulting",
   description:
     "Государственные праздники, важные сроки и ключевые даты для резидентов, инвесторов и предпринимателей в ОАЭ.",
-  robots: { index: false, follow: true },
   alternates: {
     canonical: `${BASE}/ru/events`,
+    languages: { en: `${BASE}/events` },
   },
 };
 

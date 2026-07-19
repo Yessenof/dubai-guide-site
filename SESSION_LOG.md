@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-07-19 — Phase 6C-GSC-INDEXING-RECOVERY-03 COMPLETE — 6 hub pages unblocked, sitemap fixed
+
+GSC baseline: 64 indexed, 50 not indexed (7 canonical alternate, 1 noindex, 1 redirect, 31 discovered, 10 crawled-not-indexed). Live HTTP audit: all 50 URLs return 200 (1 correct 301). Metadata/robots audit identified: 6 hub pages with Phase 3B legacy noindex blocks despite now containing real content. Fixes: (1) Removed robots noindex from `/events`, `/ru/events`, `/news`, `/ru/news`, `/calendar`, `/ru/calendar`; (2) Added EN↔RU hreflang cross-links to events and news hub pages (calendar already had hreflang); (3) Added all 6 hub pages to `app/sitemap.ts` `EN_STATIC`/`RU_STATIC` arrays; (4) Fixed `sitemap.ts` `lastModified: new Date()` → `SITE_BUILD = new Date("2026-07-19")` — eliminates fake "modified today" signal on every build. TypeScript: 0 errors. Files changed: 6 page.tsx files + sitemap.ts. Audit doc: `docs/content-drafts/seo/6c-gsc-indexing-recovery-03.md`. Identified but not fixed: broken relatedHubs links in news pages, CalendarGrid no static month-page links, per-record lastModified needs reader function extension. NO production deploy.
+
+---
+
 ## 2026-07-18 — Phase 6C-INFRA-UPCLOUD-DNS-CUTOVER-01 COMPLETE — UpCloud confirmed live, Batch 01ABC content verified
 
 Phase 6C-INFRA-UPCLOUD-DNS-CUTOVER-01 complete. Key finding: `guidex-consulting.ae` DNS already points to UpCloud (`85.9.203.69`) since April 2026 — no DNS mutation required. Prior session error was checking `guidex.ae` (secondary domain, not canonical). Full preflight: git HEAD `ef8b58f`, PM2 online (149.7MB, 63 restarts, 0 unstable), SSL valid to 2026-09-26 (70 days, auto-renewal active), nginx serving `guidex-consulting.ae www.guidex-consulting.ae`. Production DB: guides=19, steps=127, calendar_pages=11, integrity_check=ok. All Batch 01ABC content verified live: Etihad Rail (5 steps, EN/RU, hreflang, canonical, sitemap) ✓; July calendar 10 items (JUL-NEW-04/05/06/07 all present, tribute label, Jul 18 events render separately) ✓; August Mawlid AUG-NEW-02 (date=2026-08-25, u.ae source, no publicholidays.ae, official-UAE-confirmation wording) ✓. Full route QA: 16/16 200. HTTP→HTTPS: 301 ✓. Multi-resolver DNS check: all return 85.9.203.69 (1.1.1.1, 8.8.8.8, 9.9.9.9, local). `guidex.ae` (secondary): still points to 139.162.173.118 (old server) — purpose unclear, no Tasjeel API credentials, left unchanged. Deploy report: docs/content-drafts/seo/6c-infra-upcloud-dns-cutover-01.md.

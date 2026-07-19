@@ -9,9 +9,9 @@ export const metadata: Metadata = {
   title: "UAE Events and Key Dates — Guidex Consulting",
   description:
     "Public holidays, important deadlines, and key dates for UAE residents, businesses, and investors. Dubai government and regulatory event calendar.",
-  robots: { index: false, follow: true },
   alternates: {
     canonical: `${BASE}/events`,
+    languages: { ru: `${BASE}/ru/events` },
   },
 };
 

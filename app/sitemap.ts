@@ -16,12 +16,19 @@ const REDIRECT_SLUGS = new Set([
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
+// Single build-time date avoids fake "modified now" signals on every rebuild.
+// Update this when deploying meaningful content changes.
+const SITE_BUILD = new Date("2026-07-19");
+
 const EN_STATIC: Array<{ path: string; priority: number }> = [
   { path: "",                                    priority: 1.0 },
   { path: "/guides",                             priority: 0.9 },
+  { path: "/events",                             priority: 0.8 },
+  { path: "/calendar",                           priority: 0.8 },
   { path: "/guides/spouse-dependent-visa-dubai", priority: 0.8 },
   { path: "/guides/child-dependent-visa-dubai",  priority: 0.8 },
   { path: "/life-setup",                         priority: 0.8 },
+  { path: "/news",                               priority: 0.7 },
   { path: "/visas",                              priority: 0.7 },
   { path: "/visas/family",                       priority: 0.7 },
   { path: "/visas/golden",                       priority: 0.7 },
@@ -37,9 +44,12 @@ const EN_STATIC: Array<{ path: string; priority: number }> = [
 const RU_STATIC: Array<{ path: string; priority: number }> = [
   { path: "/ru",                                 priority: 0.9 },
   { path: "/ru/guides",                          priority: 0.8 },
+  { path: "/ru/events",                          priority: 0.8 },
+  { path: "/ru/calendar",                        priority: 0.8 },
   { path: "/ru/guides/spouse-dependent-visa-dubai", priority: 0.7 },
   { path: "/ru/guides/child-dependent-visa-dubai",  priority: 0.7 },
   { path: "/ru/life-setup",                      priority: 0.8 },
+  { path: "/ru/news",                            priority: 0.6 },
   { path: "/ru/visas",                           priority: 0.7 },
   { path: "/ru/visas/family",                    priority: 0.7 },
   { path: "/ru/visas/golden",                    priority: 0.7 },
@@ -73,70 +83,70 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const enGuideEntries = enSlugs.map((slug) => ({
     url:             `${BASE_URL}/guides/${slug}`,
-    lastModified:    new Date(),
+    lastModified:    SITE_BUILD,
     changeFrequency: "monthly" as const,
     priority:        0.8,
   }));
 
   const ruGuideEntries = ruSlugs.map((slug) => ({
     url:             `${BASE_URL}/ru/guides/${slug}`,
-    lastModified:    new Date(),
+    lastModified:    SITE_BUILD,
     changeFrequency: "monthly" as const,
     priority:        0.8,
   }));
 
   const enCalendarEntries = enCalendarSlugs.map((slug) => ({
     url:             `${BASE_URL}/calendar/${slug}`,
-    lastModified:    new Date(),
+    lastModified:    SITE_BUILD,
     changeFrequency: "weekly" as const,
     priority:        0.7,
   }));
 
   const ruCalendarEntries = ruCalendarSlugs.map((slug) => ({
     url:             `${BASE_URL}/ru/calendar/${slug}`,
-    lastModified:    new Date(),
+    lastModified:    SITE_BUILD,
     changeFrequency: "weekly" as const,
     priority:        0.7,
   }));
 
   const enEventEntries = enEventSlugs.map((slug) => ({
     url:             `${BASE_URL}/events/${slug}`,
-    lastModified:    new Date(),
+    lastModified:    SITE_BUILD,
     changeFrequency: "monthly" as const,
     priority:        0.7,
   }));
 
   const ruEventEntries = ruEventSlugs.map((slug) => ({
     url:             `${BASE_URL}/ru/events/${slug}`,
-    lastModified:    new Date(),
+    lastModified:    SITE_BUILD,
     changeFrequency: "monthly" as const,
     priority:        0.6,
   }));
 
   const enNewsEntries = enNewsSlugs.map((slug) => ({
     url:             `${BASE_URL}/news/${slug}`,
-    lastModified:    new Date(),
+    lastModified:    SITE_BUILD,
     changeFrequency: "monthly" as const,
     priority:        0.6,
   }));
 
   const ruNewsEntries = ruNewsSlugs.map((slug) => ({
     url:             `${BASE_URL}/ru/news/${slug}`,
-    lastModified:    new Date(),
+    lastModified:    SITE_BUILD,
     changeFrequency: "monthly" as const,
     priority:        0.5,
   }));
 
   const enStaticEntries = EN_STATIC.map(({ path, priority }) => ({
     url:             `${BASE_URL}${path}`,
-    lastModified:    new Date(),
+    lastModified:    SITE_BUILD,
     changeFrequency: "monthly" as const,
     priority,
   }));
 
   const ruStaticEntries = RU_STATIC.map(({ path, priority }) => ({
     url:             `${BASE_URL}${path}`,
-    lastModified:    new Date(),
+    lastModified:    SITE_BUILD,
     changeFrequency: "monthly" as const,
     priority,
   }));

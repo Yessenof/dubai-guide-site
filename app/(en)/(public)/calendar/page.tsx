@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   title: "UAE Calendar: Holidays, Events and Deadlines in Dubai and Abu Dhabi | Guidex",
   description:
     "UAE public holidays, corporate tax deadlines, business events, concerts and key dates for Dubai and Abu Dhabi residents and companies. Month-by-month UAE calendar.",
-  robots: { index: false, follow: true },
   alternates: {
     canonical: `${BASE}/calendar`,
     languages: { ru: `${BASE}/ru/calendar` },

@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   title: "Календарь ОАЭ: праздники, события и дедлайны в Дубае и Абу-Даби | Guidex",
   description:
     "Праздники ОАЭ, налоговые сроки, бизнес-события, концерты и важные даты для резидентов и компаний в Дубае и Абу-Даби. Помесячный календарь ОАЭ.",
-  robots: { index: false, follow: true },
   alternates: {
     canonical: `${BASE}/ru/calendar`,
     languages: { en: `${BASE}/calendar` },

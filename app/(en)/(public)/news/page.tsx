@@ -9,9 +9,9 @@ export const metadata: Metadata = {
   title: "UAE Regulatory Updates — Guidex Consulting",
   description:
     "Visa rule changes, business and tax updates, property laws, and government announcements relevant to Dubai residents, investors, and business owners.",
-  robots: { index: false, follow: true },
   alternates: {
     canonical: `${BASE}/news`,
+    languages: { ru: `${BASE}/ru/news` },
   },
 };
 

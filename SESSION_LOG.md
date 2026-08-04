@@ -5,6 +5,24 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-08-04 — Phase 6D Stage D COMPLETE — 7 new calendar items added (Aug/Nov/Dec 2026)
+
+7 verified calendar items added to local DB: AUG-6D-01 Al Shami at DWTC Hall 8 (Aug 8, AED 105, type: trade_show); AUG-6D-02 Lucky Ali at Coca-Cola Arena (Aug 16, AED 125); AUG-6D-03 Sunil Grover comedy at Coca-Cola Arena (Aug 21, AED 125); AUG-6D-04 Jimmy Carr 'Laughs Funny' at Dubai Opera (Aug 29-30, AED 250); NOV-6D-01 UAE Flag Day (Nov 3, type: important-date, u.ae T1); NOV-6D-02 Diwali 2026 (Nov 8, type: holiday, expected); DEC-6D-01 NYE Burj Khalifa fireworks (Dec 31, type: holiday, confirmed annual). All 4 August items sourced from Platinumlist (T1). Mawlid brief updated: "as of 18 July 2026" → "as of 4 August 2026" (Stage C correction). DB counts after patch: Aug 8→12, Nov 17→19, Dec 10→11. Build: 92 pages, 0 TS errors, integrity_check ok. HOLD list: Marwan Moussa/Haleem (Aug 15), Leg_cy/Aziz Maraka/Big Sam (Aug 22), Jony (Nov 4), Andrea Bocelli (Dec 2), Balqees (Sep 15), DSF, Global Village — all below T1 bar. Patch script: scripts/patch-6d-calendar-batch-01-aug-nov-dec.ts. DB backup: backups/local/guides.db.pre-6d-calendar-batch01-2026-08-04T12-11-49. NO production deploy.
+
+---
+
+## 2026-08-04 — Phase 6D Stages A–C COMPLETE — State recovery, technical audit, content verification
+
+State recovery (Stage A): 2.5-week gap since 2026-07-19. Local+GitHub HEAD: f11ec5b. Production server: f6e9eae (one extra docs commit, never pushed — resolved by committing prod report locally in 6D batch). Production DB confirmed: 19 guides, 127 steps, 11 calendar_pages (Sep–Dec already live). Technical audit (Stage B): all 108 production URLs HTTP 200, 0 broken routes. GSC signals on all 6 hub pages clean: no noindex, self-canonical, bidirectional hreflang, in sitemap — Phase 6C-GSC-INDEXING-RECOVERY-03-PROD confirmed live. Content verification (Stage C): DDW Nov 3-8 ✓; F1 Dec 4-6 (Yasalam range, race Dec 7 ✓); Big 5 Nov 23-26 ✓; GITEX Dec 7-11 Expo City ✓; Expand North Star Dec 8-10 ✓; Dubai Airshow absent (correct — biennial) ✓; Mawlid Aug 25 expected (no 2026 FAHR announcement as of Aug 4) ✓; DSF absent (correct — no official dates announced) ✓. One correction applied: Mawlid brief date reference updated.
+
+---
+
+## 2026-07-19 — Phase 6C-GSC-INDEXING-RECOVERY-03-PROD COMPLETE — All 6 hub pages live, indexable
+
+Deployed commit f11ec5b to production (UpCloud 85.9.203.69). Production DB backed up before deploy. `npm run build` on server: 92 pages, 0 errors. `pm2 reload guidex-production` zero-downtime. Post-deploy verification: all 6 hub pages HTTP 200, no robots meta tag (indexable), self-canonical, bidirectional EN/RU hreflang, all in sitemap.xml. robots.txt clean (no disallow of hub routes). Sitemap lastmod = 2026-07-19 (SITE_BUILD constant, no fake freshness). Deploy report: docs/content-drafts/seo/6c-gsc-indexing-recovery-03-prod.md. GSC URL submission is a manual owner action — not automated.
+
+---
+
 ## 2026-07-19 — Phase 6C-GSC-INDEXING-RECOVERY-03 COMPLETE — 6 hub pages unblocked, sitemap fixed
 
 GSC baseline: 64 indexed, 50 not indexed (7 canonical alternate, 1 noindex, 1 redirect, 31 discovered, 10 crawled-not-indexed). Live HTTP audit: all 50 URLs return 200 (1 correct 301). Metadata/robots audit identified: 6 hub pages with Phase 3B legacy noindex blocks despite now containing real content. Fixes: (1) Removed robots noindex from `/events`, `/ru/events`, `/news`, `/ru/news`, `/calendar`, `/ru/calendar`; (2) Added EN↔RU hreflang cross-links to events and news hub pages (calendar already had hreflang); (3) Added all 6 hub pages to `app/sitemap.ts` `EN_STATIC`/`RU_STATIC` arrays; (4) Fixed `sitemap.ts` `lastModified: new Date()` → `SITE_BUILD = new Date("2026-07-19")` — eliminates fake "modified today" signal on every build. TypeScript: 0 errors. Files changed: 6 page.tsx files + sitemap.ts. Audit doc: `docs/content-drafts/seo/6c-gsc-indexing-recovery-03.md`. Identified but not fixed: broken relatedHubs links in news pages, CalendarGrid no static month-page links, per-record lastModified needs reader function extension. NO production deploy.

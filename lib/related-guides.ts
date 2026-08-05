@@ -10,24 +10,24 @@ export const RELATED_GUIDES: Record<string, string[]> = {
     "amer-center-dubai",
     "document-attestation-dubai",
   ],
-  "spouse-dependent-dubai-inside": [
-    "spouse-dependent-dubai-outside",
-    "child-dependent-dubai-inside",
+  "spouse-dependent-visa-dubai-inside-country": [
+    "spouse-dependent-visa-dubai-outside-country",
+    "child-dependent-visa-dubai-inside-country",
     "renew-family-visa-dubai",
   ],
-  "spouse-dependent-dubai-outside": [
-    "spouse-dependent-dubai-inside",
-    "child-dependent-dubai-outside",
+  "spouse-dependent-visa-dubai-outside-country": [
+    "spouse-dependent-visa-dubai-inside-country",
+    "child-dependent-visa-dubai-outside-country",
     "renew-family-visa-dubai",
   ],
-  "child-dependent-dubai-inside": [
-    "child-dependent-dubai-outside",
-    "spouse-dependent-dubai-inside",
+  "child-dependent-visa-dubai-inside-country": [
+    "child-dependent-visa-dubai-outside-country",
+    "spouse-dependent-visa-dubai-inside-country",
     "renew-family-visa-dubai",
   ],
-  "child-dependent-dubai-outside": [
-    "child-dependent-dubai-inside",
-    "spouse-dependent-dubai-outside",
+  "child-dependent-visa-dubai-outside-country": [
+    "child-dependent-visa-dubai-inside-country",
+    "spouse-dependent-visa-dubai-outside-country",
     "renew-family-visa-dubai",
   ],
   "newborn-visa-dubai": [

@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-08-05 — Phase 6D Stage B — Full technical SEO audit complete; 1 defect fixed
+
+Full technical audit of 92 static pages. One real defect fixed: `lib/related-guides.ts` had 4 stale key entries using old short slugs for spouse/child dependent visa guides (`"spouse-dependent-dubai-inside"` etc.) — none matched any published guide slug, so those 4 guide detail pages silently showed zero related guides. Fixed: all 4 keys and 8 target slug values updated to correct full slug names. Build: 92/92, 0 TS errors. 2 gaps documented for Stage E: (1) calendar detail pages have no JSON-LD structured data; (2) sitemap uses static SITE_BUILD = 2026-07-19 instead of per-record updated_at. All other checks clean: html-lang correct in both layouts; 41 published records across 4 content types — all unique titles; OrgSchema on all public pages; no orphan pages; noindex logic correct; all internal guide links valid. Audit report: docs/content-drafts/seo/6d-stage-b-technical-audit.md.
+
+---
+
 ## 2026-08-05 — Phase 6D Stage D Batch-02 — 11 new calendar items added, P0 defect fixed
 
 P0 defect OCT-06-MARX fixed: date corrected 2026-10-05 → 2026-10-03. Labels/briefs/noindex_after all updated; source_url → Platinumlist event/105069; age policy added (children <16 need adult 18+); T1 confirmation: Platinumlist event-specific page + Coca-Cola Arena official. Python fix applied, idempotency confirmed. TypeScript production patch script covers the fix for deployment. 11 new verified calendar items added to local DB via idempotent Python patch: Aug (AUG-6D-07 Ramy Gamal & Wael Jassar Aug 8 Sheikh Rashid Hall DWTC AED 195+; AUG-6D-05 Marwan Moussa & Hleem Aug 15 DWTC Hall 8 AED 105+; AUG-6D-06 Lege-cy/Aziz Maraka/Big Sam Aug 22 DWTC Hall 8 AED 105+); Sep (SEP-6D-01 Mina Nader Sep 5 Dubai Opera ~AED 200; SEP-6D-03 Radhika Das Lightfall Sep 20 Coca-Cola Arena AED 150-450; SEP-6D-02 Sumukhi Suresh Sep 26 Emirates Theatre AED 100+); Oct (OCT-6D-01 Najwa Karam Oct 2 CCA AED 150+; OCT-6D-05 Lost Frequencies Oct 3 Bohemia FIVE Palm AED 150+; OCT-6D-02 Shawn Chidiac Oct 5 CCA AED 199; OCT-6D-03 TJ Monterde & KZ Tandingan Oct 11 CCA AED 199+; OCT-6D-04 Vir Das Dubai Comedy Festival Oct 18 CCA AED 195+). All T1 verified. DB counts: Aug=15, Sep=15, Oct=19. Build: 92 pages, 0 TS errors, integrity_check ok. TypeScript production patch: scripts/patch-6d-calendar-batch-02-aug-sep-oct.ts. Idempotency confirmed: second run skipped all 11 items and P0 fix. NO production deploy.

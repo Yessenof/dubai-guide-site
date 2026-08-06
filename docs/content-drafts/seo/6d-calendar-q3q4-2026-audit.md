@@ -88,8 +88,8 @@ All research performed 2026-08-04 through 2026-08-06. Events verified against li
 |-------|----------|----------------|-------------|--------|
 | Dubai Design Week 2026 | Nov 3-8 | Nov 3-8 | T1 (d3d.ae) | CONFIRMED-CURRENT |
 | Big 5 Global Dubai 2026 | Nov 23-26 | Nov 23-26 | T1 (thebig5.ae) | CONFIRMED-CURRENT |
-| Formula 1 Abu Dhabi GP 2026 | Dec 3-6 (Yasalam) | Race Dec 5-7; Yasalam Dec 3-6 | T1 (formula1.com) | CONFIRMED (range intentional — covers fan week) |
-| GITEX Global 2026 | Dec 7-11 | Dec 7-11 at Expo City Dubai | T1 (gitex.com) | CONFIRMED-CURRENT — NOT in October |
+| Formula 1 Abu Dhabi GP 2026 | Dec 3-6 (Yasalam) | F1 GP weekend Dec 4-6; race day Sunday Dec 6; Yasalam concerts Dec 3-5 | T1 (formula1.com) | CONFIRMED — DEC-03-F1 date=Dec 4 period_end=Dec 6 correct |
+| GITEX Global 2026 | Dec 7-11 | Dec 7 Scale Summit at DWTC; Dec 8-11 main expo at Expo City Dubai | T1 (gitex.com) | CONFIRMED — split venue; DEC-04-GITEX label/brief corrected in 6D-FINAL-CORRECTION-01 |
 | Expand North Star 2026 | Dec 8-10 | Dec 8-10 at Expo City Dubai | T1 (expandnorthstar.com) | CONFIRMED-CURRENT |
 | DP World Tour Championship 2026 | Nov 12-15 | Nov 12-15 Jumeirah Golf Estates | T1 (europeantour.com) | CONFIRMED (existing) |
 | Mawlid Al Nabi 2026 | Aug 25 (expected) | Expected Aug 25; no FAHR announcement as of Aug 6 | T1 pending | CONFIRMED-EXPECTED — brief correctly says subject to moon-sighting |
@@ -97,7 +97,7 @@ All research performed 2026-08-04 through 2026-08-06. Events verified against li
 | Global Village Season 31 | absent | Oct 2026-May 2027 confirmed, opening date unannounced | no T1 date | HOLD correctly absent |
 | DSF 2026-27 | absent | No official dates from DFRE/DET | no T1 date | HOLD correctly absent |
 
-**EN/RU parity result:** All Phase 6D-added items (Batch-01/02/03) have both EN and RU labels and briefs. 13 pre-Phase-6D items across Aug-Dec have `label_ru` present but `brief_ru` empty — this is a pre-existing condition, not a Phase 6D regression. Per CLAUDE.md project policy, RU fields default to empty string until translated; public pages fall back to EN. No untranslated EN block appears on RU pages.
+**EN/RU parity result:** All Phase 6D-added items (Batch-01/02/03) have both EN and RU labels and briefs. 13 pre-Phase-6D items across Aug-Dec are content stubs: `brief_en` and `brief_ru` are both empty — these items appear in the calendar grid (label_ru present) but do not show an expandable brief on either EN or RU pages. CalendarBriefSection uses a strict locale gate; no EN fallback renders on the RU page for these items. The 13 items are a P1 content backlog, not a Phase 6D regression.
 
 **GITEX in October negative confirmation:** October calendar contains 0 GITEX items. GITEX is correctly placed in December only. No stale October GITEX reference exists in DB or code.
 
@@ -151,7 +151,7 @@ Net new Phase 6D August: +10 items (7 new events + 3 pre-existing AUG items not 
 
 Net new Phase 6D September: +4 items
 
-### October 2026 (26 total; was 15 pre-6D)
+### October 2026 (26 total; was 14 pre-6D)
 
 | ID | Date | Event | Venue | Batch | Action |
 |----|------|-------|-------|-------|--------|
@@ -170,7 +170,7 @@ Net new Phase 6D September: +4 items
 | OCT-NEW-GIPSY | Oct 22 | Gipsy Kings Symphonic by André Reyes | Dubai Opera | Batch-03 | NEW |
 | OCT-NEW-MELADZE | Oct 25 | Valery Meladze | The Agenda | Batch-03 | NEW |
 
-Net new Phase 6D October: +11 new items + 2 date corrections
+Net new Phase 6D October: +12 new items + 2 date corrections
 
 ### November 2026 (19 total; was 17 pre-6D)
 
@@ -236,13 +236,13 @@ All five target months queried directly from DB. All verified via build at 92/92
 
 | Month | DB items | Phase 6D new | Phase 6D updated | EN/RU parity | Duplicate IDs | Build status |
 |-------|----------|--------------|------------------|--------------|---------------|--------------|
-| August 2026 | 15 | 7 | 1 (Mawlid brief) | All new items: OK; 2 pre-existing items missing brief_ru (pre-existing) | None | ✅ |
-| September 2026 | 16 | 4 | 0 | All new items: OK; 6 pre-existing items missing brief_ru (pre-existing) | None | ✅ |
-| October 2026 | 26 | 11 | 2 (date fixes) | All new items: OK; 3 pre-existing items missing brief_ru (pre-existing) | None | ✅ |
-| November 2026 | 19 | 2 | 0 | All new items: OK; 1 pre-existing item missing brief_ru (pre-existing) | None | ✅ |
-| December 2026 | 11 | 1 | 0 | All new items: OK; 1 pre-existing item missing brief_ru (pre-existing) | None | ✅ |
+| August 2026 | 15 | 7 | 1 (Mawlid brief) | All new items: OK; 2 pre-existing items have no brief in either language (content stub) | None | ✅ |
+| September 2026 | 16 | 4 | 0 | All new items: OK; 6 pre-existing items have no brief in either language (content stub) | None | ✅ |
+| October 2026 | 26 | 12 | 2 (date fixes) | All new items: OK; 3 pre-existing items have no brief in either language (content stub) | None | ✅ |
+| November 2026 | 19 | 2 | 0 | All new items: OK; 1 pre-existing item has no brief in either language (content stub) | None | ✅ |
+| December 2026 | 11 | 1 | 0 | All new items: OK; 1 pre-existing item has no brief in either language (content stub) | None | ✅ |
 
-**Pre-existing RU gap:** 13 items across all months have `label_ru` but empty `brief_ru`. These are pre-Phase-6D items. Per CLAUDE.md, RU fields default to empty string until translated; pages fall back to EN. Not a Phase 6D regression.
+**Pre-existing content stub gap:** 13 pre-Phase-6D items across all months have `label_ru` present but `brief_en` and `brief_ru` both empty. CalendarBriefSection filters them from the expandable-brief section on both EN and RU pages (strict locale gate, no EN fallback on RU). Users see these items in the calendar grid but get no expandable brief on either locale. This is a P1 content backlog item, not a Phase 6D regression.
 
 ---
 
@@ -329,7 +329,7 @@ No duplicate JSON-LD blocks. No standalone Event schema for calendar items (item
 - `lib/db/reader.ts` — Stage E updatedAt propagation (a9875e9)
 
 **DB changes (via Python patch scripts in scratchpad):**
-- `data/guides.db` — August (+10), September (+4), October (+11 new + 2 date fixes), November (+2), December (+1)
+- `data/guides.db` — August (+10), September (+4), October (+12 new + 2 date fixes), November (+2), December (+1)
 
 **Documentation and artifacts:**
 - `docs/content-drafts/seo/6d-stage-a-state-recovery.md` (8bacd4c)
@@ -501,12 +501,12 @@ Priority: pages with meaningful new or corrected content.
 
 | URL | Reason | Change made | Live test required | Request Indexing |
 |-----|--------|-------------|-------------------|-----------------|
-| `/calendar/october-2026-dubai-calendar` | +11 new events (concerts, comedy, shopping); 2 date corrections (Marx, Boris G); significant content addition | 11 new items, 2 date fixes | Confirm page loads 200, shows new events | Yes |
+| `/calendar/october-2026-dubai-calendar` | +12 new events (concerts, comedy, shopping); 2 date corrections (Marx, Boris G); significant content addition | 12 new items, 2 date fixes | Confirm page loads 200, shows new events | Yes |
 | `/calendar/september-2026-dubai-calendar` | +4 new events (Mina Nader, Sumukhi Suresh, Radhika Das, DEKA FIT); page grew from 12→16 items | 4 new items | Confirm page loads 200, shows new events | Yes |
 | `/calendar/august-2026-dubai-calendar` | +7 new concerts (Marwan Moussa, Lege-cy, Ramy Gamal etc.); page grew 5→15 items | 7 new items | Confirm page loads 200, shows new events | Yes |
 | `/calendar/november-2026-dubai-calendar` | +2 new items (UAE Flag Day, Diwali) | 2 new items | Confirm page loads 200 | Yes |
 | `/calendar/december-2026-uae-calendar` | +1 new item (NYE fireworks) | 1 new item | Confirm page loads 200 | Yes |
-| `/events/gitex-global-2026` | GITEX confirmed Dec 7-11 at Expo City — first year at new venue; highly search-relevant | No change to dates but page confirmed accurate | Confirm page loads 200, correct dates | Yes if not recently submitted |
+| `/events/gitex-global-2026` | GITEX Dec 7-11: Scale Summit Dec 7 at DWTC; main expo Dec 8-11 at Expo City — event page correct; calendar item label/brief corrected in 6D-FINAL-CORRECTION-01 | Calendar label and brief corrected | Confirm page loads 200, correct venue split visible | Yes if not recently submitted |
 
 ### Wave Two — Submit 2-3 weeks after Wave One is crawled
 

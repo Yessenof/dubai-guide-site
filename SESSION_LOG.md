@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-08-06 — Phase 6D-FINAL-CORRECTION-01 — DB fixes, doc corrections, count reconciliation
+
+Phase 6D-FINAL-CORRECTION-01 complete. DB fixes via `scripts/patch-6d-final-correction-01.ts`: (1) DEC-04-GITEX label/brief corrected — old label implied all 7-11 Dec at Expo City; corrected to Scale Summit Dec 7 at DWTC + main expo Dec 8-11 at Expo City; (2) OCT-06-MARX source_url and cta_url replaced — dead Platinumlist 404 (event/105069) → CCA official (coca-cola-arena.com/music/1837/richard-marx); source_label updated to remove Platinumlist. DB integrity_check pre+post ok. MD5 changed to 1b41c07364f8f345fe6d210a841afcbf. Doc corrections in `6d-calendar-q3q4-2026-audit.md`: F1 race date "Dec 5-7" → "race day Sunday Dec 6" (DEC-03-F1 was always correct); GITEX verification row updated to split venue; October count corrected to +12 new (was +11), pre-6D corrected to 14 (was 15), total Phase 6D now 26 (was 25); 13 stub items correctly characterised as brief_en + brief_ru BOTH empty (not just brief_ru — CalendarBriefSection filters these from brief section on both EN and RU pages; no EN fallback). CSV updates: 6d-monthly-coverage-summary.csv October row (existing_confirmed 15→14, added_phase_6d 11→12); 6d-site-audit-defect-matrix.csv (D6–D9, G3 added). New doc: 6d-calendar-q3q4-2026-final-correction-01.md (14 sections). Build: 92/92, 0 TS errors. NO production deploy.
+
+---
+
 ## 2026-08-06 — Phase 6D Stage F — Full QA gate; all stage documentation and artifacts complete
 
 Phase 6D all stages complete. Stage D research notes updated to reflect all 3 batches resolved. Machine-readable artifacts created: 6d-new-events-added.csv (28 rows covering all Phase 6D adds/updates), 6d-hold-candidates.csv (7 rows), 6d-monthly-coverage-summary.csv (6 months), 6d-event-verification-matrix.csv (42 rows, all Sep/Oct candidates documented), 6d-site-audit-defect-matrix.csv (7 defects). Full Stage F QA: DB integrity_check ok; Aug=15, Sep=16, Oct=26, Nov=19, Dec=11; 0 duplicate IDs; all 8 calendar→event cross-links resolve to published events; EN/RU parity confirmed on all Phase 6D items; Richard Marx date=2026-10-03 confirmed; Boris Grebenshikov date=2026-10-29 confirmed; GITEX in December only (0 stale Oct refs in DB/code); Stage E JSON-LD verified on EN+RU calendar pages; sitemap per-record lastmod from DB. Build: 92/92, 0 TS errors. Final audit report: docs/content-drafts/seo/6d-calendar-q3q4-2026-audit.md. Manual GSC Wave 1 plan documented (6 URLs). NO production deploy.

@@ -1,12 +1,20 @@
 # Phase 6D Stage D — Research Notes and Candidate Matrix
 
 **Phase:** 6D-CALENDAR-Q3Q4-2026-EXPANSION-AND-FULL-SITE-AUDIT-01
-**Last updated:** 2026-08-05
-**Status:** IN PROGRESS — checkpoint after Aug/Sep/Oct sweep partial completion
+**Last updated:** 2026-08-06
+**Status:** COMPLETE — all three batches applied; all P0/P1 defects fixed; machine-readable artifacts created
+
+**Batch status:**
+- Batch-01 (Aug/Nov/Dec): COMPLETE — commit 5d84750
+- Batch-02 (Aug+/Sep/Oct — P0 fix + 11 new items): COMPLETE — commit 5b19741
+- Batch-03 (Sep/Oct sweep — 8 new items + Boris G date fix): COMPLETE — commit 8bb1e52
+- Machine-readable artifacts: COMPLETE — docs/content-drafts/seo/data/6d-*.csv
+
+**Final DB counts:** Aug=15, Sep=16, Oct=26, Nov=19, Dec=11
 
 ---
 
-## P0 DEFECT — Richard Marx date error (MUST FIX BEFORE CLOSE)
+## P0 DEFECT — Richard Marx date error (FIXED)
 
 | Field | Stored value | Correct value |
 |-------|-------------|---------------|
@@ -25,7 +33,7 @@
 - Few.ae: Richard Marx Live in Dubai at Coca-Cola Arena — Oct 3
 - Visit Dubai official: https://www.visitdubai.com/en/festivals-and-events/dubai-events-calendar/richard-marx
 
-**Action required:** Fix OCT-06-MARX date from 2026-10-05 → 2026-10-03. Update EN label, RU label, EN brief, RU brief, source note. Verify no duplicate OCT entry exists for Oct 3.
+**FIXED in Batch-02 (commit 5b19741):** Date corrected to 2026-10-03. EN/RU labels, briefs, noindex_after, source_url all updated. DB verified: date=2026-10-03. Note: Platinumlist event/105069 URL returned 404 but date confirmed via CCA official + Visit Dubai + Gulf News. No stale Oct-5 reference remains in live code or DB. Historical 6C docs still show Oct 5 — those are pre-fix research artefacts, not live content.
 
 ---
 
@@ -187,25 +195,37 @@ This will be noted in the final report.
 
 ---
 
-## Remaining work for Stage D completion
+## Final completion status — all items resolved (2026-08-06)
 
-1. [ ] Fix OCT-06-MARX date P0 defect (Oct 5 → Oct 3)
-2. [ ] Verify and add AUG-6D-05 (Marwan Moussa & Hleem)
-3. [ ] Verify and add AUG-6D-06 (Lege-cy / Aziz Maraka / Big Sam)
-4. [ ] Verify and add AUG-6D-07 (Ramy Gamal & Wael Jassar)
-5. [ ] Add SEP-6D-01 (Mina Nader, Sep 5 Dubai Opera)
-6. [ ] Add SEP-6D-02 (Sumukhi Suresh, Sep 26)
-7. [ ] Verify Balqees (Sep 15) — needs T1 event-specific page
-8. [ ] Verify Radhika Das (Sep 20) — needs T1 event-specific page
-9. [ ] Verify Najwa Karam (Oct 2) — needs T1 event-specific page
-10. [ ] Verify TJ Monterde (Oct 11) — needs T1 event-specific page
-11. [ ] Verify Vir Das (Oct 18) — needs T1 event-specific page
-12. [ ] Verify Lost Frequencies (Oct 3) — needs T1 direct confirmation
-13. [ ] Check Dubai Fitness Challenge 2026 official date
-14. [ ] Check Dubai Home Festival 2026
-15. [ ] Continue October sweep (Dubai Opera, DWTC, Expo City Oct listings)
-16. [ ] Create machine-readable CSV artifacts
-17. [ ] Monthly page completion gate (5 months × checks)
-18. [ ] Stage B full technical audit (title/H1/lang/structured-data)
-19. [ ] Stage E (internal linking, JSON-LD)
-20. [ ] Stage F (final report, QA)
+| Item | Status | Commit |
+|------|--------|--------|
+| Fix OCT-06-MARX date (Oct 5 → Oct 3) | ✅ FIXED | 5b19741 |
+| AUG-6D-05 Marwan Moussa & Hleem | ✅ IMPLEMENTED | 5b19741 |
+| AUG-6D-06 Lege-cy / Aziz Maraka / Big Sam | ✅ IMPLEMENTED | 5b19741 |
+| AUG-6D-07 Ramy Gamal & Wael Jassar | ✅ IMPLEMENTED | 5b19741 |
+| SEP-6D-01 Mina Nader, Sep 5 Dubai Opera | ✅ IMPLEMENTED | 5b19741 |
+| SEP-6D-02 Sumukhi Suresh, Sep 26 | ✅ IMPLEMENTED | 5b19741 |
+| SEP-6D-03 Radhika Das Lightfall, Sep 20 | ✅ IMPLEMENTED | 5b19741 |
+| Balqees (Sep 15) | 🔶 HOLD — T2/T3 only, no T1 | not-added |
+| Najwa Karam (Oct 2) | ✅ IMPLEMENTED as OCT-6D-01 | 5b19741 |
+| TJ Monterde (Oct 11) | ✅ IMPLEMENTED as OCT-6D-03 | 5b19741 |
+| Vir Das (Oct 18) | ✅ IMPLEMENTED as OCT-6D-04 | 5b19741 |
+| Lost Frequencies (Oct 3) | ✅ IMPLEMENTED as OCT-6D-05 | 5b19741 |
+| Dubai Fitness Challenge 2026 date | ✅ CONFIRMED OCT-DFC = Oct 31 (T1 DFC official) | pre-6D |
+| Dubai Home Festival 2026 | ✅ IMPLEMENTED as OCT-NEW-DHF (Oct 16-Nov 1) | 8bb1e52 |
+| TPiMEA Awards Sep 10 CCA | ✅ OUT-OF-SCOPE (B2B industry event) | not-added |
+| OCT-R2 Boris Grebenshikov date fix (Oct 24 → Oct 29) | ✅ FIXED | 8bb1e52 |
+| SEP-NEW-DEKA (DEKA FIT Sep 26 CCA) | ✅ IMPLEMENTED | 8bb1e52 |
+| OCT-NEW-MARILYNE (Marilyne Naaman Oct 6 Dubai Opera) | ✅ IMPLEMENTED | 8bb1e52 |
+| OCT-NEW-MUNAWAR (Munawar Faruqui Oct 11 Dubai Opera) | ✅ IMPLEMENTED | 8bb1e52 |
+| OCT-NEW-GILLIGAN (Mo Gilligan Oct 12 Dubai Opera) | ✅ IMPLEMENTED | 8bb1e52 |
+| OCT-NEW-ACHKAR (John Achkar Oct 17 Dubai Opera) | ✅ IMPLEMENTED | 8bb1e52 |
+| OCT-NEW-GIPSY (Gipsy Kings Symphonic Oct 22 Dubai Opera) | ✅ IMPLEMENTED | 8bb1e52 |
+| OCT-NEW-MELADZE (Valery Meladze Oct 25 The Agenda) | ✅ IMPLEMENTED | 8bb1e52 |
+| Machine-readable CSV artifacts | ✅ COMPLETE | 8bb1e52 docs commit |
+| Monthly page completion gate | ✅ COMPLETE — Aug 15, Sep 16, Oct 26, Nov 19, Dec 11 | verified |
+| Stage B technical audit | ✅ COMPLETE — 6d-stage-b-technical-audit.md | 01e6351 |
+| Stage E (JSON-LD + sitemap lastmod) | ✅ COMPLETE | a9875e9 |
+| Stage F (final report, QA) | ✅ COMPLETE — 6d-calendar-q3q4-2026-audit.md | this session |
+
+**Global Village Season 31:** HOLD — no official date. DSF 2026-27: HOLD — no official dates.

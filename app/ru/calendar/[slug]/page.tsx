@@ -101,8 +101,27 @@ export default async function RuCalendarDetailPage({ params }: Props) {
 
   const yearBadge  = calendarMonth ? undefined : String(page.year);
 
+  const pageUrl = `${BASE}/ru/calendar/${slug}`;
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: page.seoTitle || page.title,
+    description: page.metaDescription || page.summary,
+    url: pageUrl,
+    inLanguage: "ru",
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Главная", item: `${BASE}/ru` },
+        { "@type": "ListItem", position: 2, name: "Календарь", item: `${BASE}/ru/calendar` },
+        { "@type": "ListItem", position: 3, name: page.title, item: pageUrl },
+      ],
+    },
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
 
       <Link
         href="/ru/calendar"

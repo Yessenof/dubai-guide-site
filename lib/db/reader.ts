@@ -18,12 +18,13 @@ function pick(locale: Locale, ru: string, en: string): string {
 // ─── Interfaces ───────────────────────────────────────────────────────────────
 
 export interface GuideListItem {
-  slug:     string;
-  title:    string;
-  summary:  string;
-  price:    string;
-  timeline: string;
-  category: string;
+  slug:      string;
+  title:     string;
+  summary:   string;
+  price:     string;
+  timeline:  string;
+  category:  string;
+  updatedAt: string;  // DB updated_at for sitemap lastModified
 }
 
 export interface StepData {
@@ -100,20 +101,22 @@ export function getPublishedGuidesForBand(
 }
 
 export function getRecentPublishedGuides(limit: number): GuideListItem[] {
-  return db
+  const rows = db
     .select({
-      slug:     guides.slug,
-      title:    guides.enTitle,
-      summary:  guides.enSummary,
-      price:    guides.price,
-      timeline: guides.timeline,
-      category: guides.category,
+      slug:      guides.slug,
+      title:     guides.enTitle,
+      summary:   guides.enSummary,
+      price:     guides.price,
+      timeline:  guides.timeline,
+      category:  guides.category,
+      updatedAt: guides.updatedAt,
     })
     .from(guides)
     .where(eq(guides.published, true))
     .orderBy(desc(guides.updatedAt))
     .limit(limit)
     .all();
+  return rows.map((r) => ({ ...r }));
 }
 
 /** Like getRecentPublishedGuides but returns locale-aware fields.
@@ -144,12 +147,13 @@ export function getRecentPublishedGuidesLocale(
     .filter((r) => r.ruTitle.trim() !== "")
     .slice(0, limit)
     .map((r) => ({
-      slug:     r.slug,
-      title:    r.ruTitle,
-      summary:  r.ruSummary,
-      price:    r.price,
-      timeline: r.timeline,
-      category: r.category,
+      slug:      r.slug,
+      title:     r.ruTitle,
+      summary:   r.ruSummary,
+      price:     r.price,
+      timeline:  r.timeline,
+      category:  r.category,
+      updatedAt: "",
     }));
 }
 
@@ -164,18 +168,20 @@ export function getAllPublishedGuides(locale: Locale = "en"): GuideListItem[] {
       price:     guides.price,
       timeline:  guides.timeline,
       category:  guides.category,
+      updatedAt: guides.updatedAt,
     })
     .from(guides)
     .where(eq(guides.published, true))
     .all();
 
   return rows.map((r) => ({
-    slug:     r.slug,
-    title:    pick(locale, r.ruTitle, r.enTitle),
-    summary:  pick(locale, r.ruSummary, r.enSummary),
-    price:    r.price,
-    timeline: r.timeline,
-    category: r.category,
+    slug:      r.slug,
+    title:     pick(locale, r.ruTitle, r.enTitle),
+    summary:   pick(locale, r.ruSummary, r.enSummary),
+    price:     r.price,
+    timeline:  r.timeline,
+    category:  r.category,
+    updatedAt: r.updatedAt,
   }));
 }
 

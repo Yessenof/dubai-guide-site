@@ -77,6 +77,7 @@ export interface NewsPostSummary {
   summary:          string;   // locale field, no fallback
   datePublished:    string;
   dateUpdated:      string;
+  updatedAt:        string;   // DB row updated_at for sitemap lastModified
   sourceLabel:      string;
   imagePath:        string;
   imageAlt:         string;   // locale field, no fallback
@@ -113,6 +114,7 @@ export interface EventSummary {
   featuredCalendar: number;
   featuredDigest:   number;
   schemaEligible:   number;
+  updatedAt:        string;   // DB updated_at for sitemap lastModified
 }
 
 export interface EventDetail extends EventSummary {
@@ -141,6 +143,7 @@ export interface CalendarPageSummary {
   hasIslamicDates:  number;
   featuredHomepage: number;
   dates:            CalendarDateItem[];   // parsed from dates_json
+  updatedAt:        string;   // DB updated_at for sitemap lastModified
 }
 
 export interface CalendarPageDetail extends CalendarPageSummary {
@@ -172,6 +175,7 @@ export function getPublishedNewsPosts(locale: Locale): NewsPostSummary[] {
       ruSummary:        newsPosts.ruSummary,
       datePublished:    newsPosts.datePublished,
       dateUpdated:      newsPosts.dateUpdated,
+      updatedAt:        newsPosts.updatedAt,
       sourceLabel:      newsPosts.sourceLabel,
       imagePath:        newsPosts.imagePath,
       imageAlt:         newsPosts.imageAlt,
@@ -194,6 +198,7 @@ export function getPublishedNewsPosts(locale: Locale): NewsPostSummary[] {
       summary:          field(locale, r.ruSummary, r.enSummary),
       datePublished:    r.datePublished,
       dateUpdated:      r.dateUpdated,
+      updatedAt:        r.updatedAt,
       sourceLabel:      r.sourceLabel,
       imagePath:        r.imagePath,
       imageAlt:         field(locale, r.ruImageAlt, r.imageAlt),
@@ -229,6 +234,7 @@ export function getFeaturedNewsPosts(
       ruSummary:        newsPosts.ruSummary,
       datePublished:    newsPosts.datePublished,
       dateUpdated:      newsPosts.dateUpdated,
+      updatedAt:        newsPosts.updatedAt,
       sourceLabel:      newsPosts.sourceLabel,
       imagePath:        newsPosts.imagePath,
       imageAlt:         newsPosts.imageAlt,
@@ -252,6 +258,7 @@ export function getFeaturedNewsPosts(
       summary:          field(locale, r.ruSummary, r.enSummary),
       datePublished:    r.datePublished,
       dateUpdated:      r.dateUpdated,
+      updatedAt:        r.updatedAt,
       sourceLabel:      r.sourceLabel,
       imagePath:        r.imagePath,
       imageAlt:         field(locale, r.ruImageAlt, r.imageAlt),
@@ -290,6 +297,7 @@ export function getNewsPostBySlug(
     metaDescription:    field(locale, row.ruMetaDescription, row.enMetaDescription),
     datePublished:      row.datePublished,
     dateUpdated:        row.dateUpdated,
+    updatedAt:          row.updatedAt,
     sourceLabel:        row.sourceLabel,
     sourceUrl:          row.sourceUrl,
     imagePath:          row.imagePath,
@@ -330,6 +338,7 @@ export function getPublishedEvents(locale: Locale): EventSummary[] {
       featuredCalendar: eventsTable.featuredCalendar,
       featuredDigest:   eventsTable.featuredDigest,
       schemaEligible:   eventsTable.schemaEligible,
+      updatedAt:        eventsTable.updatedAt,
     })
     .from(eventsTable)
     .where(where)
@@ -353,6 +362,7 @@ export function getPublishedEvents(locale: Locale): EventSummary[] {
       featuredCalendar: r.featuredCalendar,
       featuredDigest:   r.featuredDigest,
       schemaEligible:   r.schemaEligible,
+      updatedAt:        r.updatedAt,
     }));
 }
 
@@ -390,6 +400,7 @@ export function getFeaturedEvents(
       featuredCalendar: eventsTable.featuredCalendar,
       featuredDigest:   eventsTable.featuredDigest,
       schemaEligible:   eventsTable.schemaEligible,
+      updatedAt:        eventsTable.updatedAt,
     })
     .from(eventsTable)
     .where(where)
@@ -414,6 +425,7 @@ export function getFeaturedEvents(
       featuredCalendar: r.featuredCalendar,
       featuredDigest:   r.featuredDigest,
       schemaEligible:   r.schemaEligible,
+      updatedAt:        r.updatedAt,
     }));
 }
 
@@ -481,6 +493,7 @@ export function getEventBySlug(
     featuredCalendar:    row.featuredCalendar,
     featuredDigest:      row.featuredDigest,
     schemaEligible:      row.schemaEligible,
+    updatedAt:           row.updatedAt,
     sourceUrl:           row.sourceUrl,
     ruPublished:         row.ruPublished,
     relatedGuideSlug:    row.relatedGuideSlug,
@@ -517,6 +530,7 @@ export function getPublishedCalendarPages(locale: Locale): CalendarPageSummary[]
       hasIslamicDates:  calendarPages.hasIslamicDates,
       featuredHomepage: calendarPages.featuredHomepage,
       datesJson:        calendarPages.datesJson,
+      updatedAt:        calendarPages.updatedAt,
     })
     .from(calendarPages)
     .where(where)
@@ -537,6 +551,7 @@ export function getPublishedCalendarPages(locale: Locale): CalendarPageSummary[]
       hasIslamicDates:  r.hasIslamicDates,
       featuredHomepage: r.featuredHomepage,
       dates:            parseDatesJson(r.datesJson),
+      updatedAt:        r.updatedAt,
     }));
 }
 
@@ -572,6 +587,7 @@ export function getFeaturedCalendarPages(
       hasIslamicDates:  calendarPages.hasIslamicDates,
       featuredHomepage: calendarPages.featuredHomepage,
       datesJson:        calendarPages.datesJson,
+      updatedAt:        calendarPages.updatedAt,
     })
     .from(calendarPages)
     .where(where)
@@ -593,6 +609,7 @@ export function getFeaturedCalendarPages(
       hasIslamicDates:  r.hasIslamicDates,
       featuredHomepage: r.featuredHomepage,
       dates:            parseDatesJson(r.datesJson),
+      updatedAt:        r.updatedAt,
     }));
 }
 
@@ -637,5 +654,6 @@ export function getCalendarPageBySlug(
     ruPublished:       row.ruPublished,
     featuredHomepage:  row.featuredHomepage,
     dates:             parseDatesJson(row.datesJson),
+    updatedAt:         row.updatedAt,
   };
 }

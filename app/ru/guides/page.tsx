@@ -35,20 +35,22 @@ const CATEGORY_LABELS: Record<string, string> = {
 // These are not DB guides — they link to /ru/guides/[group] tab pages.
 const RU_GROUP_ENTRIES: GuideListItem[] = [
   {
-    slug:     "child-dependent-visa-dubai",
-    title:    "Виза ребёнка в Дубае: оформление dependent visa",
-    summary:  "Маршрут для оформления резидентской визы ребёнка в Дубае. Выберите вариант внутри ОАЭ или за пределами ОАЭ, чтобы понять шаги, документы, стоимость и сроки.",
-    price:    "AED 1,586–2,875",
-    timeline: "3–6 недель",
-    category: "visas",
+    slug:      "child-dependent-visa-dubai",
+    title:     "Виза ребёнка в Дубае: оформление dependent visa",
+    summary:   "Маршрут для оформления резидентской визы ребёнка в Дубае. Выберите вариант внутри ОАЭ или за пределами ОАЭ, чтобы понять шаги, документы, стоимость и сроки.",
+    price:     "AED 1,586–2,875",
+    timeline:  "3–6 недель",
+    category:  "visas",
+    updatedAt: "",
   },
   {
-    slug:     "spouse-dependent-visa-dubai",
-    title:    "Виза жены или мужа в Дубае: оформление dependent visa",
-    summary:  "Маршрут для оформления резидентской визы супруга в Дубае. Подходит для семей, где спонсор уже имеет резидентскую визу ОАЭ.",
-    price:    "AED 1,800–3,200",
-    timeline: "3–6 недель",
-    category: "visas",
+    slug:      "spouse-dependent-visa-dubai",
+    title:     "Виза жены или мужа в Дубае: оформление dependent visa",
+    summary:   "Маршрут для оформления резидентской визы супруга в Дубае. Подходит для семей, где спонсор уже имеет резидентскую визу ОАЭ.",
+    price:     "AED 1,800–3,200",
+    timeline:  "3–6 недель",
+    category:  "visas",
+    updatedAt: "",
   },
 ];
 

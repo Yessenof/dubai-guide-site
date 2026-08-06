@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-08-06 — Phase 6D Stage E — Calendar JSON-LD + per-record sitemap lastmod complete
+
+Calendar detail pages (EN+RU /calendar/[slug]) now emit WebPage+BreadcrumbList JSON-LD in <head>. Sitemap refactored to derive per-record lastModified from DB updated_at column for all 4 content types (guides, calendar, events, news). Static hub pages retain SITE_BUILD fallback. TypeScript errors from updatedAt propagation fully resolved: GuideListItem interface updated; getRecentPublishedGuides, getRecentPublishedGuidesLocale (RU), getNewsPostBySlug, getEventBySlug, getCalendarPageBySlug all return updatedAt. app/ru/guides/page.tsx and app/(en)/(public)/guides/page.tsx GROUP_ENTRIES synthetic items use updatedAt:"". Build: 92/92, 0 TS errors. No production deploy.
+
+---
+
 ## 2026-08-05 — Phase 6D Stage B — Full technical SEO audit complete; 1 defect fixed
 
 Full technical audit of 92 static pages. One real defect fixed: `lib/related-guides.ts` had 4 stale key entries using old short slugs for spouse/child dependent visa guides (`"spouse-dependent-dubai-inside"` etc.) — none matched any published guide slug, so those 4 guide detail pages silently showed zero related guides. Fixed: all 4 keys and 8 target slug values updated to correct full slug names. Build: 92/92, 0 TS errors. 2 gaps documented for Stage E: (1) calendar detail pages have no JSON-LD structured data; (2) sitemap uses static SITE_BUILD = 2026-07-19 instead of per-record updated_at. All other checks clean: html-lang correct in both layouts; 41 published records across 4 content types — all unique titles; OrgSchema on all public pages; no orphan pages; noindex logic correct; all internal guide links valid. Audit report: docs/content-drafts/seo/6d-stage-b-technical-audit.md.

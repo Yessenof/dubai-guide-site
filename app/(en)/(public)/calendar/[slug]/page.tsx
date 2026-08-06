@@ -107,8 +107,29 @@ export default async function CalendarDetailPage({ params }: Props) {
   // yearBadge shown when there is no single-month target (yearly/multi-month pages)
   const yearBadge  = calendarMonth ? undefined : String(page.year);
 
+  const pageUrl = `${BASE}/calendar/${slug}`;
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: BASE },
+      { "@type": "ListItem", position: 2, name: "Calendar", item: `${BASE}/calendar` },
+      { "@type": "ListItem", position: 3, name: page.title, item: pageUrl },
+    ],
+  };
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: page.seoTitle || page.title,
+    description: page.metaDescription || page.summary,
+    url: pageUrl,
+    inLanguage: "en",
+    breadcrumb: breadcrumbSchema,
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-10">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
 
       <Link
         href="/calendar"

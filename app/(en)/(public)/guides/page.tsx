@@ -27,12 +27,13 @@ const GROUP_ENTRIES: GuideListItem[] = Object.entries(GUIDE_GROUPS).map(([groupS
     "child-dependent-visa-dubai":  "AED 1,586–2,875",
   };
   return {
-    slug:     groupSlug,
-    title:    group.title,
-    summary:  group.summary,
-    price:    prices[groupSlug] ?? "",
-    timeline: "3–6 weeks",
-    category: group.category,
+    slug:      groupSlug,
+    title:     group.title,
+    summary:   group.summary,
+    price:     prices[groupSlug] ?? "",
+    timeline:  "3–6 weeks",
+    category:  group.category,
+    updatedAt: "",
   };
 });
 

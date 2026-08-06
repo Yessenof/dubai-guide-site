@@ -16,9 +16,14 @@ const REDIRECT_SLUGS = new Set([
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
-// Single build-time date avoids fake "modified now" signals on every rebuild.
-// Update this when deploying meaningful content changes.
-const SITE_BUILD = new Date("2026-07-19");
+// Fallback date for pages that have no DB-derived updatedAt (static hub pages, etc.)
+const SITE_BUILD = new Date("2026-08-05");
+
+function toDate(isoStr: string | undefined): Date {
+  if (!isoStr) return SITE_BUILD;
+  const d = new Date(isoStr);
+  return isNaN(d.getTime()) ? SITE_BUILD : d;
+}
 
 const EN_STATIC: Array<{ path: string; priority: number }> = [
   { path: "",                                    priority: 1.0 },
@@ -61,78 +66,84 @@ const RU_STATIC: Array<{ path: string; priority: number }> = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const enSlugs = getAllPublishedGuides()
-    .map((g) => g.slug)
-    .filter((s) => !REDIRECT_SLUGS.has(s));
+  // Query each content type once; derive both slug lists and updatedAt maps from the same result.
+  const enGuides   = getAllPublishedGuides("en");
+  const enSlugs    = enGuides.map((g) => g.slug).filter((s) => !REDIRECT_SLUGS.has(s));
+  const guideUpdatedAt = Object.fromEntries(enGuides.map((g) => [g.slug, g.updatedAt]));
 
-  const ruSlugs = getRuPublishedGuidesSlugs()
-    .filter((s) => !REDIRECT_SLUGS.has(s));
+  const ruSlugs = getRuPublishedGuidesSlugs().filter((s) => !REDIRECT_SLUGS.has(s));
 
-  const enCalendarSlugs = getPublishedCalendarPages("en").map((p) => p.slug);
+  const enCalPages = getPublishedCalendarPages("en");
+  const enCalendarSlugs = enCalPages.map((p) => p.slug);
+  const calUpdatedAt    = Object.fromEntries(enCalPages.map((p) => [p.slug, p.updatedAt]));
   const ruCalendarSlugs = getPublishedCalendarPages("ru").map((p) => p.slug);
 
   // Events: status=published. getPublishedEvents("ru") gates on ru_published=1 + non-empty ru_title.
-  const enEventSlugs = getPublishedEvents("en").map((e) => e.slug);
-  const ruEventSlugs = getPublishedEvents("ru").map((e) => e.slug);
+  const enEvents = getPublishedEvents("en");
+  const enEventSlugs   = enEvents.map((e) => e.slug);
+  const eventUpdatedAt = Object.fromEntries(enEvents.map((e) => [e.slug, e.updatedAt]));
+  const ruEventSlugs   = getPublishedEvents("ru").map((e) => e.slug);
 
   // News: status=published. getPublishedNewsPosts does not expose the noindex field in NewsPostSummary.
   // All currently published news have noindex=0, so including all is correct.
   // If a future post needs noindex=1 but stays published, it would also need to be excluded here.
-  const enNewsSlugs = getPublishedNewsPosts("en").map((p) => p.slug);
-  const ruNewsSlugs = getPublishedNewsPosts("ru").map((p) => p.slug);
+  const enNews = getPublishedNewsPosts("en");
+  const enNewsSlugs   = enNews.map((p) => p.slug);
+  const newsUpdatedAt = Object.fromEntries(enNews.map((p) => [p.slug, p.updatedAt]));
+  const ruNewsSlugs   = getPublishedNewsPosts("ru").map((p) => p.slug);
 
   const enGuideEntries = enSlugs.map((slug) => ({
     url:             `${BASE_URL}/guides/${slug}`,
-    lastModified:    SITE_BUILD,
+    lastModified:    toDate(guideUpdatedAt[slug]),
     changeFrequency: "monthly" as const,
     priority:        0.8,
   }));
 
   const ruGuideEntries = ruSlugs.map((slug) => ({
     url:             `${BASE_URL}/ru/guides/${slug}`,
-    lastModified:    SITE_BUILD,
+    lastModified:    toDate(guideUpdatedAt[slug]),
     changeFrequency: "monthly" as const,
     priority:        0.8,
   }));
 
   const enCalendarEntries = enCalendarSlugs.map((slug) => ({
     url:             `${BASE_URL}/calendar/${slug}`,
-    lastModified:    SITE_BUILD,
+    lastModified:    toDate(calUpdatedAt[slug]),
     changeFrequency: "weekly" as const,
     priority:        0.7,
   }));
 
   const ruCalendarEntries = ruCalendarSlugs.map((slug) => ({
     url:             `${BASE_URL}/ru/calendar/${slug}`,
-    lastModified:    SITE_BUILD,
+    lastModified:    toDate(calUpdatedAt[slug]),
     changeFrequency: "weekly" as const,
     priority:        0.7,
   }));
 
   const enEventEntries = enEventSlugs.map((slug) => ({
     url:             `${BASE_URL}/events/${slug}`,
-    lastModified:    SITE_BUILD,
+    lastModified:    toDate(eventUpdatedAt[slug]),
     changeFrequency: "monthly" as const,
     priority:        0.7,
   }));
 
   const ruEventEntries = ruEventSlugs.map((slug) => ({
     url:             `${BASE_URL}/ru/events/${slug}`,
-    lastModified:    SITE_BUILD,
+    lastModified:    toDate(eventUpdatedAt[slug]),
     changeFrequency: "monthly" as const,
     priority:        0.6,
   }));
 
   const enNewsEntries = enNewsSlugs.map((slug) => ({
     url:             `${BASE_URL}/news/${slug}`,
-    lastModified:    SITE_BUILD,
+    lastModified:    toDate(newsUpdatedAt[slug]),
     changeFrequency: "monthly" as const,
     priority:        0.6,
   }));
 
   const ruNewsEntries = ruNewsSlugs.map((slug) => ({
     url:             `${BASE_URL}/ru/news/${slug}`,
-    lastModified:    SITE_BUILD,
+    lastModified:    toDate(newsUpdatedAt[slug]),
     changeFrequency: "monthly" as const,
     priority:        0.5,
   }));

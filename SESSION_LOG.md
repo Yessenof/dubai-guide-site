@@ -5,6 +5,12 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-08-06 — Phase 6D Stage D Batch-03 — Sep/Oct sweep: 8 new items + Boris G date fix
+
+Boris Grebenshikov OCT-R2 date corrected: 2026-10-24 → 2026-10-29 (T1: The Agenda official website). 8 new verified items added: SEP-NEW-DEKA (DEKA FIT Dubai Sep 26, Coca-Cola Arena, AED 340-440, T1: Visit Dubai); OCT-NEW-DHF (Dubai Home Festival Oct 16-Nov 1, T1: Visit Dubai); OCT-NEW-MARILYNE (Marilyne Naaman Oct 6, Dubai Opera, AED 295+, T1: Dubai Opera+Platinumlist); OCT-NEW-MUNAWAR (Munawar Faruqui Oct 11, Dubai Opera/Dubai Comedy Festival, AED 125+, T1: Platinumlist event/106537); OCT-NEW-GILLIGAN (Mo Gilligan Oct 12, Dubai Opera/Dubai Comedy Festival, AED 250+, 16+, T1: Dubai Opera official); OCT-NEW-ACHKAR (John Achkar Oct 17, Dubai Opera/Dubai Comedy Festival, AED 185-415, 13+, T1: Visit Dubai+Dubai Opera); OCT-NEW-GIPSY (Gipsy Kings Symphonic Oct 22, Dubai Opera, AED 395+, T1: Dubai Opera+Platinumlist); OCT-NEW-MELADZE (Valery Meladze Oct 25, The Agenda, AED 300+, 21+, T1: Platinumlist event/92918). Additional context from sweep: Sep 10 CCA = TPiMEA Awards (OUT-OF-SCOPE professional industry event); Balqees Sep 15 = HOLD (T2/T3 only); DFC Oct 31 start confirmed correct (T1: DFC official); Richard Marx Oct 3 confirmed correct (T1: CCA official + Visit Dubai). DB: Aug=15, Sep=16, Oct=26, Nov=19, Dec=11. Python patch: scratchpad (idempotency confirmed). TypeScript production patch: scripts/patch-6d-calendar-batch-03-sep-oct.ts. Backup: guides.db.pre-batch03-6d-2026-08-06-122714. Build: 92/92, 0 TS errors, integrity_check ok. NO production deploy.
+
+---
+
 ## 2026-08-06 — Phase 6D Stage E — Calendar JSON-LD + per-record sitemap lastmod complete
 
 Calendar detail pages (EN+RU /calendar/[slug]) now emit WebPage+BreadcrumbList JSON-LD in <head>. Sitemap refactored to derive per-record lastModified from DB updated_at column for all 4 content types (guides, calendar, events, news). Static hub pages retain SITE_BUILD fallback. TypeScript errors from updatedAt propagation fully resolved: GuideListItem interface updated; getRecentPublishedGuides, getRecentPublishedGuidesLocale (RU), getNewsPostBySlug, getEventBySlug, getCalendarPageBySlug all return updatedAt. app/ru/guides/page.tsx and app/(en)/(public)/guides/page.tsx GROUP_ENTRIES synthetic items use updatedAt:"". Build: 92/92, 0 TS errors. No production deploy.

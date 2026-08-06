@@ -28,7 +28,7 @@ import Database from "better-sqlite3";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 
-const DB_PATH    = path.resolve(__dirname, "../data/guides.db");
+const DB_PATH    = process.env.GUIDEX_DB_PATH ?? path.resolve(__dirname, "../data/guides.db");
 const BACKUP_DIR = path.resolve(__dirname, "../backups/local");
 
 type DateItem = Record<string, unknown>;

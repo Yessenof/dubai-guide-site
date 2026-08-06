@@ -26,8 +26,8 @@ import * as fs from "fs";
 import * as path from "path";
 import * as crypto from "crypto";
 
-const DB_PATH = path.join(process.cwd(), "data", "guides.db");
-const BACKUP_DIR = path.join(process.cwd(), "backups", "local");
+const DB_PATH = process.env.GUIDEX_DB_PATH ?? path.join(process.cwd(), "data", "guides.db");
+const BACKUP_DIR = process.env.GUIDEX_BACKUP_DIR ?? path.join(process.cwd(), "backups", "local");
 
 interface CalendarDateItem {
   id?: string;

@@ -23,8 +23,8 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 
-const DB_PATH = path.join(process.cwd(), "data", "guides.db");
-const BACKUP_DIR = path.join(process.cwd(), "backups", "local");
+const DB_PATH = process.env.GUIDEX_DB_PATH ?? path.join(process.cwd(), "data", "guides.db");
+const BACKUP_DIR = process.env.GUIDEX_BACKUP_DIR ?? path.join(process.cwd(), "backups", "local");
 
 if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR, { recursive: true });
 const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);

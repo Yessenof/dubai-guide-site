@@ -17,7 +17,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as crypto from "crypto";
 
-const DB_PATH = path.resolve(process.cwd(), "data/guides.db");
+const DB_PATH = process.env.GUIDEX_DB_PATH ?? path.resolve(process.cwd(), "data/guides.db");
 
 function md5(filePath: string): string {
   return crypto.createHash("md5").update(fs.readFileSync(filePath)).digest("hex");

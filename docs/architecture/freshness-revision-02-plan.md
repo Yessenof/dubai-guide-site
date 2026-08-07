@@ -140,6 +140,17 @@ Revision 02's `blocked: social media` line is retracted as a blanket rule. Corre
 
 The hard requirement this fixes: **a small event must be able to survive Discovery when its only two pieces of evidence are a verified organizer's social post and a small official venue page.** Under Revision 02's blanket rule this candidate would have been discarded before Discovery even finished. Under this model it survives Discovery, gets `source_entity` records for both the organizer and the venue, and its publication confidence (`subject_to_official_confirmation` vs. `confirmed`) is decided separately, downstream, by the existing confidence field — not by whether one of its two sources happened to be social media. See rewritten Simulation 3 (§44).
 
+### 6.3 Authority & registry governance — who assigns `authority_level` (new, resolves apparent tension with routine hard-stops)
+
+`source_entity`/`source_kind`/`authority_level` (§6.1) are **curated configuration, not runtime output.** A routine proposing that a source is trustworthy is not the same thing as that source becoming trustworthy — this is the distinction that removes the apparent tension with the routines' existing, unchanged hard-stop rule ("mark media/social as official source" stays a HARD STOP, per `GUIDEX_DAILY_ROUTINES_STRATEGY.md` and `ROUTINE_02_SOURCE_VERIFICATION_AND_CLASSIFICATION.md` — neither is modified by this pass). Concretely:
+
+- **Initial registry values** (the 7 HOLD items + all L1/L2 sources already named in routine docs, §11.3 item 2) are created via a **deterministic seed/backfill**, reviewed by the owner before being written — not invented at runtime by any routine.
+- **Routines may identify a new source candidate** (a URL/account not yet in the registry) as part of Discovery — this is a Discovery output, same as any other candidate, and is subject to the same human-import gate as everything else (§10's lifecycle: DISCOVERED → human decides to import).
+- **Routines may propose a classification** (e.g. "this looks like a `venue`-kind source, candidate `authority_level=secondary` for `venue_location`") as part of that Discovery output — a proposal, recorded as such, never a write to `sources`/`source_authority`.
+- **A new source never silently becomes high-authority merely because a routine's output describes it as official-sounding.** Registry writes (`sources`, `source_authority`) happen only through the same human-reviewed import/backfill path as any other `freshness.db` write requiring judgment — there is no autonomous path from "routine mentions a source" to "source is registered as `primary`."
+- **Verified social can be authoritative for specific fact classes** (§6.2 — e.g. `primary` for `announcement`, never for `legal_basis`) once its ownership is independently confirmed (verified badge + matches known organizer identity, or linked from the organizer's own official site) — that verification is itself a registry decision made under this same governance model, not a routine's runtime judgment call.
+- This governance model does not require new tooling to state — it is a policy constraint on who may write to `sources`/`source_authority`, enforced the same way every other `freshness.db` write boundary in this document is enforced: by which script/process has write access (§18), not by trusting a routine's own output.
+
 ---
 
 ## 7 — Source Identity & Alias Registry (new — resolves label/URL validation properly)
@@ -263,12 +274,18 @@ T0  05:45 UTC  Due-watchlist digest generation (deterministic, §18)
                 → digest artifact must exist and be readable by R02 BEFORE 06:30 UTC
 T1  06:30 UTC  R02 runs (existing schedule, unchanged), reads T0's digest as input,
                 fetches each due source, writes structured findings
-T2  ~06:35 UTC Structured ingestion (deterministic, §18) parses R02's output,
-                writes freshness_checks + freshness_alerts rows
-T3  ~06:40 UTC Consistency scan (deterministic, §18) runs independently of R02 —
+T2  ~06:40 UTC Structured ingestion (deterministic, §18) parses R02's output,
+                writes freshness_observations + freshness_change_candidates rows
+T3  ~06:45 UTC Consistency scan (deterministic, §18) runs independently of R02 —
                 does not depend on T1/T2, can run any time, but scheduled here
                 to land in the same morning digest
-T4  ~06:45 UTC Alert delivery (per §33's recommended channel/tiering)
+T4  ~06:50 UTC Alert delivery (per §30's recommended channel/tiering)
+
+This is the single canonical schedule used everywhere in this document (this section,
+§18's topology table, §29's diagram, §40's fallback SOP, and all simulations that cite
+exact times) — chosen as the wider-spaced, more operationally conservative variant so
+each deterministic stage has a real buffer against the previous stage's typical
+completion time, not a tight best-case assumption.
 ```
 
 **Failure handling:** if T0 fails to produce a fresh digest before 06:30 UTC, R02 must not silently treat a stale or missing digest as "nothing due." R02's prompt (updated in a future FRESH phase, not this doc-only pass) must be able to detect a missing/stale digest artifact and report `Status: BLOCKED — digest unavailable` rather than `Status: CLEAN`, so a T0 failure is visible instead of masquerading as a clean monitoring run. This requirement is recorded here as an architectural must; wiring it into the routine prompt is FRESH-phase work.
@@ -328,7 +345,7 @@ confidence, result (unchanged|changed|unreachable|inconclusive), evidence_ref
 
 The deterministic ingestion script (T2, §12) must: strictly validate against `schema_version`; reject (not partially accept) any malformed artifact; be idempotent on `observation_id`; reject duplicate `observation_id`s outright rather than silently overwriting.
 
-**MVP reality check:** routine prompts today only emit Markdown, and changing that is FRESH-phase implementation work, not something this doc-only pass can do. Until the JSON/JSONL companion artifact exists, the ingestion script uses a **strict Markdown parser** as an explicitly labeled **MVP COMPATIBILITY BRIDGE** — not the target contract, with migration to the structured artifact named as an early FRESH-phase deliverable (§37), not indefinitely deferred.
+**MVP reality check:** routine prompts today only emit Markdown, and changing that is FRESH-phase implementation work, not something this doc-only pass can do. Until the JSON/JSONL companion artifact exists, the ingestion script uses a **strict Markdown parser** as an explicitly labeled **MVP COMPATIBILITY BRIDGE** — not the target contract. The Markdown bridge remains in place through Track A (FRESH-00 through FRESH-05) so the first end-to-end pilot isn't blocked on a routine-prompt format change; migration to the structured JSON/JSONL contract is named as **Track B's first priority**, targeted immediately after Track A's gate (§37/§38) — not indefinitely deferred, but also not required before the first live monitoring cycle.
 
 ---
 
@@ -412,6 +429,17 @@ CREATE TABLE freshness_alerts (
 
 `freshness_observations` is the raw evidence log (append-only, never edited). `freshness_change_candidates` is the reviewable unit a human approves or rejects. `freshness_alerts` is purely a delivery record. This three-way split is what makes manual-hotfix reconciliation (§10, §45) representable: a hotfix closes the relevant `freshness_change_candidates` row with `closed_reason='superseded_by_manual_hotfix'` and the watchlist continues against the new baseline, instead of the next monitor cycle repeatedly re-proposing a revert.
 
+**Severity vocabulary — explicit mapping (resolves the two-vocabulary ambiguity):** this schema's `severity` columns use a simplified 3-value storage class (`info`/`warning`/`urgent`). Elsewhere in this document (§22, §30, §31), severity is discussed using a 4-tier operational vocabulary (`P0`/`P1`/`P2`/`P3`). `P0`/`P1`/`P2`/`P3` is the **canonical operational severity** — it's what a human reviewer and the alert-delivery tiering (§30) actually reason about, since it distinguishes "urgent + YMYL/money" (P0) from "urgent but lower-stakes" (P1), a distinction the 3-value DB enum can't express on its own. The schema's `info`/`warning`/`urgent` is retained as a simplified storage class **only if** it carries this explicit mapping, applied at write time by the alert-generation step (topology row 9, §18):
+
+```
+urgent  → P0 or P1  (money/ticket risk, YMYL, imminent event — P0/P1 distinguished by
+                      proximity/impact, not by a separate DB column at MVP)
+warning → P2         (§30's "daily digest" tier)
+info    → P3         (§30's "weekly digest" / source-health tier)
+```
+
+This is a doc-only clarification, not a schema change — no migration is implemented in this pass. If a future FRESH-phase implementation finds the collapsed `urgent→P0/P1` mapping insufficiently precise (e.g. P0/P1 need different delivery latency, not just the same "urgent" tier), storing `P0`/`P1`/`P2`/`P3` directly as the `severity` CHECK values is the conceptually cleaner alternative and should be preferred at that point over maintaining a mapping table — but that decision is deferred to implementation, not made here.
+
 MVP may implement a smaller subset of these columns, but this is the target contract — not renegotiated at implementation time without a documented reason.
 
 ---
@@ -422,21 +450,46 @@ Verified starting facts (§1): Claude routines have zero DB/SSH/server filesyste
 
 **Decision: `freshness.db` lives on UpCloud, colocated with `guides.db`, on the same trust boundary and the same backup precedent (`server-cron-backup.sh`).** This part of Revision 02 was right. What Revision 02 never resolved is how a routine (repo-scoped only) and a UpCloud-scoped script exchange data without a human in the loop every day. That gap is resolved component-by-component below.
 
-| Component | Executor | Host | Scheduler | Input | Output | Read perms | Write perms | Failure behavior | Retry | Locking/idempotency |
-|---|---|---|---|---|---|---|---|---|---|---|
-| Source/new-source discovery | Claude routine (R01/R05, extended per §11) | Claude remote sandbox | Claude routine scheduler (06:00/08:00 UTC) | Repo files, public web | `daily-radar/*.md` (git, pushed) | Repo + public web | Repo docs paths only | Missing output file = visible failure (no file written) | Owner re-runs manually next session | N/A — stateless per run |
-| Due-watchlist digest generation (T0) | New deterministic script, e.g. `scripts/generate-watchlist-digest.ts` | **UpCloud** (new cron entry, modeled on `server-cron-backup.sh`) | cron, 05:45 UTC | `freshness.db` (local read) | Digest artifact — **must reach the repo for R02 to read it; see decision below** | `freshness.db` read-only | Digest artifact write (destination per decision below) | Cron failure logged locally; R02 must detect a stale/missing digest and report `BLOCKED`, not `CLEAN` (§12) | Owner-triggered manual re-run if a cron failure is noticed | Idempotent — same due-set produces same digest content |
-| R02 monitoring (T1) | Claude routine | Claude remote sandbox | Claude routine scheduler, 06:30 UTC | Digest artifact (repo) + live web fetch | `daily-radar/*-source-verification.md` + structured companion (target, §16) | Repo + public web | Repo docs paths only | Same as today — visible via missing/blocked output | Owner-triggered | Stateless per run |
-| Structured ingestion (T2) | New deterministic script, `scripts/sync-freshness-alerts.ts` | **UpCloud** (same cron chain, staggered) | cron, ~06:40 UTC (after R02's typical completion) | R02's structured output (must be pulled from GitHub — UpCloud already has pull access) | `freshness_observations` + `freshness_change_candidates` rows | GitHub read (pull, already exists) + `freshness.db` write | `freshness.db` only, never `guides.db` | Reject malformed input (§16); log, do not crash silently | Owner-triggered manual re-run | `observation_id` uniqueness enforced at DB level |
-| Consistency scan (T3) | New deterministic script, `scripts/qa-consistency-check.ts` | **UpCloud** | cron, ~06:45 UTC (or ad hoc, no dependency on T1/T2) | `guides.db` (local read-only) | `freshness_change_candidates` rows | `guides.db` read-only | `freshness.db` only | Logs and continues rule-by-rule; one rule's failure doesn't block others | Owner-triggered manual re-run | Re-running produces the same candidates unless state changed — no duplicate rows for the same unresolved issue |
-| Alert delivery (T4) | New deterministic script | **UpCloud** | cron, ~06:50 UTC | `freshness_alerts` pending rows | Delivery per §33 (channel TBD-recommended) | `freshness.db` read | External delivery API write only (no repo, no DB other than marking `delivered_at`) | Delivery failure retried; alert stays `pending` until confirmed delivered | Bounded retry (e.g. 3x with backoff), then falls back to "owner's daily review will still see it" as the floor | `delivered_at` set only once per alert |
-| Human approval | Owner | Owner's machine/phone, reading delivered alert or `freshness_change_candidates` | Manual, owner-paced | Alert + underlying evidence | Approve/reject decision | Full | N/A | N/A | N/A | One decision per candidate; no silent-approval path (§34) |
-| Approved production correction | Owner or an agent session under explicit owner instruction | Owner's local machine (SSH to UpCloud) | Manual, owner-triggered | Approved `freshness_change_candidates` row | Patch script execution against `guides.db` | Full | `guides.db`, via existing patch-script pattern | Unchanged from today — backup/assert/verify/rollback discipline | Unchanged | Unchanged — idempotent patch scripts |
-| Live QA | Owner or agent session | Owner's machine (curl against production) | Manual, immediately after correction | Live production URLs | Pass/fail report | Public HTTP only | None | Unchanged from today | Unchanged | Unchanged |
+15 physically distinct stages, numbered in execution order. Some stages share an executor/scheduler (e.g. rows 6-9 all run in the same UpCloud cron chain) — the point of naming them separately is unambiguous physical ownership per stage, not that each needs its own process.
+
+| # | Component | Executor | Host | Scheduler | Input | Output | Read perms | Write perms | Failure behavior | Retry | Locking/idempotency |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | Discovery routine execution | Claude routine (R01/R05, extended per §11) | Claude remote sandbox | Claude routine scheduler (06:00/08:00 UTC) | Repo files, public web | Discovery findings (in-memory, pending row 1's own publication) | Repo + public web | N/A (write happens in the same run, see output) | Missing output = visible failure (no file written) | Owner re-runs manually next session | N/A — stateless per run |
+| 2 | Due-list generation (T0) | New deterministic script, `scripts/generate-watchlist-digest.ts` | **UpCloud** (new cron entry, modeled on `server-cron-backup.sh`) | cron, 05:45 UTC | `freshness.db` (local read) | Local digest artifact (pre-push) | `freshness.db` read-only | Local temp/digest file only | Cron failure logged locally | Owner-triggered manual re-run | Idempotent — same due-set produces same digest content |
+| 3 | Freshness exchange publication to GitHub | Same script's push step (deterministic bridge process, §18 credential model) | **UpCloud** | cron, immediately after row 2, before 06:30 UTC | Local digest artifact | `docs/content-drafts/freshness/*` pushed to GitHub | Local digest file | Repository-scoped credential, restricted to the freshness exchange path by a pre-push changed-path assertion (§18) | Pre-push assertion rejects locally and aborts the push if any changed path falls outside the freshness exchange directory; R02 (row 4) detects a stale/missing digest and reports `BLOCKED`, not `CLEAN` (§12) | Owner-triggered manual re-run | Idempotent — unchanged content produces no new commit |
+| 4 | R02 monitoring execution (T1) | Claude routine | Claude remote sandbox | Claude routine scheduler, 06:30 UTC | Digest artifact (repo, from row 3) + live web fetch | Findings in the routine's own run context, pending publication (row 5) | Repo + public web | N/A (write happens in row 5) | Same as today — visible via missing/blocked output | Owner-triggered | Stateless per run |
+| 5 | Observation artifact publication | Claude routine (R02, existing push capability) | Claude remote sandbox | Same routine run as row 4, immediately following | R02's findings | `daily-radar/*-source-verification.md` + structured companion (target, §16), pushed to GitHub | N/A | Repo docs paths only (existing routine push capability, unchanged) | Missing/blocked output visible same as today | Owner-triggered | Stateless per run |
+| 6 | UpCloud ingestion/pull | `scripts/sync-freshness-alerts.ts` (pull step) | **UpCloud** | cron, ~06:40 UTC (after R02's typical completion) | GitHub (pull, existing UpCloud capability) | Local copy of row 5's output | GitHub read (pull, already exists) | Local temp file only | Reject malformed/missing input (§16); log, do not crash silently | Owner-triggered manual re-run | N/A — read-only pull |
+| 7 | Consistency engine (T3) | `scripts/qa-consistency-check.ts` | **UpCloud** | cron, ~06:45 UTC (or ad hoc, no dependency on rows 4-6) | `guides.db` (local read-only) | Candidate findings, pending write (row 8) | `guides.db` read-only | N/A (write happens in row 8) | Logs and continues rule-by-rule; one rule's failure doesn't block others | Owner-triggered manual re-run | Re-running produces the same candidates unless state changed |
+| 8 | freshness.db mutation | `scripts/sync-freshness-alerts.ts` (ingestion write, row 6's output) + `scripts/qa-consistency-check.ts` (consistency write, row 7's output) | **UpCloud** | Same cron chain, immediately after rows 6/7 | Parsed observations (row 6) + consistency candidates (row 7) | `freshness_observations` + `freshness_change_candidates` rows | N/A | `freshness.db` only, never `guides.db` | Malformed input rejected before write; partial failure does not commit | Owner-triggered manual re-run | `observation_id` uniqueness enforced at DB level |
+| 9 | Alert generation | Same scripts as row 8 (severity assignment step, §8/§30) | **UpCloud** | Same cron chain, immediately after row 8 | New/updated `freshness_change_candidates` rows | `freshness_alerts` rows (`status='pending'`) | `freshness.db` read | `freshness.db` only | An undefined/unmapped severity is a hard fail, not a default guess | Owner-triggered manual re-run | One alert row per candidate; re-running does not duplicate |
+| 10 | Alert delivery (T4) | New deterministic script | **UpCloud** | cron, ~06:50 UTC | `freshness_alerts` pending rows | Delivery per §30 (channel recommendation) | `freshness.db` read | External delivery API write only (no repo, no DB other than marking `delivered_at`) | Delivery failure retried; alert stays `pending` until confirmed delivered | Bounded retry (e.g. 3x with backoff), then falls back to "owner's daily review will still see it" as the floor | `delivered_at` set only once per alert |
+| 11 | Human approval | Owner | Owner's machine/phone, reading delivered alert or `freshness_change_candidates` | Manual, owner-paced | Alert + underlying evidence | Approve/reject decision | Full | N/A | N/A | N/A | One decision per candidate; no silent-approval path (§31) |
+| 12 | Approved `guides.db` correction | Owner or an agent session under explicit owner instruction | Owner's local machine (SSH to UpCloud) | Manual, owner-triggered | Approved `freshness_change_candidates` row | Patch script execution against `guides.db` | Full | `guides.db`, via existing patch-script pattern | Unchanged from today — backup/assert/verify/rollback discipline | Unchanged | Unchanged — idempotent patch scripts |
+| 13 | Build/reload | Owner or agent session under explicit owner instruction | Owner's local machine (SSH to UpCloud) | Manual, immediately after row 12 | Updated `guides.db` | Rebuilt app, `pm2 reload` | Full | Build artifacts, running process only | Unchanged from today | Unchanged | Unchanged |
+| 14 | Live QA | Owner or agent session | Owner's machine (curl against production) | Manual, immediately after row 13 | Live production URLs | Pass/fail report | Public HTTP only | None | Unchanged from today | Unchanged | Unchanged |
+| 15 | Baseline reconciliation | Owner or agent session under explicit owner instruction (patch-script extension, §45) | Owner's local machine (SSH to UpCloud) | Manual, immediately after row 14 passes | Applied `freshness_change_candidates` row | Candidate closed (`applied`), `freshness_watchlist.next_check_due` reset, observations preserved (§45) | Full | `freshness.db` only, via the same patch-script session | Skipping this step is a checklist gap, not an automated failure — flagged, not silently tolerated | Unchanged | Idempotent — closing an already-closed candidate is a no-op |
 
 **The one unresolved cross-boundary link:** T0's digest must reach R02, but R02 can only read the git repo, and UpCloud's git-push capability is unverified and currently contrary to CLAUDE.md's "production is runtime-only, never a source of truth" framing.
 
-**Decision, explicitly flagged for owner sign-off before FRESH-00 (not silently assumed):** grant UpCloud a narrow, path-scoped git-push credential (deploy key or fine-grained PAT) usable **only** by the new freshness cron scripts, scoped **only** to `docs/content-drafts/freshness/` (a new, dedicated path — never touching code, schema, or existing docs paths). This is a real, new production capability, smaller in blast radius than the git-pull capability production already has, but it is new and must be approved explicitly, not inherited from Revision 02's silent assumption. It is logged as Pre-Implementation Blocker #1 (§48). If the owner rejects this, the fallback is: T0/T2 still run on UpCloud against `freshness.db`, but the digest is instead relayed by the owner's own machine on whatever cadence the owner is actually online — which reintroduces the manual-dependency problem this correction pass exists to remove, and should be treated as a degraded fallback, not the target.
+**Decision, explicitly flagged for owner sign-off before FRESH-00 (not silently assumed):** grant UpCloud a **repository-scoped credential with process-level path restriction and validation** (deploy key or fine-grained PAT), used only by the new freshness cron scripts (topology rows 2/3). This is deliberately not described as "path-scoped," because **GitHub does not natively provide subdirectory-scoped git push credentials** — no git hosting provider issues a credential that is cryptographically restricted to a subdirectory. The architecture's production safety therefore comes from three separate layers, not from the credential alone:
+
+1. **Credential scope** — repository-level, not path-scoped. The narrowest practical repository permission available for the chosen transport is used (e.g. a fine-grained PAT limited to this one repository, or a deploy key with write access to this repository only). It is never described as restricted to a subdirectory, because no such native mechanism exists.
+2. **Process scope** — the deterministic bridge script itself (topology row 3) is the only process that ever uses this credential, and it is designed to write only to the designated freshness exchange path (conceptually `docs/content-drafts/freshness/`, or the exact path chosen at implementation time). This is a self-imposed behavioral restriction of the script, not a property of the credential.
+3. **Enforcement/detection** — realistic and layered, explicitly not claimed to be cryptographic path enforcement:
+   - a dedicated repository-scoped credential, used for no other purpose;
+   - a dedicated non-interactive bridge process — not the owner's personal credential, not shared with any other script;
+   - a deterministic pre-push diff assertion: the script computes the changed-path set before pushing and **rejects locally, refusing to push**, if any changed path falls outside the freshness exchange directory;
+   - a GitHub-side check/validation on the bridge's commits where practically available under the project's actual GitHub plan (e.g. a required status check or branch protection rule on `main`) — **not assumed to exist**. If branch protection/required checks cannot reliably reject a direct automated push to `main` under the current GitHub plan/configuration, that limitation is stated plainly: at MVP, enforcement is local-only (the pre-push assertion), and `main`-level GitHub-side protection is a Track B hardening item, not a Track A guarantee;
+   - every bridge commit is audited/logged (commit message includes a run identifier);
+   - the credential carries no SSH access and no `guides.db`/production-filesystem permission of any kind — it is a pure GitHub API/git credential, isolated from every other production credential;
+   - the credential is independently revocable (a dedicated deploy key/PAT, not a shared one) without affecting any other access path.
+
+Required wording for this credential everywhere in this document and in any future implementation doc: **"Repository-scoped credential with process-level path restriction and validation."** Never "path-scoped credential" or "scoped only to `docs/content-drafts/freshness/`" as a claim about the credential itself — that restriction is enforced by the process and validated by the pre-push assertion, not granted by GitHub.
+
+**Re-evaluating the GitHub relay (not redesigning it):** given the routines' verified capabilities (§1) — repo read, public web fetch, docs-only push, no SSH, no DB access — GitHub remains the only channel a Claude routine can use to exchange data with UpCloud at all. UpCloud already has git pull; the routine already has git push. No simpler bridge exists without granting either side a capability it doesn't have today (SSH to the routine's sandbox, or DB/API access from the routine's sandbox — both larger changes, not smaller). The relay is retained as the simplest valid bridge.
+
+This is a real, new production capability, smaller in blast radius than the git-pull capability production already has, but it is new and must be approved explicitly, not inherited from Revision 02's silent assumption. It is logged as Pre-Implementation Blocker #1 (§48). If the owner rejects this, the fallback is: T0/T2 still run on UpCloud against `freshness.db`, but the digest is instead relayed by the owner's own machine on whatever cadence the owner is actually online — which reintroduces the manual-dependency problem this correction pass exists to remove, and should be treated as a degraded fallback, not the target.
 
 ---
 
@@ -484,19 +537,25 @@ No content type or severity level ever reaches autopublish. Table is unchanged f
 
 ## 22 — Monitoring Cadence — corrected to be adaptive, not a single default
 
-Revision 02's flat "confirmed calendar item → monthly, no escalation" is replaced with an adaptive model. Cadence is computed from entity class + proximity + volatility, not read off confidence alone:
+Revision 02's flat "confirmed calendar item → monthly, no escalation" is replaced with an adaptive model. Cadence is computed from entity class + proximity + volatility, not read off confidence alone. This table is **examples/defaults, not rigid global law** — the driving logic is proximity/volatility/impact/source-history (§9), and these rows are the currently-known entity classes that logic has been worked out for, not an exhaustive enumeration that blocks a new class from being added later.
 
 | Entity class | Base cadence | Proximity escalation |
 |---|---|---|
-| Public holiday (government-sourced) | monthly once confirmed; weekly while unconfirmed | daily inside 30 days pre-holiday while unconfirmed (unchanged from Revision 02) |
-| Ticketed fixed-date event | **weekly, even once confirmed** — corrects Revision 02's flat monthly-when-confirmed rule, since postponement risk doesn't end at confirmation | daily inside 14 days pre-event |
+| Public holiday — provisional/expected (unconfirmed) | weekly | daily inside 30 days pre-holiday (unchanged from Revision 02) |
+| Public holiday — confirmed | monthly (sanity recheck only — lowest-volatility class in this table) | none — confirmed government holiday dates rarely change again, but never drop below monthly while still watched |
+| Ticketed fixed-date event — distant (>30 days out) | weekly, even once confirmed — corrects Revision 02's flat monthly-when-confirmed rule, since postponement risk doesn't end at confirmation | escalates to the near-term row below as the date approaches |
+| Ticketed fixed-date event — near-term (14-30 days out) | weekly | daily inside 14 days pre-event |
+| Ticketed fixed-date event — same-week / day-of | daily | same-day: manual trigger on any Discovery signal naming the venue/organizer, in addition to the scheduled daily check |
+| Postponed/rescheduled event (any class, immediately after a detected change) | daily for 7 days post-change | reverts to the entity's normal class-based cadence once the new date has been stable for one full recheck cycle |
 | Free/community event | monthly | weekly inside 14 days pre-event |
-| Distant event (>90 days out) | monthly | escalates automatically as the date approaches, per the rows above |
 | Government/YMYL guide fact (fee, deadline) | monthly | manual trigger on any Discovery signal naming that authority |
-| Transport launch / attraction price-hours | monthly | weekly inside 30 days of an announced launch/change window |
+| Transport launch / opening | monthly | weekly inside 30 days of an announced launch/change window |
+| Attraction price | monthly | weekly inside 30 days of an announced change window |
+| Attraction hours | monthly | weekly inside 30 days of an announced change window (e.g. Ramadan hours transitions) |
+| Low-volatility evergreen fact (e.g. a venue's physical address, a government portal's canonical URL) | quarterly | manual trigger only — reserved for facts with a demonstrated multi-year stability history (§9's source-change-history factor), not a default for anything unproven |
 | General guide prose | manual_only | none — still explicitly out of automated monitoring at MVP (§36), unchanged from Revision 02 |
 
-No entity class ever drops to `manual_only` cadence purely because it reached `confirmed` — only public-holiday-class facts (the lowest-volatility class in this table) drop as low as monthly, and even then never below monthly while still watched.
+No entity class ever drops to `manual_only` cadence purely because it reached `confirmed` — only public-holiday-class and evergreen facts (the lowest-volatility classes in this table) drop as low as monthly/quarterly, and even then never below quarterly while still watched.
 
 ---
 
@@ -524,7 +583,7 @@ A monitoring-tool cache (whether `WebFetch`'s cache or any future CDN layer) mus
 
 ## 25 — Security & Production Write Boundaries — reaffirmed, not weakened
 
-Automated freshness components (T0-T4, §18) may never directly mutate `guides.db`. This is unchanged from Revision 02 and is the one rule this entire correction pass treats as non-negotiable. Approved corrections remain human-reviewed, applied via the existing deterministic/idempotent patch-script mechanism, with backup, preconditions, post-write assertions, build/reload, and live EN/RU QA — identical to both proven hotfixes. The one new production capability introduced by this pass (§18's narrow, docs-path-scoped git-push credential for the freshness cron scripts) is additive and explicitly flagged for owner approval (§48) — it does not touch `guides.db`, code, schema, or any existing write path.
+Automated freshness components (T0-T4, §18) may never directly mutate `guides.db`. This is unchanged from Revision 02 and is the one rule this entire correction pass treats as non-negotiable. Approved corrections remain human-reviewed, applied via the existing deterministic/idempotent patch-script mechanism, with backup, preconditions, post-write assertions, build/reload, and live EN/RU QA — identical to both proven hotfixes. The one new production capability introduced by this pass (§18's repository-scoped credential with process-level path restriction and validation, used only by the freshness cron scripts) is additive and explicitly flagged for owner approval (§48) — it does not touch `guides.db`, code, schema, or any existing write path.
 
 ---
 
@@ -574,7 +633,7 @@ flowchart TD
         R02[R02 06:30 UTC\nreads digest, fetches sources]
     end
 
-    T0 -->|"push (narrow, docs-only,\nowner-approved credential)"| GH[(GitHub repo:\ndocs/content-drafts/freshness/)]
+    T0 -->|"push (repo-scoped credential,\nprocess-restricted + pre-push\npath assertion, owner-approved)"| GH[(GitHub repo:\ndocs/content-drafts/freshness/)]
     GH -->|pull, read-only| R02
     R02 -->|"push (existing routine\npush capability)"| GH2[(GitHub repo:\ndaily-radar/*.md +\nstructured companion)]
     GH2 -->|pull, existing capability| T2
@@ -585,13 +644,15 @@ flowchart TD
     PATCH -->|SSH, human-triggered| GDB
     PATCH --> QA[Layered live QA, §24]
     QA --> DEPLOY[build + pm2 reload]
-    DEPLOY --> RECONCILE[Baseline reconciliation, §10/§45]
+    DEPLOY --> RECONCILE[Baseline reconciliation, §10/§45\nExecutor: owner / agent session\nunder explicit owner instruction\npatch-script extension, manual]
     RECONCILE --> FDB
 ```
 
 ---
 
 ## 30 — Alert Delivery — recommendation (was fully open in Revision 02, now decided)
+
+Severity here uses the canonical `P0`/`P1`/`P2`/`P3` operational vocabulary; see §17 for the explicit mapping to the DB schema's simplified `info`/`warning`/`urgent` storage class.
 
 | Severity | Channel | Rationale |
 |---|---|---|
@@ -656,7 +717,7 @@ Revision 02's MVP items are retained but reframed around the corrected requireme
 5. `discovery_lead` intake path so verified-social-only candidates survive Discovery (§11.3) — cheap, a rule removal not new infrastructure.
 6. R02's prompt updated to read the digest artifact and report `BLOCKED` on a missing/stale digest (§12) instead of silently treating it as clean.
 7. Alert delivery: Telegram push for P0/P1 at minimum (§30) — daily/weekly digest tiers can ride on the existing review habit without new infrastructure.
-8. The narrow, docs-path-scoped git-push credential for UpCloud (§18) — flagged for explicit owner approval before this item is built.
+8. The repository-scoped credential with process-level path restriction and validation, for UpCloud (§18) — flagged for explicit owner approval before this item is built.
 9. Extend `server-cron-backup.sh` to also back up `freshness.db`.
 
 This is the **minimum required pre-6E foundation** (§37) — it is intentionally more than Revision 02's MVP list because Revision 02's list did not actually satisfy "automatic DETECT/ALERT," and this correction pass will not repeat that gap.
@@ -675,14 +736,14 @@ Revision 02 had one undifferentiated "deferred" list. This pass splits it per th
 
 **Track A — must land before Phase 6E begins (§37/§38):** everything in §34's MVP list. Nothing else is required.
 
-**Track B — parallel evolution, does not block Phase 6E, proceeds alongside it once Track A lands:**
+**Track B — parallel evolution, does not block Phase 6E, proceeds alongside it once Track A lands.** Internally ordered by one priority; everything else is unordered relative to each other:
+- **Priority 1 (first Track B deliverable, targeted immediately after Track A's gate, §37/§38):** JSON/JSONL structured machine contract replacing the Markdown-parsing MVP compatibility bridge (§16) — not indefinitely deferred, but not a Track A blocker since the bridge is functional for the first pilot.
 - Full source-universe expansion (§11.2): arenas/theatres/convention centres/malls/hotels/attractions/promoters/ticket providers/artist-tour sources/sports bodies/universities/cultural/community-org sweeps.
 - All seven emirates, not Dubai-only.
 - Verified-social as a routine discovery channel beyond the MVP intake path (§11.3 item 1 is the MVP floor; full integration into R01/R05's active sweeps is Track B).
 - New-source discovery itself (finding sources not yet in the registry).
 - Arabic-language discovery where it demonstrably adds recall.
 - Guide-field freshness (`guide_fee_facts`, still correctly deferred per Simulation 5, §46 — unsolved by any MVP or near-term Track B item, requires its own content-model work first).
-- JSON/JSONL structured machine contract replacing the Markdown-parsing MVP compatibility bridge (§16) — should land early in Track B, not indefinitely deferred, but is not a Track A blocker since the bridge is functional.
 - systemd migration from cron, if cron's simpler retry semantics prove insufficient in practice (§20) — not needed unless evidence emerges.
 - Any auto-apply/autopublish tier — permanently out of scope, not just deferred (unchanged from Revision 02, reaffirmed in §21/§25).
 
@@ -695,11 +756,11 @@ Revision 02 had one undifferentiated "deferred" list. This pass splits it per th
 | FRESH-00 | `freshness.db` schema + source registry backfill, UpCloud-deployed, no automation wired yet |
 | FRESH-01 | `qa-consistency-check.ts` (expanded rule classes) runs on UpCloud cron (T3), verified against the fixture suite (§32) |
 | FRESH-02 | `generate-watchlist-digest.ts` (T0) + `sync-freshness-alerts.ts` (T2) live on UpCloud cron, MVP Markdown-parsing bridge (§16) in place, T0-before-R02 ordering verified in practice for several real mornings |
-| FRESH-03 | Narrow docs-scoped git-push credential provisioned (pending explicit owner approval, §48) and wired into T0; R02's prompt updated to read the digest and report `BLOCKED` correctly |
+| FRESH-03 | Repository-scoped credential with process-level path restriction and validation provisioned (pending explicit owner approval, §48) and wired into T0; R02's prompt updated to read the digest and report `BLOCKED` correctly |
 | FRESH-04 | Alert delivery (Telegram P0/P1 minimum, §30) live; human-approval flow exercised end-to-end at least once with a real (or deliberately seeded) candidate |
 | FRESH-05 | Manual-hotfix reconciliation (§45) verified against a real or simulated hotfix — baseline correctly updates, no repeat-alert regression |
 | **Gate: Track A complete** | All of FRESH-00 through FRESH-05 verified. This — not an arbitrary phase number — is the actual gate for Phase 6E (§38) |
-| Track B (parallel, unordered relative to 6E) | Source-universe expansion, structured machine contract, all-emirates coverage, guide-field freshness design, etc. — proceeds alongside Phase 6E, not before it |
+| Track B (parallel, unordered relative to 6E) | Priority 1: JSON/JSONL structured machine contract (§16), targeted immediately after this gate. Then, unordered: source-universe expansion, all-emirates coverage, guide-field freshness design, etc. (§36) — all proceed alongside Phase 6E, not before it |
 
 Each Track A phase follows the project's established two-turn pattern (read-only investigation/rehearsal, then a separately-approved implementation turn) — unchanged from Revision 02.
 
@@ -820,7 +881,7 @@ See §25 (moved earlier in this document for logical flow after the topology sec
 
 ## 48 — Pre-Implementation Blockers (corrected/expanded)
 
-1. **New: UpCloud git-push credential decision** (§18) — requires explicit owner approval before FRESH-03. Not silently assumed. If rejected, T0's delivery mechanism needs a different design (fallback noted in §18, degraded).
+1. **New: UpCloud repository-scoped git-push credential decision** (§18) — requires explicit owner approval before FRESH-03. Not silently assumed. If rejected, T0's delivery mechanism needs a different design (fallback noted in §18, degraded).
 2. **New: cron vs. systemd** — this pass recommends cron (§20) to match existing precedent; if the owner has an infrastructure reason to prefer systemd, that's a cheap decision to revisit before FRESH-01, no architecture change required either way.
 3. Carried from Revision 02, still valid: `scripts/db-backup-from-server.sh`/`db-backup-from-server.sh` reference the decommissioned Cloudways host; the working replacement (`db-backup-from-upcloud.sh`/`db-restore-to-upcloud.sh`) already exists — the stale pair should stop being referenced in docs/memory files, not "fixed." Still not yet applied to memory files, still a follow-up for whichever session next does a "meaningful step" per CLAUDE.md's memory rule.
 4. Carried from Revision 02: local `data/guides.db` is stale — refresh before any FRESH-00 backfill that reads real calendar data locally.
@@ -892,9 +953,10 @@ Only `docs/architecture/freshness-revision-02-plan.md` was modified in this pass
 │ role both have concrete MVP defaults instead of open questions.           │
 │                                                                            │
 │ One new production capability is introduced and explicitly flagged for   │
-│ owner approval, not silently assumed: a narrow, docs-path-scoped          │
-│ git-push credential on UpCloud, used only by the new freshness cron       │
-│ scripts, touching no code/schema/DB path.                                │
+│ owner approval, not silently assumed: a repository-scoped credential     │
+│ with process-level path restriction and validation on UpCloud (GitHub    │
+│ has no native path-scoped push credential), used only by the new         │
+│ freshness cron scripts, touching no code/schema/DB path.                 │
 │                                                                            │
 │ STATUS: CORRECTION COMPLETE — NOT YET IMPLEMENTED                        │
 └──────────────────────────────────────────────────────────────────────────┘

@@ -5,6 +5,22 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE6D-AUG-NEW-02-SOURCE-LABEL-FIX-01 — AUG-NEW-02 Source Label Corrected — LIVE ON PRODUCTION
+
+**Date:** 2026-08-07
+**Status:** HOTFIX DEPLOYED AND VERIFIED — live on guidex-consulting.ae
+
+- AUG-NEW-02 source_label_en/ru corrected to accurately name the actual link destination (u.ae / UAE Government Portal), fixing a label-names-one-authority-links-to-another defect
+- date (2026-08-28), confirmed status, source_url, cta_url, brief_en/ru all verified unchanged before and after
+- Patch script: scripts/patch-aug-new-02-source-label-fix.ts (idempotent, GUIDEX_DB_PATH-aware, refuses ambiguous multi-match updates)
+- Correct production host identified as UpCloud 85.9.203.69 (/var/www/guidex) — db-backup-from-server.sh still points at a decommissioned Cloudways host and needs updating in a future session
+- Pre-patch production backup: /var/www/guidex/backups/local/guides.db.pre-aug-new-02-source-label-fix-2026-08-07T13-15-03
+- Post-WAL-checkpoint DB MD5: 0d0bb71c7d553523b2b417ba6d185a10
+- August count: 15 (unchanged). Exactly 1 row / 2 columns affected. All other items preserved.
+- Known follow-up: local data/guides.db remains stale (predates this and the prior Mawlid hotfix) — git-ignored, no deploy participation, no immediate hazard
+
+---
+
 ## CP-PHASE6D-MAWLID-HOTFIX-01 — Mawlid Al Nabi 2026 Date Confirmed — LIVE ON PRODUCTION
 
 **Date:** 2026-08-07

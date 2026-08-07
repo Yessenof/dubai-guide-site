@@ -5,6 +5,26 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-08-07 — Phase 6D-AUG-NEW-02-SOURCE-LABEL-FIX-01 — CLOSED
+
+Read-only consistency check on AUG-NEW-02 (performed right after the Mawlid date hotfix above) found that source_label_en/ru named "UAE Government Media Office" as the linked authority while source_url/cta_url still pointed to u.ae (UAE Government Portal) — a label/destination mismatch. Root cause: the prior hotfix updated the labels to name the announcing authority but deliberately kept the URLs on u.ae (no Media Office URL was ever captured).
+
+Approved 2-field correction only: source_label_en "UAE Government Media Office · Cabinet Resolution No. 27/2024" → "UAE Government Portal · Cabinet Resolution No. 27/2024"; source_label_ru "Медиа-офис правительства ОАЭ · ..." → "Правительство ОАЭ · Постановление Кабинета № 27/2024". date, confirmed status, source_url, cta_url, brief_en/ru, all other fields and items explicitly protected and verified unchanged before and after.
+
+Production access note: scripts/db-backup-from-server.sh targets a decommissioned Cloudways host (165.245.187.15, decommissioned April 2026 during the UpCloud migration) — attempting it produced a host-key mismatch, correctly refused rather than bypassed. Real production is the UpCloud VPS (root@85.9.203.69, /var/www/guidex), reachable via existing key-based SSH with no password. Script needs updating in a future session.
+
+Patch script: scripts/patch-aug-new-02-source-label-fix.ts — idempotent, refuses ambiguous multi-match updates, snapshots the entry to assert no field other than the two labels changed in memory before writing. Rehearsed against a fresh scp'd copy of the actual production DB (MD5 c09f358ff2b75ac7f87ecf87ca9805a9, matching the prior hotfix's recorded post-checkpoint MD5 — confirmed byte-identical to true production state) rather than the stale local data/guides.db. Rehearsal PASS x2 (apply + idempotent no-op).
+
+Production patch: PASS x2. Backup: /var/www/guidex/backups/local/guides.db.pre-aug-new-02-source-label-fix-2026-08-07T13-15-03. Affected exactly 1 row (AUG-NEW-02), exactly 2 columns. WAL checkpoint clean (0 pending frames). Post-checkpoint MD5: 0d0bb71c7d553523b2b417ba6d185a10. No code/schema changes — rebuilt (npm run build, success) and pm2 reload guidex-production --update-env anyway, since the calendar route has no revalidate export and the prior hotfix's precedent showed a rebuild is required for DB-only changes to reach the live page. PM2: online, 0 unstable restarts.
+
+Live QA via direct curl (not WebFetch — its 15-minute per-URL cache served stale content on the first check since the same URLs were fetched during the earlier read-only investigation this same session). EN: HTTP 200, new label present, old label absent, 28 August 2026 present, u.ae href unchanged, Media Office brief prose intact. RU: HTTP 200, new label present, old label absent as a link, 28 августа present, u.ae href unchanged, Media Office brief prose intact. Both PASS. Regression: AUG-NEW-01/AUG-NEW-03 source labels spot-checked unchanged, August count still 15, no duplicate IDs.
+
+Local data/guides.db drift: still reads date=2026-08-25/expected — predates both this hotfix and the Mawlid date hotfix, never touched by either. Git-ignored, does not participate in production deploy (production is patched only via SSH scripts against GUIDEX_DB_PATH on the server). No immediate hazard; flagged as a pre-existing follow-up to refresh once db-backup-from-server.sh is repointed at the UpCloud host.
+
+Implementation commit: e6ef153 — fix: AUG-NEW-02 source-label-url mismatch micro-hotfix (6D-AUG-NEW-02-SOURCE-LABEL-FIX-01). Hotfix report: docs/content-drafts/seo/6d-aug-new-02-source-label-fix-01.md.
+
+---
+
 ## 2026-08-07 — Phase 6D-MAWLID-OFFICIAL-CONFIRMATION-HOTFIX-01 — CLOSED
 
 Urgent factual production hotfix: corrected AUG-NEW-02 from provisional date (2026-08-25, confidence=expected) to confirmed official date (2026-08-28, confidence=confirmed) after UAE Government Media Office announced on 7 August 2026 that the Mawlid Al Nabi public holiday will be observed Friday 28 August 2026 for federal government employees and UAE private-sector workers.

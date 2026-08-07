@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-08-07 (Phase 6D-PRODUCTION-DEPLOY-CLOSURE-01 COMPLETE. All 26 Phase 6D items live. Documentation corrected. git bundle 48bc3c3 pending local scp transfer and push. GSC Wave 1 manual submission pending (24h stability). P1 hub hreflang backlog added. NEXT: transfer bundle -> push origin/main -> GSC submission.) — 26 new Q3/Q4 2026 calendar items live in production. Jul=10, Aug=15, Sep=16, Oct=26, Nov=19, Dec=11. All mandatory live QA checks pass. Commit: 5da1015. P1 stub backlog (13 items, both brief empty) deferred. GSC Wave 1 manual submission pending: Sep/Oct/Nov/Dec calendar pages + GITEX event page. NEXT: 24h stability window -> GSC Wave 1 manual submission -> P1 stub content work.)
+Last updated: 2026-08-07 (Phase 6D-MAWLID-OFFICIAL-CONFIRMATION-HOTFIX-01 COMPLETE. AUG-NEW-02 date corrected 2026-08-25 → 2026-08-28 (UAE Gov Media Office confirmed 28 Aug 2026 as Mawlid Al Nabi public holiday). Implementation commit: 7265b76. Documentation commit: pushed with this session's doc files. DB MD5 post-WAL-checkpoint: c09f358ff2b75ac7f87ecf87ca9805a9. Aug=15 (unchanged), Jul=10 (unchanged). EN+RU live QA: PASS. No stale 25-Aug claim on any live page. Freshness monitoring NOT implemented. Architecture Revision 02 ready for owner review. GSC Wave 1 manual submission still pending (Sep/Oct/Nov/Dec calendar pages + GITEX event page). NEXT: Architecture Revision 02 OR GSC Wave 1 submission OR P1 stub content (OCT-03-VAT, OCT-04-EINV).)
 
 WHAT TO ATTACH
 --------------

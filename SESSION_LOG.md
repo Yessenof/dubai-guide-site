@@ -5,6 +5,24 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-08-07 — Phase 6D-MAWLID-OFFICIAL-CONFIRMATION-HOTFIX-01 — CLOSED
+
+Urgent factual production hotfix: corrected AUG-NEW-02 from provisional date (2026-08-25, confidence=expected) to confirmed official date (2026-08-28, confidence=confirmed) after UAE Government Media Office announced on 7 August 2026 that the Mawlid Al Nabi public holiday will be observed Friday 28 August 2026 for federal government employees and UAE private-sector workers.
+
+Source resolution: u.ae shows Hijri date (12 Rabi' Awwal) without Gregorian conversion — NOT in conflict with UAE Gov Media Office announcement. They describe different levels of specificity. No source conflict; hotfix proceeded.
+
+Patch script: scripts/patch-aug-mawlid-official-confirmation-2026.ts — targets only AUG-NEW-02 in august-2026-dubai-calendar. Idempotent. Respects GUIDEX_DB_PATH. Asserts old state before mutation. Verifies all changed fields after write. Asserts August count = 15. Runs PRAGMA integrity_check.
+
+DB fields changed: date (2026-08-25 → 2026-08-28), confidence (expected → confirmed), source_status (expected → confirmed), brief_en, brief_ru (hedging provisional text → confirmed factual), source_label_en/ru (updated to "UAE Government Media Office · Cabinet Resolution No. 27/2024"), last_verified_date (page) → 2026-08-07. All other AUG-NEW-02 fields and all other August items preserved byte-for-byte.
+
+Local rehearsal: PASS × 2 (first run applied; second run no-op idempotency confirmed). Production rehearsal (/tmp/guidex-mawlid-rehearsal.db): PASS × 2. Production backup before patch: /var/www/guidex/backups/local/guides.db.pre-mawlid-hotfix-production-20260807-164633 (MD5: 7085b33ec5f1cd5f8ea468bcf38f0ffd). Production patch: PASS × 2. WAL checkpoint: { busy:0, log:11, checkpointed:11 }. Post-checkpoint DB MD5: c09f358ff2b75ac7f87ecf87ca9805a9. Build: 92/92, 0 TS errors. PM2 reload: online, 0 unstable restarts. EN live QA: HTTP 200, '28 August 2026' present, '25 August' absent, stale hedging text absent, three-day-weekend wording conditional (Sat-Sun workers only, not implied as three public holidays), JSON-LD clean. RU live QA: 200, '28 августа' present, stale text absent. Stale-reference sweep: only "subject to official" occurrences on /calendar hub are correct evergreen Islamic calendar disclaimer (UNRELATED). No stale Mawlid-specific claim on any live page. Sitemap lastmod for August calendar: 2026-08-07T12:46:44.000Z.
+
+Implementation commit: 7265b76 — fix: confirm 2026 Mawlid UAE holiday date as August 28 (6D-MAWLID-HOTFIX-01). Documentation commit: (this session). Hotfix report: docs/content-drafts/seo/6d-mawlid-official-confirmation-hotfix-01.md.
+
+Freshness monitoring architecture NOT implemented. Phase 6E-00 NOT begun. No unrelated calendar items modified. Production DB NOT overwritten from local copy.
+
+---
+
 ## 2026-08-07 — Phase 6D-PRODUCTION-DEPLOY-CLOSURE-01 — post-deploy closure corrections
 
 Five factual corrections applied to deployment documentation (no production DB or code changes):

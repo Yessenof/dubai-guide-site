@@ -5,6 +5,30 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE6D-MAWLID-HOTFIX-01 — Mawlid Al Nabi 2026 Date Confirmed — LIVE ON PRODUCTION
+
+**Date:** 2026-08-07
+**Status:** HOTFIX DEPLOYED AND VERIFIED — live on guidex-consulting.ae
+
+- AUG-NEW-02 corrected: date 2026-08-25 → 2026-08-28, confidence expected → confirmed
+- Official source: UAE Government Media Office announcement 7 August 2026
+- Sectors covered: federal government employees + UAE private-sector workers
+- Three-day weekend correctly described (conditional on Sat-Sun workers; 29-30 Aug are normal weekend, not public holidays)
+- Patch script: scripts/patch-aug-mawlid-official-confirmation-2026.ts (idempotent, GUIDEX_DB_PATH-aware)
+- Pre-patch production backup: /var/www/guidex/backups/local/guides.db.pre-mawlid-hotfix-production-20260807-164633 (MD5: 7085b33ec5f1cd5f8ea468bcf38f0ffd)
+- Post-WAL-checkpoint DB MD5: c09f358ff2b75ac7f87ecf87ca9805a9
+- August count: 15 (unchanged). July count: 10 (unchanged). All other items preserved.
+- Build: 92/92, 0 TS errors. PM2: online, 0 unstable restarts.
+- EN live QA: 200, 28-Aug present, 25-Aug absent, stale hedging text absent — PASS
+- RU live QA: 200, 28 августа present, stale text absent — PASS
+- Stale-reference sweep: no misleading UAE-holiday claim for 25 August on any live page — PASS
+- Sitemap lastmod: 2026-08-07T12:46:44.000Z
+- Implementation commit: 7265b76
+- Hotfix report: docs/content-drafts/seo/6d-mawlid-official-confirmation-hotfix-01.md
+- Freshness monitoring NOT implemented (architecture plan complete, implementation deferred)
+
+---
+
 ## CP-PHASE6D-PRODUCTION-DEPLOY-01 — Phase 6D Calendar Q3/Q4 2026 — LIVE ON PRODUCTION
 
 **Date:** 2026-08-07

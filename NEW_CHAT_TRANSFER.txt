@@ -1,6 +1,6 @@
 DUBAI GUIDE SITE — NEW CHAT TRANSFER
 =====================================
-Last updated: 2026-06-22 (Phase 6C-EVENTS-SCHEMA-01 LOCAL COMPLETE — added `image` field to Event JSON-LD for all 3 events (EN+RU). Image: https://guidex-consulting.ae/images/hubs/dubai-skyline-downtown.webp. Performer: blocked for all (DP World Tour: no player data; GITEX: trade expo; F1: race vs. concert conflation). Build 88 pages, 0 errors, 9/9 routes 200. NOT committed/deployed — awaiting owner review. GSC image warning will be resolved after deploy; performer warning remains (intentional). NEXT: owner review → commit + deploy.)
+Last updated: 2026-08-07 (Phase 6D-CALENDAR-Q3Q4-2026-PRODUCTION-DEPLOY-01 COMPLETE — 26 new Q3/Q4 2026 calendar items live in production. Jul=10, Aug=15, Sep=16, Oct=26, Nov=19, Dec=11. All mandatory live QA checks pass. Commit: 5da1015. P1 stub backlog (13 items, both brief empty) deferred. GSC Wave 1 manual submission pending: Sep/Oct/Nov/Dec calendar pages + GITEX event page. NEXT: 24h stability window -> GSC Wave 1 manual submission -> P1 stub content work.)
 
 WHAT TO ATTACH
 --------------

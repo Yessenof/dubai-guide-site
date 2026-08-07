@@ -1,6 +1,6 @@
 # Dubai Guide Site — Claude Project Knowledge Base
 
-**Version:** 2026-04-17
+**Version:** 2026-08-07
 **Source of truth:** This file is a snapshot derived from the repo's `PROJECT_STATE.md`, `CLAUDE.md`, `DECISIONS.md`, `ROADMAP.md`, and `SESSION_LOG.md`. When in doubt, the repo files are authoritative.
 
 ---
@@ -23,7 +23,7 @@ A premium, mobile-first Dubai knowledge hub. It helps expats and entrepreneurs u
 | Database | SQLite via `better-sqlite3` + Drizzle ORM (file: `data/guides.db`) |
 | Admin auth | NextAuth.js v4, CredentialsProvider, bcryptjs, JWT sessions |
 | Route protection | `proxy.ts` (NOT `middleware.ts` — deprecated in Next.js 16) |
-| Deployment target | Cloudways (Node.js VPS) — not deployed yet |
+| Deployment target | UpCloud VPS — 85.9.203.69 (Ubuntu 24.04), PM2: guidex-production, app path: /var/www/guidex |
 
 **No external services.** No CMS, no cloud DB, no email service, no analytics SDK.
 

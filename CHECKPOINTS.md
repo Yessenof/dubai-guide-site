@@ -5,6 +5,28 @@ safely restored to or continued from. Add a new entry only after full verificati
 
 ---
 
+## CP-PHASE6D-PRODUCTION-DEPLOY-01 — Phase 6D Calendar Q3/Q4 2026 — LIVE ON PRODUCTION
+
+**Date:** 2026-08-07
+**Status:** DEPLOYED AND VERIFIED — live on guidex-consulting.ae
+
+- 26 new calendar items added to production DB via 4 idempotent patch scripts (never DB overwrite)
+- DB: Jul=10, Aug=15, Sep=16, Oct=26, Nov=19, Dec=11 (post-6D total: 97 items across 6 months)
+- 3 corrections applied: OCT-06-MARX date (Oct 3), Boris Grebenshikov date (Oct 29), DEC-04-GITEX split venue label
+- 1 dead URL fixed: OCT-06-MARX Platinumlist event/105069 -> CCA official
+- Code: JSON-LD on calendar detail pages, per-record sitemap lastmod from DB updated_at
+- Build: 92/92, 0 TS errors, 0 build warnings
+- PM2: online, 1 restart (from reload), 0 unstable restarts
+- All mandatory live QA checks pass (see Section 31, deploy report)
+- Production commit: 5da1015
+- Pre-deploy backup: /var/www/guidex/backups/local/guides.db.pre-6d-deploy-20260806-122013 (MD5: fc5eebafcd3144f04a6204702637cc2a)
+- Post-patch backup: /var/www/guidex/backups/local/guides.db.post-6d-patches-20260807-134006 (MD5: 7085b33ec5f1cd5f8ea468bcf38f0ffd)
+- Deployment report: docs/content-drafts/seo/6d-calendar-q3q4-2026-production-deploy-01.md
+- Open P1 backlog: 13 items with empty brief_en + brief_ru — deferred, not deployed
+- GSC Wave 1 URLs documented, manual submission pending after 24h stability window
+
+---
+
 ## CP-PHASE6C91-OCTOBER-CALENDAR-LIVE — October 2026 Calendar — LIVE ON PRODUCTION
 
 **Date:** 2026-05-31

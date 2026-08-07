@@ -18,7 +18,7 @@ Please read these files first before doing anything else:
 
 ---
 
-## What's built (as of 2026-04-17)
+## What's built (as of 2026-08-07)
 
 **Tech stack:**
 - Next.js 16.2.3 (App Router, Turbopack), TypeScript, Tailwind CSS v4

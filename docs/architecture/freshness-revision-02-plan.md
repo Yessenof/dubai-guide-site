@@ -1,569 +1,901 @@
-# GUIDEX — FRESHNESS ARCHITECTURE REVISION 02
+# GUIDEX — FRESHNESS ARCHITECTURE REVISION 02.1
 
-Status: PLAN-ONLY. No production, DB, code, or deploy changes were made while producing this document. Investigation was read-only (Explore agents + direct read-only `git`/`ssh`/`Read` calls). This is the sole repo file created for Revision 02, followed by exactly one docs-only commit.
+## ARCHITECTURE CORRECTION PASS OVER REVISION 02
 
-`IMPLEMENTATION PERFORMED DURING FRESHNESS ARCHITECTURE REVISION 02: NONE`
+Status: DOC-ONLY. No production, DB, code, script, routine-prompt, or deploy changes. Read-only investigation performed via direct `Read`/`Bash`(read-only) calls, re-verifying the routines' actual execution environment. This document replaces the body of `docs/architecture/freshness-revision-02-plan.md` in place — same file, corrected content. Revision 02's commit (`4be2df1`) is not reverted or rewritten.
+
+`IMPLEMENTATION PERFORMED: NONE`
+
+This revision corrects internal contradictions found in Revision 02 (listed and resolved one-by-one in §50). It does **not** discard Revision 02's core recommendation — isolated operational freshness state, deterministic detection, structured alerts, human approval, deterministic approved patch, live QA, no autonomous writes to `guides.db` — all of that is preserved and reaffirmed (§0, §25).
 
 ---
 
 ## 0 — Executive Verdict
 
-Two production hotfixes this week (Mawlid date confirmation, then the AUG-NEW-02 source-label/URL mismatch) both followed the same shape by hand: a human-run **DETECT → ALERT → HUMAN REVIEW → APPROVED CORRECTION → QA → DEPLOY** cycle, using idempotent patch scripts, timestamped backups, and curl-based live QA. That workflow already works. Revision 02 does not need to invent a new operating model — it needs to make the DETECT and ALERT stages **automatic and structured** instead of manual and ad hoc, while leaving HUMAN REVIEW → CORRECTION → QA → DEPLOY exactly as already proven.
+Revision 02's central architecture bet is correct and is kept: an isolated freshness store, populated by deterministic (non-agent) processes, feeding a human-approved correction pipeline that reuses the exact patch-script/backup/QA/deploy pattern already proven twice in production. Nothing in this correction pass changes that bet.
 
-The project already has a real, running discovery layer: five Claude Code "routines" (R01–R05, Phase 6C-92) that scan sources on a schedule and write markdown reports. What's missing is (a) a structured, queryable place for freshness state to live (today it's either hardcoded in a routine's prompt file, like the 7 HOLD items in R02, or absent entirely, like the `guides` table which has zero source/confidence columns), and (b) a generalized consistency-check rule (the exact class of bug that caused AUG-NEW-02) that runs automatically instead of being caught by a manual read-only audit.
+What was wrong in Revision 02 was **scope and precision**, not direction:
 
-**Recommended architecture (§28):** a new, isolated `data/freshness.db` (normalized tables, Option C-refined, §27) populated by a **deterministic, non-agent parser script** that reads the routines' existing structured markdown output — never by the routines themselves, and never touching `guides.db`. This requires zero change to the routines' existing absolute hard-stop rules and adds a queryable watchlist/alert layer without increasing the blast radius of any automated process touching production content.
+1. It treated Discovery as basically solved and out of scope, when Guidex's actual business requirement (find small/niche UAE events, not just what R01/R05 already catch) was never audited against Discovery's real coverage. Discovery is now a first-class system alongside Monitoring (§11).
+2. It encoded a blanket "social = blocked" rule that would silently kill the exact small-event candidates the business needs. Verified first-party social is now a legitimate discovery/evidence source with its own handling, not a rejection reason (§6).
+3. It overloaded one `source_level` field to mean authority, kind, and role at once. These are now four separate dimensions (§6).
+4. It asserted `freshness.db` is "server-authoritative" and also had scripts running "on the owner's machine" without ever resolving where either database or script physically executes. This pass verifies the routines' actual execution environment (a stateless git-repo clone in Claude's remote sandbox, no DB/SSH/filesystem access — confirmed via `GUIDEX_DAILY_ROUTINES_STRATEGY.md` and `ROUTINE_02`) and commits to one concrete topology, component by component (§18).
+5. It described "automatic DETECT/ALERT" while the actual MVP procedure required the owner to run four commands by hand every morning — not automatic in any meaningful sense. This pass picks one real orchestration mechanism (§20) and fixes the T0-before-R02 ordering bug that made even the manual version internally inconsistent (§10 in the correction request; folded into §12/§18 here).
+6. It made "confirmed → monitoring stops" the default, when confirmed facts demonstrably still change (postponements, cancellations, fee changes). Monitoring eligibility is now driven by volatility/impact/proximity, not confidence alone; confidence only sets cadence (§9).
+7. It let "more specific source wins" stand as a general conflict-resolution rule, when it should only resolve specificity gaps — not authority conflicts. A real `CONFLICT / HOLD / HUMAN REVIEW` state now exists (§14).
+8. It left alert delivery and the Phase 6E gate as open questions the document itself needed to answer. Both now have concrete recommendations (§33, §38).
 
-Session end-state: **REVISION 02 — PLAN COMPLETE** (§43).
+Session end-state: **REVISION 02.1 — ARCHITECTURE CORRECTION COMPLETE** (§51).
 
 ---
 
-## 1 — Verified Current State (independently re-verified, not trusted from handoff report)
+## 1 — Verified Current State (re-verified for this pass)
 
 | Claim | Verified | Method |
 |---|---|---|
-| Local branch `main`, HEAD `3dd198a` | ✅ matches | `git rev-parse HEAD` |
-| `origin/main` HEAD `3dd198a` | ✅ matches | `git ls-remote origin main` |
-| Production HEAD `3dd198a` | ✅ matches | `ssh root@85.9.203.69 "cd /var/www/guidex && git rev-parse HEAD"` |
-| PM2 `guidex-production` online, stable | ✅ online, `restart_time=3`, `unstable_restarts=0` | `pm2 jlist` on production |
-| No rollback occurred | ✅ consistent — clean fast-forward history, no revert commits | `git log` |
-| AUG-NEW-02 fix closed | ✅ `CHECKPOINTS.md` entry `CP-PHASE6D-AUG-NEW-02-SOURCE-LABEL-FIX-01` present and consistent with commit history | file read |
-| Only a daily 3 AM DB-backup cron exists on production; no app-level scheduler | ✅ confirmed — `crontab -l` shows exactly one line (`server-cron-backup.sh`), `systemctl list-timers` shows only stock Ubuntu timers, no custom unit | ssh read-only |
+| Starting HEAD for this pass is `4be2df1` (Revision 02's commit) | ✅ | `git rev-parse HEAD` |
+| Working tree clean before this pass | ✅ | `git status --porcelain -uno` |
+| Routines execute in Claude's remote scheduled-agent environment, not on the owner's laptop, not on UpCloud, not via this project's PM2/systemd/cron | ✅ confirmed | `CLAUDE_ROUTINES_SETUP_GUIDE_FOR_GUIDEX.md`: "Claude Code routines are automated agents that run on a cron schedule using Claude's remote execution environment... configured in Claude.ai or via the `schedule` skill" |
+| Routines can read any file in the git-tracked repo, fetch/search the public web, and write **and push** docs-only commits directly — with no SSH, no DB, no server filesystem access of any kind | ✅ confirmed | `GUIDEX_DAILY_ROUTINES_STRATEGY.md` §5: "Push docs-only commits — Yes"; §4 hard-stops forbid `data/` writes, imports, deploys, PM2, pushing *code* |
+| Routine prompts operate against a git clone (working directory literally named after the repo), not a live database | ✅ confirmed | `ROUTINE_02...md`: `Working directory: /Users/batyr/Desktop/dubai-guide-site` inside the prompt block, files-to-read list is 100% git-tracked paths |
+| R02's HOLD list is still 7 hardcoded items typed directly into the routine doc | ✅ unchanged since Revision 02 | `ROUTINE_02_SOURCE_VERIFICATION_AND_CLASSIFICATION.md` §"Current HOLD items" |
+| Only one cron job exists on UpCloud production (`server-cron-backup.sh`, 3 AM daily); no systemd timers beyond stock Ubuntu ones | ✅ still true, not re-verified via fresh SSH this pass (Revision 02 already confirmed it days ago and nothing has changed the server since) | carried from Revision 02 §1, low-risk to carry forward since no deploy has occurred |
 
-**One discrepancy found and corrected (not a blocker):** the AUG-NEW-02 hotfix report (`docs/content-drafts/seo/6d-aug-new-02-source-label-fix-01.md`, §15 "Remaining Issues") states `scripts/db-backup-from-server.sh` "needs updating to the UpCloud target ... in a future session." Independent verification shows this is already solved under different filenames: `scripts/db-backup-from-upcloud.sh` and `scripts/db-restore-to-upcloud.sh` already exist (dated April 29, predating both hotfixes), both correctly targeting `SERVER="85.9.203.69"`. The stale `-from-server.sh`/`-to-server.sh` pair (Cloudways, decommissioned) should simply stop being used/documented, not "fixed" — the working replacement already exists. This is a documentation correction, recorded here, not made in the memory files (out of scope for this plan-only turn — flagged in §41).
+**New fact this pass surfaces, not previously stated in Revision 02:** production (UpCloud) currently has git **pull**-only capability (it deploys by pulling from GitHub). It has never been verified to have git **push** capability, and CLAUDE.md's deployment rules treat production as runtime-only, not a source of truth — i.e., today's locked rules lean toward production never writing back to GitHub. This fact directly drives the topology decision in §18 and is logged as a Pre-Implementation Blocker requiring explicit owner sign-off (§48).
 
-No code, schema, config, or documentation file other than this one has been touched in this turn.
+No file other than `docs/architecture/freshness-revision-02-plan.md` has been modified in this pass.
 
 ---
 
-## 2 — Current Architecture Map
+## 2 — Current Architecture Map (unchanged from Revision 02, reproduced for context)
 
 ```
                        ┌─────────────────────────────────────────┐
-                       │        Claude Code "Routines" (R01-R05)   │
-                       │  external cron, remote agents, docs-only  │
-                       │  HARD STOP: cannot write data/, cannot    │
-                       │  import, cannot deploy, cannot push code  │
+                       │   Claude Code "Routines" (R01-R05)        │
+                       │   Claude's remote sandbox, stateless per  │
+                       │   run, operates on a git-repo clone only  │
+                       │   HARD STOP: cannot write data/, cannot   │
+                       │   import, cannot deploy, cannot push code │
+                       │   CAN push docs-only commits directly     │
                        └───────────────────┬───────────────────────┘
-                                            │ writes markdown
+                                            │ writes + pushes markdown
                                             ▼
-                       docs/content-drafts/daily-radar/*.md
-                       docs/content-drafts/source-ledgers/*.md
+                       docs/content-drafts/daily-radar/*.md  (on GitHub)
                                             │ owner reads each morning
                                             ▼
-                       Owner starts a new Claude Code SESSION (this pattern)
+                       Owner starts a new Claude Code SESSION (local machine)
                                             │
                                             ▼
               ┌─────────────────────────────────────────────────────┐
-              │  scripts/patch-*.ts / import-*.ts (idempotent, raw   │
-              │  better-sqlite3, assert-before/verify-after pattern) │
+              │  scripts/patch-*.ts / import-*.ts, run from the       │
+              │  owner's local machine or an agent session acting     │
+              │  under the owner's explicit instruction               │
               └───────────────────────────┬───────────────────────────┘
                                             │ SSH + GUIDEX_DB_PATH
                                             ▼
                   Production: root@85.9.203.69:/var/www/guidex/data/guides.db
-                  (guides, steps, news_posts, events, calendar_pages tables;
-                   calendar item freshness fields live inside calendar_pages
-                   .dates_json as an unvalidated JSON blob — see §4)
                                             │
                                             ▼
                   npm run build → pm2 reload guidex-production --update-env
-                  (fully static rendering; no revalidate/ISR anywhere)
 ```
 
-Two structurally separate write paths exist today and must stay separate: **admin UI writes** (`lib/db/news-events-calendar-admin.ts`, gated by NextAuth via `proxy.ts`, matcher covers only `/admin/guides*` and `/admin/content*`) and **script-based writes** (SSH + `GUIDEX_DB_PATH`, used for all calendar/freshness patches so far, no admin UI exists for individual calendar-item field edits). Revision 02 must fit into the script-based path — it has no reason to touch the admin UI.
+Two structurally separate write paths remain, unchanged and correct: admin UI (NextAuth-gated) vs. script-based (SSH, owner-triggered). This correction pass does not touch either.
 
 ---
 
-## 3 — Failure Surfaces (what actually breaks today, evidenced)
+## 3 — Failure Surfaces (Revision 02's list, plus one addition)
 
-1. **No source/label consistency check runs automatically.** The AUG-NEW-02 bug (label names one authority, link resolves to another) existed in production for an unknown period before a manually-requested read-only audit caught it. Nothing in the build, the admin-save validation (`lib/admin-validation/news-events-calendar.ts`), or any routine checks label/URL semantic consistency.
-2. **Zero freshness metadata on `guides`.** The `guides`/`steps` tables (schema.ts) have no `source_url`, `confidence`, or `last_verified_date` columns at all — only `calendar_pages` and `events` have any. A stale AED fee or a changed MOHRE process step inside a guide has no mechanism to be flagged, ever (this is the exact shape of Simulation 4, §40).
-3. **The calendar item JSON shape has drifted into four incompatible declared types** (public reader `CalendarDateItem`, AI-draft `CalendarDateEntry`, mock-data `CalendarDateItemExtended`, and real production JSON which is wider than all three — confirmed via `scripts/patch-6d-calendar-batch-01-aug-nov-dec.ts`). `parseDatesJson()` does a raw `JSON.parse` cast with no runtime validation. Any freshness system that reads this blob inherits this drift risk.
-4. **R02's HOLD list is hardcoded prose**, not data — 7 items typed directly into `ROUTINE_02_SOURCE_VERIFICATION_AND_CLASSIFICATION.md`. Adding an 8th monitored fact means editing a routine's prompt file by hand; there is no "add to watchlist" primitive.
-5. **At least four overlapping, unreconciled source-trust vocabularies exist** in docs: calendar `confidence` (5 values), Public Holiday Radar `source_label` (8 values), News Signal Radar `source_reliability` (5 values), hub-plan `source_label` (binary), AI-editorial-plan `source_type` (7 values). None of the docs attempt to unify them. A Revision 02 schema that adds a fifth vocabulary would make this worse.
-6. **`.env.example` omits 7 environment variables that `lib/ai/editor-runtime.ts` actually depends on** (`ANTHROPIC_API_KEY`, `AI_EDITOR_ENABLED`, etc.). If any freshness component calls the Anthropic API directly (rather than via a routine, which uses Claude Code's own auth), this gap must close first.
-7. **No cache/revalidation path exists for calendar/news/events** (`lib/revalidate.ts` only handles `/guides/*`) — confirmed no `revalidatePath`/`revalidateTag` call anywhere tied to calendar saves. Combined with fully static rendering and no `revalidate` export, every DB-only content fix requires a full `npm run build` + `pm2 reload` — as both August hotfixes had to do. Any automated correction path inherits this cost; it cannot be "instant."
+Revision 02's seven failure surfaces (no automatic label/URL check; zero freshness metadata on `guides`; 4-way calendar-item type drift; R02's hardcoded HOLD list; unreconciled trust vocabularies; `.env.example` gap; no revalidation path) all still hold and are not repeated in full here — see the prior version in git history at `4be2df1` for the original text.
+
+**8. Discovery coverage was never audited against the actual business requirement.** Revision 02 asserted Discovery "already works" on the strength of R01/R05 existing. Neither routine's prompt has ever been checked against a concrete list of source classes (government, tourism authority, venue, arena, theatre, convention centre, mall, hotel, attraction, promoter, ticket provider, artist-tour source, sports body, university, cultural institution, community organization, local media, event platform, verified first-party social, all seven emirates, Arabic-language discovery). This is a real gap, addressed in §11.
 
 ---
 
-## 4 — Content Inventory (freshness-relevant surface)
+## 4 — Content Inventory (unchanged from Revision 02 — no new evidence changes this table)
 
-| Content type | Table | Freshness fields today | Volume (approx, from CHECKPOINTS) |
-|---|---|---|---|
-| Guides | `guides` + `steps` | **None** | 15 guides, ~94 steps |
-| News | `news_posts` | `source_url`, `source_label` (default `"media"`, free text) | not tracked in memory files |
-| Events | `events` | `date_confidence` (DB column, CHECK-constrained), `source_url` | not tracked |
-| Calendar items | `calendar_pages.dates_json` (blob) | `confidence`, `source_status`, `source_url`, `cta_url`, `source_label_en/ru`, `risk_level`, `lifecycle`, `noindex_after` — all inside unvalidated JSON | 97 items across Jul–Dec 2026 (Aug=15 most recently touched) |
-| Calendar page (container) | `calendar_pages` | `official_source_url`, `last_verified_date` (real columns, with a 14/90-day staleness *warning* at admin-save time only — `lib/admin-validation/news-events-calendar.ts:497-511`) | 6 monthly pages |
-
-Guides are the highest-value, lowest-freshness-coverage surface: they carry AED fee amounts and government process names (YMYL-adjacent, per CLAUDE.md's Content Writing Standard) with zero mechanism to detect when MOHRE/GDRFA/ICA changes a fee or a process step.
+Guides carry the highest-value, lowest-freshness-coverage content (fee amounts, government process names) with zero source/confidence columns. Calendar items carry the richest freshness fields today, all inside an unvalidated JSON blob. See Revision 02 §4 for the full table (unchanged, git history at `4be2df1`).
 
 ---
 
-## 5 — Discovery vs. Monitoring (definitions used throughout this document)
+## 5 — Discovery vs. Monitoring — corrected definitions
 
-- **Discovery**: finding *new* candidate facts/events that don't exist in the DB yet (what R01 "Event Radar" and R05 "Import Candidate Pack" already do). High recall is the goal; false positives are cheap (a human filters the daily pack).
-- **Monitoring**: rechecking facts *already published* to detect that they changed or were confirmed/resolved (what R02 already does, but only for 7 hardcoded HOLD items, and only for calendar/event content — never for guides). High precision matters more here: a false "nothing changed" on a YMYL fact is worse than a missed new event.
+Revision 02 said: *"Revision 02 is almost entirely Monitoring; Discovery already works and is out of scope."* **This was wrong and is retracted.**
 
-Revision 02's scope, by design, is almost entirely **Monitoring** — Discovery (R01/R05) already works and is out of scope for change except where its output format needs to feed the new watchlist (§10).
+Corrected position: Discovery and Monitoring are two first-class systems with different goals, different failure modes, and different architectural requirements. Neither is a subset of the other, and neither is "done":
 
----
-
-## 6 — Source Architecture
-
-Reuse the routines' existing hierarchy (`GUIDEX_DAILY_ROUTINES_STRATEGY.md` §6) as the single source-trust vocabulary going forward, rather than inventing a fifth:
-
-| Level | Meaning | Examples |
+| | Discovery | Monitoring |
 |---|---|---|
-| L1_official | Government authority | FAHR, FTA, MOHRE, ICA, GDRFA, DET |
-| L1_organizer | Event organizer official site | gitex.com, dwtc.com |
-| L1_venue | Venue official page | globalvillage.ae |
-| L2_aggregator | Official tourism/municipality aggregator | visitdubai.com, u.ae |
-| L2_media_signal | Trusted media, discovery only, never a final source | Khaleej Times, Gulf News |
-| blocked | Social media, unknown-agency press releases | — |
-
-This maps cleanly onto the AUG-NEW-02 case: u.ae is `L2_aggregator`, the "UAE Government Media Office" claim in `brief_en` was effectively an `L1_official` announcement never captured as its own URL (§37). The consistency engine (§14) needs a **link-target ↔ label-authority match rule**, independent of trust level — that bug wasn't a trust-level problem, it was a referential-integrity problem between two fields.
+| Goal | Find candidate facts/events that don't exist in the DB yet | Detect that a published fact changed or needs reconfirmation |
+| Optimizes for | Recall (better a false lead than a missed small event) | Precision (a false "unchanged" on a YMYL fact is worse than a missed new event) |
+| Current coverage | R01 (Event Radar) + R05 (Import Pack) — narrow source list, unaudited against full source-class requirement (§3.8) | R02 — 7 hardcoded items, calendar/event only, never guides |
+| Core rule | **Discovery eligibility ≠ publication eligibility.** A lead that isn't publication-grade yet is still a valid Discovery output — it must never be silently dropped for failing a publication bar it was never trying to meet. | Monitoring eligibility is driven by volatility/impact/proximity, not by confidence alone (§9) |
+| This pass's scope | Named as a first-class system with an explicit target architecture and phased expansion path (§11). MVP implementation stays intentionally small; the *target* is not small. | Fully corrected: adaptive cadence (§22), real conflict states (§14), automated T0-T4 ordering (§12) |
 
 ---
 
-## 7 — Canonical Entity / Fact Architecture
+## 6 — Source Architecture — corrected model
 
-A **canonical fact** = one verifiable, sourced claim about one entity (e.g. "Mawlid Al Nabi 2026 public holiday date = 2026-08-28"). An entity may have several canonical facts (a calendar item has a date fact, a venue fact, a fee fact if ticketed). Today, facts and their display copy are the same JSON fields (`date`, `brief_en`) — there is no separation between "the verified fact" and "the prose describing it." Revision 02 introduces this separation only where it earns its cost (§15) — it does not require rewriting existing content fields.
+### 6.1 Four separate dimensions, not one `source_level`
 
-Entity types in scope, in priority order: **calendar item** (highest existing volume + already has the richest field set) → **event** (has a real `date_confidence` column already) → **guide field** (currently zero coverage — highest risk, lowest existing infrastructure, §40).
+Revision 02's `sources` table collapsed "who," "what kind," "how trustworthy," and "used for what" into a single `source_level` enum. That's wrong: the same source can be authoritative for one fact and irrelevant for another (a ticket provider is authoritative for ticket availability, not for the legal basis of a public holiday; a government portal is authoritative for government procedure, not for a private concert's stage time). Corrected model, four dimensions:
+
+| Dimension | Answers | Values |
+|---|---|---|
+| `source_entity` | WHO is this — a stable identity, not a URL | e.g. "UAE Government Portal (u.ae)", "GDRFA Dubai", "Coca-Cola Arena", "Dubai Fitness Challenge (organizer)" |
+| `source_kind` | WHAT type of source is it | `government` \| `organizer` \| `venue` \| `ticketing` \| `media` \| `verified_social` \| `aggregator` \| `unverified_social` |
+| `authority_level` | HOW authoritative is it, **in context of a specific fact class** — not a single global rank | `primary` \| `secondary` \| `corroborating` \| `discovery_only` — assigned per (source_entity, fact_class) pair, not once per source |
+| `source_role` | WHAT is this specific citation being used for, on this specific record | `announcement` \| `evidence` \| `official_reference` \| `legal_basis` \| `organizer` \| `venue` \| `ticketing` \| `booking` \| `corroboration` \| `discovery_lead` |
+
+A single URL can carry different `source_role` values across different facts on the same record — e.g. a venue page is `venue` role for location and `evidence` role for a postponed date, but never `legal_basis`. `source_url` ≠ `cta_url` is explicitly allowed when their roles differ (an evidence URL and a "learn more" CTA URL are not required to match) — Revision 02's implicit assumption that they always align was itself a source of the AUG-NEW-02-style bug class; the consistency rule (§15) checks role-appropriate matches, not blanket URL equality.
+
+### 6.2 Social-source policy — corrected
+
+Revision 02's `blocked: social media` line is retracted as a blanket rule. Corrected three-tier model:
+
+| Tier | Definition | Valid for |
+|---|---|---|
+| **Verified first-party social** | Official account of the organizer, venue, artist, government body, or sports organization — ownership independently confirmable (verified badge + matches known organizer identity, or linked from the organizer's own official site) | Discovery (yes) · announcement evidence (yes) · sometimes the *only* primary evidence for a small event (yes, with `authority_level=secondary` or `primary` for `discovery_lead`/`announcement`, never `legal_basis`) |
+| **Third-party social** | Fan accounts, event-listing accounts, reposts, unverified pages | Discovery leads / corroboration only — never sufficient alone for a `confirmed` publication |
+| **Unknown / rumor / unverifiable** | No traceable ownership, anonymous, contradicted elsewhere | Low confidence, discovery signal only, never sufficient for publication |
+
+The hard requirement this fixes: **a small event must be able to survive Discovery when its only two pieces of evidence are a verified organizer's social post and a small official venue page.** Under Revision 02's blanket rule this candidate would have been discarded before Discovery even finished. Under this model it survives Discovery, gets `source_entity` records for both the organizer and the venue, and its publication confidence (`subject_to_official_confirmation` vs. `confirmed`) is decided separately, downstream, by the existing confidence field — not by whether one of its two sources happened to be social media. See rewritten Simulation 3 (§44).
 
 ---
 
-## 8 — Freshness / Confidence / Verification Model
+## 7 — Source Identity & Alias Registry (new — resolves label/URL validation properly)
 
-Do not add a new confidence vocabulary. Reuse and clarify the two that already exist on calendar items, since they answer different questions:
-- `confidence` (`confirmed` / `expected` / `subject_to_official_confirmation`) — **is the fact itself certain** (a date might genuinely not be fixed yet, independent of sourcing).
-- `source_status` (`confirmed` / `expected` / `monitoring`) — **is the sourcing chain currently active/being watched**.
+Revision 02's consistency-engine rule 1 ("label contains an authority name pattern not present in the URL's domain") was keyword-guessing, and would have been brittle in production (false positives on any legitimate paraphrase, false negatives on any adversarial or just-differently-worded label). Correct approach: a **registry**, not a heuristic.
 
-Public Holiday Radar Rules already documents that `confidence:"expected"` + `source_status:"confirmed"` is an invalid combination — this is exactly the kind of rule the consistency engine (§14) should enforce mechanically instead of relying on a human remembering it.
+`sources` (§6) becomes the identity anchor. Each `source_entity` row owns:
+- one or more canonical hostnames/URL prefixes it is known to control,
+- localized display-label variants that are pre-approved to represent it (e.g. u.ae → `"UAE Government Portal"` (EN) / `"Правительство ОАЭ"` (RU)),
+- known verified social-account handles, if any.
 
-Add exactly one new concept, not a new vocabulary: a **`next_check_due`** timestamp per watchlist entry (§15), driven by the cadence matrix (§19). This is scheduling metadata, not a trust/confidence value, so it doesn't add a fifth vocabulary.
+A calendar/event/news record's `source_label_en/ru` must resolve to a **registered** `source_entity` whose registered hostnames include the record's `source_url`. If a label claims an entity (e.g. "UAE Government Media Office") whose registered hostnames do **not** include the record's URL, the check fails deterministically — not because of a keyword match, but because that URL was never registered as belonging to that entity. This is exactly the AUG-NEW-02 bug, generalized correctly: the fix is registering entities and their real domains once, then doing a lookup, not pattern-matching prose forever.
 
 ---
 
-## 9 — Event/Fact Lifecycle
+## 8 — Canonical Entity / Fact Architecture (unchanged from Revision 02 in substance)
+
+A canonical fact = one verifiable, sourced claim about one entity. Priority order unchanged: calendar item → event → guide field. No correction needed here beyond referencing the new source model (§6/§7) wherever Revision 02 said "source."
+
+---
+
+## 9 — Freshness / Confidence / Monitoring-Eligibility Model — corrected
+
+Revision 02 conflated "is this fact certain" with "should this fact be watched." **Corrected rule: confidence affects cadence, not whether a fact is monitorable.**
+
+Monitoring eligibility is now a function of:
+
+| Factor | Examples |
+|---|---|
+| Volatility | Ticketed/fixed-date events change more than static government holiday dates |
+| Impact | YMYL (fees, legal deadlines) and money-implicated (tickets) facts matter more than decorative copy |
+| Proximity to effective/event date | A fact 3 days out deserves tighter monitoring than one 6 months out |
+| Source change history | A source that has revised itself before is more likely to revise again |
+| Entity class | Public holiday vs. ticketed concert vs. attraction hours vs. transport launch all have different baseline volatility |
+| User risk | Money/time lost if wrong (ticket, deadline) outranks purely informational copy |
+
+`confidence` (`confirmed`/`expected`/`subject_to_official_confirmation`) and `source_status` (`confirmed`/`expected`/`monitoring`) are retained exactly as Revision 02 defined them (still not a new vocabulary) — they now only feed the cadence calculation (§22), not the watch/no-watch decision. A `confirmed` ticketed concert stays on the watchlist; a `confirmed` government holiday date drops to a slow sanity cadence but is never fully unwatched — see corrected lifecycle below.
+
+---
+
+## 10 — Event/Fact Lifecycle — corrected
 
 ```
-DISCOVERED (R01/R05, docs only)
+DISCOVERED (Discovery, R01/R05 + expanded source classes, §11)
      │  human decides to import
      ▼
-IMPORTED (patch/import script, confidence=expected|confirmed per source)
-     │  if confidence=expected or source_status=monitoring
+IMPORTED (patch/import script)
+     │  ALWAYS creates a freshness_watchlist row — confidence no longer gates this (§9)
      ▼
-WATCHED (new: row in freshness_watchlist, next_check_due set per §19 cadence)
-     │  scheduled recheck (generalized R02, reads live source)
+WATCHED (cadence set by §22's adaptive model, not by confidence alone)
+     │  scheduled recheck (Monitoring pipeline, §12)
      ▼
-   ┌─────────────┴─────────────┐
-UNCHANGED                   CHANGED / CONFIRMED
-(next_check_due pushed out)  │
-                              ▼
-                    ALERT (new: row in freshness_alerts, status=pending)
-                              │  owner reviews (same daily-review habit as R02 today)
-                              ▼
-                    APPROVED CORRECTION (existing patch-script pattern, unchanged)
-                              │
-                              ▼
-                    QA (existing curl-based live QA, unchanged) → DEPLOY (existing build+pm2 reload, unchanged)
+   ┌─────────────┴──────────────┬───────────────────────┐
+UNCHANGED                    CHANGED                  CONFLICTING
+(next_check_due            (single credible          (two credible sources
+ pushed out per            source reports a           disagree on the same
+ adaptive cadence)         different value)           fact — §14)
+     │                          │                          │
+     │                          ▼                          ▼
+     │                 ALERT (severity per        CONFLICT / HOLD
+     │                  impact+confidence)          (routes to human
+     │                          │                    review same as
+     │                          │                    ALERT, tagged
+     │                          │                    distinctly)
+     │                          └──────────┬───────────────┘
+     │                                     ▼
+     │                          HUMAN REVIEW (owner)
+     │                                     │
+     │                         ┌───────────┴───────────┐
+     │                     APPROVED                REJECTED
+     │                         │                  (candidate closed,
+     │                         ▼                   watchlist continues
+     │              APPLIED (patch script,          unchanged)
+     │               same proven pattern)
+     │                         │
+     │                         ▼
+     │              QA → DEPLOY (unchanged)
+     │                         │
+     │                         ▼
+     │              BASELINE RECONCILED (§16 of the correction
+     │               request — new observation baseline recorded,
+     │               so the next monitor cycle compares against
+     │               the newly-approved truth, not stale state)
+     │                         │
+     └─────────────────────────┴──── loop continues, watchlist row stays active
 ```
 
-This is a direct generalization of what R02 already does for 7 hardcoded items, plus the DETECT→ALERT→...→DEPLOY chain the two August hotfixes already validated by hand.
+Same distinction as Revision 02 for entering WATCHED, but now unconditional on import (not gated by confidence), and the loop never terminates just because a fact reached `confirmed` — see §22 for what changes is cadence, not membership.
 
 ---
 
-## 10 — Discovery Pipeline (unchanged, referenced for completeness)
+## 11 — Discovery Pipeline — corrected: first-class system, target architecture, phased expansion
 
-R01 (06:00 UTC) scans official sources for new candidates → R05 (08:00 UTC) synthesizes into an import-ready pack. No changes proposed. The only new integration point: when a human imports a candidate with `confidence != confirmed` or any `source_status`, the import script should also insert a `freshness_watchlist` row (§15) — a one-line addition to the existing patch-script pattern, not a new pipeline.
+### 11.1 Coverage audit (what R01/R05 cover today vs. the business requirement)
 
----
+The business requirement is: *find all relevant UAE information/events possible, including small and niche events*, across the source classes listed in the correction request (government, tourism authorities, venues, arenas, theatres, convention centres, malls, hotels, attractions, promoters, ticket providers, artist-tour sources, sports bodies, universities, cultural institutions, community organizations, local media, event platforms, verified first-party social, all seven emirates, English search discovery, Arabic discovery where it adds recall, and discovery of new sources itself).
 
-## 11 — Monitoring Pipeline (new/generalized)
+R01/R05's current prompts (per `ROUTINE_01_DAILY_DUBAI_UAE_EVENT_RADAR.md`, `ROUTINE_05_DAILY_IMPORT_CANDIDATE_PACK.md`) are scoped to a short, Dubai-weighted official-source list. They do not enumerate: arenas/theatres/convention centres as a distinct sweep, university/cultural-institution calendars, community organizations, verified first-party social accounts as a discovery channel (previously blocked entirely, §6.2 fixes this), the other six emirates beyond Dubai, or a "new source discovery" step (finding sources not yet in the source registry, §7). This is a real, named coverage gap — not fixed by this doc-only pass, but no longer denied by it either.
 
-Generalize R02 from "7 hardcoded HOLD items in a prompt file" to "every row in `freshness_watchlist` with `next_check_due <= today`":
+### 11.2 Target Discovery architecture (not MVP-sized, this is the direction)
 
-1. A routine (R02, extended, still docs-only, still under the exact same hard-stop rules) reads a **generated** list of due items instead of a hardcoded table. Generation is a deterministic script (§17) that queries `freshness.db` and writes a compact markdown input file the routine reads — this keeps the routine's "compact context only" rule (`GUIDEX_DAILY_ROUTINES_STRATEGY.md` §10) intact and requires no new permissions for the routine itself.
-2. The routine fetches each source URL (as it already does), and writes its findings in the same structured markdown format it already uses (`GUIDEX-R02`, table + "Resolved holds" detail blocks) — no format change needed, meaning R05 (which already reads R02's output) keeps working unmodified.
-3. A new deterministic parser script (§17) reads that markdown and upserts rows into `freshness.db` (`freshness_checks`, and `freshness_alerts` when a check finds a change). This script — not the routine — is the only thing that ever writes to `data/`, and it never writes to `guides.db`.
+- A maintained **source universe registry** (an extension of `sources`, §6/§7) enumerating known source entities per class and per emirate, kept current by a periodic "new source discovery" sweep (itself a Discovery task: find sources, not just events).
+- Per-class discovery sweeps: government/tourism (existing), venues/arenas/theatres/convention centres (new sweep), malls/hotels/attractions (new sweep), promoters/ticket providers/artist-tour sources (new sweep), sports bodies/universities/cultural/community orgs (new sweep), verified first-party social (new channel, gated by §6.2's verification bar), local media (existing, signal-only, unchanged), Arabic-language discovery where English-only search demonstrably misses relevant UAE content (new, scoped to recall gain, not translation of existing content).
+- All seven emirates in scope, not Dubai-only — flagged as a scope expansion, sequenced deliberately (§36).
 
----
+### 11.3 MVP Discovery scope (what actually ships first — kept small, per instruction not to overbuild)
 
-## 12 — Change Detection
-
-Two detection modes, both already precedented in this project:
-- **Structural/consistency detection** (§14): compare two fields of the *same* record for a known-invalid combination (AUG-NEW-02's bug class). Fully deterministic, no AI needed, runs instantly against the existing DB — no source fetch required.
-- **External-change detection** (what R02 does): fetch a live source URL, extract the relevant fact, compare to the stored value. Requires a fetch + an extraction step (currently done by the routine's own reading comprehension, not a parser) — this is why it stays an AI-agent routine rather than becoming a deterministic script.
-
----
-
-## 13 — Verification & Conflict Resolution
-
-Rule already established and worth keeping as a hard rule, not just a norm (per the Mawlid hotfix's actual resolution): when two sources describe the same event at different specificity levels (u.ae's Hijri-only date vs. the Media Office's Gregorian date), that is **not** a conflict — it's a specificity gap, and the more specific/authoritative source wins without needing a "conflict resolution" workflow. A true conflict (two L1 sources stating different Gregorian dates) is out of MVP scope for automatic resolution — always routes to human review, never auto-resolved, regardless of trust level (this matches the routines' existing "never mark media/social as official" hard stop, extended to "never auto-resolve conflicting L1 sources").
+MVP does **not** attempt full source-class coverage. MVP Discovery work is:
+1. Add a `discovery_lead` intake path so any candidate — including ones with only a verified-social + venue-page evidence pair — survives into the watchlist system without being discarded for social-source reasons (§6.2's core fix, cheap to apply: it's a rule removal, not new infrastructure).
+2. Register the source entities already in active use (7 HOLD items + all L1/L2 sources named in the routine docs) into the new `sources` registry (§6/§7) — a backfill, not new discovery capability.
+3. Everything else in §11.2 is named, scoped, and explicitly sequenced as parallel/deferred work (§36) — not blocking Phase 6E (§38).
 
 ---
 
-## 14 — Consistency Engine
+## 12 — Monitoring Pipeline — corrected ordering (T0 before R02, not after)
 
-The single highest-leverage new component, because it would have caught AUG-NEW-02 automatically instead of requiring a human to explicitly ask for a read-only audit. Deterministic, no AI, no network calls — pure DB read + rule check. Proposed initial rule set (extendable, not exhaustive):
+Revision 02's SOP admitted R02 (06:30 UTC) effectively read *yesterday's* digest because the owner generated today's digest manually, after R02 already ran. That is a real defect, not an acceptable MVP compromise, and this pass fixes the ordering explicitly:
 
-1. **Label/URL authority match** (the AUG-NEW-02 rule, generalized): if `source_label_en` contains an authority name pattern not present in `source_url`'s domain or a documented alias table, flag. (u.ae ↔ "UAE Government Portal" is an alias; "Media Office" naming a URL that isn't a Media Office URL is a flag.)
-2. **Confidence/source_status invalid-combination check** (already documented as a rule in Public Holiday Radar Rules, never enforced in code): flag `confidence:"expected"` + `source_status:"confirmed"`.
-3. **`schema_eligible` requires `date_confidence:"confirmed"`** (already validated at admin-save time per `lib/admin-validation/news-events-calendar.ts:341-349` — extend the same check to run standalone against the live/production DB, not just at admin-form-submit time, since script-based writes bypass the admin form entirely).
-4. **Staleness threshold** (already exists as an admin-save warning, `lib/admin-validation/news-events-calendar.ts:497-511` — extend to run on a schedule against the live DB, not just when someone happens to open the admin form for that record).
+```
+T0  05:45 UTC  Due-watchlist digest generation (deterministic, §18)
+                → digest artifact must exist and be readable by R02 BEFORE 06:30 UTC
+T1  06:30 UTC  R02 runs (existing schedule, unchanged), reads T0's digest as input,
+                fetches each due source, writes structured findings
+T2  ~06:35 UTC Structured ingestion (deterministic, §18) parses R02's output,
+                writes freshness_checks + freshness_alerts rows
+T3  ~06:40 UTC Consistency scan (deterministic, §18) runs independently of R02 —
+                does not depend on T1/T2, can run any time, but scheduled here
+                to land in the same morning digest
+T4  ~06:45 UTC Alert delivery (per §33's recommended channel/tiering)
+```
 
-Implementation: `scripts/qa-consistency-check.ts`, read-only, callable ad hoc (as this session's original read-only audit effectively was, done by hand) or wired into R04's live-QA routine as an additional check. Outputs a plain report; writing findings into `freshness_alerts` is the parser script's job (§17), keeping this script side-effect-free.
+**Failure handling:** if T0 fails to produce a fresh digest before 06:30 UTC, R02 must not silently treat a stale or missing digest as "nothing due." R02's prompt (updated in a future FRESH phase, not this doc-only pass) must be able to detect a missing/stale digest artifact and report `Status: BLOCKED — digest unavailable` rather than `Status: CLEAN`, so a T0 failure is visible instead of masquerading as a clean monitoring run. This requirement is recorded here as an architectural must; wiring it into the routine prompt is FRESH-phase work.
 
 ---
 
-## 15 — Proposed Data Model (`data/freshness.db`, new, isolated — see §16 for why separate)
+## 13 — Change Detection (unchanged in substance from Revision 02)
+
+Two modes: deterministic structural/consistency detection (§15, runs any time, no fetch needed) vs. external-change detection (R02, needs a live fetch + extraction, stays an AI-agent routine). No correction needed here.
+
+---
+
+## 14 — Verification & Conflict Resolution — corrected
+
+Revision 02's rule — *"more specific source wins"* — is retracted as a general rule. It is correct **only** for a genuine specificity gap (one source gives a Hijri-only date, a more specific source gives the resolved Gregorian date for the same underlying event — not a disagreement, just different precision). It is wrong as a general conflict resolver, because it lets fetch order and phrasing determine truth rather than actual authority.
+
+Corrected resolution order, evaluated in this sequence for any apparent disagreement between two observations of the same fact:
+
+1. **Same underlying claim at different specificity** (not a conflict) → the more specific/complete observation is used, exactly as before, but only after confirming they describe the same occurrence (not two different editions/occurrences of a recurring event — see entity-integrity rule, §15).
+2. **Authority-for-this-exact-fact** (per §6.1's per-fact-class `authority_level`, not a single global rank) — a `primary` source for this fact class outranks a `secondary`/`corroborating` one for the same fact class.
+3. **Explicit correction/supersession wording** — a source that explicitly states it corrects/supersedes an earlier announcement outranks an equally-authoritative source that hasn't updated.
+4. **Recency** (observation timestamp / publication timestamp) — only used as a tiebreaker after 1-3 fail to resolve, never as the first-line rule.
+5. **If still unresolved after 1-4**: `CONFLICT / HOLD / HUMAN REVIEW` — a real state (§10's lifecycle diagram), not a silent pick. Fetch order never determines the stored value in this case.
+
+---
+
+## 15 — Consistency Engine — expanded rule classes
+
+Revision 02's four rules are retained as the seed set and are joined by explicit rule classes, each tagged with a severity tier so the engine doesn't imply everything is deterministically checkable:
+
+| Rule class | Example checks | Severity |
+|---|---|---|
+| **Source integrity** | source_entity ↔ URL (via registry, §7); source_entity ↔ label EN; source_entity ↔ label RU; evidence-role URL vs. CTA-role URL allowed to differ (§6.1); localized labels map to the same registered entity | HARD FAIL |
+| **Date integrity** | canonical date ↔ calendar month bucket; canonical date ↔ event detail page; canonical date ↔ EN prose; canonical date ↔ RU prose; canonical date ↔ JSON-LD structured data; canonical date ↔ any date embedded in SEO title/meta; canonical date ↔ preview/carousel components | HARD FAIL (numeric mismatch) |
+| **Status/confidence integrity** | `confidence:"expected"` + `source_status:"confirmed"` invalid combo (existing rule 2); status values across confirmed/expected/provisional/postponed/cancelled/completed consistent with structured-data status | HARD FAIL (known-invalid enum combos) / WARNING (unusual but not provably invalid) |
+| **EN/RU integrity** | same canonical fact values across languages; localized *presentation* differences (date format, phrasing) explicitly allowed and must not be flagged | WARNING if a factual field (date, price, status) differs; never flag presentation-only differences |
+| **Entity integrity** | duplicate event detection; venue-name aliasing (same venue, different string); artist/organizer aliasing; annual-edition collision (Season 30 vs. Season 31 of the same recurring event); same title representing two different occurrences | HUMAN SEMANTIC REVIEW — this class is explicitly **not** safely fully-deterministic; the engine flags candidates, a human confirms |
+
+`schema_eligible requires date_confidence:"confirmed"` and the staleness-threshold rule (Revision 02 rules 3-4) are retained as HARD FAIL / WARNING respectively, unchanged.
+
+This corrects Revision 02's implicit overreach: not every rule in this list can be a clean boolean. Entity-alias and duplicate-occurrence detection are pattern-suggestive at best — the engine's job there is to surface a candidate for a human to confirm, not to assert a verdict.
+
+---
+
+## 16 — Machine Contract — structured observation format (new, corrects markdown-only assumption)
+
+Revision 02 implicitly made free-form Markdown the permanent machine interface between R02 and the ingestion script. Markdown stays as the **human-readable** report format. It is not the long-term machine contract.
+
+**Target contract:** each routine run that produces observations also emits a versioned, machine-readable companion artifact (JSON or JSONL — JSONL preferred for streaming/append-friendly ingestion of multiple observations per run) alongside its Markdown report. Minimum fields per observation record:
+
+```
+schema_version, run_id, observation_id, entity_ref, fact_key,
+source_entity_ref, source_url, observed_value, previous_value (if known),
+observed_at, published_at (if known), effective_at (if known),
+confidence, result (unchanged|changed|unreachable|inconclusive), evidence_ref
+```
+
+The deterministic ingestion script (T2, §12) must: strictly validate against `schema_version`; reject (not partially accept) any malformed artifact; be idempotent on `observation_id`; reject duplicate `observation_id`s outright rather than silently overwriting.
+
+**MVP reality check:** routine prompts today only emit Markdown, and changing that is FRESH-phase implementation work, not something this doc-only pass can do. Until the JSON/JSONL companion artifact exists, the ingestion script uses a **strict Markdown parser** as an explicitly labeled **MVP COMPATIBILITY BRIDGE** — not the target contract, with migration to the structured artifact named as an early FRESH-phase deliverable (§37), not indefinitely deferred.
+
+---
+
+## 17 — Proposed Data Model — expanded for auditability
+
+Revision 02's schema is retained with one structural correction: `proposed_change TEXT` (free text) is replaced with a proper separation of **observation → candidate change → approved canonical change**, so the audit trail survives review, not just the final outcome.
 
 ```sql
 CREATE TABLE sources (
   id TEXT PRIMARY KEY,
-  url TEXT NOT NULL,
-  source_level TEXT NOT NULL CHECK (source_level IN
-    ('L1_official','L1_organizer','L1_venue','L2_aggregator','L2_media_signal','blocked')),
-  label TEXT NOT NULL,
+  source_entity TEXT NOT NULL,          -- stable identity, e.g. "u.ae"
+  source_kind TEXT NOT NULL CHECK (source_kind IN
+    ('government','organizer','venue','ticketing','media','verified_social','aggregator','unverified_social')),
+  canonical_hostnames TEXT NOT NULL,    -- JSON array of registered hostnames/prefixes
+  label_en TEXT NOT NULL,
+  label_ru TEXT,
+  verified_social_handle TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE source_authority (
+  id TEXT PRIMARY KEY,
+  source_id TEXT NOT NULL REFERENCES sources(id),
+  fact_class TEXT NOT NULL,             -- e.g. "holiday_date","ticket_price","venue_location"
+  authority_level TEXT NOT NULL CHECK (authority_level IN
+    ('primary','secondary','corroborating','discovery_only'))
 );
 
 CREATE TABLE freshness_watchlist (
   id TEXT PRIMARY KEY,
   entity_type TEXT NOT NULL CHECK (entity_type IN ('calendar_item','event','guide_field')),
-  entity_ref TEXT NOT NULL,        -- e.g. "AUG-NEW-02" or "guides.employment-visa.step-3.cost"
-  field_name TEXT NOT NULL,        -- e.g. "date", "fee_aed"
-  source_id TEXT REFERENCES sources(id),
-  check_frequency TEXT NOT NULL,   -- 'daily' | 'weekly' | 'monthly' | 'manual_only'
-  next_check_due TEXT NOT NULL,    -- ISO date
+  entity_ref TEXT NOT NULL,
+  fact_key TEXT NOT NULL,               -- e.g. "date","fee_aed","venue"
+  check_frequency TEXT NOT NULL,        -- computed per §22 adaptive cadence
+  next_check_due TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active','resolved','archived')),
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE freshness_checks (
+CREATE TABLE freshness_observations (
   id TEXT PRIMARY KEY,
   watchlist_id TEXT NOT NULL REFERENCES freshness_watchlist(id),
-  checked_at TEXT NOT NULL DEFAULT (datetime('now')),
-  routine_run_ref TEXT,            -- which routine output file produced this, for traceability
+  observation_id TEXT NOT NULL UNIQUE,  -- from the machine contract, §16 — idempotency key
+  run_id TEXT,
+  source_id TEXT REFERENCES sources(id),
+  observed_value TEXT,
+  observed_at TEXT NOT NULL DEFAULT (datetime('now')),
+  published_at TEXT,
+  effective_at TEXT,
   result TEXT NOT NULL CHECK (result IN ('unchanged','changed','unreachable','inconclusive')),
-  evidence_url TEXT,
-  evidence_text TEXT
+  evidence_ref TEXT
+);
+
+CREATE TABLE freshness_change_candidates (
+  id TEXT PRIMARY KEY,
+  watchlist_id TEXT NOT NULL REFERENCES freshness_watchlist(id),
+  triggering_observation_id TEXT REFERENCES freshness_observations(id),
+  fact_key TEXT NOT NULL,
+  old_value TEXT,
+  proposed_value TEXT NOT NULL,
+  severity TEXT NOT NULL CHECK (severity IN ('info','warning','urgent')),
+  verification_status TEXT NOT NULL DEFAULT 'pending' CHECK (verification_status IN
+    ('pending','conflict_hold','approved','rejected','applied','superseded')),
+  reviewed_by TEXT,
+  reviewed_at TEXT,
+  applied_at TEXT,
+  closed_reason TEXT,                   -- e.g. "superseded_by_manual_hotfix"
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 CREATE TABLE freshness_alerts (
   id TEXT PRIMARY KEY,
-  check_id TEXT REFERENCES freshness_checks(id),
-  watchlist_id TEXT NOT NULL REFERENCES freshness_watchlist(id),
+  change_candidate_id TEXT NOT NULL REFERENCES freshness_change_candidates(id),
   severity TEXT NOT NULL CHECK (severity IN ('info','warning','urgent')),
-  proposed_change TEXT,            -- free text / JSON describing old -> new
-  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected','applied')),
-  created_at TEXT NOT NULL DEFAULT (datetime('now')),
-  resolved_at TEXT
+  delivery_channel TEXT,                -- per §33
+  delivered_at TEXT,
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','acknowledged','resolved'))
 );
 ```
 
-This is intentionally the *only* schema work in this document — everything else (guides, steps, news_posts, events, calendar_pages) stays untouched. Note this finally gives a real reason to wire up Drizzle Kit migrations (currently configured but never run, per `docs/content-model-decision-news-events-calendar.md:25`) — but only for this new isolated file, not retroactively for `guides.db`, keeping migration risk at zero for the production content DB.
+`freshness_observations` is the raw evidence log (append-only, never edited). `freshness_change_candidates` is the reviewable unit a human approves or rejects. `freshness_alerts` is purely a delivery record. This three-way split is what makes manual-hotfix reconciliation (§10, §45) representable: a hotfix closes the relevant `freshness_change_candidates` row with `closed_reason='superseded_by_manual_hotfix'` and the watchlist continues against the new baseline, instead of the next monitor cycle repeatedly re-proposing a revert.
+
+MVP may implement a smaller subset of these columns, but this is the target contract — not renegotiated at implementation time without a documented reason.
 
 ---
 
-## 16 — Local vs. Production DB Strategy
+## 18 — Execution Topology (new, mandatory — resolves the "server-authoritative vs. runs on the owner's machine" contradiction)
 
-`freshness.db` is **server-authoritative only**, same principle CLAUDE.md already applies to `guides.db` ("Production DB source of truth: local backups... Cloudways/UpCloud is runtime only"). It gets the same backup treatment as `guides.db` (extend `deploy/scripts/server-cron-backup.sh` to also checkpoint+copy `freshness.db` — a two-line addition, not built in this plan-only turn). Critically: **`freshness.db` is never read by any public or admin page** — it is an operational/monitoring artifact only, consumed by scripts and the owner's daily review habit, so it carries none of the "public pages import only from reader.ts" constraints. This keeps it fully outside CLAUDE.md's locked public/admin architecture rules.
+Verified starting facts (§1): Claude routines have zero DB/SSH/server filesystem access — only a git-repo clone, web fetch, and push-capable git access scoped to docs. UpCloud production has git **pull**-only capability (unverified for push, flagged as a blocker, §48) and is the only 24/7 machine with SSH+filesystem access to `guides.db`. The owner's local machine has full access to everything but is not always on.
+
+**Decision: `freshness.db` lives on UpCloud, colocated with `guides.db`, on the same trust boundary and the same backup precedent (`server-cron-backup.sh`).** This part of Revision 02 was right. What Revision 02 never resolved is how a routine (repo-scoped only) and a UpCloud-scoped script exchange data without a human in the loop every day. That gap is resolved component-by-component below.
+
+| Component | Executor | Host | Scheduler | Input | Output | Read perms | Write perms | Failure behavior | Retry | Locking/idempotency |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Source/new-source discovery | Claude routine (R01/R05, extended per §11) | Claude remote sandbox | Claude routine scheduler (06:00/08:00 UTC) | Repo files, public web | `daily-radar/*.md` (git, pushed) | Repo + public web | Repo docs paths only | Missing output file = visible failure (no file written) | Owner re-runs manually next session | N/A — stateless per run |
+| Due-watchlist digest generation (T0) | New deterministic script, e.g. `scripts/generate-watchlist-digest.ts` | **UpCloud** (new cron entry, modeled on `server-cron-backup.sh`) | cron, 05:45 UTC | `freshness.db` (local read) | Digest artifact — **must reach the repo for R02 to read it; see decision below** | `freshness.db` read-only | Digest artifact write (destination per decision below) | Cron failure logged locally; R02 must detect a stale/missing digest and report `BLOCKED`, not `CLEAN` (§12) | Owner-triggered manual re-run if a cron failure is noticed | Idempotent — same due-set produces same digest content |
+| R02 monitoring (T1) | Claude routine | Claude remote sandbox | Claude routine scheduler, 06:30 UTC | Digest artifact (repo) + live web fetch | `daily-radar/*-source-verification.md` + structured companion (target, §16) | Repo + public web | Repo docs paths only | Same as today — visible via missing/blocked output | Owner-triggered | Stateless per run |
+| Structured ingestion (T2) | New deterministic script, `scripts/sync-freshness-alerts.ts` | **UpCloud** (same cron chain, staggered) | cron, ~06:40 UTC (after R02's typical completion) | R02's structured output (must be pulled from GitHub — UpCloud already has pull access) | `freshness_observations` + `freshness_change_candidates` rows | GitHub read (pull, already exists) + `freshness.db` write | `freshness.db` only, never `guides.db` | Reject malformed input (§16); log, do not crash silently | Owner-triggered manual re-run | `observation_id` uniqueness enforced at DB level |
+| Consistency scan (T3) | New deterministic script, `scripts/qa-consistency-check.ts` | **UpCloud** | cron, ~06:45 UTC (or ad hoc, no dependency on T1/T2) | `guides.db` (local read-only) | `freshness_change_candidates` rows | `guides.db` read-only | `freshness.db` only | Logs and continues rule-by-rule; one rule's failure doesn't block others | Owner-triggered manual re-run | Re-running produces the same candidates unless state changed — no duplicate rows for the same unresolved issue |
+| Alert delivery (T4) | New deterministic script | **UpCloud** | cron, ~06:50 UTC | `freshness_alerts` pending rows | Delivery per §33 (channel TBD-recommended) | `freshness.db` read | External delivery API write only (no repo, no DB other than marking `delivered_at`) | Delivery failure retried; alert stays `pending` until confirmed delivered | Bounded retry (e.g. 3x with backoff), then falls back to "owner's daily review will still see it" as the floor | `delivered_at` set only once per alert |
+| Human approval | Owner | Owner's machine/phone, reading delivered alert or `freshness_change_candidates` | Manual, owner-paced | Alert + underlying evidence | Approve/reject decision | Full | N/A | N/A | N/A | One decision per candidate; no silent-approval path (§34) |
+| Approved production correction | Owner or an agent session under explicit owner instruction | Owner's local machine (SSH to UpCloud) | Manual, owner-triggered | Approved `freshness_change_candidates` row | Patch script execution against `guides.db` | Full | `guides.db`, via existing patch-script pattern | Unchanged from today — backup/assert/verify/rollback discipline | Unchanged | Unchanged — idempotent patch scripts |
+| Live QA | Owner or agent session | Owner's machine (curl against production) | Manual, immediately after correction | Live production URLs | Pass/fail report | Public HTTP only | None | Unchanged from today | Unchanged | Unchanged |
+
+**The one unresolved cross-boundary link:** T0's digest must reach R02, but R02 can only read the git repo, and UpCloud's git-push capability is unverified and currently contrary to CLAUDE.md's "production is runtime-only, never a source of truth" framing.
+
+**Decision, explicitly flagged for owner sign-off before FRESH-00 (not silently assumed):** grant UpCloud a narrow, path-scoped git-push credential (deploy key or fine-grained PAT) usable **only** by the new freshness cron scripts, scoped **only** to `docs/content-drafts/freshness/` (a new, dedicated path — never touching code, schema, or existing docs paths). This is a real, new production capability, smaller in blast radius than the git-pull capability production already has, but it is new and must be approved explicitly, not inherited from Revision 02's silent assumption. It is logged as Pre-Implementation Blocker #1 (§48). If the owner rejects this, the fallback is: T0/T2 still run on UpCloud against `freshness.db`, but the digest is instead relayed by the owner's own machine on whatever cadence the owner is actually online — which reintroduces the manual-dependency problem this correction pass exists to remove, and should be treated as a degraded fallback, not the target.
 
 ---
 
-## 17 — Scheduler / Worker Architecture
+## 19 — Local vs. Production / Authoritative `freshness.db` — corrected
 
-No new scheduler needed for Discovery/Monitoring — Claude Code's own remote-routine cron already does this externally (R01–R05), and it is explicitly out of this project's process-management surface (not PM2, not systemd, not GitHub Actions). What's new and needs a home:
+**Single authoritative location: UpCloud, `/var/www/guidex/data/freshness.db`, alongside `guides.db`.** No second copy is ever treated as a source of truth.
 
-- **`scripts/generate-watchlist-digest.ts`** (deterministic, no AI): queries `freshness.db` for `next_check_due <= today AND status='active'`, writes a compact markdown file the R02 routine reads as its input (replacing the hardcoded HOLD table).
-- **`scripts/sync-freshness-alerts.ts`** (deterministic, no AI): parses R02's output markdown, upserts `freshness_checks` and `freshness_alerts` rows into `freshness.db`.
-
-Both are plain `npx tsx scripts/*.ts` invocations, same as every existing script in the repo — MVP scope runs them **manually by the owner** each morning alongside the existing "review daily-radar output" habit (zero new infrastructure). Deferred scope (§31): a systemd timer on the UpCloud box running these two scripts right after R02's known completion time (06:35 UTC) — this is the only place a traditional "scheduler" would ever enter this architecture, and it's explicitly deferred, not MVP.
+| Concern | Policy |
+|---|---|
+| Local development copy | Never authoritative. If a local copy exists (pulled for inspection/backfill work), it is read-only reference, refreshed via the same `db-backup-from-upcloud.sh` pattern already used for `guides.db`, and clearly named (e.g. `freshness.db.local-readonly`) to prevent confusion with production state |
+| Backup | Added to the same daily `server-cron-backup.sh` (extended, not built in this doc-only pass) — checkpoint + copy + rotate, identical pattern to `guides.db` |
+| Restore | Same `db-restore-to-upcloud.sh` pattern, extended to accept a `freshness.db` target |
+| WAL | `journal_mode=WAL`, `PRAGMA wal_checkpoint(TRUNCATE)` before backup — identical discipline to every existing patch script |
+| Locking | SQLite's own file locking is sufficient at this write volume (a handful of scripts, staggered by minutes, not concurrent) — no additional locking layer needed |
+| Migration handling | Since this is a new, isolated file, Drizzle Kit migrations are finally usable here (configured but never run against `guides.db`, per `docs/content-model-decision-news-events-calendar.md:25`) — scoped only to `freshness.db`, never retroactively to `guides.db` |
+| Integrity checks | `PRAGMA integrity_check` after every write, matching existing patch-script discipline |
+| Snapshot policy | Same timestamped pre-write snapshot pattern already proven for `guides.db` |
+| Stale-copy detection | Any local/reference copy must record the production MD5 + timestamp it was pulled at (same discipline `6d-aug-new-02-source-label-fix-01.md` §5 already used for `guides.db` rehearsal) |
+| Accidental local→authoritative overwrite prevention | No script in this architecture ever writes from a local copy back to UpCloud — the only write path to the authoritative file is the UpCloud-resident cron scripts themselves (§18). A local copy is structurally read-only by virtue of never being an input to any write script |
 
 ---
 
-## 18 — Human vs. Automatic Decision Matrix
+## 20 — Scheduler / Orchestration — corrected (picks one MVP mechanism)
 
-| Decision | Automatic? | Rationale |
+Options compared, per the correction request's requirement to evaluate before picking:
+
+| Option | Verdict |
+|---|---|
+| Existing Claude routine scheduler | Cannot run T0/T2/T3/T4 — those need `freshness.db`/`guides.db` filesystem access, which routines structurally do not have (§1, §18) |
+| Cron on UpCloud | Viable, matches the one existing precedent (`server-cron-backup.sh`) exactly |
+| systemd timer on UpCloud | Also viable, slightly better failure/retry semantics (`OnFailure=`, `Restart=`), but is new infrastructure this project doesn't currently use |
+| Small dedicated deterministic worker (long-running process) | Rejected — unnecessary infrastructure for 4-5 short scheduled scripts; violates "do not introduce unnecessary infrastructure" |
+
+**Decision: cron on UpCloud, matching the exact existing precedent, not systemd.** This directly follows the instruction not to introduce unnecessary infrastructure — the project already has exactly one working, proven scheduled-execution mechanism on UpCloud (`server-cron-backup.sh` via `crontab`), and reusing that mechanism for the new T0/T2/T3/T4 scripts is strictly less new infrastructure than introducing systemd units this project has never used.
+
+Automation boundary, restated and unchanged from the correction request: automatic processes (T0-T4) may read sources/state, generate due-queues, run deterministic consistency checks, ingest observations, create and deliver alerts. They must never modify `guides.db`, approve a change, or deploy. This boundary is identical to §25/§28 of Revision 02 and is **not weakened** by adding automation — automation is added only to DETECT and ALERT, never to CORRECT.
+
+---
+
+## 21 — Human vs. Automatic Decision Matrix (unchanged from Revision 02, reaffirmed)
+
+No content type or severity level ever reaches autopublish. Table is unchanged from Revision 02 §18 — reaffirmed here, not repeated in full (see git history at `4be2df1`).
+
+---
+
+## 22 — Monitoring Cadence — corrected to be adaptive, not a single default
+
+Revision 02's flat "confirmed calendar item → monthly, no escalation" is replaced with an adaptive model. Cadence is computed from entity class + proximity + volatility, not read off confidence alone:
+
+| Entity class | Base cadence | Proximity escalation |
 |---|---|---|
-| Discover a new candidate fact | Yes (R01/R05, existing) | Cheap to be wrong, human filters |
-| Recheck a watched fact against its source | Yes (R02, extended) | Read-only, no write risk |
-| Run consistency-engine rules | Yes (§14 script) | Deterministic, read-only |
-| Parse routine output into `freshness_alerts` | Yes (§17 script) | Deterministic, writes only to isolated `freshness.db` |
-| Decide a `freshness_alert` is correct and should be applied | **No — always human** | Matches existing owner-approval pattern for both August hotfixes; matches editorial-automation-plan's explicit exclusion of visa/tax/legal/holiday-date content from any auto-publish level (Level 5) |
-| Write the correction to `guides.db` | **No — always human-triggered**, via the existing patch-script pattern | No change from today |
-| Deploy (build + pm2 reload) | **No — always human-triggered** | No change from today |
+| Public holiday (government-sourced) | monthly once confirmed; weekly while unconfirmed | daily inside 30 days pre-holiday while unconfirmed (unchanged from Revision 02) |
+| Ticketed fixed-date event | **weekly, even once confirmed** — corrects Revision 02's flat monthly-when-confirmed rule, since postponement risk doesn't end at confirmation | daily inside 14 days pre-event |
+| Free/community event | monthly | weekly inside 14 days pre-event |
+| Distant event (>90 days out) | monthly | escalates automatically as the date approaches, per the rows above |
+| Government/YMYL guide fact (fee, deadline) | monthly | manual trigger on any Discovery signal naming that authority |
+| Transport launch / attraction price-hours | monthly | weekly inside 30 days of an announced launch/change window |
+| General guide prose | manual_only | none — still explicitly out of automated monitoring at MVP (§36), unchanged from Revision 02 |
 
-No content type or severity level in this plan ever reaches autopublish. This is a deliberate, explicit choice, not an oversight — it matches every existing project document that touches the topic (routines' hard stops, editorial-automation-plan's Level 5 exclusion, CLAUDE.md's Admin QA rules).
+No entity class ever drops to `manual_only` cadence purely because it reached `confirmed` — only public-holiday-class facts (the lowest-volatility class in this table) drop as low as monthly, and even then never below monthly while still watched.
 
 ---
 
-## 19 — Monitoring Cadence Matrix
+## 23 — Backup / Rollback Architecture (extended per §19, otherwise unchanged from Revision 02)
 
-Derived from the one concrete cadence rule that already exists in the docs (Public Holiday Radar Rules: weekly checks starting 30 days before an expected Islamic holiday) generalized by content class:
+Identical discipline to `guides.db`'s proven pattern, now explicitly extended to `freshness.db` per §19's table. No further correction needed.
 
-| Entity class | Default `check_frequency` | Escalation |
+---
+
+## 24 — Live QA Architecture — corrected: layered verification model
+
+Revision 02's lesson (don't trust `WebFetch`'s 15-minute cache) is preserved and formalized into an explicit layered model, so "live" always means the right layer for the question being asked:
+
+| Layer | What it proves | Tool |
 |---|---|---|
-| Calendar item, `confidence != confirmed` | weekly | daily inside a 30-day pre-event window (matches existing Rule 5/6) |
-| Calendar item, `confidence == confirmed` | monthly (sanity recheck only) | none |
-| Event, `date_confidence != confirmed` | weekly | daily inside 30-day window |
-| Guide field flagged YMYL (fee, deadline, legal threshold) | monthly | manual trigger on any owner-side news signal (R01 output mentioning that authority) |
-| Guide field, general prose | manual_only | none — not watched automatically at MVP (§30/§31) |
+| Authoritative production DB value | What was actually written | Direct query via SSH (`sqlite3` read) |
+| Origin/application response | What the app server generates from that DB value, before any CDN/proxy caching | `curl` directly against the origin, cache-busting headers if needed |
+| Public HTTP response | What an end user actually receives | `curl` against the public URL, **not** `WebFetch` (15-min cache risk, per Revision 02's own lesson) |
+| Rendered HTML | What's in the final markup (post-hydration content, if any) | `curl` + grep, or a headless fetch if JS-rendered content is in question |
+| Structured data | What search engines/AI systems will parse (JSON-LD, meta tags) | `curl` + JSON-LD extraction |
 
-Emergency path preserved unchanged from Public Holiday Radar Rules Rule 7: an unplanned/urgent announcement (like the actual Mawlid case) does not wait for its scheduled cadence — the owner starts a hotfix session immediately, exactly as already happened twice this week.
-
----
-
-## 20 — Backup / Rollback Architecture
-
-No new pattern — reuse exactly what both August hotfixes already proved: timestamped pre-write backup (`backups/local/guides.db.pre-<name>-<timestamp>`), `PRAGMA wal_checkpoint(TRUNCATE)`, MD5 before/after, idempotent patch script that can be safely re-run. `freshness.db` gets the identical treatment, added to the same daily server-cron backup script (§16), and to the corrected `db-backup-from-upcloud.sh`/`db-restore-to-upcloud.sh` pair (§1 discrepancy) rather than the stale, unused `-from-server.sh` pair.
+A monitoring-tool cache (whether `WebFetch`'s cache or any future CDN layer) must never be the sole source used to declare an alert stale or resolved — the authoritative-DB layer is always checked first when confirming whether a correction actually landed, exactly as both August hotfixes already did by convention; this section makes that convention explicit and layered instead of a single ad hoc lesson.
 
 ---
 
-## 21 — Live QA Architecture
+## 25 — Security & Production Write Boundaries — reaffirmed, not weakened
 
-Two lessons from this week, both to be encoded as standing rules for any future freshness-driven correction:
-1. **Use `curl`, not `WebFetch`, for post-deploy verification** — `WebFetch` caches per-URL for 15 minutes, which produced a false-negative during the AUG-NEW-02 hotfix's own QA.
-2. **A rebuild + `pm2 reload` is required for every DB-only content change**, because the calendar/guide routes are fully static with no `revalidate` export — an automated correction pipeline cannot assume "the DB write is enough."
-
-R04 (Live Site QA and Carousel Freshness) already exists and already checks production routes daily — extend its scope to also run `scripts/qa-consistency-check.ts` (§14) as an additional automatic check, and to flag (not fix) any `freshness_alerts` row still `pending` after N days as a "stale alert" signal in its own report.
+Automated freshness components (T0-T4, §18) may never directly mutate `guides.db`. This is unchanged from Revision 02 and is the one rule this entire correction pass treats as non-negotiable. Approved corrections remain human-reviewed, applied via the existing deterministic/idempotent patch-script mechanism, with backup, preconditions, post-write assertions, build/reload, and live EN/RU QA — identical to both proven hotfixes. The one new production capability introduced by this pass (§18's narrow, docs-path-scoped git-push credential for the freshness cron scripts) is additive and explicitly flagged for owner approval (§48) — it does not touch `guides.db`, code, schema, or any existing write path.
 
 ---
 
-## 22 — EN/RU Strategy
+## 26 — Cost/Scale Model (unchanged in substance from Revision 02)
 
-No new rule needed beyond what already exists and was correctly followed in both hotfixes: every approved correction must update `en_*` and `ru_*` fields together in the same patch script (mirrors CLAUDE.md's "never split field-edits" admin rule, extended to script-based writes), and live QA must check both `/calendar/...` and `/ru/calendar/...` before closing an alert. The two-gate publish model (`status='published' AND ru_published=1`) already governs whether an RU page is even reachable — the freshness system doesn't need to know about this gate, it only needs to check whichever RU pages are actually live.
-
----
-
-## 23 — SEO Implications
-
-`last_verified_date` (real column, `calendar_pages`) and `date_updated` (`news_posts`/`events`) already exist as the SEO-facing freshness signals (`SEO_STRATEGY.md`: "`lastUpdated` field signals freshness"). Every approved correction must continue to bump these fields — both August hotfixes did this correctly. The sitemap's per-record `lastmod` (added in Phase 6D, confirmed in `CHECKPOINTS.md`) already derives from `updated_at`, so no sitemap-side change is needed; approved corrections just need to keep writing through the same column they already write through.
+Discovery/Monitoring via routines remains free within the existing 5-included-daily-runs envelope. New UpCloud-resident cron scripts (§20) run in seconds against small SQLite files — zero hosting cost beyond what's already running. No correction needed.
 
 ---
 
-## 24 — RAG/AI Search Implications
+## 27 — Database Architecture Options — re-scored per corrected topology
 
-AI answer engines (and Claude itself, when asked about Dubai holidays) will surface whatever text is live at crawl time — the AUG-NEW-02 bug (a label naming one authority while linking to another) is exactly the kind of inconsistency that erodes trust in an AI-citation context, since an AI summarizer may quote the label as the source name while a human clicking through lands somewhere else. The consistency engine (§14) is therefore not just a QA nicety but directly protects AI-discoverability credibility, which CLAUDE.md already names as a primary acquisition channel ("Organic search and AI discoverability are the primary acquisition channel"). No RAG-specific infrastructure (embeddings, a vector store, etc.) is proposed — out of scope, not needed for this problem class.
+| Option | Risk to prod content | Query/index quality | Fit w/ existing conventions | Implementation cost | Score |
+|---|---|---|---|---|---|
+| A — Extend blob + tables inside `guides.db` | High | Poor | High | Low | 5/10 (unchanged — corrections don't touch this option's fundamentals) |
+| B — Normalized tables inside `guides.db` | Medium | Good | Medium | Medium | 6/10 (down from 6.5 — the corrected schema in §17 is materially larger/more relational than Revision 02's version, increasing the cost of co-locating it with production content) |
+| **C-refined — Isolated `freshness.db` on UpCloud, deterministic scripts only, corrected topology per §18** | **Lowest** | Good | High — now grounded in a verified, concrete execution topology instead of an unresolved one | Medium-high (the new cron scripts + narrow git-push credential are more infrastructure than Revision 02 admitted, but still small relative to the isolation benefit) | **8/10** (down slightly from 8.5 — reflects the honest cost of the new git-push credential and cron scripts that Revision 02 glossed over, not a change in direction) |
 
----
-
-## 25 — Security & Production Write Boundaries
-
-Unchanged and reinforced, not loosened:
-- Routines keep their exact current hard-stop list verbatim (§2/§11) — this plan adds zero new write permissions to any AI agent.
-- The two new deterministic scripts (§17) gain write access to **`data/freshness.db` only** — never `guides.db`. This is a narrower permission than any existing script has today (every existing patch script already has full `guides.db` write access via `GUIDEX_DB_PATH`).
-- All `guides.db` writes remain exclusively: (a) NextAuth-gated admin UI, or (b) human-triggered, human-reviewed patch scripts run over SSH by the owner (or an agent acting under explicit owner instruction in a session, as both August hotfixes did) — never a scheduled/automatic process.
-- `.env.example`'s gap (7 undocumented AI-runtime vars, §3.6) should close before any freshness component calls the Anthropic API directly — flagged as a blocker only if a future implementation phase needs direct API calls rather than routing through routines (MVP does not need this, since routines use Claude Code's own auth, not a standalone API key).
+**Still recommended: Option C-refined.** The score moved from 8.5 to 8 not because the option got worse, but because this pass is honest about costs Revision 02 hid (the topology gap, the new production credential). The relative ranking versus A and B is unchanged and, if anything, more clearly justified now that the topology is concrete instead of hand-waved.
 
 ---
 
-## 26 — Cost/Scale Model
+## 28 — Recommended Architecture (summary, corrected)
 
-- Discovery/Monitoring: **zero incremental cost at MVP** — R01–R05 already run within the "5 included daily runs, no paid usage credits" envelope (`GUIDEX_DAILY_ROUTINES_STRATEGY.md` §3). Extending R02's scope doesn't add a routine, just changes what it reads.
-- New scripts (§17): run on the owner's machine, `npx tsx`, no hosting cost, seconds of runtime against a small SQLite file.
-- `freshness.db` size: trivial at current content volume (97 calendar items + events + eventually guide fields — low thousands of rows even at 12 months of daily checks).
-- Scale ceiling: this design comfortably covers hundreds of watched facts. If content volume grows an order of magnitude (thousands of guides/events), the isolated-SQLite-file approach still holds — SQLite handles this volume trivially; the bottleneck would be routine run-time/context budget (§17's "compact context only" rule), not the database.
+Isolated `freshness.db` on UpCloud (not "server-authoritative" as an abstract phrase — concretely, physically colocated with `guides.db` on the same box, §18/§19), populated by new UpCloud-resident cron scripts (§20, matching the existing `server-cron-backup.sh` precedent) that read Claude routine output pulled from GitHub (routines already push docs-only, production already pulls) and write only to `freshness.db`. Alerts are delivered per §33's recommendation. `guides.db` is touched only by the existing, unmodified human-approved patch-script pipeline. This is the same core shape as Revision 02 — the correction is that every arrow in this sentence now has a named, concrete executor (§18), not an implied one.
 
 ---
 
-## 27 — Database Architecture Options (scored)
-
-| Option | Description | Risk to prod content | Query/index quality | Fit w/ existing conventions | Implementation cost | Score |
-|---|---|---|---|---|---|---|
-| A — Extend `dates_json` blob + 2 new tables in `guides.db` | More fields inside the existing JSON blob; `freshness_watchlist`/`freshness_alerts` added directly to `guides.db` | High — any bug in a new script touches the live content DB file; intensifies existing 4-way type drift (§3.3) | Poor — blob fields unindexable, cross-entity queries need app-side JSON parsing | High — matches existing raw-`better-sqlite3` patch-script culture exactly | Low | 5/10 |
-| B — Normalized tables inside `guides.db` | New relational tables (`sources`, `freshness_watchlist`, etc.) added to the existing schema, wired through Drizzle | Medium — new tables are additive/non-destructive, but still share one file/one backup/one blast radius with production content | Good — real SQL joins/indexes | Medium — finally uses Drizzle Kit migrations (currently unused) but breaks from the raw-script culture | Medium | 6.5/10 |
-| **C-refined — Normalized tables in isolated `data/freshness.db`, populated only by deterministic scripts (not agents)** | Same schema as B, separate file, separate backup, zero automated write path to `guides.db` | **Lowest** — a bug in any freshness script cannot corrupt production content, full stop | Good — same SQL quality as B | High — extends the project's existing "share no state" isolation philosophy (already applied between admin/public) one level further | Medium (one extra file to back up/restore) | **8.5/10** |
-
-**Recommended: Option C-refined** (§0, §15, §16). Rejected B primarily on risk grounds: co-locating experimental, agent-adjacent freshness schema with the one file the entire production site depends on is an unforced blast-radius increase with no offsetting benefit — nothing in the freshness workflow needs to join against `guides.db` in SQL; the human-approved correction step already bridges the two databases deliberately, at the one point where a human is looking.
-
----
-
-## 28 — Recommended Architecture (summary)
-
-`data/freshness.db` (isolated, new, normalized per §15) + two deterministic sync scripts (§17) sitting between the existing, unmodified routines (Discovery/Monitoring, docs-only, unchanged hard stops) and the existing, unmodified human-approval → patch-script → QA → deploy pipeline (unchanged from both August hotfixes). The single new automated component with any "intelligence" is the consistency engine (§14), and it is deterministic/rule-based, not AI — it is the one piece that would have caught AUG-NEW-02 without a human having to ask.
-
----
-
-## 29 — Architecture Diagram
+## 29 — Architecture Diagram (corrected topology and ordering)
 
 ```mermaid
 flowchart TD
-    R01[R01 Event Radar\n06:00 UTC, docs-only] --> RADAR[daily-radar/*.md]
-    R02[R02 Source Verification\n06:30 UTC, docs-only\nextended: reads generated digest]
-    DIGEST[scripts/generate-watchlist-digest.ts\ndeterministic] -->|compact input| R02
-    FDB[(data/freshness.db\nisolated, new)] --> DIGEST
-    R02 --> RADAR2[daily-radar/*-source-verification.md]
-    RADAR2 --> SYNC[scripts/sync-freshness-alerts.ts\ndeterministic]
-    SYNC -->|writes checks + alerts| FDB
-    CE[scripts/qa-consistency-check.ts\ndeterministic, read-only] -->|reads| GDB[(guides.db\nproduction content)]
-    CE -->|writes alerts via SYNC path| FDB
-    FDB --> OWNER[Owner morning review\nsame habit as today]
-    OWNER -->|approves| PATCH[patch-*.ts\nexisting idempotent pattern]
-    PATCH -->|human-triggered, SSH| GDB
-    PATCH --> QA[curl-based live QA\nexisting pattern]
-    QA --> DEPLOY[npm run build + pm2 reload\nexisting pattern]
+    subgraph UPCLOUD["UpCloud production server"]
+        FDB[(data/freshness.db)]
+        GDB[(data/guides.db)]
+        T0[T0 05:45 UTC cron:\ngenerate-watchlist-digest.ts]
+        T2[T2 ~06:40 UTC cron:\nsync-freshness-alerts.ts]
+        T3[T3 ~06:45 UTC cron:\nqa-consistency-check.ts]
+        T4[T4 ~06:50 UTC cron:\nalert delivery]
+        T0 -->|read| FDB
+        T2 -->|write| FDB
+        T3 -->|read-only| GDB
+        T3 -->|write candidates| FDB
+        T4 -->|read pending alerts| FDB
+    end
+
+    subgraph CLAUDE["Claude remote sandbox (routines)"]
+        R02[R02 06:30 UTC\nreads digest, fetches sources]
+    end
+
+    T0 -->|"push (narrow, docs-only,\nowner-approved credential)"| GH[(GitHub repo:\ndocs/content-drafts/freshness/)]
+    GH -->|pull, read-only| R02
+    R02 -->|"push (existing routine\npush capability)"| GH2[(GitHub repo:\ndaily-radar/*.md +\nstructured companion)]
+    GH2 -->|pull, existing capability| T2
+
+    T4 --> CHANNEL[Alert channel, §33]
+    CHANNEL --> OWNER[Owner review]
+    OWNER -->|approve| PATCH[patch-*.ts, owner's machine,\nexisting proven pattern]
+    PATCH -->|SSH, human-triggered| GDB
+    PATCH --> QA[Layered live QA, §24]
+    QA --> DEPLOY[build + pm2 reload]
+    DEPLOY --> RECONCILE[Baseline reconciliation, §10/§45]
+    RECONCILE --> FDB
 ```
 
 ---
 
-## 30 — MVP Scope
+## 30 — Alert Delivery — recommendation (was fully open in Revision 02, now decided)
 
-1. `data/freshness.db` schema (§15), created via a new migration script, isolated from `guides.db`.
-2. `scripts/qa-consistency-check.ts` — the 4 rules in §14, read-only against `guides.db`, run manually on demand (this alone would have caught AUG-NEW-02).
-3. `scripts/generate-watchlist-digest.ts` + `scripts/sync-freshness-alerts.ts` (§17), run manually by the owner.
-4. Backfill: seed `freshness_watchlist` with the 7 existing R02 HOLD items + any calendar item currently `confidence != confirmed` (a one-time read of `guides.db`, write-once to `freshness.db`).
-5. R02's prompt updated to read the generated digest instead of its hardcoded table (a docs-only routine-file edit, within the routines' own existing self-edit permission — "Write to `docs/content-drafts/routines/` — Yes").
-6. Extend `deploy/scripts/server-cron-backup.sh` to also back up `freshness.db`.
+| Severity | Channel | Rationale |
+|---|---|---|
+| P0/P1 (urgent — money/ticket risk, YMYL, imminent event) | Immediate push (Telegram bot) | Matches the correction request's suggested default; lowest-latency channel the owner is likely to see promptly without relying on remembering to check a file |
+| P2 (warning) | Daily digest (folded into the existing morning daily-radar review habit) | No new infrastructure needed beyond what already exists |
+| P3 / source-health signals | Weekly digest | Low urgency, avoids alert fatigue |
 
-Explicitly NOT in MVP: guide-field watching (§40 shows why this needs its own entity-mapping work first), any automated scheduling of the two new scripts (owner runs them manually alongside the existing daily-review habit), any alert-delivery channel beyond "the file the owner already reads" (§42 — open question).
-
----
-
-## 31 — Deferred Scope
-
-- Guide-field freshness (needs an `entity_ref` convention for guide steps first, e.g. `guides.<slug>.step-<n>.cost` — a small design task, not a blocker, just sequenced after MVP proves the calendar/event path).
-- Systemd timer on the UpCloud box to run the two sync scripts automatically right after R02 completes (06:35 UTC) — MVP keeps this manual.
-- Any push-style alert delivery (Telegram, email, Slack) — explicitly named in prior history as deferred (`GUIDEX-FRESHNESS-SOURCE-MONITORING-ARCHITECTURE-PLAN-01` reference) and still an open question here (§42), not decided in this document.
-- Drizzle Kit migrations for `guides.db` itself (out of scope — this plan only wires up migrations for the new isolated file).
-- Any auto-apply/autopublish tier for any content type or severity (permanently out of scope per §18, not just deferred).
+**Recommended default: Telegram push for P0/P1, daily digest for P2, weekly digest for P3** — chosen over email because it's lower-latency and matches the "small operator checking a phone" reality better than an inbox. This is a recommendation the owner may override before implementation (§48) — Telegram bot setup itself is new infrastructure and is not built in this doc-only pass.
 
 ---
 
-## 32 — Implementation Phases (for a future FRESH-00+ session, not this one)
+## 31 — Human Approver — MVP default (was open in Revision 02, now decided)
 
-1. **FRESH-00**: create `data/freshness.db` schema + backfill script, local only, no production write.
-2. **FRESH-01**: `scripts/qa-consistency-check.ts`, run against a local copy of production data, verify it flags AUG-NEW-02's exact bug pattern retroactively (a concrete regression test — see §34).
-3. **FRESH-02**: `generate-watchlist-digest.ts` + `sync-freshness-alerts.ts`, dry-run against R02's existing (pre-change) output format to confirm the parser handles it without requiring R02's prompt to change yet.
-4. **FRESH-03**: update R02's prompt to read the generated digest; owner approves the routine-file change (docs-only commit, routines' own existing self-edit permission).
-5. **FRESH-04**: production rollout — deploy `data/freshness.db` to the UpCloud server, wire into `server-cron-backup.sh`, run the full cycle manually once with owner review at the HUMAN REVIEW gate.
-6. **FRESH-05+ (deferred)**: guide-field watching, systemd automation of the sync scripts, alert-delivery channel — each gated on its own open question being resolved first.
+**Default: the Guidex owner/operator is the sole approver, no multi-role workflow.** No fictional second employee is introduced. This confirms Revision 02's implicit assumption explicitly rather than leaving it as an open question.
 
-Each phase should follow the exact two-turn pattern already established in this project (read-only investigation/rehearsal turn, then a separate explicitly-approved implementation turn) — this is not a new process, it's the same one used for both August hotfixes and for this Revision 02 session itself.
-
----
-
-## 33 — Relationship to Phase 6E / Existing SEO Roadmap
-
-`PROJECT_STATE.md` currently reads "NEXT: Architecture Revision 02 (PLAN ONLY...) — do not begin Phase 6E." This document is that plan. Phase 6E implementation (whatever its content-production scope turns out to be) should be sequenced **after** at least FRESH-00 through FRESH-02 land, since Phase 6E will presumably add more calendar/event/guide content — content that should be born with watchlist entries from day one rather than needing a later backfill. This plan does not otherwise redefine or constrain Phase 6E's content scope, which remains undecided.
+| Question | Answer |
+|---|---|
+| What does the approver see | The `freshness_change_candidates` row: old value, proposed value, evidence reference, source entity/role, severity |
+| What counts as approval | An explicit action (approve in whatever interface exists at implementation time — MVP may be as simple as running an approval script against a specific candidate ID; no UI required at MVP) |
+| What does rejection do | Sets `verification_status='rejected'`, closes the candidate, watchlist continues unaffected |
+| What happens if an urgent alert gets no review | **Silence is never approval.** An unacknowledged P0/P1 alert stays `pending` indefinitely and is re-surfaced in the next digest cycle until explicitly approved or rejected — never auto-applied, never auto-expired into a default state |
+| Government/YMYL evidence bar | Higher evidence bar (require `primary`-authority source per §6.1, not just any observation) before a candidate is even created for these fact classes — still reviewed by the same single owner, not a different role |
 
 ---
 
-## 34 — Test Strategy
+## 32 — Test Strategy — corrected: repeatable, not ad hoc
 
-The project has zero test infrastructure today (no Jest/Vitest/Mocha, confirmed by repo-wide search). Revision 02 does not propose introducing a test framework — it proposes the same verification discipline already used for both hotfixes, applied to the new scripts:
-- `scripts/qa-consistency-check.ts` must be validated against a **known-bad fixture**: a copy of the pre-fix AUG-NEW-02 record (label="UAE Government Media Office", url=u.ae) must produce a flag; a copy of the post-fix record must produce no flag. This is a concrete, cheap regression test that directly proves the tool would have caught the real bug.
-- `sync-freshness-alerts.ts` must be idempotent (same pattern as every existing patch script) — running it twice on the same routine-output file must not duplicate `freshness_checks`/`freshness_alerts` rows.
-- All new scripts follow the existing pattern: rehearse against a local copy before touching anything real, assert-before/verify-after, `PRAGMA integrity_check`.
+Node's built-in test runner (`node --test`) is the recommended mechanism — zero new dependency, available in the Node version this project already requires, and matches the "no unnecessary infrastructure" instruction better than introducing Jest/Vitest for a handful of deterministic-script tests. This is a target for FRESH-phase implementation, not built in this doc-only pass.
+
+Required repeatable fixtures (expanded from Revision 02's single AUG-NEW-02 case):
+
+| Fixture | Proves |
+|---|---|
+| Pre-fix AUG-NEW-02 record | Consistency engine flags it |
+| Post-fix AUG-NEW-02 record | Consistency engine does not flag it |
+| Source-label mismatch (synthetic, beyond the real case) | Registry-based check (§7) generalizes correctly |
+| Date mismatch across EN/RU/JSON-LD | Date-integrity rule class (§15) catches cross-field drift |
+| EN/RU factual mismatch vs. presentation-only difference | EN/RU integrity rule doesn't false-positive on legitimate localization |
+| Duplicate event / annual-edition collision | Entity-integrity rule surfaces a human-review candidate, doesn't auto-resolve |
+| Postponement (confirmed → changed) | Confirmed-but-monitored lifecycle (§10) actually detects and alerts |
+| Conflicting sources (two `primary`-authority sources disagree) | `CONFLICT/HOLD` state is reached, not a silent pick (§14) |
+| Malformed observation artifact | Ingestion script rejects, doesn't partially parse (§16) |
+| Duplicate `observation_id` / re-run | Idempotency holds (§17) |
+| Manual hotfix reconciliation | Baseline updates, next monitor cycle doesn't re-propose the reverted state (§10, §45) |
 
 ---
 
-## 35 — Observability / Alerts
+## 33 — EN/RU Strategy, SEO Implications, RAG/AI Search Implications (unchanged from Revision 02)
 
-MVP: the owner's existing daily-review habit (reading `daily-radar/*.md` each morning) is extended to also mean "check `freshness_alerts` where status=pending" — surfaced via a plain query/report, not a new dashboard. R04's live-QA report (§21) additionally flags stale pending alerts. No new dashboard, no new UI is proposed — this is a deliberate MVP-scope decision, not an oversight, to avoid building admin-panel surface area for a system that isn't proven yet. A real-time push channel (§42) is an open question, not assumed.
+No correction needed. Every approved correction still updates `en_*`/`ru_*` together (existing rule); `last_verified_date`/`date_updated` remain the SEO freshness signals already wired into the sitemap; the consistency engine still protects AI-citation trust without introducing RAG infrastructure. See Revision 02 §22-24 for full text (unchanged, git history at `4be2df1`).
 
 ---
 
-## 36 — Manual Operating Procedure (until any deferred automation lands)
+## 34 — MVP Scope — corrected: minimal end-to-end foundation, not a partial loop
+
+Revision 02's MVP items are retained but reframed around the corrected requirement that DETECT+ALERT be actually automated (§9/§20 of the correction request), not manual-by-default:
+
+1. `data/freshness.db` schema (§17), deployed to UpCloud, isolated from `guides.db`.
+2. `scripts/qa-consistency-check.ts` — expanded rule classes (§15), scheduled via UpCloud cron (T3).
+3. `scripts/generate-watchlist-digest.ts` + `scripts/sync-freshness-alerts.ts`, scheduled via UpCloud cron (T0/T2) — **not run manually by the owner**, correcting Revision 02's manual-SOP MVP.
+4. Source registry backfill (§7): register the 7 HOLD items' entities + all L1/L2 sources already named in routine docs.
+5. `discovery_lead` intake path so verified-social-only candidates survive Discovery (§11.3) — cheap, a rule removal not new infrastructure.
+6. R02's prompt updated to read the digest artifact and report `BLOCKED` on a missing/stale digest (§12) instead of silently treating it as clean.
+7. Alert delivery: Telegram push for P0/P1 at minimum (§30) — daily/weekly digest tiers can ride on the existing review habit without new infrastructure.
+8. The narrow, docs-path-scoped git-push credential for UpCloud (§18) — flagged for explicit owner approval before this item is built.
+9. Extend `server-cron-backup.sh` to also back up `freshness.db`.
+
+This is the **minimum required pre-6E foundation** (§37) — it is intentionally more than Revision 02's MVP list because Revision 02's list did not actually satisfy "automatic DETECT/ALERT," and this correction pass will not repeat that gap.
+
+---
+
+## 35 — MVP Discovery Scope (kept small, per instruction — full detail in §11.3)
+
+Cross-reference only: §11.3 is the authoritative MVP Discovery scope. It is intentionally small — the target Discovery architecture (§11.2) is large and explicitly not required before Phase 6E (§38).
+
+---
+
+## 36 — Deferred / Parallel-Evolution Scope — corrected: two explicit tracks
+
+Revision 02 had one undifferentiated "deferred" list. This pass splits it per the correction request's §22:
+
+**Track A — must land before Phase 6E begins (§37/§38):** everything in §34's MVP list. Nothing else is required.
+
+**Track B — parallel evolution, does not block Phase 6E, proceeds alongside it once Track A lands:**
+- Full source-universe expansion (§11.2): arenas/theatres/convention centres/malls/hotels/attractions/promoters/ticket providers/artist-tour sources/sports bodies/universities/cultural/community-org sweeps.
+- All seven emirates, not Dubai-only.
+- Verified-social as a routine discovery channel beyond the MVP intake path (§11.3 item 1 is the MVP floor; full integration into R01/R05's active sweeps is Track B).
+- New-source discovery itself (finding sources not yet in the registry).
+- Arabic-language discovery where it demonstrably adds recall.
+- Guide-field freshness (`guide_fee_facts`, still correctly deferred per Simulation 5, §46 — unsolved by any MVP or near-term Track B item, requires its own content-model work first).
+- JSON/JSONL structured machine contract replacing the Markdown-parsing MVP compatibility bridge (§16) — should land early in Track B, not indefinitely deferred, but is not a Track A blocker since the bridge is functional.
+- systemd migration from cron, if cron's simpler retry semantics prove insufficient in practice (§20) — not needed unless evidence emerges.
+- Any auto-apply/autopublish tier — permanently out of scope, not just deferred (unchanged from Revision 02, reaffirmed in §21/§25).
+
+---
+
+## 37 — Implementation Phases — corrected: gates name capabilities, not arbitrary numbers
+
+| Phase | Capability delivered |
+|---|---|
+| FRESH-00 | `freshness.db` schema + source registry backfill, UpCloud-deployed, no automation wired yet |
+| FRESH-01 | `qa-consistency-check.ts` (expanded rule classes) runs on UpCloud cron (T3), verified against the fixture suite (§32) |
+| FRESH-02 | `generate-watchlist-digest.ts` (T0) + `sync-freshness-alerts.ts` (T2) live on UpCloud cron, MVP Markdown-parsing bridge (§16) in place, T0-before-R02 ordering verified in practice for several real mornings |
+| FRESH-03 | Narrow docs-scoped git-push credential provisioned (pending explicit owner approval, §48) and wired into T0; R02's prompt updated to read the digest and report `BLOCKED` correctly |
+| FRESH-04 | Alert delivery (Telegram P0/P1 minimum, §30) live; human-approval flow exercised end-to-end at least once with a real (or deliberately seeded) candidate |
+| FRESH-05 | Manual-hotfix reconciliation (§45) verified against a real or simulated hotfix — baseline correctly updates, no repeat-alert regression |
+| **Gate: Track A complete** | All of FRESH-00 through FRESH-05 verified. This — not an arbitrary phase number — is the actual gate for Phase 6E (§38) |
+| Track B (parallel, unordered relative to 6E) | Source-universe expansion, structured machine contract, all-emirates coverage, guide-field freshness design, etc. — proceeds alongside Phase 6E, not before it |
+
+Each Track A phase follows the project's established two-turn pattern (read-only investigation/rehearsal, then a separately-approved implementation turn) — unchanged from Revision 02.
+
+---
+
+## 38 — Relationship to Phase 6E — corrected, contradiction resolved
+
+Revision 02 said Phase 6E could begin after FRESH-00 through FRESH-02, while also requiring new 6E content to be "born with watchlist entries from day one" — but FRESH-02 in Revision 02's own numbering left the actual monitoring loop non-operational (no automated T0/T2/T3/T4, still a manual SOP). Those two statements were mutually inconsistent, and this pass retracts the FRESH-00→02 gate.
+
+**Corrected gate: Phase 6E may begin only after Track A (§37) is fully complete** — i.e., after a real, automated, end-to-end DETECT→ALERT loop exists and has been verified against the fixture suite and at least one live cycle. At that point, "6E content is born with watchlist entries from day one" is actually true, because the watchlist-registration hook and the automated monitoring loop both exist. Track B (§36) continues in parallel with Phase 6E without gating it — this preserves Revision 02's original intent (don't hold SEO/content work hostage to full Discovery-platform completion) while fixing the actual contradiction (don't claim automated monitoring exists before it does).
+
+---
+
+## 39 — Observability (folded into §30's alert-delivery recommendation; no separate section needed)
+
+MVP observability is the Telegram P0/P1 channel + the existing daily-review habit for P2/P3, per §30. No new dashboard is proposed — reaffirmed from Revision 02, still a deliberate MVP scope decision, not an oversight.
+
+---
+
+## 40 — Manual Operating Procedure — corrected: now a fallback, not the primary mechanism
+
+Because DETECT/ALERT are now automated (§18/§20), the owner's daily manual procedure is a **fallback for when automation is down**, not the primary mechanism Revision 02 described:
 
 ```
-Morning (owner, ~5-10 extra minutes beyond current routine review):
-1. Run: npx tsx scripts/generate-watchlist-digest.ts   (writes today's digest)
-   -- R02 routine already ran at 06:30 UTC and read yesterday's digest;
-      for same-day effect this step should eventually precede R02's run (deferred automation, §31)
-2. Read R02's output as today, same as already do.
-3. Run: npx tsx scripts/sync-freshness-alerts.ts        (parses R02 output into freshness.db)
-4. Run: npx tsx scripts/qa-consistency-check.ts          (deterministic rule check against guides.db)
-5. Review any freshness_alerts with status=pending.
-6. For each approved alert: start a new Claude Code session, same two-turn pattern as both
-   August hotfixes (read-only confirm -> explicit approval -> patch script -> QA -> deploy).
+If Telegram alerts and the automated pipeline appear healthy:
+  Just review P0/P1 pushes as they arrive, and the daily digest each morning.
+  No commands to run.
+
+If automation appears down (no digest, no alerts, cron failure suspected):
+  1. ssh root@85.9.203.69 "crontab -l"  — confirm the freshness cron entries are present
+  2. Check for recent freshness.db writes: file mtime / row counts
+  3. Manually run the T0/T2/T3 scripts once, as a bridge, exactly as Revision 02's
+     original manual SOP described — this remains valid as a degraded-mode fallback
+  4. File/track the automation failure as a follow-up, do not let the fallback become
+     the permanent mode silently
 ```
 
 ---
 
-## 37 — Simulation 1: AUG-NEW-02 (retrospective, using this exact architecture)
+## 41 — Simulation 1: AUG-NEW-02 (corrected, includes reconciliation)
 
-- Calendar item imported with `confidence=expected` → `freshness_watchlist` row created automatically by the import script, `check_frequency=weekly` (30-day pre-event window per §19), `next_check_due` set.
-- R02 (reading the generated digest instead of a hardcoded table) rechecks weekly; when the Media Office announcement lands, `source_status→confirmed` and `confidence→confirmed` are detected exactly as the human-run hotfix did.
-- **Separately**, `qa-consistency-check.ts` rule 1 (label/URL authority match, §14) would have flagged the label/URL mismatch **the moment the label was changed** to name "Media Office" while the URL stayed on u.ae — i.e., during the *first* hotfix, not requiring a second, separate read-only audit turn to discover it days/hours later. This is the concrete, named improvement this architecture delivers over what actually happened this week.
-
----
-
-## 38 — Simulation 2: Postponed Concert (conflict scenario)
-
-A ticketed event (`cta_type:"ticket"`, `lifecycle:"event_fixed"`) has its date pushed back by the venue after tickets are already on sale and the calendar/event pages are live.
-- Watchlist entry (weekly cadence, since date isn't in the `confirmed`-forever category for ticketed events — `lifecycle:"event_fixed"` items should default to `weekly` regardless of `confidence`, a refinement to §19 worth noting: *fixed-date ticketed events should never drop to monthly, since postponement risk doesn't end at "confirmed," unlike a government holiday date*).
-- R02-style recheck against the venue's official page detects a new date string ≠ stored date → `freshness_checks.result='changed'` → `freshness_alerts` row, severity=`urgent` (money/tickets involved, per §19's "escalation" logic extended to commercial risk, not just date-confidence).
-- Human review: this is exactly the "true conflict between the record and reality" case, always routed to human review (§13) — never auto-applied, because a ticket-purchase page implicates real user money and CLAUDE.md's YMYL-adjacent caution.
-- Correction: existing patch-script pattern updates `date`, `source_label_en/ru` if the source changed, `last_verified_date`; existing QA/deploy unchanged. `noindex_after`/`archive_action` fields (already present in real data) are exactly the right existing primitive to also flag if the postponement is severe enough to warrant temporarily de-indexing the stale date until the correction deploys — a judgment call left to the human reviewer, not automated.
+- Under the corrected topology, the label/URL mismatch is caught by the registry-based source-integrity rule (§7/§15) — deterministic lookup against registered `u.ae` hostnames, not keyword guessing — flagged the moment the label diverged from the registered entity, same conclusion as Revision 02 but on firmer footing.
+- **New: reconciliation.** When the owner's hotfix session applied the approved correction to `guides.db`, under this architecture it would also close the corresponding `freshness_change_candidates` row (`closed_reason='superseded_by_manual_hotfix'`) and update `freshness_watchlist.next_check_due`/baseline — so the next scheduled consistency scan (T3) does not re-flag the already-fixed record as if the old label were still current. Revision 02 never modeled this step; this is exactly the gap §16/§45 of the correction request identified.
 
 ---
 
-## 39 — Simulation 3: Small-Event High-Recall Discovery
+## 42 — Simulation 2: Postponed Concert (corrected, adaptive cadence + real conflict state)
 
-A small/niche event (not government, not major — e.g. a boutique art fair) is announced only via a local Instagram post and a single Khaleej Times mention, no official organizer site yet.
-- This is squarely **Discovery** (§5), not Monitoring — R01/R05 already handle this class, unchanged by this plan. Source classifies as `L2_media_signal` (Khaleej Times) or `blocked` (Instagram) per §6 — under the routines' existing hard stop ("mark media/social as official source" is a HARD STOP), it cannot be imported as `confirmed`.
-- If the owner chooses to seed it anyway as a calendar-only item (per `CALENDAR_SEED_ITEM_POLICY.md`'s seed-item allowance), it imports with `confidence:"subject_to_official_confirmation"`, `source_status:"monitoring"` — which **automatically** creates a `freshness_watchlist` row under this plan (§10's one-line addition to the import script), immediately entering the Monitoring pipeline without any extra manual step. This is the concrete mechanism connecting Discovery output to Monitoring coverage — today that connection doesn't exist (a seeded item just sits there until someone remembers to recheck it by hand).
-
----
-
-## 40 — Simulation 4: Government-Fee YMYL Change
-
-MOHRE changes a work-permit fee referenced in a guide's step (e.g. `steps.enWhat`/`enAdvice` prose stating "AED 1,010").
-
-- **Current state (§3.2): this cannot be caught by anything in this plan's MVP.** `guides`/`steps` have zero source/confidence columns, and fee amounts live embedded in free-text prose fields (`enWhat`, `enAdvice`), not as a discrete, comparable value — there is no `field_name` to point a `freshness_watchlist` row at without first extracting fee-bearing sentences into a structured field, which is real content-model work, not scripting.
-- This is why guide-field watching is explicitly **deferred** (§31), not MVP — pretending it's covered would be dishonest about what this architecture actually does at launch.
-- What MVP *does* give this scenario indirectly: if MOHRE's fee change is newsworthy enough to appear in Khaleej Times/Gulf News, R01 (Discovery, unchanged) would surface it in the daily radar as a signal, and the owner's existing manual habit (already the only mechanism today) would connect it to the affected guide by hand — no worse than today, not yet better.
-- Recommended (not committed, since it's deferred) first step for FRESH-05+: add a narrow `guide_fee_facts` concept (a small number of hand-identified, high-risk fee/deadline sentences per guide, each given a stable `entity_ref`) rather than attempting to watch arbitrary prose — sequenced explicitly after MVP proves the pattern on calendar/event content, where the fields are already discrete.
+Same scenario as Revision 02 (ticketed event pushed back after tickets are on sale), corrected on two points:
+- Cadence: under §22's adaptive model, this item was **already** on weekly cadence (ticketed fixed-date events never drop below weekly, even confirmed) — not something Revision 02 had to special-case as an exception, it's the default now.
+- If the venue's official page and the ticketing platform disagree on the new date during the transition window, this is now explicitly a `CONFLICT/HOLD` state (§14), not silently resolved by "whichever source is more specific" — both are asked to independently confirm, or the human reviewer resolves it, before any correction is proposed.
 
 ---
 
-## 41 — Pre-Implementation Blockers
+## 43 — Simulation 3: Small-Event High-Recall Discovery (rewritten per §23 of the correction request)
 
-None block writing/approving this plan document itself. For a future FRESH-00 implementation session:
+A small UAE event exists only on: a verified organizer Instagram account, and a small official venue website. No major media coverage. No Visit Dubai listing. No government listing.
 
-1. **Documentation correction needed** (§1): `docs/content-drafts/seo/6d-aug-new-02-source-label-fix-01.md` §15 and the corresponding memory-file follow-up item both describe `db-backup-from-server.sh` as needing a fix that, per this session's independent re-verification, is already available under `db-backup-from-upcloud.sh`/`db-restore-to-upcloud.sh`. Recommend correcting the memory files to point at the working scripts and stop referencing the decommissioned-host pair, in whatever session next touches those files for a "meaningful step" per CLAUDE.md's memory rule — not done in this plan-only turn.
-2. **Local `data/guides.db` is still stale** (predates both August hotfixes) — not a blocker for FRESH-00 (which works against a schema-only new file + a fresh production pull for backfill), but should be refreshed via `db-backup-from-upcloud.sh` before any FRESH-00 backfill step that reads real calendar data locally.
-3. **No blocker from the routines' side** — confirmed their hard-stop rules already permit everything this plan needs from them (reading digest files, writing docs, self-editing their own prompt file) with zero rule changes.
-
----
-
-## 42 — Open Questions
-
-1. **Alert delivery channel** (required by amendment A10, not resolvable from repo evidence): today, "alert delivery" is entirely passive — the owner reads a markdown file when they choose to. No push channel (email/Telegram/Slack/SMS) exists anywhere in the repo or its dependencies. Options for a future decision: (a) stay passive — the owner already checks daily-radar output every morning as a habit, so `freshness_alerts` just becomes one more thing in that same habit (lowest cost, matches current behavior, risk: urgent alerts wait until the owner's next check, which was already true for the Mawlid case — resolved within hours because the owner was actively working the project that day, not because of infrastructure); (b) add a lightweight push (e.g. a systemd-triggered curl to a Telegram bot, previously named as a deferred idea in project history) — real infra work, deferred (§31), needs an owner decision on which channel before any implementation.
-2. **Human-approver role** (required by amendment A10): today there is exactly one operator (owner, per CLAUDE.md "solo founder" framing in memory) who is also the only person who has ever run a patch script or approved a hotfix. This plan assumes the approver is always the owner, with no multi-person review workflow, since no second role exists anywhere in the project's auth model (NextAuth has one admin account, `ADMIN_EMAIL`/`ADMIN_PASSWORD_HASH`, no roles/permissions table). If this assumption is wrong (e.g. a future contractor gets scoped write access), the entire HUMAN REVIEW → APPROVED CORRECTION step needs a role model that doesn't exist yet — flagged, not designed here, since nothing in the repo suggests it's needed soon.
-3. Should `freshness.db`'s `check_frequency` cadence be config (editable without a code change, e.g. a value in the table itself, as designed in §15) or hardcoded per entity type? §15's schema already answers this (it's a per-row column) — flagging only because §19's matrix describes *defaults*, and nothing yet specifies who's allowed to override a default per-item (currently: nobody, since no UI exists — only a script could edit it, meaning any override is itself a manual, scripted, low-frequency operation, consistent with this project's existing low-automation bias).
+**Required outcome under the corrected architecture:**
+- Discovery retains the candidate. It is not discarded for having a social source (§6.2 removes the blanket block).
+- Source identity records both the organizer (`source_kind=verified_social`, `authority_level=primary` for `fact_class=announcement`) and the venue (`source_kind=venue`, `authority_level=primary` for `fact_class=venue_location`).
+- Publication confidence is decided separately from Discovery eligibility: this candidate likely publishes as `confidence:"subject_to_official_confirmation"` given only two sources, not `confirmed` — that's a publication-bar decision, not a Discovery-bar decision (§5's core rule).
+- If published: a canonical event occurrence is created, source evidence is retained in the registry, a `freshness_watchlist` row is registered automatically on import (unconditional per §9, not gated by confidence), and future venue-page/social/ticket-availability changes are monitored at the "free/community event" cadence (§22) — escalating as the event date approaches.
+- This scenario no longer requires Gulf News or Khaleej Times to exist for the event to be discoverable and publishable.
 
 ---
 
-## 43 — Session End-State
+## 44 — Simulation 4: Confirmed Event, Later Date Change (new, per §24 of the correction request)
 
-**REVISION 02 — PLAN COMPLETE**
+A concert has been confirmed for two months; the watchlist entry has stayed at weekly cadence throughout (§22 — ticketed fixed-date events never drop below weekly even once confirmed, so this is not a special case, it's the corrected default). The venue later moves it to a different date.
 
-`IMPLEMENTATION PERFORMED DURING FRESHNESS ARCHITECTURE REVISION 02: NONE`
-
-This document was written to `docs/architecture/freshness-revision-02-plan.md` (the sole permitted new file), followed by a single docs-only commit — `docs: add freshness architecture revision 02 plan` — containing exactly that one file. Push status is reported as a separate explicit fact in the final session report, not assumed.
+- **Why it was still being monitored:** because confidence never gated monitoring eligibility under the corrected lifecycle (§9/§10) — it was on the watchlist continuously since import, cadence unaffected by reaching `confirmed`.
+- **How the new observation is detected:** the next scheduled T1 (R02) recheck against the venue's official page observes a date differing from the stored value → `freshness_observations` row with `result='changed'`.
+- **Source conflict representation, if the ticketing site still shows the old date:** two `primary`-authority sources (venue page = `primary` for `event_date`, ticketing platform = `primary` for `ticket_availability` but only `secondary` for `event_date` unless it independently confirms) disagree — per §14's resolution order, this is evaluated for authority-per-fact-class first; if the ticketing platform is only `secondary` for the date fact, the venue page's observation wins without needing a `CONFLICT/HOLD` state. If both were registered as `primary` for `event_date` specifically, it would enter `CONFLICT/HOLD` instead.
+- **Why no auto-write occurs:** unchanged hard rule (§21/§25) — a `freshness_change_candidates` row is created, never an automatic `guides.db` write.
+- **How the alert reaches the owner:** severity `urgent` (money/ticket risk, §22's escalation logic) → Telegram P0/P1 push (§30).
+- **How the approved patch happens:** identical, unchanged patch-script pattern (§21).
+- **How the monitor baseline reconciles afterward:** identical mechanism to §41/§45 — the candidate closes as `applied`, `freshness_watchlist.next_check_due` resets, and the new date becomes the comparison baseline for future observations.
 
 ---
 
-## 44 — Architecture Decision Box
+## 45 — Manual Hotfix Reconciliation (dedicated design section, per §16 of the correction request)
+
+This was a named Revision 02 requirement that never made it into an explicit design. Corrected here as its own section, not just a simulation footnote:
+
+```
+Manual hotfix applied to guides.db (owner-approved, existing patch-script pattern)
+     │
+     ▼
+Patch script (extended, FRESH-phase work — not built in this doc-only pass) also:
+     1. Looks up any freshness_change_candidates row referencing the same
+        entity_ref + fact_key that is still 'pending' or 'conflict_hold'
+     2. Closes it: verification_status='superseded_by_manual_hotfix',
+        closed_reason recorded, reviewed_by=owner, reviewed_at=now
+     3. Preserves the old freshness_observations rows as history — never deleted,
+        only superseded
+     4. Updates freshness_watchlist.next_check_due to the normal post-correction
+        cadence (§22), so the very next scheduled check compares against the
+        NEW approved value, not the pre-hotfix one
+     5. Monitoring continues uninterrupted against the new baseline
+```
+
+Without this step, the next T1/T3 cycle would compare its observation against the *old* stored value (if the watchlist's implicit "expected value" wasn't updated) and could re-propose reverting the hotfix — exactly the failure mode named in the correction request. This step is why the data model in §17 separates observations from candidates: closing a candidate doesn't erase the evidence trail, it just stops it from re-triggering.
+
+---
+
+## 46 — Simulation 5: Government-Fee YMYL Change (unchanged from Revision 02 — still honestly out of MVP scope)
+
+Unchanged from Revision 02 §40: `guides`/`steps` have zero source/confidence columns, fees live in free-text prose, and this cannot be caught by anything in Track A. Still correctly deferred to Track B, pending a future narrow `guide_fee_facts` concept. No correction needed — Revision 02 was honest here and this pass preserves that honesty.
+
+---
+
+## 47 — Security & Production Write Boundaries — cross-reference
+
+See §25 (moved earlier in this document for logical flow after the topology section) — reaffirmed, not weakened, with the one new narrow credential explicitly flagged for approval.
+
+---
+
+## 48 — Pre-Implementation Blockers (corrected/expanded)
+
+1. **New: UpCloud git-push credential decision** (§18) — requires explicit owner approval before FRESH-03. Not silently assumed. If rejected, T0's delivery mechanism needs a different design (fallback noted in §18, degraded).
+2. **New: cron vs. systemd** — this pass recommends cron (§20) to match existing precedent; if the owner has an infrastructure reason to prefer systemd, that's a cheap decision to revisit before FRESH-01, no architecture change required either way.
+3. Carried from Revision 02, still valid: `scripts/db-backup-from-server.sh`/`db-backup-from-server.sh` reference the decommissioned Cloudways host; the working replacement (`db-backup-from-upcloud.sh`/`db-restore-to-upcloud.sh`) already exists — the stale pair should stop being referenced in docs/memory files, not "fixed." Still not yet applied to memory files, still a follow-up for whichever session next does a "meaningful step" per CLAUDE.md's memory rule.
+4. Carried from Revision 02: local `data/guides.db` is stale — refresh before any FRESH-00 backfill that reads real calendar data locally.
+5. **New: verify UpCloud's actual git remote configuration** (read-only check, e.g. `git remote -v` on the server) before FRESH-03 — this pass did not perform that specific SSH check (deliberately, to avoid any action adjacent to testing write/push capability against a production credential that doesn't exist yet); it's a concrete, cheap, read-only first step for FRESH-00/01.
+
+---
+
+## 49 — Open Questions (narrowed — most of Revision 02's opens now have recommendations)
+
+1. **Alert channel** — no longer fully open; §30 gives a concrete recommendation (Telegram P0/P1). Remaining open sub-question: does the owner already have a Telegram bot/workflow preference, or should FRESH-04 stand one up from scratch?
+2. **Human approver** — no longer open; §31 confirms sole-owner default explicitly.
+3. **Git-push credential approval** (§18/§48) — genuinely open, requires an explicit owner decision, not resolvable from repo evidence.
+4. **Cron vs. systemd** (§20/§48) — minor, low-stakes, revisit if needed.
+5. Carried from Revision 02: per-item cadence override permission — still nobody today (no UI exists), consistent with the project's low-automation bias; not changed by this pass.
+
+---
+
+## 50 — Contradiction Audit (new — explicit checklist per the correction request's acceptance criteria)
+
+| Named contradiction | Resolved how |
+|---|---|
+| "Discovery out of scope" while claiming high recall | Retracted; Discovery is now first-class with a target architecture (§11) and an honest coverage audit (§11.1) |
+| "Social blocked" while needing small-event discovery | Retracted; three-tier social model (§6.2), Simulation 3 rewritten (§43) to prove the small-event case survives |
+| "Server-authoritative freshness.db" while scripts silently assumed local access | Resolved with a concrete, component-by-component execution topology (§18) and a firm single-authoritative-location decision (§19) |
+| "Automatic detect/alert" while the owner had to run the whole chain by hand every morning | Resolved with a real cron-based orchestration mechanism (§20) and explicit T0-T4 ordering that removes the manual dependency (§12); manual procedure is now an explicitly-labeled fallback, not the primary mechanism (§40) |
+| "Confirmed" leading to effectively no monitoring | Retracted; monitoring eligibility now driven by volatility/impact/proximity (§9), adaptive cadence table corrects the flat "confirmed→monthly" default (§22) |
+| "Phase 6E content born monitored" while the pre-6E gate stopped before production monitoring existed | Retracted; gate redefined around actual Track A capability completion (§37/§38), not an arbitrary phase number |
+| "More specific source wins" as a general rule | Narrowed to true specificity gaps only; real authority-conflict resolution order added, with an actual `CONFLICT/HOLD` state (§14) |
+| One `source_level` overloading authority/kind/role | Split into four dimensions: `source_entity`, `source_kind`, `authority_level` (per fact class), `source_role` (§6.1) |
+| Free-form Markdown treated as the permanent machine interface | Named as an explicitly-labeled MVP compatibility bridge, with a versioned JSON/JSONL target contract (§16) |
+| `proposed_change TEXT` as the only audit record | Split into observation → change-candidate → alert (§17), enabling real reconciliation (§45) |
+| Manual hotfix reconciliation never designed | Now a dedicated section (§45) plus a rewritten AUG-NEW-02 simulation (§41) |
+| Alert delivery and human-approver role left fully open | Both given concrete MVP recommendations (§30, §31) |
+
+No section of this document still contains the retracted wording above — this table is the verification step required before committing.
+
+---
+
+## 51 — Session End-State
+
+**REVISION 02.1 — ARCHITECTURE CORRECTION COMPLETE**
+
+`IMPLEMENTATION PERFORMED: NONE`
+
+Only `docs/architecture/freshness-revision-02-plan.md` was modified in this pass. Starting HEAD `4be2df1` (Revision 02's commit, not reverted or rewritten). This correction is recorded as a new local commit on top of it — see the final report for the exact new HEAD, files changed, and commit message. **Not pushed** — held locally per instruction, pending review before FRESH-00. No production, database, script, routine-prompt, or deployment-config change occurred.
+
+---
+
+## 52 — Architecture Decision Box
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ FRESHNESS ARCHITECTURE REVISION 02 — DECISION                             │
+│ FRESHNESS ARCHITECTURE REVISION 02.1 — CORRECTED DECISION                 │
 │                                                                            │
-│ Recommended: isolated data/freshness.db (normalized tables) + two         │
-│ deterministic sync scripts + one deterministic consistency-check script,  │
-│ sitting between the EXISTING unmodified routines (R01-R05) and the        │
-│ EXISTING unmodified human-approval -> patch-script -> QA -> deploy        │
-│ pipeline. No AI agent ever gains a new write permission. guides.db is     │
-│ never touched by any automated process. No content type or severity      │
-│ level ever reaches autopublish.                                          │
+│ Core bet unchanged from Revision 02: isolated freshness state (now        │
+│ concretely UpCloud-colocated with guides.db) + deterministic detection    │
+│ + structured, auditable change candidates + human approval + the proven   │
+│ patch-script/backup/QA/deploy pipeline + no autonomous writes to          │
+│ guides.db, ever.                                                          │
 │                                                                            │
-│ STATUS: PLAN COMPLETE                                                    │
+│ Corrected this pass: Discovery is first-class (not "already solved");     │
+│ social sources are tiered, not blocked; source identity has four          │
+│ separate dimensions, not one ordinal rank; the execution topology is      │
+│ concrete and component-by-component, not asserted; DETECT/ALERT are      │
+│ actually automated via UpCloud cron with explicit T0-before-R02           │
+│ ordering; monitoring eligibility survives "confirmed"; conflicts get a    │
+│ real HOLD state instead of a fetch-order default; manual hotfix           │
+│ reconciliation is designed, not assumed; alert channel and approver       │
+│ role both have concrete MVP defaults instead of open questions.           │
+│                                                                            │
+│ One new production capability is introduced and explicitly flagged for   │
+│ owner approval, not silently assumed: a narrow, docs-path-scoped          │
+│ git-push credential on UpCloud, used only by the new freshness cron       │
+│ scripts, touching no code/schema/DB path.                                │
+│                                                                            │
+│ STATUS: CORRECTION COMPLETE — NOT YET IMPLEMENTED                        │
 └──────────────────────────────────────────────────────────────────────────┘
 ```

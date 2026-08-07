@@ -158,7 +158,7 @@ MD5: 7085b33ec5f1cd5f8ea468bcf38f0ffd
 |---|---|---|
 | July 2026 | 10 | 0 (preserved) |
 | August 2026 | 15 | +7 |
-| September 2026 | 16 | +8 |
+| September 2026 | 16 | +4 |
 | October 2026 | 26 | +12 |
 | November 2026 | 19 | +2 |
 | December 2026 | 11 | +1 |
@@ -265,9 +265,20 @@ Result: INDEXABLE on both pages — PASS
 
 ## 24 — Live QA: hreflang
 
-hreflang tags: NOT present on calendar detail pages.
+**Correction (6D-CLOSURE-01): the original QA used a lowercase  regex. Next.js App Router emits  (camelCase). Re-audit with correct case.**
 
-Pre-existing state — not introduced by this deployment. Noted as P2 future improvement.
+Monthly calendar pages (Oct, Dec EN+RU): 3 hreflang tags each — en, ru, x-default. Reciprocal. PASS.
+Event pages (GITEX, F1 EN+RU): 3 hreflang tags each — en, ru, x-default. Reciprocal. PASS.
+Guide detail pages: 3 hreflang tags each. Reciprocal. PASS.
+
+Hub-page partial hreflang (pre-existing, not introduced by Phase 6D):
+- Events hub (/events, /ru/events): 1 hreflang tag each (opposite locale only; missing self-referential and x-default)
+- Calendar hub (/calendar, /ru/calendar): 1 hreflang tag each (same pattern)
+- EN guides hub (/guides): 0 hreflang tags (RU hub has 3 — asymmetry)
+
+These hub-page gaps are pre-existing Phase 6C implementation issues. P1 backlog item added.
+
+Overall: calendar monthly pages and event pages are CORRECT. Hub pages have a pre-existing partial implementation.
 
 ---
 
@@ -278,7 +289,26 @@ All sampled calendar pages emit three JSON-LD blocks:
 - @type=WebSite: Guidex Consulting
 - @type=WebPage: page-specific title
 
-No per-event Event schema (not required for calendar hub pages). PASS.
+Event pages emit @type=Event schema (F1, GITEX confirmed).
+
+---
+
+## 25b — Correction: Dedicated F1 Event Page Exists (6D-CLOSURE-01)
+
+The original deployment report stated No dedicated F1 sub-page — F1 content is on the December calendar page only. This was incorrect.
+
+Fact:
+- URL: https://guidex-consulting.ae/events/formula-1-abu-dhabi-grand-prix-2026 -> HTTP 200
+- RU: https://guidex-consulting.ae/ru/events/formula-1-abu-dhabi-grand-prix-2026 -> HTTP 200
+- JSON-LD: @type=Event
+- Canonical: self-referential, correct
+- hreflang: 3 tags (en, ru, x-default), fully reciprocal
+- Race dates: 4-6 December; race day Dec 6 confirmed in page text
+- Sitemap: present (EN + RU)
+- DEC-03-F1 in December calendar has detail_url=/events/formula-1-abu-dhabi-grand-prix-2026 (internal link active)
+
+Classification: A — dedicated F1 event page exists and is published.
+The December calendar page is the calendar owner; the event page is the canonical content destination.
 
 ---
 
@@ -389,3 +419,52 @@ Deferred to a future phase. No action in this deployment.
 | DB MD5 | `7085b33ec5f1cd5f8ea468bcf38f0ffd` |
 | Calendar items | Jul=10, Aug=15, Sep=16, Oct=26, Nov=19, Dec=11 |
 | Total Phase 6D new items | 26 |
+
+
+---
+
+## 33 — Closure Corrections (6D-PRODUCTION-DEPLOY-CLOSURE-01)
+
+Phase 6D-PRODUCTION-DEPLOY-CLOSURE-01 corrections applied 2026-08-07:
+
+**C1: September event count corrected**
+- Deployment summary incorrectly stated Sep +8 (total 30). Correct: Sep +4 (total 26).
+- Error source: Phase 6D Stage A verification recorded Sep=8 as pre-6D baseline.
+- Actual pre-6D Sep baseline from backup (guides.db.pre-6d-deploy-20260806-122013): 12 items.
+- The 4 Phase 6C95/96/97 items (SEP-NEW-01 ATB/Solarstone, SEP-09-AGUILERA Christina Aguilera, SEP-10-OAKENFOLD Paul Oakenfold, SEP-R1 The Corrs) were already live before Phase 6D began.
+- Phase 6D added: SEP-6D-01, SEP-6D-02, SEP-6D-03 (Batch-02) + SEP-NEW-DEKA (Batch-03) = 4 items.
+- 26 total is correct. Sep month delta was 12->16 (+4).
+
+**C2: Hreflang QA corrected**
+- Previous QA used lowercase regex; Next.js App Router emits hrefLang (camelCase).
+- Calendar monthly pages: hreflang CORRECT (3 tags, reciprocal, x-default). PASS.
+- Event pages: hreflang CORRECT. PASS.
+- Hub pages: pre-existing partial implementation (not introduced by Phase 6D). P1 backlog.
+
+**C3: F1 event page existence corrected**
+- Previous report: No dedicated F1 sub-page.
+- Correct: /events/formula-1-abu-dhabi-grand-prix-2026 is published, indexed, in sitemap (EN+RU).
+- @type=Event JSON-LD present. Dates confirmed correct (4-6 Dec, race day Dec 6).
+
+**C4: GITEX event URL corrected**
+- Previous QA tested /events/gitex-2026 (404). Correct slug: gitex-global-2026.
+- /events/gitex-global-2026 -> 200. hreflang 3 tags. Canonical correct. DWTC/Scale Summit/Expo City content present.
+
+**C5: Memory-guard.sh root cause**
+- Script at /var/www/guidex/.claude/memory-guard.sh has correct permissions (-rwxr-xr-x).
+- Script runs correctly on the production server (exit code 0).
+- The Operation not permitted error was in the LOCAL Mac Claude Code session due to macOS TCC (Transparency, Consent, and Control) filesystem access restriction.
+- The entire local filesystem was inaccessible in that session (even  failed).
+- Fix: grant Claude Code Full Disk Access in macOS System Settings > Privacy & Security > Full Disk Access.
+- No script change needed. No production change needed.
+
+**Pre-6D baseline correction:**
+| Month | Documented pre-6D | Actual pre-6D (from backup) | Phase 6D new |
+|---|---|---|---|
+| July | 10 | 10 | 0 |
+| August | 8 | 8 | +7 |
+| September | 8 (WRONG) | 12 | +4 |
+| October | 14 | 14 | +12 |
+| November | 17 | 17 | +2 |
+| December | 10 | 10 | +1 |
+| **Total** | **67** | **71** | **26** |

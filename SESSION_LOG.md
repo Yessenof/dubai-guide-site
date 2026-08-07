@@ -5,6 +5,26 @@ Trivial edits (typos, comment fixes) do not get entries.
 
 ---
 
+## 2026-08-07 — Phase 6D-PRODUCTION-DEPLOY-CLOSURE-01 — post-deploy closure corrections
+
+Five factual corrections applied to deployment documentation (no production DB or code changes):
+
+C1 Sep count: Deployment summary stated Sep +8. Actual: Sep +4. Error source: Phase 6D Stage A recorded Sep pre-6D = 8, but actual pre-6D Sep = 12 (4 items SEP-NEW-01/SEP-09-AGUILERA/SEP-10-OAKENFOLD/SEP-R1 added in Phase 6C95/96/97 before Phase 6D). Phase 6D added SEP-6D-01/02/03 + SEP-NEW-DEKA = 4 items. Total 26 new items is CORRECT; only the per-month Sep breakdown was wrong.
+
+C2 Hreflang QA corrected: Previous QA used lowercase hreflang regex; Next.js App Router emits hrefLang (camelCase). Re-audit with correct case: calendar monthly pages have 3 hreflang tags (en/ru/x-default, reciprocal) -- PASS. Event pages same -- PASS. Hub pages have pre-existing partial implementation (1 tag, opposite locale only, missing self-ref and x-default) -- pre-existing P1 backlog.
+
+C3 F1 event page: Previous report said no dedicated F1 sub-page. WRONG. /events/formula-1-abu-dhabi-grand-prix-2026 -> HTTP 200, @type=Event JSON-LD, hreflang 3 tags, in sitemap EN+RU, dates 4-6 Dec race day Dec 6 confirmed. DEC-03-F1 in December calendar links to this page via detail_url.
+
+C4 GITEX URL: Previous QA tested wrong slug (gitex-2026, 404). Correct slug: gitex-global-2026. /events/gitex-global-2026 -> 200, hreflang 3 tags, DWTC+Scale Summit+Expo City content present.
+
+C5 Memory-guard.sh: Script has correct permissions on server (-rwxr-xr-x, exit 0). Local Mac Operation not permitted was macOS TCC filesystem access restriction on the Claude Code session (entire local filesystem inaccessible). Fix: grant Claude Code Full Disk Access in macOS System Settings. No script change needed.
+
+Git bundle created: /tmp/guidex-phase6d-deploy-docs.bundle (8.7K, MD5: a25528a37a2a802fd16b495d2b5bbcc6). Transfer method: scp. Bundle contains exactly 48bc3c3 (docs commit) with base 5da1015.
+
+Corrective commit: this entry. Deployment report updated (Section 13 Sep count, Sections 24-25 hreflang/F1, Section 33 closure corrections). All memory files updated.
+
+---
+
 ## 2026-08-07 — Phase 6D-CALENDAR-Q3Q4-2026-PRODUCTION-DEPLOY-01 COMPLETE — 26 calendar items live
 
 All Phase 6D calendar work (commits 8bacd4c..5da1015) deployed to production. 4 idempotent TypeScript patch scripts applied server-side against production DB (never overwritten from local): Batch-01 (7 new Aug/Nov/Dec items), Batch-02 (11 new Aug/Sep/Oct items + OCT-06-MARX date fix: 2026-10-05 -> 2026-10-03), Batch-03 (8 new Sep/Oct items + Boris Grebenshikov date fix: 2026-10-24 -> 2026-10-29), Final-Correction-01 (DEC-04-GITEX split venue label/brief; OCT-06-MARX dead Platinumlist URL -> CCA official). 3 blockers resolved: (1) production git divergence at f6e9eae (docs-only commit never pushed -- reset hard to origin/main 5da1015); (2) Batch-01 used __dirname-relative DB path with no env var override (fixed commit 5da1015); (3) SQLite WAL mode: post-patch MD5 unchanged -- ran PRAGMA wal_checkpoint(FULL), 23/23 pages checkpointed, DB 884K -> 960K, MD5 7085b33ec5f1cd5f8ea468bcf38f0ffd. Rehearsal pass before production writes confirmed idempotency. Build: 92/92, 0 TS errors. PM2 reload: 1 restart, 0 unstable. Live QA: all mandatory checks pass -- Marx CCA URL (0 dead refs), F1 4-6 Dec (no stale Dec 5-7), July 10 items preserved, noindex absent, JSON-LD OK, sitemap 11 EN + 11 RU. Final DB: Jul=10, Aug=15, Sep=16, Oct=26, Nov=19, Dec=11. Pre-deploy backup: guides.db.pre-6d-deploy-20260806-122013. Post-patch backup: guides.db.post-6d-patches-20260807-134006. Deployment report: docs/content-drafts/seo/6d-calendar-q3q4-2026-production-deploy-01.md. GSC Wave 1 URLs documented for manual submission. P1 stub backlog (13 items, both brief_en+ru empty) deferred.

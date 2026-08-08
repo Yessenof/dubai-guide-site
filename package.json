@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "freshness:migrate": "tsx scripts/freshness/migrate.ts",
+    "freshness:integrity": "tsx scripts/freshness/integrity-check.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

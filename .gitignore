@@ -53,6 +53,12 @@ data/guides.db-shm
 data/guides.db-wal
 data/guides.db.backup-*
 
+# SQLite — freshness DB (isolated, never guides.db) and WAL auxiliary files
+data/freshness.db
+data/freshness.db-shm
+data/freshness.db-wal
+data/freshness.db.backup-*
+
 # Production DB backups (local copies pulled from Cloudways)
 # Directory is tracked via .gitkeep; actual backup files are not committed.
 backups/production-db/*.db*

@@ -25,21 +25,48 @@ export interface ValidationResult {
 
 // ─── Shared helpers ─────────────────────────────────────────────────────────
 
-const ISO_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/;
-const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const ISO_TIMESTAMP = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?Z$/;
+const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
 function isNonEmptyString(v: unknown): v is string {
   return typeof v === "string" && v.trim().length > 0;
 }
 
+/**
+ * Real calendar validity, not just parseable-by-Date.parse(). Date.parse
+ * (and `new Date(...)`) silently roll an out-of-range day into the next
+ * month (e.g. Feb 30 -> Mar 2, Feb 29 in a non-leap year -> Mar 1), so a
+ * regex + Date.parse check alone would accept impossible dates. This
+ * reconstructs the date from its numeric components and rejects unless the
+ * reconstruction reports back the exact same year/month/day — leap years
+ * are handled correctly for free because Date.UTC's own day-count rollover
+ * follows the standard Gregorian rule.
+ */
+function isValidCalendarDate(year: number, month: number, day: number): boolean {
+  if (month < 1 || month > 12) return false;
+  if (day < 1 || day > 31) return false;
+  const reconstructed = new Date(Date.UTC(year, month - 1, day));
+  return (
+    reconstructed.getUTCFullYear() === year &&
+    reconstructed.getUTCMonth() === month - 1 &&
+    reconstructed.getUTCDate() === day
+  );
+}
+
 export function isValidIsoTimestamp(v: string): boolean {
-  if (!ISO_TIMESTAMP.test(v)) return false;
-  return !Number.isNaN(Date.parse(v));
+  const match = ISO_TIMESTAMP.exec(v);
+  if (!match) return false;
+  const [, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr] = match;
+  if (!isValidCalendarDate(Number(yearStr), Number(monthStr), Number(dayStr))) return false;
+  // The regex alone permits 00-99 for each time component — enforce real ranges explicitly.
+  return Number(hourStr) <= 23 && Number(minuteStr) <= 59 && Number(secondStr) <= 59;
 }
 
 export function isValidIsoDate(v: string): boolean {
-  if (!ISO_DATE.test(v)) return false;
-  return !Number.isNaN(Date.parse(v));
+  const match = ISO_DATE.exec(v);
+  if (!match) return false;
+  const [, yearStr, monthStr, dayStr] = match;
+  return isValidCalendarDate(Number(yearStr), Number(monthStr), Number(dayStr));
 }
 
 function result(errors: string[], warnings: string[] = []): ValidationResult {

@@ -86,6 +86,43 @@
         "effectiveAt": "next Tuesday",
         "result": "unchanged"
       }
+    },
+    {
+      "caseName": "impossible observedAt timestamp (Feb 30)",
+      "input": {
+        "observationId": "obs-7",
+        "entityType": "calendar_item",
+        "entityRef": "AUG-NEW-02",
+        "factKey": "date",
+        "sourceRef": "src-1",
+        "observedAt": "2026-02-30T08:00:00.000Z",
+        "result": "unchanged"
+      }
+    },
+    {
+      "caseName": "impossible observedAt timestamp (Feb 29 in a non-leap year)",
+      "input": {
+        "observationId": "obs-8",
+        "entityType": "calendar_item",
+        "entityRef": "AUG-NEW-02",
+        "factKey": "date",
+        "sourceRef": "src-1",
+        "observedAt": "2026-02-29T00:00:00.000Z",
+        "result": "unchanged"
+      }
+    },
+    {
+      "caseName": "impossible effectiveAt date-only value (Apr 31)",
+      "input": {
+        "observationId": "obs-9",
+        "entityType": "calendar_item",
+        "entityRef": "AUG-NEW-02",
+        "factKey": "date",
+        "sourceRef": "src-1",
+        "observedAt": "2026-08-08T06:31:12Z",
+        "effectiveAt": "2026-04-31",
+        "result": "unchanged"
+      }
     }
   ]
 }

@@ -299,6 +299,36 @@ describe("temporal semantics", () => {
     assert.equal(isValidIsoDate("next Tuesday"), false);
   });
 
+  test("isValidIsoDate rejects impossible calendar dates instead of letting Date.parse roll them over", () => {
+    assert.equal(isValidIsoDate("2026-08-28"), true);
+    assert.equal(isValidIsoDate("2026-02-28"), true);
+    assert.equal(isValidIsoDate("2024-02-29"), true, "2024 is a leap year");
+    assert.equal(isValidIsoDate("2026-02-29"), false, "2026 is not a leap year");
+    assert.equal(isValidIsoDate("2026-02-30"), false, "February never has 30 days");
+    assert.equal(isValidIsoDate("2026-04-31"), false, "April has 30 days");
+    assert.equal(isValidIsoDate("2026-13-01"), false, "month 13 does not exist");
+    assert.equal(isValidIsoDate("2026-00-10"), false, "month 0 does not exist");
+  });
+
+  test("isValidIsoDate applies the Gregorian century leap-year rule", () => {
+    assert.equal(isValidIsoDate("2000-02-29"), true, "2000 is divisible by 400 — a leap year");
+    assert.equal(isValidIsoDate("2100-02-29"), false, "2100 is divisible by 100 but not 400 — not a leap year");
+  });
+
+  test("isValidIsoTimestamp rejects impossible calendar dates even with an otherwise well-formed UTC timestamp", () => {
+    assert.equal(isValidIsoTimestamp("2026-02-30T08:00:00.000Z"), false);
+    assert.equal(isValidIsoTimestamp("2026-02-29T00:00:00.000Z"), false, "2026 is not a leap year");
+    assert.equal(isValidIsoTimestamp("2026-04-31T00:00:00.000Z"), false);
+    assert.equal(isValidIsoTimestamp("2026-08-08T25:00:00.000Z"), false, "hour 25 is out of range");
+    assert.equal(isValidIsoTimestamp("2026-08-08T06:61:00.000Z"), false, "minute 61 is out of range");
+    assert.equal(isValidIsoTimestamp("2026-08-08T06:31:61.000Z"), false, "second 61 is out of range");
+  });
+
+  test("isValidIsoTimestamp still accepts valid timestamps, including a leap-day timestamp", () => {
+    assert.equal(isValidIsoTimestamp("2026-08-08T08:00:00.000Z"), true);
+    assert.equal(isValidIsoTimestamp("2024-02-29T00:00:00.000Z"), true, "2024 is a leap year");
+  });
+
   test("a date-only value round-trips unchanged with no UTC day-shift", () => {
     const dbPath = freshTestDb("date-roundtrip");
     const db = openDb(dbPath);

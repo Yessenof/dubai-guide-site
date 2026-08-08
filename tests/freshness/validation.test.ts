@@ -39,8 +39,8 @@ describe("validateNormalizedObservation — malformed cases", () => {
     });
   }
 
-  test("all six mandatory malformed cases from the fixture are actually exercised", () => {
-    assert.equal(fixture.malformed.length, 6);
+  test("all nine mandatory malformed cases from the fixture are actually exercised", () => {
+    assert.equal(fixture.malformed.length, 9);
   });
 });
 

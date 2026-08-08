@@ -1,0 +1,51 @@
+[
+  {
+    "sourceEntity": "UAE Government Portal",
+    "sourceKind": "government",
+    "canonicalHostnames": ["u.ae"],
+    "labelEn": "UAE Government Portal",
+    "labelRu": "Правительство ОАЭ"
+  },
+  {
+    "sourceEntity": "GDRFA Dubai",
+    "sourceKind": "government",
+    "canonicalHostnames": ["gdrfad.gov.ae", "gdrfa.gov.ae"],
+    "labelEn": "GDRFA Dubai",
+    "labelRu": "ГУВД Дубая"
+  },
+  {
+    "sourceEntity": "Coca-Cola Arena",
+    "sourceKind": "venue",
+    "canonicalHostnames": ["coca-colaarena.com"],
+    "labelEn": "Coca-Cola Arena",
+    "labelRu": ""
+  },
+  {
+    "sourceEntity": "Platinumlist",
+    "sourceKind": "ticketing",
+    "canonicalHostnames": ["platinumlist.net"],
+    "labelEn": "Platinumlist",
+    "labelRu": ""
+  },
+  {
+    "sourceEntity": "Nightfall Presents (verified organizer)",
+    "sourceKind": "verified_social",
+    "canonicalHostnames": ["nightfallpresents.example"],
+    "labelEn": "Nightfall Presents (verified organizer)",
+    "labelRu": ""
+  },
+  {
+    "sourceEntity": "The Yard Dubai",
+    "sourceKind": "venue",
+    "canonicalHostnames": ["theyarddubai.com"],
+    "labelEn": "The Yard Dubai",
+    "labelRu": ""
+  },
+  {
+    "sourceEntity": "DXB Events Repost (fan account)",
+    "sourceKind": "unverified_social",
+    "canonicalHostnames": ["dxbeventsrepost.example"],
+    "labelEn": "DXB Events Repost (fan account)",
+    "labelRu": ""
+  }
+]

@@ -1,0 +1,91 @@
+{
+  "valid": {
+    "schemaVersion": 1,
+    "runId": "run-2026-08-08-0630",
+    "observationId": "obs-2026-08-08-0001",
+    "entityType": "calendar_item",
+    "entityRef": "AUG-NEW-02",
+    "factKey": "source_label_en",
+    "sourceRef": "src-uae-gov-portal",
+    "observedValue": "UAE Government Portal",
+    "observedAt": "2026-08-08T06:31:12.000Z",
+    "publishedAt": "2026-08-07T10:00:00Z",
+    "effectiveAt": "2026-08-07",
+    "result": "unchanged",
+    "evidenceRef": "https://u.ae/en/about-the-uae/leadership"
+  },
+  "malformed": [
+    {
+      "caseName": "missing observationId",
+      "input": {
+        "runId": "run-1",
+        "entityType": "calendar_item",
+        "entityRef": "AUG-NEW-02",
+        "factKey": "date",
+        "sourceRef": "src-1",
+        "observedAt": "2026-08-08T06:31:12Z",
+        "result": "unchanged"
+      }
+    },
+    {
+      "caseName": "invalid entityType",
+      "input": {
+        "observationId": "obs-2",
+        "entityType": "blog_post",
+        "entityRef": "AUG-NEW-02",
+        "factKey": "date",
+        "sourceRef": "src-1",
+        "observedAt": "2026-08-08T06:31:12Z",
+        "result": "unchanged"
+      }
+    },
+    {
+      "caseName": "invalid result",
+      "input": {
+        "observationId": "obs-3",
+        "entityType": "calendar_item",
+        "entityRef": "AUG-NEW-02",
+        "factKey": "date",
+        "sourceRef": "src-1",
+        "observedAt": "2026-08-08T06:31:12Z",
+        "result": "probably_fine"
+      }
+    },
+    {
+      "caseName": "invalid observedAt timestamp",
+      "input": {
+        "observationId": "obs-4",
+        "entityType": "calendar_item",
+        "entityRef": "AUG-NEW-02",
+        "factKey": "date",
+        "sourceRef": "src-1",
+        "observedAt": "08/08/2026 06:31am",
+        "result": "unchanged"
+      }
+    },
+    {
+      "caseName": "missing sourceRef",
+      "input": {
+        "observationId": "obs-5",
+        "entityType": "calendar_item",
+        "entityRef": "AUG-NEW-02",
+        "factKey": "date",
+        "observedAt": "2026-08-08T06:31:12Z",
+        "result": "unchanged"
+      }
+    },
+    {
+      "caseName": "malformed effectiveAt (neither date nor timestamp)",
+      "input": {
+        "observationId": "obs-6",
+        "entityType": "calendar_item",
+        "entityRef": "AUG-NEW-02",
+        "factKey": "date",
+        "sourceRef": "src-1",
+        "observedAt": "2026-08-08T06:31:12Z",
+        "effectiveAt": "next Tuesday",
+        "result": "unchanged"
+      }
+    }
+  ]
+}

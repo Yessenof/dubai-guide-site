@@ -3,14 +3,15 @@
 // Usage: npx tsx scripts/freshness/migrate.ts --db <path>
 //
 // Never defaults to a database path — the caller must always name the
-// target explicitly. Refuses any path whose basename is "guides.db" so it
-// can never be pointed at the production content database by accident.
+// target explicitly. Refuses any path that resolves to the real content
+// database (see lib/freshness/path-safety.ts) so it can never be pointed
+// at guides.db by accident, including via symlink or case aliasing.
 
 import Database from "better-sqlite3";
 import fs from "node:fs";
 import path from "node:path";
+import { assertSafeFreshnessDbPath } from "../../lib/freshness/path-safety";
 
-const GUIDES_DB_BASENAME = "guides.db";
 const MIGRATIONS_DIR = path.join(process.cwd(), "scripts", "freshness", "migrations");
 
 function fail(message: string): never {
@@ -30,11 +31,10 @@ function parseDbPath(argv: string[]): string {
 }
 
 function assertNotGuidesDb(dbPath: string): void {
-  if (path.basename(dbPath) === GUIDES_DB_BASENAME) {
-    fail(
-      `Refusing to run: target path "${dbPath}" has basename "${GUIDES_DB_BASENAME}". ` +
-        "This runner is for freshness.db only and must never touch the guides database."
-    );
+  try {
+    assertSafeFreshnessDbPath(dbPath);
+  } catch (err) {
+    fail((err as Error).message);
   }
 }
 

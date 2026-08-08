@@ -3,13 +3,15 @@
 // Usage: npx tsx scripts/freshness/integrity-check.ts --db <path>
 //
 // Never defaults to a database path — the caller must always name the
-// target explicitly. Refuses any path whose basename is "guides.db".
+// target explicitly. Refuses any path that resolves to the real content
+// database (see lib/freshness/path-safety.ts), including via symlink or
+// case aliasing — readonly mode doesn't excuse producing a misleading
+// integrity report against the wrong file.
 
 import Database from "better-sqlite3";
 import fs from "node:fs";
 import path from "node:path";
-
-const GUIDES_DB_BASENAME = "guides.db";
+import { assertSafeFreshnessDbPath } from "../../lib/freshness/path-safety";
 
 const REQUIRED_TABLES = [
   "schema_migrations",
@@ -50,8 +52,10 @@ function parseDbPath(argv: string[]): string {
 }
 
 function assertNotGuidesDb(dbPath: string): void {
-  if (path.basename(dbPath) === GUIDES_DB_BASENAME) {
-    fail(`Refusing to inspect a path named "${GUIDES_DB_BASENAME}". This command is for freshness.db only.`);
+  try {
+    assertSafeFreshnessDbPath(dbPath);
+  } catch (err) {
+    fail((err as Error).message);
   }
 }
 

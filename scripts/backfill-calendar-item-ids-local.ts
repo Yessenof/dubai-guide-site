@@ -13,15 +13,27 @@
  *
  * Safety model:
  *   - Refuses to run without an explicit --db <path> (no default path).
- *   - Refuses any path containing a known production directory segment.
- *   - Dry-run by default; only --apply performs a write.
- *   - Preconditions (exact 123/102/21 counts, per-item content fingerprint
- *     match, id uniqueness) must all pass before any write is attempted --
- *     a fingerprint mismatch means the target item's content has drifted
- *     since the ID-01 audit, and the run aborts rather than patching stale
- *     data.
- *   - --apply backs up the DB file first, then performs all 21 assignments
- *     (5 UPDATE statements, one per page) inside a single SQLite transaction.
+ *   - Refuses any --db path that resolves -- after following symlinks (a
+ *     symlinked final file or a symlinked parent directory) and ignoring
+ *     case -- to a location under a known production root. Resolution
+ *     happens via resolveRealPathBestEffort() BEFORE the safety comparison,
+ *     so a symlink alias or a case-variant path cannot bypass it the way a
+ *     raw substring check on the unresolved argument could.
+ *   - Dry-run by default; only --apply performs a write. --apply also
+ *     requires an explicit --backup-dir <path> -- there is no implicit
+ *     cwd-relative backup location.
+ *   - Preconditions (exact 123/102/21 counts, zero exact/case-insensitive
+ *     duplicate ids across the ENTIRE existing 102-item corpus -- not just
+ *     the 21 proposed ids -- per-item content fingerprint match, and
+ *     proposed-id uniqueness) must all pass before any backup or write is
+ *     attempted. A fingerprint mismatch means the target item's content has
+ *     drifted since the ID-01 audit, and the run aborts rather than
+ *     patching stale data.
+ *   - --apply backs up the DB file first (exclusive create -- a backup
+ *     write can never silently overwrite a prior backup; a naming collision
+ *     or an unwritable --backup-dir aborts before any transaction starts),
+ *     then performs all 21 assignments (5 UPDATE statements, one per page)
+ *     inside a single SQLite transaction.
  *   - Post-write validation re-reads the DB and checks: final counts are
  *     123/123/0, every other field on every touched item is byte-for-byte
  *     unchanged (deep-equal, id key excluded), and there are zero exact or
@@ -29,29 +41,37 @@
  *     restores the pre-write backup and exits non-zero.
  *
  * Run:
- *   npx tsx scripts/backfill-calendar-item-ids-local.ts --db data/guides.db            (dry run, no writes)
- *   npx tsx scripts/backfill-calendar-item-ids-local.ts --db data/guides.db --apply    (writes, after backup)
+ *   npx tsx scripts/backfill-calendar-item-ids-local.ts --db data/guides.db
+ *     (dry run, no writes, --backup-dir not needed)
+ *   npx tsx scripts/backfill-calendar-item-ids-local.ts --db data/guides.db --apply --backup-dir backups/local
+ *     (writes, after an exclusively-created backup in the given directory)
  */
 
 import Database from "better-sqlite3";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { resolveRealPathBestEffort } from "../lib/freshness/path-safety";
+import { findDuplicates, isUnderProtectedRoot, PRODUCTION_ROOTS, createExclusiveBackup } from "./lib/calendar-backfill-safety";
 
 // ---- CLI args ---------------------------------------------------------------
 
-function parseArgs(argv: string[]): { dbPath?: string; apply: boolean } {
+function parseArgs(argv: string[]): { dbPath?: string; apply: boolean; backupDir?: string } {
   let dbPath: string | undefined;
   let apply = false;
+  let backupDir: string | undefined;
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--db") {
       dbPath = argv[i + 1];
       i++;
     } else if (argv[i] === "--apply") {
       apply = true;
+    } else if (argv[i] === "--backup-dir") {
+      backupDir = argv[i + 1];
+      i++;
     }
   }
-  return { dbPath, apply };
+  return { dbPath, apply, backupDir };
 }
 
 function log(msg: string): void {
@@ -65,31 +85,63 @@ function abort(msg: string): never {
   process.exit(1);
 }
 
-const { dbPath, apply } = parseArgs(process.argv.slice(2));
+const { dbPath, apply, backupDir } = parseArgs(process.argv.slice(2));
 
 if (!dbPath) {
   abort(
     "Missing required --db <path> argument.\n" +
       "  Dry run: npx tsx scripts/backfill-calendar-item-ids-local.ts --db data/guides.db\n" +
-      "  Apply:   npx tsx scripts/backfill-calendar-item-ids-local.ts --db data/guides.db --apply"
+      "  Apply:   npx tsx scripts/backfill-calendar-item-ids-local.ts --db data/guides.db --apply --backup-dir <dir>"
+  );
+}
+
+if (apply && !backupDir) {
+  abort(
+    "Missing required --backup-dir <path> for --apply (no implicit cwd-relative backup location).\n" +
+      "  Apply: npx tsx scripts/backfill-calendar-item-ids-local.ts --db data/guides.db --apply --backup-dir backups/local"
+  );
+}
+
+// ---- Production-path guard ---------------------------------------------------
+// Refuses any --db path that resolves -- after following symlinks (a
+// symlinked final file, or a symlinked parent directory) and ignoring case
+// -- to a location under a known production root. Resolution happens BEFORE
+// the safety comparison, via the same real-path helper used by the
+// freshness tooling's guides.db guard (lib/freshness/path-safety.ts), so a
+// symlink alias or a case-variant path cannot bypass it the way a raw
+// substring check on the unresolved argument could. The comparison is also
+// path-segment aware (exact root, or root + separator) so a sibling
+// directory that merely shares a prefix (e.g. "/var/www-old/") is not a
+// false positive.
+//
+// The protected roots themselves are also passed through
+// resolveRealPathBestEffort before comparison. On macOS /etc, /tmp and /var
+// are themselves symlinks into /private/..., so a literal "/var/www" path
+// resolves to "/private/var/www" -- comparing an already-resolved --db
+// path against the unresolved literal root would silently fail to match on
+// exactly that class of host. Resolving both sides the same way closes it.
+const REAL_DB_PATH = resolveRealPathBestEffort(dbPath);
+const RESOLVED_PRODUCTION_ROOTS = PRODUCTION_ROOTS.map((literal) => ({
+  literal,
+  resolved: resolveRealPathBestEffort(literal),
+}));
+const matchedProductionRoot = RESOLVED_PRODUCTION_ROOTS.find((r) => isUnderProtectedRoot(REAL_DB_PATH, r.resolved));
+if (matchedProductionRoot) {
+  abort(
+    `Production path detected: --db "${dbPath}" resolves to real path "${REAL_DB_PATH}", which is ` +
+      `under the protected root "${matchedProductionRoot.literal}" (resolved: "${matchedProductionRoot.resolved}") ` +
+      "once symlinks and case are resolved away. This script is LOCAL ONLY."
   );
 }
 
 const RESOLVED_DB_PATH = path.resolve(process.cwd(), dbPath);
-
-// Hard production-path guard, mirroring scripts/fix-calendar-label-dashes-local.ts.
-const PRODUCTION_PATHS = ["/var/www/", "/var/app/", "/srv/www/"];
-for (const p of PRODUCTION_PATHS) {
-  if (RESOLVED_DB_PATH.includes(p)) {
-    abort(`Production path detected in --db: ${RESOLVED_DB_PATH}. This script is LOCAL ONLY.`);
-  }
-}
-
 if (!fs.existsSync(RESOLVED_DB_PATH)) abort(`DB not found: ${RESOLVED_DB_PATH}`);
 
 section("PRE-FRESH-01-ID-02 -- Calendar Item Identity Backfill");
 log(`  DB path:   ${RESOLVED_DB_PATH}`);
+if (REAL_DB_PATH !== RESOLVED_DB_PATH) log(`  Real path: ${REAL_DB_PATH}  (symlink-resolved)`);
 log(`  Mode:      ${apply ? "APPLY (will write)" : "DRY RUN (no writes)"}`);
+if (apply) log(`  Backup dir: ${path.resolve(process.cwd(), backupDir!)}`);
 log(`  Timestamp: ${new Date().toISOString()}`);
 
 // ---- Canonical fingerprint ---------------------------------------------------
@@ -111,7 +163,8 @@ function canonicalize(value: unknown): unknown {
 }
 
 function fingerprint(item: Record<string, unknown>): string {
-  const { id: _id, ...rest } = item;
+  const rest = { ...item };
+  delete rest.id;
   return crypto.createHash("sha256").update(JSON.stringify(canonicalize(rest))).digest("hex");
 }
 
@@ -208,12 +261,30 @@ for (const t of TARGETS) {
 }
 log(`  Fingerprint precondition: PASS (all ${TARGETS.length} target items match the ID-01 audit snapshot)`);
 
+// Existing-corpus duplicate-id precondition: the entire existing 102-item
+// corpus (not just the 21 proposed ids) must already be free of exact and
+// case-insensitive duplicate ids BEFORE we add anything. A pre-existing
+// duplicate is a data problem unrelated to this backfill and must abort the
+// run before any backup or write is attempted.
+const existingIds = allItemsBefore.map((it) => it.id).filter((v): v is string => typeof v === "string" && v.length > 0);
+
+const existingExactDupes = findDuplicates(existingIds);
+if (existingExactDupes.length > 0) {
+  abort(`Pre-existing exact duplicate id(s) found in the existing ${existingIds.length}-item corpus: ${existingExactDupes.join(", ")}. Fix the data before running this backfill.`);
+}
+const existingLowerDupes = findDuplicates(existingIds.map((v) => v.toLowerCase()));
+if (existingLowerDupes.length > 0) {
+  abort(`Pre-existing case-insensitive duplicate id(s) found in the existing ${existingIds.length}-item corpus: ${existingLowerDupes.join(", ")}. Fix the data before running this backfill.`);
+}
+log(`  Existing-corpus duplicate precondition: PASS (0 exact, 0 case-insensitive duplicates across ${existingIds.length} existing ids)`);
+
 // Proposed-id uniqueness: among themselves, and against the existing 102.
 const proposedIds = TARGETS.map((t) => t.id);
-const proposedSet = new Set(proposedIds);
-if (proposedSet.size !== proposedIds.length) abort("Proposed IDs are not unique among themselves.");
+const proposedExactDupes = findDuplicates(proposedIds);
+if (proposedExactDupes.length > 0) abort(`Proposed IDs are not unique among themselves: ${proposedExactDupes.join(", ")}`);
+const proposedLowerDupes = findDuplicates(proposedIds.map((v) => v.toLowerCase()));
+if (proposedLowerDupes.length > 0) abort(`Proposed IDs are not case-insensitively unique among themselves: ${proposedLowerDupes.join(", ")}`);
 
-const existingIds = allItemsBefore.map((it) => it.id).filter((v): v is string => typeof v === "string" && v.length > 0);
 const existingSet = new Set(existingIds);
 for (const id of proposedIds) {
   if (existingSet.has(id)) abort(`Proposed id "${id}" collides with an existing id.`);
@@ -238,13 +309,22 @@ if (!apply) {
 
 section("Backup");
 
-const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19).replace("T", "-");
-const backupDir = path.resolve(process.cwd(), "backups", "local");
-fs.mkdirSync(backupDir, { recursive: true });
-const backupPath = path.join(backupDir, `guides-db-pre-id-backfill-${ts}.db`);
-fs.copyFileSync(RESOLVED_DB_PATH, backupPath);
+// Exclusive-create backup: fs.constants.COPYFILE_EXCL makes the OS refuse
+// the copy if the destination already exists, so a backup write can never
+// silently overwrite a prior backup (TOCTOU-safe -- there is no separate
+// existence check to race against). If a generated name is already taken
+// (e.g. two runs in the same millisecond), a fresh name is generated and
+// retried; the run only aborts if that keeps failing, or if the directory
+// itself cannot be created/written.
+const RESOLVED_BACKUP_DIR = path.resolve(process.cwd(), backupDir!);
+let backupPath: string;
+try {
+  backupPath = createExclusiveBackup(RESOLVED_DB_PATH, RESOLVED_BACKUP_DIR);
+} catch (err) {
+  abort(`Backup creation failed for --backup-dir "${RESOLVED_BACKUP_DIR}": ${(err as Error).message}`);
+}
 if (fs.statSync(backupPath).size === 0) abort("Backup is empty.");
-log(`  Backup: ${backupPath}  PASS`);
+log(`  Backup: ${backupPath}  PASS (exclusive create)`);
 
 section("Applying backfill (single transaction)");
 

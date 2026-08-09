@@ -353,6 +353,16 @@ export interface ApplyOptions {
    * partial writes) rather than a partially-applied backfill.
    */
   forceFailureAfterUpdates?: number;
+
+  /**
+   * TEST-ONLY. Never set by the CLI script. Called synchronously
+   * immediately after the in-transaction digest recheck passes, before any
+   * target recheck or UPDATE. Exists solely so a test can attempt a
+   * concurrent second-connection write at that exact point and observe that
+   * it fails/blocks (SQLITE_BUSY) -- proving the BEGIN IMMEDIATE write
+   * reservation is already held by then, not just eventually acquired.
+   */
+  testOnlyHookAfterDigestCheck?: () => void;
 }
 
 function pageMetadata(row: Record<string, unknown>): Record<string, unknown> {
@@ -368,9 +378,46 @@ function pageMetadata(row: Record<string, unknown>): Record<string, unknown> {
  * db.transaction() to commit. Throwing anywhere in here -- a precondition
  * re-check, a forced test failure, an invariant violation -- causes
  * better-sqlite3 to issue a native ROLLBACK; nothing is persisted.
+ *
+ * Invoked via .immediate() (BEGIN IMMEDIATE), not the default deferred
+ * BEGIN. This is required, not cosmetic: BEGIN IMMEDIATE acquires SQLite's
+ * write reservation atomically at the start of the transaction, before the
+ * closure below runs a single statement. Without it, a plain deferred
+ * transaction takes no lock until its first read, leaving a window between
+ * the CLI's early --expected-calendar-digest check and this function's own
+ * in-transaction recheck (immediately below) during which another writer
+ * could commit a calendar_pages change that neither check would ever see --
+ * this was PRE-FRESH-01-ID-03B-02's confirmed P1 finding (logical
+ * authorization TOCTOU race). With .immediate(), by the time the digest
+ * recheck below runs, no other writer can commit a calendar_pages mutation
+ * until this transaction commits or rolls back, so the recheck's result
+ * cannot go stale before the UPDATEs that follow it.
  */
-export function applyTransaction(writeDb: Database.Database, targets: ProductionTarget[], prePages: { slug: string; items: CalendarItem[] }[], opts: ApplyOptions = {}): void {
+export function applyTransaction(
+  writeDb: Database.Database,
+  targets: ProductionTarget[],
+  prePages: { slug: string; items: CalendarItem[] }[],
+  expectedCalendarDigest: string,
+  opts: ApplyOptions = {}
+): void {
   const tx = writeDb.transaction(() => {
+    // First operation inside the transaction, before any target recheck or
+    // UPDATE: reject if calendar_pages has drifted from the owner-approved
+    // digest since the CLI's early check. expectedCalendarDigest is the
+    // same owner-supplied --expected-calendar-digest value already
+    // validated before backup -- never recomputed from the DB here, since
+    // that would make this check a no-op.
+    const liveDigest = tableLogicalDigest(writeDb);
+    if (liveDigest !== expectedCalendarDigest) {
+      throw new Error(
+        `CALENDAR LOGICAL DIGEST MISMATCH INSIDE WRITE TRANSACTION -- PRODUCTION DRIFT DETECTED\n` +
+          `  expected: ${expectedCalendarDigest}\n` +
+          `  actual:   ${liveDigest}\n` +
+          "The live calendar_pages content changed after the pre-backup authorization check but before this write transaction -- aborting. No UPDATE has executed."
+      );
+    }
+    opts.testOnlyHookAfterDigestCheck?.();
+
     const touchedSlugs = [...new Set(targets.map((t) => t.slug))];
     const bySlug = new Map<string, ProductionTarget[]>();
     for (const t of targets) {
@@ -455,7 +502,7 @@ export function applyTransaction(writeDb: Database.Database, targets: Production
     }
   });
 
-  tx();
+  tx.immediate();
 }
 
 // ---- Independent post-commit verification ---------------------------------------

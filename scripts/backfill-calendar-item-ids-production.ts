@@ -304,7 +304,13 @@ async function main(): Promise<void> {
 
   const writeDb = new Database(RESOLVED_DB_PATH);
   try {
-    applyTransaction(writeDb, PRODUCTION_TARGETS, pre.pages);
+    // The same owner-supplied digest already validated at Step 7, passed
+    // through so applyTransaction() can recheck it a second time from
+    // inside the BEGIN IMMEDIATE transaction -- see the comment on
+    // applyTransaction() in the core module for why this closes the P1
+    // logical-authorization TOCTOU race the earlier, single, pre-backup
+    // check alone could not.
+    applyTransaction(writeDb, PRODUCTION_TARGETS, pre.pages, expectedCalendarDigest!.toLowerCase());
     log(`  Transaction: COMMIT (${PRODUCTION_TARGETS.length} id assignments across 4 pages)`);
   } catch (err) {
     writeDb.close();

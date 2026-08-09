@@ -570,10 +570,11 @@ describe(
       const preDb = new Database(dbPath, { readonly: true });
       const prePages = loadAllPages(preDb);
       const beforeCanonical = new Map(prePages.flatMap((p) => p.items.map((it, idx) => [`${p.slug}[${idx}]`, JSON.stringify(canonicalize(it))])));
+      const expectedDigest = tableLogicalDigest(preDb);
       preDb.close();
 
       const writeDb = new Database(dbPath);
-      applyTransaction(writeDb, PRODUCTION_TARGETS, prePages);
+      applyTransaction(writeDb, PRODUCTION_TARGETS, prePages, expectedDigest);
       writeDb.close();
 
       const postDb = new Database(dbPath, { readonly: true });
@@ -611,10 +612,11 @@ describe(
         before.set(slug, clone);
       }
       const prePages = loadAllPages(dbBefore);
+      const expectedDigest = tableLogicalDigest(dbBefore);
       dbBefore.close();
 
       const writeDb = new Database(dbPath);
-      applyTransaction(writeDb, PRODUCTION_TARGETS, prePages);
+      applyTransaction(writeDb, PRODUCTION_TARGETS, prePages, expectedDigest);
       writeDb.close();
 
       const dbAfter = new Database(dbPath, { readonly: true });
@@ -634,10 +636,11 @@ describe(
 
       const preDb = new Database(dbPath, { readonly: true });
       const prePages = loadAllPages(preDb);
+      const expectedDigest = tableLogicalDigest(preDb);
       preDb.close();
 
       const writeDb = new Database(dbPath);
-      assert.throws(() => applyTransaction(writeDb, PRODUCTION_TARGETS, prePages, { forceFailureAfterUpdates: 1 }), /TEST-ONLY forced failure/);
+      assert.throws(() => applyTransaction(writeDb, PRODUCTION_TARGETS, prePages, expectedDigest, { forceFailureAfterUpdates: 1 }), /TEST-ONLY forced failure/);
       writeDb.close();
 
       assert.equal(sha256File(dbPath), beforeSum, "DB file must be byte-for-byte unchanged after a rolled-back transaction");
@@ -648,9 +651,10 @@ describe(
       const dbPath = freshCopy("rerun");
       const preDb = new Database(dbPath, { readonly: true });
       const prePages = loadAllPages(preDb);
+      const expectedDigest = tableLogicalDigest(preDb);
       preDb.close();
       const writeDb = new Database(dbPath);
-      applyTransaction(writeDb, PRODUCTION_TARGETS, prePages);
+      applyTransaction(writeDb, PRODUCTION_TARGETS, prePages, expectedDigest);
       writeDb.close();
 
       const verifyDb = new Database(dbPath, { readonly: true });
@@ -664,9 +668,10 @@ describe(
       const dbPath = freshCopy("post-commit");
       const preDb = new Database(dbPath, { readonly: true });
       const prePages = loadAllPages(preDb);
+      const expectedDigest = tableLogicalDigest(preDb);
       preDb.close();
       const writeDb = new Database(dbPath);
-      applyTransaction(writeDb, PRODUCTION_TARGETS, prePages);
+      applyTransaction(writeDb, PRODUCTION_TARGETS, prePages, expectedDigest);
       writeDb.close();
 
       const result = independentPostCommitVerify(dbPath);
@@ -674,6 +679,141 @@ describe(
       assert.equal(result.totalCount, EXPECTED_TOTAL);
       assert.equal(result.withIdCount, EXPECTED_WITH_ID + 12);
       assert.equal(result.withoutIdCount, 0);
+    });
+
+    // ------------------------------------------------------------------
+    // PRE-FRESH-01-ID-03B-01: TOCTOU authorization race regression
+    // (closes the P1 identified during PRE-FRESH-01-ID-03B-02). The window
+    // was: after the owner-approved calendar digest is captured and the
+    // backup is verified, but before the write transaction's first
+    // statement, a deferred (non-IMMEDIATE) transaction held no lock -- a
+    // concurrent writer could commit drift on an *untouched* page (missed
+    // by the old touched-slugs-only in-transaction check) in that gap, and
+    // e7ed6d5's applyTransaction would still have committed the 12 ids.
+    // ------------------------------------------------------------------
+
+    test("27a. TOCTOU exploit regression: a concurrent untouched-page mutation captured after the owner-approved digest is rejected by the in-transaction recheck before any UPDATE", () => {
+      const dbPath = freshCopy("toctou-exploit");
+      const preDb = new Database(dbPath, { readonly: true });
+      const prePages = loadAllPages(preDb);
+      const approvedDigest = tableLogicalDigest(preDb); // "owner-approved" value, captured pre-drift
+      preDb.close();
+
+      const before = countIds(dbPath);
+      const beforeSum = sha256File(dbPath);
+
+      // Adversarial drift: a second connection mutates a non-target item on
+      // an untouched dummy page after the digest above was captured --
+      // exactly the gap the old deferred transaction left open.
+      const adversary = new Database(dbPath);
+      const advRow = adversary.prepare("SELECT dates_json FROM calendar_pages WHERE slug = ?").get("dummy-fixture-page-0") as { dates_json: string };
+      const advItems = JSON.parse(advRow.dates_json) as Record<string, unknown>[];
+      advItems[0].label_en = "ADVERSARIAL DRIFT";
+      adversary.prepare("UPDATE calendar_pages SET dates_json = ? WHERE slug = ?").run(JSON.stringify(advItems), "dummy-fixture-page-0");
+      adversary.close();
+
+      const driftedSum = sha256File(dbPath);
+      assert.notEqual(driftedSum, beforeSum, "the adversarial write must have actually changed the file");
+
+      // Old e7ed6d5 behavior (deferred tx, touched-slugs-only in-tx check,
+      // never re-checked the owner-approved digest) would have committed
+      // the 12 ids over this drift -- confirmed against the pre-hotfix core
+      // module during the PRE-FRESH-01-ID-03B-01 self-adversarial proof.
+      // New behavior: reject before the first UPDATE.
+      const writeDb = new Database(dbPath);
+      assert.throws(
+        () => applyTransaction(writeDb, PRODUCTION_TARGETS, prePages, approvedDigest),
+        /CALENDAR LOGICAL DIGEST MISMATCH INSIDE WRITE TRANSACTION/
+      );
+      writeDb.close();
+
+      // Zero of 12 ids added -- the backfill performed no mutation of its own.
+      assert.deepEqual(countIds(dbPath), before, "no target ids may be assigned when the in-transaction digest check fails");
+
+      // The adversary's own write persists (it is the concurrent writer's
+      // change, not the backfill's) -- the backfill neither commits over it
+      // nor reverts it.
+      const finalDb = new Database(dbPath, { readonly: true });
+      const finalRow = finalDb.prepare("SELECT dates_json FROM calendar_pages WHERE slug = ?").get("dummy-fixture-page-0") as { dates_json: string };
+      finalDb.close();
+      assert.ok(finalRow.dates_json.includes("ADVERSARIAL DRIFT"), "the concurrent writer's own committed change must remain");
+    });
+
+    test("27b. zero backfill UPDATE statements execute when the in-transaction digest check fails", () => {
+      const dbPath = freshCopy("toctou-zero-update-proof");
+      const preDb = new Database(dbPath, { readonly: true });
+      const prePages = loadAllPages(preDb);
+      preDb.close();
+
+      // A digest that cannot possibly match the fixture's real live digest --
+      // proves the check-then-throw ordering without needing real drift.
+      const staleDigest = "0".repeat(64);
+
+      const writeDb = new Database(dbPath);
+      let updateCount = 0;
+      const originalPrepare = writeDb.prepare.bind(writeDb);
+      // Test-only instrumentation: wrap the specific instance's prepare() to
+      // count executions of the backfill's own UPDATE statement. Scoped to
+      // this local writeDb instance only -- never touches production code.
+      (writeDb as unknown as { prepare: typeof writeDb.prepare }).prepare = ((sql: string) => {
+        const stmt = originalPrepare(sql);
+        if (sql.startsWith("UPDATE calendar_pages SET dates_json")) {
+          const originalRun = stmt.run.bind(stmt);
+          (stmt as unknown as { run: typeof stmt.run }).run = ((...args: unknown[]) => {
+            updateCount += 1;
+            return (originalRun as (...a: unknown[]) => unknown)(...args);
+          }) as typeof stmt.run;
+        }
+        return stmt;
+      }) as typeof writeDb.prepare;
+
+      assert.throws(
+        () => applyTransaction(writeDb, PRODUCTION_TARGETS, prePages, staleDigest),
+        /CALENDAR LOGICAL DIGEST MISMATCH INSIDE WRITE TRANSACTION/
+      );
+      writeDb.close();
+
+      assert.equal(updateCount, 0, "zero backfill UPDATE statements must execute before the authorization check aborts the transaction");
+    });
+
+    test("27c. a concurrent writer cannot commit a calendar_pages change between the in-transaction digest check and the first UPDATE (BEGIN IMMEDIATE write reservation proof)", () => {
+      const dbPath = freshCopy("toctou-immediate-lock-proof");
+      const preDb = new Database(dbPath, { readonly: true });
+      const prePages = loadAllPages(preDb);
+      const expectedDigest = tableLogicalDigest(preDb);
+      preDb.close();
+
+      let secondWriterError: Error | null = null;
+      let hookRan = false;
+
+      const writeDb = new Database(dbPath);
+      applyTransaction(writeDb, PRODUCTION_TARGETS, prePages, expectedDigest, {
+        testOnlyHookAfterDigestCheck: () => {
+          hookRan = true;
+          // Attempt a write from a second connection while the first
+          // connection's BEGIN IMMEDIATE reservation is held. This must
+          // fail -- proving no other writer can slip in between the
+          // digest recheck and the first UPDATE.
+          const second = new Database(dbPath, { timeout: 100 });
+          try {
+            second.prepare("UPDATE calendar_pages SET dates_json = dates_json WHERE slug = ?").run("dummy-fixture-page-0");
+          } catch (err) {
+            secondWriterError = err as Error;
+          } finally {
+            second.close();
+          }
+        },
+      });
+      writeDb.close();
+
+      assert.ok(hookRan, "the test-only hook must have run");
+      assert.ok(secondWriterError, "a concurrent second connection's write must fail while the BEGIN IMMEDIATE reservation is held");
+      assert.match((secondWriterError as unknown as Error).message, /database is locked|SQLITE_BUSY/i);
+
+      // The apply itself still completed normally once the (blocked) second
+      // writer's attempt finished -- the hook does not interfere with the
+      // real transaction's own success.
+      assert.deepEqual(countIds(dbPath), { total: EXPECTED_TOTAL, withId: EXPECTED_WITH_ID + 12, withoutId: 0 });
     });
   }
 );

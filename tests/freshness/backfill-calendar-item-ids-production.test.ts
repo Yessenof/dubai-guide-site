@@ -34,7 +34,8 @@ import {
   checkPreconditions,
   tableLogicalDigest,
   schemaFingerprint,
-  pickUniqueBackupPath,
+  reserveBackupDirectory,
+  assertBackupDestinationAbsent,
   createOnlineBackup,
   verifyBackup,
   applyTransaction,
@@ -142,6 +143,23 @@ function countIds(dbPath: string): { total: number; withId: number; withoutId: n
 
 function sha256File(p: string): string {
   return crypto.createHash("sha256").update(fs.readFileSync(p)).digest("hex");
+}
+
+/** tableLogicalDigest() through a fresh readonly connection -- the same value the CLI would compute and print as CALENDAR_LOGICAL_DIGEST. */
+function calendarDigestOf(dbPath: string): string {
+  const db = new Database(dbPath, { readonly: true, fileMustExist: true });
+  try {
+    return tableLogicalDigest(db);
+  } finally {
+    db.close();
+  }
+}
+
+async function makeTrivialDb(p: string): Promise<void> {
+  const db = new Database(p);
+  db.exec("CREATE TABLE t (x INTEGER)");
+  db.prepare("INSERT INTO t (x) VALUES (1)").run();
+  db.close();
 }
 
 function runScript(args: string[]): { status: number; stdout: string; stderr: string } {
@@ -365,13 +383,18 @@ describe(
       assert.match(fp1, /^[0-9a-f]{64}$/);
     });
 
-    test("17. pickUniqueBackupPath never returns a path that already exists", () => {
-      const dir = tempDir("pick-unique");
-      const first = pickUniqueBackupPath(dir);
-      fs.writeFileSync(first, "taken");
-      const second = pickUniqueBackupPath(dir);
+    test("17. reserveBackupDirectory + assertBackupDestinationAbsent: fresh directory, no destination collision", () => {
+      const dir = tempDir("reserve-unique");
+      const first = reserveBackupDirectory(dir);
+      const firstBackupPath = path.join(first, "guides.db");
+      assert.doesNotThrow(() => assertBackupDestinationAbsent(firstBackupPath));
+      fs.writeFileSync(firstBackupPath, "taken");
+
+      const second = reserveBackupDirectory(dir);
       assert.notEqual(first, second);
-      assert.ok(!fs.existsSync(second));
+      const secondBackupPath = path.join(second, "guides.db");
+      assert.doesNotThrow(() => assertBackupDestinationAbsent(secondBackupPath));
+      assert.ok(!fs.existsSync(secondBackupPath));
     });
 
     test("18. WAL-mode committed-state backup: online backup captures data committed via a separate connection without a checkpoint", async () => {
@@ -393,7 +416,9 @@ describe(
       const preDigest = tableLogicalDigest(reader);
       const preSchemaFp = schemaFingerprint(reader);
 
-      const backupPath = pickUniqueBackupPath(path.join(dir, "backups"));
+      const backupChildDir = reserveBackupDirectory(path.join(dir, "backups"));
+      const backupPath = path.join(backupChildDir, "guides.db");
+      assertBackupDestinationAbsent(backupPath);
       await createOnlineBackup(reader, backupPath);
       reader.close();
       writer.close();
@@ -443,6 +468,81 @@ describe(
     });
   }
 );
+
+// ============================================================================
+// C2. Backup directory exclusivity (P1-B hardening: reserveBackupDirectory /
+//     assertBackupDestinationAbsent, replacing the removed pickUniqueBackupPath)
+// ============================================================================
+
+describe("backup directory exclusivity (P1-B hardening)", () => {
+  test("A. rapid-succession reservations under the same parent yield distinct, real directories", () => {
+    const parent = tempDir("excl-a");
+    const d1 = reserveBackupDirectory(parent);
+    const d2 = reserveBackupDirectory(parent);
+    const d3 = reserveBackupDirectory(parent);
+    assert.notEqual(d1, d2);
+    assert.notEqual(d2, d3);
+    assert.notEqual(d1, d3);
+    for (const d of [d1, d2, d3]) assert.ok(fs.statSync(d).isDirectory());
+  });
+
+  test("B. no collision across many reservations in immediate succession -- not a probabilistic guarantee (mkdtempSync is OS-atomic, not timestamp/random-byte luck)", () => {
+    const parent = tempDir("excl-b");
+    const dirs = new Set<string>();
+    for (let i = 0; i < 50; i++) dirs.add(reserveBackupDirectory(parent));
+    assert.equal(dirs.size, 50);
+  });
+
+  test("C. a pre-existing unrelated backup child directory is left untouched by a new reservation", () => {
+    const parent = tempDir("excl-c");
+    const unrelated = fs.mkdtempSync(path.join(parent, "id-03b-"));
+    const unrelatedBackupPath = path.join(unrelated, "guides.db");
+    fs.writeFileSync(unrelatedBackupPath, "pre-existing backup content");
+
+    const fresh = reserveBackupDirectory(parent);
+    assert.notEqual(fresh, unrelated);
+
+    assert.equal(fs.readFileSync(unrelatedBackupPath, "utf8"), "pre-existing backup content", "a pre-existing backup child directory must never be touched by a later reservation");
+  });
+
+  test("D. two sequential online backups into two separately-reserved directories leave the first backup byte-for-byte unchanged after the second is created", async () => {
+    const parent = tempDir("excl-d");
+    const srcPath = path.join(tempDir("excl-d-src"), "src.db");
+    await makeTrivialDb(srcPath);
+    const src = new Database(srcPath, { readonly: true, fileMustExist: true });
+
+    const dir1 = reserveBackupDirectory(parent);
+    const backup1 = path.join(dir1, "guides.db");
+    assertBackupDestinationAbsent(backup1);
+    await createOnlineBackup(src, backup1);
+    const backup1ContentBefore = fs.readFileSync(backup1);
+
+    const dir2 = reserveBackupDirectory(parent);
+    const backup2 = path.join(dir2, "guides.db");
+    assertBackupDestinationAbsent(backup2);
+    await createOnlineBackup(src, backup2);
+
+    src.close();
+
+    assert.deepEqual(fs.readFileSync(backup1), backup1ContentBefore, "the first backup must be unchanged after a second backup is created");
+    assert.notEqual(dir1, dir2);
+  });
+
+  test("E. assertBackupDestinationAbsent throws (refuses to overwrite) when the destination unexpectedly already exists inside an owned directory", () => {
+    const parent = tempDir("excl-e");
+    const dir = reserveBackupDirectory(parent);
+    const backupPath = path.join(dir, "guides.db");
+    fs.writeFileSync(backupPath, "something already here");
+    assert.throws(() => assertBackupDestinationAbsent(backupPath), /already exists/);
+    assert.equal(fs.readFileSync(backupPath, "utf8"), "something already here", "must not overwrite");
+  });
+
+  test("F. concurrent reservations under the same parent all succeed with distinct paths (practical proxy: mkdtempSync's exclusivity is an OS-level guarantee independent of process count, exercised here via interleaved async scheduling)", async () => {
+    const parent = tempDir("excl-f");
+    const results = await Promise.all(Array.from({ length: 20 }, () => Promise.resolve().then(() => reserveBackupDirectory(parent))));
+    assert.equal(new Set(results).size, 20);
+  });
+});
 
 // ============================================================================
 // D. applyTransaction() unit tests
@@ -608,6 +708,8 @@ describe(
       const woudUpdateCount = (result.stdout.match(/WOULD UPDATE/g) ?? []).length;
       assert.equal(woudUpdateCount, 12);
       assert.equal(sha256File(dbPath), beforeSum, "dry run must not write anything");
+      assert.match(result.stdout, /DB_FILE_SHA256=[0-9a-f]{64}/, "every successful dry run must print DB_FILE_SHA256");
+      assert.match(result.stdout, /CALENDAR_LOGICAL_DIGEST=[0-9a-f]{64}/, "every successful dry run must print CALENDAR_LOGICAL_DIGEST");
     });
 
     test("29. dry run does not require and does not create --backup-dir", () => {
@@ -640,16 +742,54 @@ describe(
       assert.ok(!fs.existsSync(backupDir), "backup dir must never be created when a required apply flag is missing");
     });
 
+    test("31b. apply without --expected-calendar-digest aborts before any write", () => {
+      const { dbPath, dir } = freshCopy("no-calendar-digest");
+      const backupDir = path.join(dir, "backups");
+      const beforeSum = sha256File(dbPath);
+      const sha = sha256File(dbPath);
+      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha, "--confirm", REQUIRED_CONFIRM_TOKEN]);
+      assert.notEqual(result.status, 0);
+      assert.match(result.stderr + result.stdout, /--apply requires --expected-calendar-digest/);
+      assert.equal(sha256File(dbPath), beforeSum);
+      assert.ok(!fs.existsSync(backupDir), "backup dir must never be created when a required apply flag is missing");
+    });
+
+    test("31c. apply with a malformed --expected-calendar-digest (wrong length / non-hex) aborts before any write", () => {
+      const { dbPath, dir } = freshCopy("bad-format-calendar-digest");
+      const backupDir = path.join(dir, "backups");
+      const beforeSum = sha256File(dbPath);
+      const sha = sha256File(dbPath);
+      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha, "--expected-calendar-digest", "not-64-hex", "--confirm", REQUIRED_CONFIRM_TOKEN]);
+      assert.notEqual(result.status, 0);
+      assert.match(result.stderr + result.stdout, /--expected-calendar-digest must be exactly 64 hex characters/);
+      assert.equal(sha256File(dbPath), beforeSum);
+      assert.ok(!fs.existsSync(backupDir));
+    });
+
     test("32. apply with a wrong --expected-db-sha256 aborts before any write", () => {
       const { dbPath, dir } = freshCopy("wrong-sha");
       const backupDir = path.join(dir, "backups");
       const beforeSum = sha256File(dbPath);
       const wrongSha = "0".repeat(64);
-      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", wrongSha, "--confirm", REQUIRED_CONFIRM_TOKEN]);
+      const digest = calendarDigestOf(dbPath);
+      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", wrongSha, "--expected-calendar-digest", digest, "--confirm", REQUIRED_CONFIRM_TOKEN]);
       assert.notEqual(result.status, 0);
       assert.match(result.stderr + result.stdout, /does not match the live DB file/);
       assert.equal(sha256File(dbPath), beforeSum);
       assert.ok(!fs.existsSync(backupDir));
+    });
+
+    test("32b. apply with a wrong-but-valid-format --expected-calendar-digest aborts before any write: no backup directory created, no DB mutation", () => {
+      const { dbPath, dir } = freshCopy("wrong-calendar-digest");
+      const backupDir = path.join(dir, "backups");
+      const beforeSum = sha256File(dbPath);
+      const sha = sha256File(dbPath);
+      const wrongDigest = "f".repeat(64);
+      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha, "--expected-calendar-digest", wrongDigest, "--confirm", REQUIRED_CONFIRM_TOKEN]);
+      assert.notEqual(result.status, 0);
+      assert.match(result.stdout + result.stderr, /CALENDAR LOGICAL DIGEST MISMATCH/);
+      assert.equal(sha256File(dbPath), beforeSum);
+      assert.ok(!fs.existsSync(backupDir), "no backup directory may be created on a digest mismatch");
     });
 
     test("33. apply without --confirm aborts before any write", () => {
@@ -657,7 +797,8 @@ describe(
       const backupDir = path.join(dir, "backups");
       const beforeSum = sha256File(dbPath);
       const sha = sha256File(dbPath);
-      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha]);
+      const digest = calendarDigestOf(dbPath);
+      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha, "--expected-calendar-digest", digest]);
       assert.notEqual(result.status, 0);
       assert.match(result.stderr + result.stdout, new RegExp(`--apply requires --confirm ${REQUIRED_CONFIRM_TOKEN}`));
       assert.equal(sha256File(dbPath), beforeSum);
@@ -669,7 +810,8 @@ describe(
       const backupDir = path.join(dir, "backups");
       const beforeSum = sha256File(dbPath);
       const sha = sha256File(dbPath);
-      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha, "--confirm", REQUIRED_CONFIRM_TOKEN.toLowerCase()]);
+      const digest = calendarDigestOf(dbPath);
+      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha, "--expected-calendar-digest", digest, "--confirm", REQUIRED_CONFIRM_TOKEN.toLowerCase()]);
       assert.notEqual(result.status, 0);
       assert.match(result.stderr + result.stdout, /--apply requires --confirm/);
       assert.equal(sha256File(dbPath), beforeSum);
@@ -680,19 +822,21 @@ describe(
       const { dbPath, dir } = freshCopy("invalid-backup-dir");
       const beforeSum = sha256File(dbPath);
       const sha = sha256File(dbPath);
+      const digest = calendarDigestOf(dbPath);
       const blockedPath = path.join(dir, "backup-dir-is-a-file");
       fs.writeFileSync(blockedPath, "not a directory");
 
-      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", blockedPath, "--expected-db-sha256", sha, "--confirm", REQUIRED_CONFIRM_TOKEN]);
+      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", blockedPath, "--expected-db-sha256", sha, "--expected-calendar-digest", digest, "--confirm", REQUIRED_CONFIRM_TOKEN]);
       assert.notEqual(result.status, 0);
-      assert.match(result.stdout + result.stderr, /Backup path selection failed/);
-      assert.equal(sha256File(dbPath), beforeSum, "DB must be untouched when backup path selection fails");
+      assert.match(result.stdout + result.stderr, /Backup directory reservation failed/);
+      assert.equal(sha256File(dbPath), beforeSum, "DB must be untouched when backup directory reservation fails");
     });
 
     test("36 & 37. a successful full apply yields 118/118/0, a verified backup, and exactly 12 newly-assigned ids", () => {
       const { dbPath, dir } = freshCopy("full-apply");
       const backupDir = path.join(dir, "backups");
       const sha = sha256File(dbPath);
+      const digest = calendarDigestOf(dbPath);
 
       const beforeIdsBySlugIdx = new Map<string, unknown>();
       {
@@ -701,7 +845,7 @@ describe(
         db.close();
       }
 
-      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha, "--confirm", REQUIRED_CONFIRM_TOKEN]);
+      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha, "--expected-calendar-digest", digest, "--confirm", REQUIRED_CONFIRM_TOKEN]);
       assert.equal(result.status, 0, result.stdout + result.stderr);
       assert.match(result.stdout, /Backfill complete/);
 
@@ -724,12 +868,12 @@ describe(
       db.close();
       assert.equal(newlyAssigned, 12);
 
-      // Only .db files count as backups -- a WAL-mode backup legitimately
-      // grows -wal/-shm companion files alongside it when later opened for
-      // verification, same as any other WAL-mode SQLite file.
-      const backupFiles = fs.readdirSync(backupDir).filter((f) => f.endsWith(".db"));
-      assert.equal(backupFiles.length, 1);
-      const backupPath = path.join(backupDir, backupFiles[0]);
+      // Each backup now lives inside its own reserveBackupDirectory()-owned
+      // child directory (id-03b-*) rather than directly under --backup-dir.
+      const childDirs = fs.readdirSync(backupDir).filter((f) => fs.statSync(path.join(backupDir, f)).isDirectory());
+      assert.equal(childDirs.length, 1, "exactly one reserved backup child directory expected");
+      const backupPath = path.join(backupDir, childDirs[0], "guides.db");
+      assert.ok(fs.existsSync(backupPath));
       assert.ok(fs.statSync(backupPath).size > 0);
       const backupDb = new Database(backupPath, { readonly: true, fileMustExist: true });
       const integrity = backupDb.pragma("integrity_check") as { integrity_check: string }[];
@@ -741,15 +885,105 @@ describe(
       const { dbPath, dir } = freshCopy("rerun-cli");
       const backupDir = path.join(dir, "backups");
       const sha1 = sha256File(dbPath);
-      const first = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha1, "--confirm", REQUIRED_CONFIRM_TOKEN]);
+      const digest1 = calendarDigestOf(dbPath);
+      const first = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha1, "--expected-calendar-digest", digest1, "--confirm", REQUIRED_CONFIRM_TOKEN]);
       assert.equal(first.status, 0, first.stdout + first.stderr);
 
       const beforeSum = sha256File(dbPath);
       const sha2 = sha256File(dbPath);
-      const second = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha2, "--confirm", REQUIRED_CONFIRM_TOKEN]);
+      // Preconditions (step 3) run before either authorization lock is
+      // compared, so the exact digest value doesn't matter for this second
+      // call to demonstrate the intended abort -- only its format does.
+      const second = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha2, "--expected-calendar-digest", "1".repeat(64), "--confirm", REQUIRED_CONFIRM_TOKEN]);
       assert.notEqual(second.status, 0);
       assert.match(second.stdout + second.stderr, new RegExp(`Expected ${EXPECTED_WITHOUT_ID} items without id, found 0`));
       assert.equal(sha256File(dbPath), beforeSum);
+    });
+
+    test(
+      "40. WAL-authorization regression: a committed-but-uncheckpointed calendar_pages mutation is rejected via --expected-calendar-digest even though --expected-db-sha256 still matches",
+      () => {
+        const { dbPath, dir } = freshCopy("wal-auth-regression");
+        const backupDir = path.join(dir, "backups");
+
+        // Step 1: capture the "owner-approved" locks exactly as an operator
+        // would before running --apply.
+        const approvedSha = sha256File(dbPath);
+        const approvedDigest = calendarDigestOf(dbPath);
+
+        // Step 2: switch to WAL and commit a real calendar_pages change via
+        // a SEPARATE connection deliberately kept open (simulating a live
+        // server holding the DB open), so SQLite does not auto-checkpoint
+        // the WAL into the main file on close.
+        const writer = new Database(dbPath);
+        writer.pragma("journal_mode = WAL");
+        const row = writer.prepare("SELECT dates_json FROM calendar_pages WHERE slug = ?").get("dummy-fixture-page-0") as { dates_json: string };
+        const items = JSON.parse(row.dates_json);
+        items[0].label_en = "SILENTLY MUTATED VIA WAL, NOT CHECKPOINTED";
+        writer.prepare("UPDATE calendar_pages SET dates_json = ? WHERE slug = ?").run(JSON.stringify(items), "dummy-fixture-page-0");
+
+        try {
+          // Step 3: prove the premise -- raw file SHA is unchanged, but a
+          // fresh connection already sees the new content (the exact P1-A gap).
+          assert.equal(sha256File(dbPath), approvedSha, "test premise: raw file SHA must still equal the pre-mutation approved value while the writer connection is open");
+          const freshReader = new Database(dbPath, { readonly: true, fileMustExist: true });
+          const freshRow = freshReader.prepare("SELECT dates_json FROM calendar_pages WHERE slug = ?").get("dummy-fixture-page-0") as { dates_json: string };
+          freshReader.close();
+          assert.equal(
+            JSON.parse(freshRow.dates_json)[0].label_en,
+            "SILENTLY MUTATED VIA WAL, NOT CHECKPOINTED",
+            "test premise: a fresh connection must already see the WAL-committed change"
+          );
+
+          // Step 4: run the real CLI with the STALE (pre-mutation) approved
+          // sha AND the STALE approved calendar digest. This is exactly the
+          // scenario PRE-FRESH-01-ID-03B-02 independent QA (finding P1-A)
+          // proved a raw-SHA-only gate would silently accept.
+          const result = runScript([
+            "--db", dbPath,
+            "--apply",
+            "--backup-dir", backupDir,
+            "--expected-db-sha256", approvedSha,
+            "--expected-calendar-digest", approvedDigest,
+            "--confirm", REQUIRED_CONFIRM_TOKEN,
+          ]);
+
+          assert.notEqual(result.status, 0, "apply must be rejected -- the calendar digest gate must catch the WAL-committed drift the raw SHA gate alone would miss");
+          assert.match(result.stdout + result.stderr, /CALENDAR LOGICAL DIGEST MISMATCH/);
+          assert.ok(!fs.existsSync(backupDir), "no backup directory may be created when the digest gate rejects the run");
+
+          const finalCounts = countIds(dbPath);
+          assert.equal(finalCounts.withoutId, EXPECTED_WITHOUT_ID, "no id-assignment write may have occurred -- the 12 id-less items must remain id-less");
+        } finally {
+          writer.close();
+        }
+      }
+    );
+
+    test("40b. unrelated-table mutation does not change the calendar logical digest, and a legitimate apply still succeeds (authorization scope is calendar_pages only, by design)", () => {
+      const { dbPath, dir } = freshCopy("unrelated-table-scope");
+      const setup = new Database(dbPath);
+      setup.exec("CREATE TABLE unrelated_scope_test_table (id INTEGER PRIMARY KEY, note TEXT)");
+      setup.close();
+
+      const digestBefore = calendarDigestOf(dbPath);
+
+      const mutator = new Database(dbPath);
+      mutator.prepare("INSERT INTO unrelated_scope_test_table (note) VALUES (?)").run("unrelated mutation");
+      mutator.close();
+
+      const digestAfter = calendarDigestOf(dbPath);
+      assert.equal(
+        digestAfter,
+        digestBefore,
+        "calendar_pages logical digest must be unaffected by an unrelated-table mutation -- this is the intended, documented scope limit, not a bug"
+      );
+
+      const backupDir = path.join(dir, "backups");
+      const sha = sha256File(dbPath);
+      const digest = calendarDigestOf(dbPath);
+      const result = runScript(["--db", dbPath, "--apply", "--backup-dir", backupDir, "--expected-db-sha256", sha, "--expected-calendar-digest", digest, "--confirm", REQUIRED_CONFIRM_TOKEN]);
+      assert.equal(result.status, 0, result.stdout + result.stderr);
     });
 
     test("39. a dry run against the real local data/guides.db (123/123/0 shape) safely fails production preconditions, read-only", () => {

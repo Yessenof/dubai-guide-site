@@ -18,7 +18,7 @@ import Database from "better-sqlite3";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { findDuplicates, defaultBackupFileName } from "./calendar-backfill-safety";
+import { findDuplicates } from "./calendar-backfill-safety";
 
 // ---- Fixed target list (12 items, structurally excludes every COMPLY-* id) --
 //
@@ -193,7 +193,8 @@ export function checkPreconditions(db: Database.Database): PreconditionResult {
   return { ok: errors.length === 0, errors, totalCount, withIdCount, withoutIdCount, idLessBySlug, existingIds, pages };
 }
 
-// ---- Logical digest (WAL-safe backup verification) ----------------------------
+// ---- Logical digest (WAL-safe backup verification AND owner-approved -----------
+//      write-authorization lock) --------------------------------------------------
 //
 // An SQLite online backup (better-sqlite3's .backup(), wrapping SQLite's
 // native backup API) is not guaranteed byte-identical to the source file --
@@ -204,6 +205,18 @@ export function checkPreconditions(db: Database.Database): PreconditionResult {
 // into structured JSON so formatting differences don't matter, rows ordered
 // by slug for determinism) into a single SHA-256. Source-pre-write and
 // backup digests must match exactly before a write is allowed to proceed.
+//
+// This same function is ALSO the CLI's owner-approved --expected-calendar-
+// digest authorization gate (added post-PRE-FRESH-01-ID-03B-02 independent
+// QA, which proved --expected-db-sha256 alone is not WAL-safe: a connection
+// left open elsewhere can commit a change into the WAL that is invisible to
+// a raw-file SHA256 read but visible to any fresh SQLite connection -- see
+// the CLI script's comment on the digest gate for the full argument). This
+// digest is intentionally scoped to calendar_pages only, matching the scope
+// of the mutation this script performs. It is NOT a full-database logical
+// lock: a change to any other table is invisible to it. The SQLite online
+// backup itself remains a full-database copy regardless -- only this
+// authorization digest (and the raw file SHA) are calendar_pages-scoped.
 
 export function tableLogicalDigest(db: Database.Database): string {
   const rows = db.prepare("SELECT * FROM calendar_pages ORDER BY slug").all() as Record<string, unknown>[];
@@ -231,20 +244,43 @@ export function schemaFingerprint(db: Database.Database): string {
 // ---- WAL-safe online backup -----------------------------------------------------
 
 /**
- * Picks a backup destination path that does not currently exist, reusing
- * the same generated-name shape as the local script's exclusive-copy backup
- * (defaultBackupFileName, pure/shared). better-sqlite3's .backup() itself
- * does not refuse an existing destination the way COPYFILE_EXCL does, so
- * the existence check happens here, immediately before the path is handed
- * to .backup() -- this script never reuses a name that already exists.
+ * Atomically reserves a brand-new, uniquely-named directory under
+ * `backupDir` for this run's backup to live in, using fs.mkdtempSync --
+ * which wraps the OS mkdtemp(3) syscall and is inherently collision-proof.
+ *
+ * This replaces an earlier design (pickUniqueBackupPath, removed post-
+ * PRE-FRESH-01-ID-03B-02 independent QA finding P1-B) that generated a
+ * candidate filename and then separately checked fs.existsSync() before
+ * writing to it. That was a check-then-use race (TOCTOU): nothing stopped
+ * another process, or a second invocation of this script, from creating a
+ * file at the same path in the gap between the check and the write, and
+ * better-sqlite3's .backup() has no built-in exclusive-create protection --
+ * it will silently overwrite an existing file at the destination path. A
+ * generated name being "unlikely to collide" is not the same as being
+ * structurally unable to collide.
+ *
+ * mkdtempSync closes that gap: the directory it returns is guaranteed to
+ * have not existed a moment before this call returned, and to be owned
+ * exclusively by this call. The backup file is then written inside that
+ * directory (see assertBackupDestinationAbsent + createOnlineBackup call
+ * sites in the CLI script), so there is no name to race over.
  */
-export function pickUniqueBackupPath(backupDir: string, maxAttempts = 5): string {
+export function reserveBackupDirectory(backupDir: string): string {
   fs.mkdirSync(backupDir, { recursive: true });
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    const candidate = path.join(backupDir, defaultBackupFileName());
-    if (!fs.existsSync(candidate)) return candidate;
+  return fs.mkdtempSync(path.join(backupDir, "id-03b-"));
+}
+
+/**
+ * Defense-in-depth check called immediately before .backup() is invoked
+ * against a path inside a directory just reserved by reserveBackupDirectory.
+ * This should never actually find anything -- the directory is freshly
+ * created and exclusively owned -- but if it somehow does, this aborts
+ * rather than letting .backup() silently overwrite it.
+ */
+export function assertBackupDestinationAbsent(backupPath: string): void {
+  if (fs.existsSync(backupPath)) {
+    throw new Error(`Backup destination unexpectedly already exists: ${backupPath}. Refusing to overwrite -- aborting instead.`);
   }
-  throw new Error(`Could not find a unique backup filename in "${backupDir}" after ${maxAttempts} attempts.`);
 }
 
 /**

@@ -3,15 +3,22 @@
 // scripts/lib/post-id03-local-canonical-resync-core.ts.
 //
 // Every mutable DB used here is a disposable temp copy. The "local" fixture
-// is built by cloning the real local data/guides.db (already in its
-// pre-resync 12/123/123/0 shape); the "production" fixture is built by
-// cloning the audited WAL-safe production snapshot captured for this
-// operation (11/118/118/0, logical digest matching
-// EXPECTED_PRODUCTION_LOGICAL_DIGEST). Both real files are opened read-only
-// to clone; neither is ever written to. The audit snapshot is a local,
-// untracked artifact (never committed -- see project rules on DB/backup
-// files) so every describe() block that needs it is skipped when it is
-// absent, exactly like this repo's existing HAS_REAL_DB-gated suites.
+// is built by cloning the audited WAL-safe pre-resync local backup
+// (backups/local/id-03b-uLqglt/guides.db -- 12/123/123/0 shape, logical
+// digest matching EXPECTED_LOCAL_LOGICAL_DIGEST), NOT the live
+// data/guides.db: that file is correctly reconciled to its post-resync
+// 12/127/127/0 shape by design and is expected to keep failing this script's
+// authorization gate on every future run (see EXPECTED_LOCAL_LOGICAL_DIGEST
+// doc comment in the core module) -- sourcing fixtures from it would make
+// this entire suite permanently unrunnable. The "production" fixture is
+// built by cloning the audited WAL-safe production snapshot captured for
+// this operation (11/118/118/0, logical digest matching
+// EXPECTED_PRODUCTION_LOGICAL_DIGEST). All real files are opened read-only
+// to clone; none is ever written to. Both audit artifacts are local,
+// untracked files (never committed -- see project rules on DB/backup files)
+// so every describe() block that needs them is skipped when either is
+// absent, exactly like this repo's existing HAS_REAL_DB-gated suites. This
+// makes the suite's outcome independent of data/guides.db's current shape.
 
 import { test, describe, before, after } from "node:test";
 import assert from "node:assert/strict";
@@ -29,8 +36,8 @@ import {
   AUGUST_TARGET_ID,
   PROTECTED_ITEMS,
   EXPECTED_PRODUCTION_LOGICAL_DIGEST,
+  EXPECTED_LOCAL_LOGICAL_DIGEST,
   LOCAL_EXPECTED_TOTAL,
-  LOCAL_EXPECTED_WITH_ID,
   EXPECTED_FINAL_TOTAL,
   EXPECTED_FINAL_WITH_ID,
   EXPECTED_FINAL_WITHOUT_ID,
@@ -47,7 +54,17 @@ import {
 } from "../../scripts/lib/post-id03-local-canonical-resync-core";
 
 const REPO_ROOT = path.resolve(__dirname, "..", "..");
+// Live local DB -- used ONLY by test 34, which specifically verifies that a
+// dry run against the REAL file never writes to it, regardless of whether
+// preconditions pass or fail. No other test in this suite reads from this
+// path: every other fixture is sourced from the audited pre-resync backup
+// below, so the suite's outcome does not depend on this file's current shape.
 const REAL_LOCAL_DB_PATH = path.join(REPO_ROOT, "data", "guides.db");
+// Audited pre-resync local backup (POST-ID-03 QA artifact) -- the fixed,
+// historical fixture every OTHER test in this suite builds its disposable
+// "local" copies from. Its logical digest is expected to equal
+// EXPECTED_LOCAL_LOGICAL_DIGEST exactly; see localBackupHasExpectedDigest().
+const REAL_PRE_RESYNC_LOCAL_BACKUP_PATH = path.join(REPO_ROOT, "backups", "local", "id-03b-uLqglt", "guides.db");
 const REAL_PRODUCTION_SNAPSHOT_PATH = path.join(
   REPO_ROOT,
   "backups",
@@ -67,19 +84,14 @@ after(() => {
   for (const dir of createdDirs.splice(0)) fs.rmSync(dir, { recursive: true, force: true });
 });
 
-function localDbHasExpectedShape(): boolean {
-  if (!fs.existsSync(REAL_LOCAL_DB_PATH)) return false;
-  const db = new Database(REAL_LOCAL_DB_PATH, { readonly: true, fileMustExist: true });
+function localBackupHasExpectedDigest(): boolean {
+  if (!fs.existsSync(REAL_PRE_RESYNC_LOCAL_BACKUP_PATH)) return false;
+  const db = new Database(REAL_PRE_RESYNC_LOCAL_BACKUP_PATH, { readonly: true, fileMustExist: true });
   try {
-    const pre = checkPreconditionsLocalOnly(db);
-    return pre.total === LOCAL_EXPECTED_TOTAL && pre.withId === LOCAL_EXPECTED_WITH_ID;
+    return tableLogicalDigest(db) === EXPECTED_LOCAL_LOGICAL_DIGEST;
   } finally {
     db.close();
   }
-}
-function checkPreconditionsLocalOnly(db: Database.Database): { total: number; withId: number } {
-  const items = loadAllPages(db).flatMap((p) => p.items);
-  return { total: items.length, withId: items.filter((it) => it.id).length };
 }
 
 function productionSnapshotHasExpectedShape(): boolean {
@@ -92,13 +104,13 @@ function productionSnapshotHasExpectedShape(): boolean {
   }
 }
 
-const HAS_REAL_LOCAL = localDbHasExpectedShape();
+const HAS_REAL_LOCAL = localBackupHasExpectedDigest();
 const HAS_REAL_SNAPSHOT = productionSnapshotHasExpectedShape();
 const HAS_BOTH_FIXTURES = HAS_REAL_LOCAL && HAS_REAL_SNAPSHOT;
-const SKIP_REASON = "requires both data/guides.db (pre-resync 12/123/123/0 shape) and the audited PRE-FRESH-01-ID-03B production snapshot -- a local, untracked audit artifact not guaranteed present in every environment";
+const SKIP_REASON = "requires both the audited pre-resync local backup (backups/local/id-03b-uLqglt/guides.db, digest matching EXPECTED_LOCAL_LOGICAL_DIGEST) and the audited PRE-FRESH-01-ID-03B production snapshot -- local, untracked audit artifacts not guaranteed present in every environment. Deliberately independent of data/guides.db's current shape.";
 
 function buildLocalFixture(destPath: string): void {
-  fs.copyFileSync(REAL_LOCAL_DB_PATH, destPath);
+  fs.copyFileSync(REAL_PRE_RESYNC_LOCAL_BACKUP_PATH, destPath);
 }
 function buildProductionFixture(destPath: string): void {
   fs.copyFileSync(REAL_PRODUCTION_SNAPSHOT_PATH, destPath);
@@ -170,6 +182,21 @@ describe("scope constants", () => {
     const rowB = { slug: "x", dates_json: JSON.stringify([{ a: 1, id: "1" }], null, 2), status: "draft" };
     assert.equal(fullPageFingerprint(rowA), fullPageFingerprint(rowB));
   });
+
+  test(
+    "35. EXPECTED_LOCAL_LOGICAL_DIGEST is exactly cf0bfbbe...91bd27 and matches the audited pre-resync local backup's live-computed digest",
+    { skip: !HAS_REAL_LOCAL && "requires the audited pre-resync local backup (backups/local/id-03b-uLqglt/guides.db)" },
+    () => {
+      assert.equal(EXPECTED_LOCAL_LOGICAL_DIGEST, "cf0bfbbe3eb23553ab21b85749b32a46a7007a22ef517785ddf085537a91bd27");
+      assert.equal(EXPECTED_LOCAL_LOGICAL_DIGEST.length, 64);
+      const db = new Database(REAL_PRE_RESYNC_LOCAL_BACKUP_PATH, { readonly: true, fileMustExist: true });
+      try {
+        assert.equal(tableLogicalDigest(db), EXPECTED_LOCAL_LOGICAL_DIGEST, "the constant must match the live-computed digest of the actual audited backup file, not just be internally self-consistent");
+      } finally {
+        db.close();
+      }
+    }
+  );
 });
 
 // ============================================================================
@@ -336,6 +363,83 @@ describe("checkPreconditions()", { skip: !HAS_BOTH_FIXTURES && SKIP_REASON }, ()
     assert.equal(result.ok, false);
     assert.ok(result.errors.some((e) => e.includes('Proposed id "JUL-NEW-05" collides with an existing local id')));
   });
+
+  test("36. POST-ID-03 HOTFIX: a same-count adversarial local drift on an unrelated item (MAY-01-EIDFED.label_en, may-2026-uae-calendar) is rejected with LOCAL LOGICAL DIGEST MISMATCH -- UNAUTHORIZED LOCAL CORPUS, even though every count precondition (12/123/123/0) still passes", () => {
+    const { localDb, prodDb } = openCopies();
+
+    // Exact reproduction of the P1 finding from POST-ID-03 independent QA
+    // (commit dfbfc10): mutate an unrelated item's content while preserving
+    // page count, total item count, with-id count, and without-id count
+    // exactly -- a drift that the pre-hotfix precondition set could not
+    // detect at all.
+    const row = localDb.prepare("SELECT dates_json FROM calendar_pages WHERE slug = ?").get("may-2026-uae-calendar") as { dates_json: string };
+    const items = JSON.parse(row.dates_json) as CalendarItem[];
+    const idx = items.findIndex((it) => it.id === "MAY-01-EIDFED");
+    assert.notEqual(idx, -1, "test fixture assumption: MAY-01-EIDFED must exist on may-2026-uae-calendar in the audited backup");
+    (items[idx] as Record<string, unknown>).label_en = "ADVERSARIAL SAME-COUNT DRIFT";
+    localDb.prepare("UPDATE calendar_pages SET dates_json = ? WHERE slug = ?").run(JSON.stringify(items), "may-2026-uae-calendar");
+
+    const result = checkPreconditions(localDb, prodDb);
+    localDb.close();
+    prodDb.close();
+
+    assert.equal(result.ok, false);
+    assert.ok(
+      result.errors.some((e) => e.includes("LOCAL LOGICAL DIGEST MISMATCH") && e.includes("UNAUTHORIZED LOCAL CORPUS")),
+      `expected a LOCAL LOGICAL DIGEST MISMATCH -- UNAUTHORIZED LOCAL CORPUS error, got: ${JSON.stringify(result.errors)}`
+    );
+    // Specifically prove the COUNT checks alone did NOT catch this -- the
+    // whole point is that they cannot, by construction, since counts are
+    // unchanged. Only the digest check catches it.
+    assert.ok(
+      !result.errors.some((e) => e.includes("local pages") || e.includes("local total items") || e.includes("local items with id") || e.includes("local items without id")),
+      "the structural count preconditions must still all pass on this fixture -- the digest check is what catches this drift, not counts"
+    );
+  });
+
+  test("37. POST-ID-03 HOTFIX: zero-update proof -- if a hypothetical caller bypassed checkPreconditions() entirely and called applyTransaction() directly on the same-count-drifted fixture, the in-transaction recheck against EXPECTED_LOCAL_LOGICAL_DIGEST still rejects it before any UPDATE runs", () => {
+    const dbPath = path.join(tempDir("same-count-drift-apply"), "guides.db");
+    fs.copyFileSync(localFixture, dbPath);
+
+    const drifter = new Database(dbPath);
+    const row = drifter.prepare("SELECT dates_json FROM calendar_pages WHERE slug = ?").get("may-2026-uae-calendar") as { dates_json: string };
+    const items = JSON.parse(row.dates_json) as CalendarItem[];
+    const idx = items.findIndex((it) => it.id === "MAY-01-EIDFED");
+    (items[idx] as Record<string, unknown>).label_en = "ADVERSARIAL SAME-COUNT DRIFT";
+    drifter.prepare("UPDATE calendar_pages SET dates_json = ? WHERE slug = ?").run(JSON.stringify(items), "may-2026-uae-calendar");
+    drifter.close();
+
+    // Fabricate plausible-looking arguments the way a caller who skipped
+    // checkPreconditions() might (e.g. hand-derived from a stale in-memory
+    // copy) -- the point is that applyTransaction() must not trust them; it
+    // must independently recompute and compare the live digest itself.
+    const prodPath = path.join(tempDir("same-count-drift-prod"), "guides.db");
+    fs.copyFileSync(prodFixture, prodPath);
+    const prodDbRo = new Database(prodPath, { readonly: true });
+    const prodJuly = loadAllPages(prodDbRo).find((p) => p.slug === JULY_PAGE_SLUG)!.items;
+    const julyTargets = JULY_TARGET_IDS.map((id) => prodJuly.find((it) => it.id === id)!);
+    const augustCanonical = loadAllPages(prodDbRo).find((p) => p.slug === AUGUST_PAGE_SLUG)!.items.find((it) => it.id === AUGUST_TARGET_ID)!;
+    prodDbRo.close();
+    const protectedBefore: Record<string, string> = {};
+    for (const p of PROTECTED_ITEMS) protectedBefore[`${p.slug}::${p.id}`] = "0".repeat(64); // stale/unknown -- irrelevant, digest gate must fire first
+    const complianceDraftBefore = "0".repeat(64);
+
+    const writeDb = new Database(dbPath);
+    const changesBefore = (writeDb.prepare("SELECT total_changes() AS c").get() as { c: number }).c;
+    assert.throws(
+      () => applyTransaction(writeDb, julyTargets, augustCanonical, protectedBefore, complianceDraftBefore),
+      /LOCAL LOGICAL DIGEST MISMATCH — UNAUTHORIZED LOCAL CORPUS \(IN-TRANSACTION\)/
+    );
+    const changesAfter = (writeDb.prepare("SELECT total_changes() AS c").get() as { c: number }).c;
+    writeDb.close();
+
+    assert.equal(changesAfter, changesBefore, "zero UPDATE statements (or any other write) may execute -- the digest check runs before the first SELECT/UPDATE in the transaction body");
+    const finalDb = new Database(dbPath, { readonly: true });
+    const finalItems = loadAllPages(finalDb).flatMap((p) => p.items);
+    finalDb.close();
+    assert.equal(finalItems.length, LOCAL_EXPECTED_TOTAL, "no July additions may have occurred");
+    assert.ok(!finalItems.some((it) => it.id === "JUL-NEW-04"), "no July additions may have occurred");
+  });
 });
 
 // ============================================================================
@@ -376,7 +480,7 @@ describe("applyTransaction() / independentPostCommitVerify()", { skip: !HAS_BOTH
     const pre = preconditionsAgainstFreshProd(dbPath);
 
     const writeDb = new Database(dbPath);
-    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.localLogicalDigest, pre.protectedBefore, pre.complianceDraftBefore!);
+    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.protectedBefore, pre.complianceDraftBefore!);
     writeDb.close();
 
     const julyItems = loadPageItems(dbPath, JULY_PAGE_SLUG)!;
@@ -399,7 +503,7 @@ describe("applyTransaction() / independentPostCommitVerify()", { skip: !HAS_BOTH
     const pre = preconditionsAgainstFreshProd(dbPath);
 
     const writeDb = new Database(dbPath);
-    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.localLogicalDigest, pre.protectedBefore, pre.complianceDraftBefore!);
+    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.protectedBefore, pre.complianceDraftBefore!);
     writeDb.close();
 
     const verifyDb = new Database(dbPath, { readonly: true });
@@ -422,7 +526,7 @@ describe("applyTransaction() / independentPostCommitVerify()", { skip: !HAS_BOTH
 
     const pre = preconditionsAgainstFreshProd(dbPath);
     const writeDb = new Database(dbPath);
-    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.localLogicalDigest, pre.protectedBefore, pre.complianceDraftBefore!);
+    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.protectedBefore, pre.complianceDraftBefore!);
     writeDb.close();
 
     const afterDb = new Database(dbPath, { readonly: true });
@@ -461,7 +565,7 @@ describe("applyTransaction() / independentPostCommitVerify()", { skip: !HAS_BOTH
 
     const writeDb = new Database(dbPath);
     assert.throws(
-      () => applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.localLogicalDigest, pre.protectedBefore, pre.complianceDraftBefore!, { forceFailureAfterWrites: true }),
+      () => applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.protectedBefore, pre.complianceDraftBefore!, { forceFailureAfterWrites: true }),
       /TEST-ONLY forced failure/
     );
     writeDb.close();
@@ -470,12 +574,14 @@ describe("applyTransaction() / independentPostCommitVerify()", { skip: !HAS_BOTH
     assert.deepEqual(countIds(dbPath), before);
   });
 
-  test("20. TOCTOU regression: a concurrent local mutation captured after the pre-backup digest is rejected before any UPDATE", () => {
+  test("20. post-check TOCTOU regression: a second connection commits an unrelated same-count local drift after checkPreconditions() passes but before applyTransaction() begins -- the in-transaction recheck against the audited EXPECTED_LOCAL_LOGICAL_DIGEST constant (not a freshly-captured digest) rejects it before any UPDATE, with zero UPDATE statements executed", () => {
     const dbPath = freshLocalCopy("toctou");
-    const pre = preconditionsAgainstFreshProd(dbPath); // captures the "approved" digest pre-drift
+    const pre = preconditionsAgainstFreshProd(dbPath); // early check passes against the audited baseline, pre-drift
     const before = countIds(dbPath);
     const beforeSum = sha256File(dbPath);
 
+    // Second connection: an adversarial same-count content drift on an
+    // unrelated item, committed AFTER checkPreconditions() already passed.
     const adversary = new Database(dbPath);
     const advRow = adversary.prepare("SELECT dates_json FROM calendar_pages WHERE slug = ?").get(COMPLIANCE_DRAFT_PAGE_SLUG) as { dates_json: string };
     const advItems = JSON.parse(advRow.dates_json) as CalendarItem[];
@@ -486,12 +592,15 @@ describe("applyTransaction() / independentPostCommitVerify()", { skip: !HAS_BOTH
     assert.notEqual(sha256File(dbPath), beforeSum, "the adversarial write must have actually changed the file");
 
     const writeDb = new Database(dbPath);
+    const changesBefore = (writeDb.prepare("SELECT total_changes() AS c").get() as { c: number }).c;
     assert.throws(
-      () => applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.localLogicalDigest, pre.protectedBefore, pre.complianceDraftBefore!),
-      /LOCAL LOGICAL DIGEST MISMATCH INSIDE WRITE TRANSACTION/
+      () => applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.protectedBefore, pre.complianceDraftBefore!),
+      /LOCAL LOGICAL DIGEST MISMATCH — UNAUTHORIZED LOCAL CORPUS \(IN-TRANSACTION\)/
     );
+    const changesAfter = (writeDb.prepare("SELECT total_changes() AS c").get() as { c: number }).c;
     writeDb.close();
 
+    assert.equal(changesAfter, changesBefore, "zero UPDATE statements (or any other write) may execute on this connection when the in-transaction digest check fails -- not just zero net effect after rollback");
     assert.deepEqual(countIds(dbPath), before, "no July/August mutation may occur when the in-transaction digest check fails");
     const finalRow = loadFullPage(new Database(dbPath, { readonly: true }), COMPLIANCE_DRAFT_PAGE_SLUG);
     assert.ok(JSON.stringify(finalRow).includes("ADVERSARIAL DRIFT"), "the concurrent writer's own committed change must remain (this script neither commits over it nor reverts it)");
@@ -504,7 +613,7 @@ describe("applyTransaction() / independentPostCommitVerify()", { skip: !HAS_BOTH
     let secondWriterError: Error | null = null;
     let hookRan = false;
     const writeDb = new Database(dbPath);
-    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.localLogicalDigest, pre.protectedBefore, pre.complianceDraftBefore!, {
+    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.protectedBefore, pre.complianceDraftBefore!, {
       testOnlyHookAfterDigestCheck: () => {
         hookRan = true;
         const second = new Database(dbPath, { timeout: 100 });
@@ -525,31 +634,28 @@ describe("applyTransaction() / independentPostCommitVerify()", { skip: !HAS_BOTH
     assert.deepEqual(countIds(dbPath), { total: EXPECTED_FINAL_TOTAL, withId: EXPECTED_FINAL_WITH_ID, withoutId: 0 });
   });
 
-  test("22. a protected item mutated between precondition capture and the write transaction is caught by the in-transaction safety net, not just by checkPreconditions", () => {
+  test("22. a stale/incorrect protectedBefore fingerprint passed in by the caller is caught by applyTransaction's own protected-item recheck, independently of the digest gate", () => {
     const dbPath = freshLocalCopy("protected-drift-defense-in-depth");
-    const pre = preconditionsAgainstFreshProd(dbPath); // captures protectedBefore fingerprints from the pristine state
+    const pre = preconditionsAgainstFreshProd(dbPath); // captures correct protectedBefore fingerprints from the pristine, digest-authorized state
 
-    // Simulate a hypothetical caller bug: the DB is mutated on a protected
-    // item AFTER precondition capture but the (now-stale) pre.protectedBefore
-    // and pre.localLogicalDigest are still passed through unchanged is not
-    // representative (that would trip the digest gate first, as covered by
-    // test 20). Instead, prove applyTransaction's OWN protected-item
-    // recheck independently by mutating the item content but keeping the
-    // recorded logical digest consistent with the new state (i.e. simulate
-    // the digest gate already having been (mis-)satisfied) -- this isolates
-    // the protected-item invariant as its own independent safety net.
-    const mutator = new Database(dbPath);
-    const row = mutator.prepare("SELECT dates_json FROM calendar_pages WHERE slug = ?").get(JULY_PAGE_SLUG) as { dates_json: string };
-    const items = JSON.parse(row.dates_json) as CalendarItem[];
-    const idx = items.findIndex((it) => it.id === "JUL-NEW-02");
-    (items[idx] as Record<string, unknown>).brief_en = "mutated protected wording, should never be allowed to commit";
-    mutator.prepare("UPDATE calendar_pages SET dates_json = ? WHERE slug = ?").run(JSON.stringify(items), JULY_PAGE_SLUG);
-    const driftedDigest = tableLogicalDigest(mutator);
-    mutator.close();
+    // Since applyTransaction() no longer accepts a caller-supplied "expected
+    // digest" (the in-transaction gate is bound unconditionally to
+    // EXPECTED_LOCAL_LOGICAL_DIGEST -- see test 20), it is no longer possible
+    // to mutate a protected item on disk and still get past the digest gate:
+    // any content change to calendar_pages changes the table digest, so that
+    // class of bypass is now structurally impossible, which is the intended
+    // effect of this hotfix. To still exercise the protected-item invariant
+    // as an independent safety net (not merely inferred from the digest
+    // gate), simulate a different, still-realistic caller-side bug: the DB
+    // itself is untouched (digest still matches the audited baseline), but
+    // the caller passes a stale/incorrect protectedBefore fingerprint for
+    // one item (as could happen if a caller captured it from the wrong
+    // source). applyTransaction must still catch the mismatch on its own.
+    const staleProtectedBefore = { ...pre.protectedBefore, [`${JULY_PAGE_SLUG}::JUL-NEW-02`]: "0".repeat(64) };
 
     const writeDb = new Database(dbPath);
     assert.throws(
-      () => applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, driftedDigest, pre.protectedBefore, pre.complianceDraftBefore!),
+      () => applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, staleProtectedBefore, pre.complianceDraftBefore!),
       /protected item changed: july-2026-dubai-calendar::JUL-NEW-02/
     );
     writeDb.close();
@@ -564,7 +670,7 @@ describe("applyTransaction() / independentPostCommitVerify()", { skip: !HAS_BOTH
     const dbPath = freshLocalCopy("post-commit-ok");
     const pre = preconditionsAgainstFreshProd(dbPath);
     const writeDb = new Database(dbPath);
-    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.localLogicalDigest, pre.protectedBefore, pre.complianceDraftBefore!);
+    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.protectedBefore, pre.complianceDraftBefore!);
     writeDb.close();
 
     const post = independentPostCommitVerify(dbPath, pre.julyTargets, pre.augustCanonical!, pre.protectedBefore, pre.complianceDraftBefore!);
@@ -578,7 +684,7 @@ describe("applyTransaction() / independentPostCommitVerify()", { skip: !HAS_BOTH
     const dbPath = freshLocalCopy("post-commit-tampered");
     const pre = preconditionsAgainstFreshProd(dbPath);
     const writeDb = new Database(dbPath);
-    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.localLogicalDigest, pre.protectedBefore, pre.complianceDraftBefore!);
+    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.protectedBefore, pre.complianceDraftBefore!);
     writeDb.close();
 
     const tamperer = new Database(dbPath);
@@ -598,7 +704,7 @@ describe("applyTransaction() / independentPostCommitVerify()", { skip: !HAS_BOTH
     const dbPath = freshLocalCopy("rerun");
     const pre = preconditionsAgainstFreshProd(dbPath);
     const writeDb = new Database(dbPath);
-    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.localLogicalDigest, pre.protectedBefore, pre.complianceDraftBefore!);
+    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.protectedBefore, pre.complianceDraftBefore!);
     writeDb.close();
 
     const prodPath = path.join(tempDir("rerun-prod"), "guides.db");

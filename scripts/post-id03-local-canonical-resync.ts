@@ -185,6 +185,7 @@ async function main(): Promise<void> {
   }
 
   log(`  Local baseline precondition:      PASS (${LOCAL_EXPECTED_PAGES} / ${LOCAL_EXPECTED_TOTAL} / ${LOCAL_EXPECTED_WITH_ID} / ${LOCAL_EXPECTED_WITHOUT_ID})`);
+  log("  Local logical digest precondition: PASS (matches audited pre-resync local baseline -- counts alone are not sufficient authorization)");
   log(`  Production baseline precondition: PASS (${PRODUCTION_SNAPSHOT_EXPECTED_PAGES} / ${PRODUCTION_SNAPSHOT_EXPECTED_TOTAL} / ${PRODUCTION_SNAPSHOT_EXPECTED_WITH_ID} / ${PRODUCTION_SNAPSHOT_EXPECTED_WITHOUT_ID})`);
   log("  Production integrity_check precondition: PASS (ok)");
   log("  Production logical digest precondition:  PASS (matches audited PRE-FRESH-01-ID-03B post-apply snapshot)");
@@ -277,7 +278,7 @@ async function main(): Promise<void> {
 
   const writeDb = new Database(RESOLVED_LOCAL_DB_PATH);
   try {
-    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.localLogicalDigest, pre.protectedBefore, pre.complianceDraftBefore!);
+    applyTransaction(writeDb, pre.julyTargets, pre.augustCanonical!, pre.protectedBefore, pre.complianceDraftBefore!);
     log(`  Transaction: COMMIT (4 July additions + 1 August update, ${PROTECTED_ITEMS.length} protected items + compliance draft verified unchanged)`);
   } catch (err) {
     writeDb.close();

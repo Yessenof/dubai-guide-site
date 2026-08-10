@@ -61,6 +61,22 @@ export const PRODUCTION_SNAPSHOT_EXPECTED_WITHOUT_ID = 0;
 // if its shape happens to match.
 export const EXPECTED_PRODUCTION_LOGICAL_DIGEST = "769a79b75986baa3dc487bd9779c1e297a513704698647004806c4923c51f6e8";
 
+// The exact WAL-safe LOCAL pre-resync corpus this one-time reconciliation was
+// audited against (backups/local/id-03b-uLqglt/guides.db, captured
+// immediately before POST-ID-03 was approved to run; independently
+// re-verified during the POST-ID-03 QA pass). This is a ONE-TIME
+// migration/resync authorization value, not a general evolving local-state
+// value: it intentionally continues to represent the historical pre-resync
+// corpus and is never expected to be updated after this script has run
+// successfully once. A local DB that does not reproduce this digest --
+// including the real local DB once it has been correctly reconciled to the
+// post-resync (127-item) shape -- is not the audited corpus this script was
+// approved to mutate and must fail closed, even if item counts happen to
+// match. This closes the gap found in POST-ID-03 independent QA (commit
+// dfbfc10): same-count local content drift on an unrelated item previously
+// passed every precondition and was silently carried through --apply.
+export const EXPECTED_LOCAL_LOGICAL_DIGEST = "cf0bfbbe3eb23553ab21b85749b32a46a7007a22ef517785ddf085537a91bd27";
+
 export const JULY_PAGE_SLUG = "july-2026-dubai-calendar";
 export const AUGUST_PAGE_SLUG = "august-2026-dubai-calendar";
 export const COMPLIANCE_DRAFT_PAGE_SLUG = "uae-business-compliance-calendar-2026-2027";
@@ -161,6 +177,19 @@ export function checkPreconditions(localDb: Database.Database, prodDb: Database.
   if (localCiDupes.length > 0) errors.push(`Local case-insensitive duplicate id(s): ${localCiDupes.join(", ")}.`);
 
   const localLogicalDigest = tableLogicalDigest(localDb);
+
+  // Item counts matching alone is not sufficient authorization to mutate the
+  // local corpus: a same-count content drift on an unrelated item would pass
+  // every count check above. Bind authorization to the full audited digest
+  // of the pre-resync corpus instead. This check is independent of, and in
+  // addition to, the structural count checks above (defense-in-depth --
+  // those remain exactly as they were).
+  if (localLogicalDigest !== EXPECTED_LOCAL_LOGICAL_DIGEST) {
+    errors.push(
+      `LOCAL LOGICAL DIGEST MISMATCH — UNAUTHORIZED LOCAL CORPUS. expected=${EXPECTED_LOCAL_LOGICAL_DIGEST} actual=${localLogicalDigest}. ` +
+        "This local DB is not the audited pre-resync corpus this one-time script was approved to mutate -- refusing to proceed. Matching item counts alone is not sufficient authorization."
+    );
+  }
 
   // --- production snapshot baseline ---
   const prodPages = loadAllPages(prodDb);
@@ -298,24 +327,34 @@ export interface ApplyOptions {
  * calendar-backfill-production-core.ts's applyTransaction is: it closes the
  * TOCTOU window between the CLI's pre-backup digest check and this
  * transaction's own recheck.
+ *
+ * The in-transaction recheck below compares the live digest directly against
+ * the hardcoded EXPECTED_LOCAL_LOGICAL_DIGEST constant -- the same audited
+ * value checked by checkPreconditions() -- and NOT against a digest supplied
+ * by the caller. Comparing only against a freshly-captured "current" digest
+ * (e.g. one recomputed right after the early precondition check) would let a
+ * drift that occurs between the early check and this transaction become its
+ * own new "authorized" baseline: whatever the corpus looked like a moment
+ * ago would always satisfy that kind of self-referential check. Binding both
+ * the early check and this recheck to the same fixed external constant is
+ * what closes that gap (see EXPECTED_LOCAL_LOGICAL_DIGEST doc comment).
  */
 export function applyTransaction(
   writeDb: Database.Database,
   julyTargets: CalendarItem[],
   augustCanonical: CalendarItem,
-  expectedLocalDigest: string,
   protectedBefore: Record<string, string>,
   complianceDraftBefore: string,
   opts: ApplyOptions = {}
 ): void {
   const tx = writeDb.transaction(() => {
     const liveDigest = tableLogicalDigest(writeDb);
-    if (liveDigest !== expectedLocalDigest) {
+    if (liveDigest !== EXPECTED_LOCAL_LOGICAL_DIGEST) {
       throw new Error(
-        `LOCAL LOGICAL DIGEST MISMATCH INSIDE WRITE TRANSACTION -- LOCAL DRIFT DETECTED\n` +
-          `  expected: ${expectedLocalDigest}\n` +
-          `  actual:   ${liveDigest}\n` +
-          "The live local calendar_pages content changed after the pre-backup check but before this write transaction -- aborting. No UPDATE has executed."
+        `LOCAL LOGICAL DIGEST MISMATCH — UNAUTHORIZED LOCAL CORPUS (IN-TRANSACTION)\n` +
+          `  expected (audited pre-resync baseline): ${EXPECTED_LOCAL_LOGICAL_DIGEST}\n` +
+          `  actual:                                 ${liveDigest}\n` +
+          "The live local calendar_pages content does not match the audited pre-resync baseline this one-time script was approved to mutate -- aborting. No UPDATE has executed."
       );
     }
     opts.testOnlyHookAfterDigestCheck?.();

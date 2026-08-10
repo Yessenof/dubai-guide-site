@@ -9,7 +9,8 @@
     "lint": "eslint",
     "freshness:migrate": "tsx scripts/freshness/migrate.ts",
     "freshness:integrity": "tsx scripts/freshness/integrity-check.ts",
-    "freshness:test": "tsx --test tests/freshness/*.test.ts"
+    "freshness:test": "tsx --test tests/freshness/*.test.ts",
+    "qa:consistency-check": "tsx scripts/qa-consistency-check.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
